@@ -7,6 +7,7 @@
 
 #include <string>
 #include "MBUtils.h"
+#include "documentation/MOOSAppDoc.h"
 #include "ColorParse.h"
 #include "Joystick.h"
 #include "Joystick_Info.h"
@@ -21,13 +22,13 @@ int main(int argc, char *argv[])
   for(int i=1; i<argc; i++) {
     string argi = argv[i];
     if((argi=="-v") || (argi=="--version") || (argi=="-version"))
-      showReleaseInfoAndExit();
+      ensta::showReleaseInfoAndExit(argv[0]);
     else if((argi=="-e") || (argi=="--example") || (argi=="-example"))
-      showExampleConfigAndExit();
+      ensta::showExampleConfigAndExit(argv[0]);
     else if((argi == "-h") || (argi == "--help") || (argi=="-help"))
-      showHelpAndExit();
+      ensta::showHelpAndExit(argv[0]);
     else if((argi == "-i") || (argi == "--interface"))
-      showInterfaceAndExit();
+      ensta::showInterfaceAndExit(argv[0]);
     else if(strEnds(argi, ".moos") || strEnds(argi, ".moos++"))
       mission_file = argv[i];
     else if(strBegins(argi, "--alias="))
@@ -37,7 +38,7 @@ int main(int argc, char *argv[])
   }
 
   if(mission_file == "")
-    showHelpAndExit();
+    ensta::showHelpAndExit(argv[0]);
 
   cout << termColor("green");
   cout << "uJoystick launching as " << run_command << endl;

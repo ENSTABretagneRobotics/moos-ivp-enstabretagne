@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<moosapp>
+
+   <info>
+      <name>uJoystick</name>
+      <organization>ENSTA Bretagne</organization>
+      <date>2015</date>
+      <authors>
+         <author>Vincent Drevelle</author>
+         <author>Simon Rohou</author>
+      </authors>
+      <licence>MIT</licence>
+   </info>
+
+   <documentation>
+      <synopsis>
+         The uJoystick application is used to update MOOS variables by handling a joystick. Each axis or button of the joystick can be linked to a MOOSVar. The corresponding MOOSVar name has to be set in the .moos configuration file. Ratio, min and max values can be set for each control item.
+      </synopsis>
+      <interface>
+         <subscriptions>
+            <!--
+            <moosvar>
+               <name>EXAMPLE_VAR_IN</name>
+               <type>string</type>
+               <info>description of the MOOSVar</info>
+            </moosvar>
+            -->
+         </subscriptions>
+         <publications>
+            <!--
+            <moosvar>
+               <name>EXAMPLE_VAR_OUT</name>
+               <type>string</type>
+               <info>description of the MOOSVar</info>
+            </moosvar>
+            -->
+         </publications>
+      </interface>
+   </documentation>
+
+</moosapp>

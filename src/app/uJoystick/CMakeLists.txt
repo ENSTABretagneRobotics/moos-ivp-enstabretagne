@@ -14,6 +14,7 @@ ADD_EXECUTABLE(uJoystick ${SRC})
 
 TARGET_LINK_LIBRARIES(uJoystick
    ${MOOS_LIBRARIES}
+   ensta-documentation
    apputil
    mbutil
    m
