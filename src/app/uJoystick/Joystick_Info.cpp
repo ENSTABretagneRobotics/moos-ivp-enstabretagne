@@ -20,11 +20,11 @@ void showSynopsis()
 {
   blk("SYNOPSIS:                                                       ");
   blk("------------------------------------                            ");
-  blk("  The uJoystick application is used for               ");
-  blk("                                                                ");
-  blk("                                                                ");
-  blk("                                                                ");
-  blk("                                                                ");
+  blk("  The uJoystick application is used to update MOOS variables by ");
+  blk("  handling of a joystick.                                       ");
+  blk("  Each updated MOOS Variable is linked to an axis or a button   ");
+  blk("  of the joystick. The corresponding MOOS Variable name has to  ");
+  blk("  be set in the .moos configuration file.                       ");
 }
 
 //----------------------------------------------------------------
@@ -34,15 +34,15 @@ void showHelpAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("Usage: uJoystick file.moos [OPTIONS]                   ");
+  blu("Usage: uJoystick file.moos [OPTIONS]                            ");
   blu("=============================================================== ");
   blk("                                                                ");
   showSynopsis();
   blk("                                                                ");
   blk("Options:                                                        ");
   mag("  --alias","=<ProcessName>                                      ");
-  blk("      Launch uJoystick with the given process name         ");
-  blk("      rather than uJoystick.                           ");
+  blk("      Launch uJoystick with the given process name              ");
+  blk("      rather than uJoystick.                                    ");
   mag("  --example, -e                                                 ");
   blk("      Display example MOOS configuration block.                 ");
   mag("  --help, -h                                                    ");
@@ -50,7 +50,7 @@ void showHelpAndExit()
   mag("  --interface, -i                                               ");
   blk("      Display MOOS publications and subscriptions.              ");
   mag("  --version,-v                                                  ");
-  blk("      Display the release version of uJoystick.        ");
+  blk("      Display the release version of uJoystick.                 ");
   blk("                                                                ");
   blk("Note: If argv[2] does not otherwise match a known option,       ");
   blk("      then it will be interpreted as a run alias. This is       ");
@@ -66,14 +66,42 @@ void showExampleConfigAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("uJoystick Example MOOS Configuration                   ");
+  blu("uJoystick Example MOOS Configuration                            ");
   blu("=============================================================== ");
   blk("                                                                ");
-  blk("ProcessConfig = uJoystick                              ");
+  blk("ProcessConfig = uJoystick                                       ");
   blk("{                                                               ");
   blk("  AppTick   = 4                                                 ");
   blk("  CommsTick = 4                                                 ");
   blk("                                                                ");
+  blk("  DEVICE_NAME = /dev/input/js0                                  ");
+  blk("                                                                ");
+  blk("  INCREMENT = false                                             ");
+  blk("  SCALE = 100                                                   ");
+  blk("                                                                ");
+  blk("  AXIS = 0                                                      ");
+  blk("  SCALE_RATIO = 0.5                                             ");
+  blk("  MOOS_DEST_VAR = DESIRED_SLIDE                                 ");
+  blk("                                                                ");
+  blk("  AXIS = 1                                                      ");
+  blk("  SCALE_RATIO = 0.5                                             ");
+  blk("  MOOS_DEST_VAR = DESIRED_THRUST                                ");
+  blk("                                                                ");
+  blk("  AXIS = 2                                                      ");
+  blk("  SCALE_RATIO = 0.5                                             ");
+  blk("  MOOS_DEST_VAR = DESIRED_RUDDER                                ");
+  blk("                                                                ");
+  blk("  AXIS = 3                                                      ");
+  blk("  SCALE_RATIO = 0.5                                             ");
+  blk("  MOOS_DEST_VAR = DESIRED_ELEVATOR                              ");
+  blk("                                                                ");
+  blk("  BUTTON = 1                                                    ");
+  blk("  SCALE_RATIO = 0.5                                             ");
+  blk("  MOOS_DEST_VAR = PUSHED_BUTTON_1                               ");
+  blk("                                                                ");
+  blk("  BUTTON = 1                                                    ");
+  blk("  SCALE_RATIO = 0.5                                             ");
+  blk("  MOOS_DEST_VAR = PUSHED_BUTTON_2                               ");
   blk("}                                                               ");
   blk("                                                                ");
   exit(0);
@@ -87,21 +115,18 @@ void showInterfaceAndExit()
 {
   blk("                                                                ");
   blu("=============================================================== ");
-  blu("uJoystick INTERFACE                                    ");
+  blu("uJoystick INTERFACE                                             ");
   blu("=============================================================== ");
   blk("                                                                ");
   showSynopsis();
   blk("                                                                ");
   blk("SUBSCRIPTIONS:                                                  ");
   blk("------------------------------------                            ");
-  #if 0 // Keep these around just for template
-    blk("  NODE_MESSAGE = src_node=alpha,dest_node=bravo,var_name=FOO,   ");
-    blk("                 string_val=BAR                                 ");
-  #endif
+  blk("  No subscriptions.                                             ");
   blk("                                                                ");
   blk("PUBLICATIONS:                                                   ");
   blk("------------------------------------                            ");
-  blk("  Publications are determined by the node message content.      ");
+  blk("  No publications.                                              ");
   blk("                                                                ");
   exit(0);
 }
