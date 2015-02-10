@@ -1,0 +1,37 @@
+//------------------------------------------------
+// uJoystick config block
+
+ProcessConfig = uJoystick
+{
+   AppTick   = 4
+   CommsTick = 4
+   
+   DEVICE_NAME = /dev/input/js0
+
+   INCREMENT = false
+   SCALE = 100
+   
+   AXIS = 0
+   SCALE_RATIO = 0.5
+   MOOS_DEST_VAR = DESIRED_SLIDE
+   
+   AXIS = 1
+   SCALE_RATIO = 0.5
+   MOOS_DEST_VAR = DESIRED_THRUST
+   
+   AXIS = 2
+   SCALE_RATIO = 0.5
+   MOOS_DEST_VAR = DESIRED_RUDDER
+   
+   AXIS = 3
+   SCALE_RATIO = 0.5
+   MOOS_DEST_VAR = DESIRED_ELEVATOR
+   
+   BUTTON = 1
+   SCALE_RATIO = 0.5
+   MOOS_DEST_VAR = PUSHED_BUTTON_1
+   
+   BUTTON = 1
+   SCALE_RATIO = 0.5
+   MOOS_DEST_VAR = PUSHED_BUTTON_2
+}

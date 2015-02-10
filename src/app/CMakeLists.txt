@@ -19,7 +19,7 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
   # ADD_SUBDIRECTORY(pLocalization)
 
 # 'u' apps
-  # ADD_SUBDIRECTORY(uSimModem)
+  ADD_SUBDIRECTORY(uJoystick)
 
 # 'i' apps
   # ADD_SUBDIRECTORY(iModem)
