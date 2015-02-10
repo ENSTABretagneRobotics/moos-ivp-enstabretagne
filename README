@@ -1,0 +1,85 @@
+##############################################################################
+# FILE:        moos-ivp-enstabzh/README
+# DATE:        2015
+# DESCRIPTION: Contains important information regarding the moos-ivp-extend
+#              repository.
+##############################################################################
+
+#=============================================================================
+# Introduction
+#=============================================================================
+The moos-ivp-extend repository contains examples for extending the MOOS-IvP
+Autonomy system. This includes a MOOS application and an IvP behavior.
+
+
+#=============================================================================
+# Directory Structure
+#=============================================================================
+The directory structure for the moos-ivp-extend is decribed below:
+
+bin              - Directory for generated executable files
+build            - Directory for build object files
+build.sh         - Script for building moos-ivp-extend
+CMakeLists.txt   - CMake configuration file for the project
+data             - Directory for storing data
+doc              - Directory for documentation files
+lib              - Directory for generated library files
+missions         - Directory for mission files
+README           - Contains helpful information - (this file).
+scripts          - Directory for script files
+src              - Directory for source code
+
+
+#=============================================================================
+# Build Instructions
+#=============================================================================
+#--------------------
+# Linux and Mac Users
+#--------------------
+
+To build on Linux and Apple platforms, execute the build script within this
+directory:
+
+   $ ./build.sh
+
+To build without using the supplied script, execute the following commands
+within this directory:
+
+   $ mkdir -p build
+   $ cd build
+   $ cmake ../
+   $ make
+   $ cd ..
+
+
+#--------------
+# Windows Users
+#--------------
+To build on Windows platform, open CMake using your favorite shortcut. Then 
+set the source directory to be this directory and set the build directory
+to the "build" directory inside this directory.
+
+The source directory is typically next to the question:
+   "Where is the source code?"
+
+The build directory is typically next to the question:
+   "Where to build the binaries?"
+
+Alternatively, CMake can be invoked via the command line. However, you must
+specify your gernerator. Use "cmake --help" for a list of generators and
+additional help.
+
+#=============================================================================
+# Environment variables
+#=============================================================================
+The moos-ivp-extend binaries files should be added to your path to allow them
+to be launched from pAntler. 
+
+In order for generated IvP Behaviors to be recognized by the IvP Helm, you
+should add the library directory to the "IVP_BEHAVIOR_DIRS" environment 
+variable.
+
+
+##############################################################################
+#                               END of README
+##############################################################################
