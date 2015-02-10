@@ -3,5 +3,4 @@
 # DESCRIPTION: CMakeLists.txt file
 ##############################################################################
 
-#ADD_SUBDIRECTORY(intervals)
-# ...
+ADD_SUBDIRECTORY(graphics)
