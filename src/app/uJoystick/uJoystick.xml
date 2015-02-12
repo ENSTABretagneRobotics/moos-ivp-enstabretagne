@@ -1,3 +1,5 @@
+<!-- This file contains uJoystick documentation -->
+
 <?xml version="1.0" encoding="UTF-8"?>
 
 <moosapp>
@@ -15,7 +17,7 @@
 
    <documentation>
       <synopsis>
-         The uJoystick application is used to update MOOS variables by handling a joystick. Each axis or button of the joystick can be linked to a MOOSVar. The corresponding MOOSVar name has to be set in the .moos configuration file. Ratio, min and max values can be set for each control item.
+         The uJoystick application is used to update MOOS variables by handling a joystick. Publicated variables depend on .moos configuration file. Each axis or button of the joystick can be linked to a variable. Ratio, min and max values can be set for each control item.
       </synopsis>
       <interface>
          <subscriptions>

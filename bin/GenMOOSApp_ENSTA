@@ -26,7 +26,6 @@ cat >> CMakeLists.txt <<EOF
 
 SET(SRC
   ${1}.cpp
-  ${1}_Info.cpp
   main.cpp
 )
 
@@ -34,6 +33,7 @@ ADD_EXECUTABLE($2$1 \${SRC})
 
 TARGET_LINK_LIBRARIES($2$1
    \${MOOS_LIBRARIES}
+   ensta-documentation
    apputil
    mbutil
    m
@@ -88,9 +88,9 @@ cat >> main.cpp <<EOF
 
 #include <string>
 #include "MBUtils.h"
+#include "documentation/MOOSAppDocumentation.h"
 #include "ColorParse.h"
 #include "${1}.h"
-#include "${1}_Info.h"
 
 using namespace std;
 
@@ -98,17 +98,18 @@ int main(int argc, char *argv[])
 {
   string mission_file;
   string run_command = argv[0];
+  ensta::MOOSAppDocumentation documentation(argv[0]);
 
   for(int i=1; i<argc; i++) {
     string argi = argv[i];
     if((argi=="-v") || (argi=="--version") || (argi=="-version"))
-      showReleaseInfoAndExit();
+      documentation.showReleaseInfoAndExit();
     else if((argi=="-e") || (argi=="--example") || (argi=="-example"))
-      showExampleConfigAndExit();
+      documentation.showExampleConfigAndExit();
     else if((argi == "-h") || (argi == "--help") || (argi=="-help"))
-      showHelpAndExit();
+      documentation.showHelpAndExit();
     else if((argi == "-i") || (argi == "--interface"))
-      showInterfaceAndExit();
+      documentation.showInterfaceAndExit();
     else if(strEnds(argi, ".moos") || strEnds(argi, ".moos++"))
       mission_file = argv[i];
     else if(strBegins(argi, "--alias="))
@@ -118,10 +119,10 @@ int main(int argc, char *argv[])
   }
 
   if(mission_file == "")
-    showHelpAndExit();
+    documentation.showHelpAndExit();
 
   cout << termColor("green");
-  cout << "${2}${1} launching as " << run_command << endl;
+  cout << "uJoystick launching as " << run_command << endl;
   cout << termColor() << endl;
 
   ${1} ${1};
@@ -293,144 +294,58 @@ bool ${1}::buildReport()
 EOF
 
 
-cat >> ${1}_Info.h <<EOF
-/****************************************************************/
-/*    FILE: ${1}_Info.h
-/*    ORGN: ENSTA Bretagne
-/*    AUTH: ${3}
-/*    DATE: 2015
-/****************************************************************/
+cat >> ${2}${1}.xml <<EOF
+<!-- This file contains ${2}${1} documentation -->
 
-#ifndef ${1}_INFO_HEADER
-#define ${1}_INFO_HEADER
+<?xml version="1.0" encoding="UTF-8"?>
 
-void showSynopsis();
-void showHelpAndExit();
-void showExampleConfigAndExit();
-void showInterfaceAndExit();
-void showReleaseInfoAndExit();
+<moosapp>
 
-#endif
-EOF
+   <info>
+      <name>${2}${1}</name>
+      <organization>ENSTA Bretagne</organization>
+      <date>2015</date>
+      <authors>
+         <author>${3}</author>
+      </authors>
+      <licence>MIT</licence>
+   </info>
 
+   <documentation>
+      <synopsis>
+        ...
+      </synopsis>
+      <interface>
+         <subscriptions>
+            <!--
+            <moosvar>
+               <name>EXAMPLE_VAR_IN</name>
+               <type>string</type>
+               <info>description of the MOOSVar</info>
+            </moosvar>
+            -->
+         </subscriptions>
+         <publications>
+            <!--
+            <moosvar>
+               <name>EXAMPLE_VAR_OUT</name>
+               <type>string</type>
+               <info>description of the MOOSVar</info>
+            </moosvar>
+            -->
+         </publications>
+      </interface>
+      <!-- if there is a bug or a special fact to know.. -->
+      <optional-comments>
+         No comment.
+      </optional-comments>
+      <!-- if something can be improved -->
+      <suggested-improvements>
+         No suggested improvements.
+      </suggested-improvements>
+   </documentation>
 
-cat >> ${1}_Info.cpp <<EOF
-/****************************************************************/
-/*    FILE: ${1}_Info.cpp
-/*    ORGN: ENSTA Bretagne
-/*    AUTH: ${3}
-/*    DATE: 2015
-/****************************************************************/
-
-#include <cstdlib>
-#include <iostream>
-#include "${1}_Info.h"
-#include "ColorParse.h"
-#include "ReleaseInfo.h"
-
-using namespace std;
-
-//----------------------------------------------------------------
-// Procedure: showSynopsis
-
-void showSynopsis()
-{
-  blk("SYNOPSIS:                                                       ");
-  blk("------------------------------------                            ");
-  blk("  The ${2}${1} application is used for               ");
-  blk("                                                                ");
-  blk("                                                                ");
-  blk("                                                                ");
-  blk("                                                                ");
-}
-
-//----------------------------------------------------------------
-// Procedure: showHelpAndExit
-
-void showHelpAndExit()
-{
-  blk("                                                                ");
-  blu("=============================================================== ");
-  blu("Usage: ${2}${1} file.moos [OPTIONS]                   ");
-  blu("=============================================================== ");
-  blk("                                                                ");
-  showSynopsis();
-  blk("                                                                ");
-  blk("Options:                                                        ");
-  mag("  --alias","=<ProcessName>                                      ");
-  blk("      Launch ${2}${1} with the given process name         ");
-  blk("      rather than ${2}${1}.                           ");
-  mag("  --example, -e                                                 ");
-  blk("      Display example MOOS configuration block.                 ");
-  mag("  --help, -h                                                    ");
-  blk("      Display this help message.                                ");
-  mag("  --interface, -i                                               ");
-  blk("      Display MOOS publications and subscriptions.              ");
-  mag("  --version,-v                                                  ");
-  blk("      Display the release version of ${2}${1}.        ");
-  blk("                                                                ");
-  blk("Note: If argv[2] does not otherwise match a known option,       ");
-  blk("      then it will be interpreted as a run alias. This is       ");
-  blk("      to support pAntler launching conventions.                 ");
-  blk("                                                                ");
-  exit(0);
-}
-
-//----------------------------------------------------------------
-// Procedure: showExampleConfigAndExit
-
-void showExampleConfigAndExit()
-{
-  blk("                                                                ");
-  blu("=============================================================== ");
-  blu("${2}${1} Example MOOS Configuration                   ");
-  blu("=============================================================== ");
-  blk("                                                                ");
-  blk("ProcessConfig = ${2}${1}                              ");
-  blk("{                                                               ");
-  blk("  AppTick   = 4                                                 ");
-  blk("  CommsTick = 4                                                 ");
-  blk("                                                                ");
-  blk("}                                                               ");
-  blk("                                                                ");
-  exit(0);
-}
-
-
-//----------------------------------------------------------------
-// Procedure: showInterfaceAndExit
-
-void showInterfaceAndExit()
-{
-  blk("                                                                ");
-  blu("=============================================================== ");
-  blu("${2}${1} INTERFACE                                    ");
-  blu("=============================================================== ");
-  blk("                                                                ");
-  showSynopsis();
-  blk("                                                                ");
-  blk("SUBSCRIPTIONS:                                                  ");
-  blk("------------------------------------                            ");
-  #if 0 // Keep these around just for template
-    blk("  NODE_MESSAGE = src_node=alpha,dest_node=bravo,var_name=FOO,   ");
-    blk("                 string_val=BAR                                 ");
-  #endif
-  blk("                                                                ");
-  blk("PUBLICATIONS:                                                   ");
-  blk("------------------------------------                            ");
-  blk("  Publications are determined by the node message content.      ");
-  blk("                                                                ");
-  exit(0);
-}
-
-//----------------------------------------------------------------
-// Procedure: showReleaseInfoAndExit
-
-void showReleaseInfoAndExit()
-{
-  showReleaseInfo("${2}${1}", "gpl");
-  exit(0);
-}
+</moosapp>
 EOF
 
 
