@@ -7,9 +7,9 @@
 
 #include <string>
 #include "MBUtils.h"
+#include "documentation/MOOSAppDocumentation.h"
 #include "ColorParse.h"
 #include "Joystick.h"
-#include "Joystick_Info.h"
 
 using namespace std;
 
@@ -17,17 +17,18 @@ int main(int argc, char *argv[])
 {
   string mission_file;
   string run_command = argv[0];
+  ensta::MOOSAppDocumentation documentation(argv[0]);
 
   for(int i=1; i<argc; i++) {
     string argi = argv[i];
     if((argi=="-v") || (argi=="--version") || (argi=="-version"))
-      showReleaseInfoAndExit();
+      documentation.showReleaseInfoAndExit();
     else if((argi=="-e") || (argi=="--example") || (argi=="-example"))
-      showExampleConfigAndExit();
+      documentation.showExampleConfigAndExit();
     else if((argi == "-h") || (argi == "--help") || (argi=="-help"))
-      showHelpAndExit();
+      documentation.showHelpAndExit();
     else if((argi == "-i") || (argi == "--interface"))
-      showInterfaceAndExit();
+      documentation.showInterfaceAndExit();
     else if(strEnds(argi, ".moos") || strEnds(argi, ".moos++"))
       mission_file = argv[i];
     else if(strBegins(argi, "--alias="))
@@ -37,14 +38,13 @@ int main(int argc, char *argv[])
   }
 
   if(mission_file == "")
-    showHelpAndExit();
+    documentation.showHelpAndExit();
 
   cout << termColor("green");
   cout << "uJoystick launching as " << run_command << endl;
   cout << termColor() << endl;
 
   Joystick Joystick;
-
   Joystick.Run(run_command.c_str(), mission_file.c_str());
 
   return(0);
