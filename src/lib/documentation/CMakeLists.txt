@@ -4,11 +4,16 @@
 #--------------------------------------------------------
 
 SET(SRC
-  MOOSAppDoc.cpp
+  MOOSAppDocumentation.cpp
 )
 
 SET(HEADERS 
-  MOOSAppDoc.h
+  MOOSAppDocumentation.h
 ) 
 
 ADD_LIBRARY(ensta-documentation ${SRC})
+
+TARGET_LINK_LIBRARIES(ensta-documentation
+  tinyxml2
+  mbutil
+  )

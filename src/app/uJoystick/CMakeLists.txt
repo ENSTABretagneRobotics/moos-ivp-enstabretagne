@@ -6,7 +6,6 @@
 
 SET(SRC
   Joystick.cpp
-  Joystick_Info.cpp
   main.cpp
 )
 

@@ -7,10 +7,9 @@
 
 #include <string>
 #include "MBUtils.h"
-#include "documentation/MOOSAppDoc.h"
+#include "documentation/MOOSAppDocumentation.h"
 #include "ColorParse.h"
 #include "Joystick.h"
-#include "Joystick_Info.h"
 
 using namespace std;
 
@@ -18,17 +17,18 @@ int main(int argc, char *argv[])
 {
   string mission_file;
   string run_command = argv[0];
+  ensta::MOOSAppDocumentation documentation(argv[0]);
 
   for(int i=1; i<argc; i++) {
     string argi = argv[i];
     if((argi=="-v") || (argi=="--version") || (argi=="-version"))
-      ensta::showReleaseInfoAndExit(argv[0]);
+      documentation.showReleaseInfoAndExit();
     else if((argi=="-e") || (argi=="--example") || (argi=="-example"))
-      ensta::showExampleConfigAndExit(argv[0]);
+      documentation.showExampleConfigAndExit();
     else if((argi == "-h") || (argi == "--help") || (argi=="-help"))
-      ensta::showHelpAndExit(argv[0]);
+      documentation.showHelpAndExit();
     else if((argi == "-i") || (argi == "--interface"))
-      ensta::showInterfaceAndExit(argv[0]);
+      documentation.showInterfaceAndExit();
     else if(strEnds(argi, ".moos") || strEnds(argi, ".moos++"))
       mission_file = argv[i];
     else if(strBegins(argi, "--alias="))
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
   }
 
   if(mission_file == "")
-    ensta::showHelpAndExit(argv[0]);
+    documentation.showHelpAndExit();
 
   cout << termColor("green");
   cout << "uJoystick launching as " << run_command << endl;

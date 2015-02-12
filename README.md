@@ -28,6 +28,18 @@ The directory structure for the `moos-ivp-enstabzh` is decribed below:
 | `scripts`        | Directory for script files               |
 | `src`            | Directory for source code (app, lib)     |
 
+Installation
+------------------
+
+[MOOS-IvP](http://oceanai.mit.edu/moos-ivp) (typically v14.7.1) is supposed to be installed. 
+More information available on the official website.
+
+Additional packages are required for building `moos-ivp-enstabzh`:
+```shell
+sudo apt-get install libtinyxml2-dev
+```
+
+
 Build Instructions
 ------------------
 
@@ -76,6 +88,12 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/moos-ivp-enstabzh/lib
 In order for generated IvP Behaviors to be recognized by the IvP Helm, you
 should add the library directory to the `IVP_BEHAVIOR_DIRS` environment 
 variable.
+
+New XML documentation is also available by command-line (e.g. typing `uJoystick -e`). 
+This can work by specifying the `MOOS_IVP_ENSTABZH_PATH` environment variable. For instance:
+```shell
+export MOOS_IVP_ENSTABZH_PATH="~/moos-ivp-enstabzh"
+```
 
 Generate a new MOOS Application
 -------------------------------
