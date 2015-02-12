@@ -106,3 +106,22 @@ GenMOOSApp_ENSTA SimModem u "John Doe"
 ```
 
 Do not forget to add your new application to the CMake configuration file: `./src/app/CMakeLists.txt`
+
+Documentation
+-------------
+
+MOOSApp documentation is available by command line:
+
+```shell
+Options:                                                        
+  --alias=<ProcessName>                                      
+      Launch the MOOSApp with the given process name.
+  --example, -e                                                 
+      Display example MOOS configuration block.                 
+  --help, -h                                                    
+      Display this help message.                                
+  --interface, -i                                               
+      Display MOOS publications and subscriptions.              
+  --version,-v                                                  
+      Display all information about the MOOSApp.
+```
