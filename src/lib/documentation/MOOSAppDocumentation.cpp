@@ -48,9 +48,9 @@ namespace ensta
   }
 
   //----------------------------------------------------------------
-  // Procedure: showSynopsis
+  // Procedure: getRepositoryPath
 
-  void MOOSAppDocumentation::loadXML()
+  string MOOSAppDocumentation::getRepositoryPath()
   {
     // Test if environment value is set
     char* repository_path = getenv(MOOS_IVP_ENSTABZH_PATH);
@@ -71,9 +71,18 @@ namespace ensta
       exit(0);
     }
 
-    string doc_path = string(repository_path) + "/src/app/" + m_moosapp_name + "/" + m_moosapp_name + ".xml";
+    return string(repository_path);
+  }
 
-    // Test file eistance with ifstream
+  //----------------------------------------------------------------
+  // Procedure: showSynopsis
+
+  void MOOSAppDocumentation::loadXML()
+  {
+    string repository_path = getRepositoryPath();
+    string doc_path = repository_path + "/src/app/" + m_moosapp_name + "/" + m_moosapp_name + ".xml";
+
+    // Test file existance with ifstream
     ifstream xmlfile(doc_path.c_str());
     if(!xmlfile)
     {
@@ -282,8 +291,26 @@ namespace ensta
   {
     showTitleSection("EXAMPLE MOOS CONFIGURATION");
 
-    // todo
+    string repository_path = getRepositoryPath();
+    string example_path = repository_path + "/src/app/" + m_moosapp_name + "/" + m_moosapp_name + ".moos";
 
+    // Test file existance with ifstream
+    ifstream moosfile(example_path.c_str());
+    if(!moosfile || !moosfile.is_open())
+    {
+      red("  ERROR: unable to load " + m_moosapp_name + ".moos example file.");
+      blk("  Please check file existance at:");
+      blk("  " + example_path + "\n");
+      exit(0);
+    }
+
+    // Write .moos configuration file
+    string line;
+    while(getline(moosfile, line))
+      blk(line);
+
+    blk("");
+    moosfile.close();
     exit(0);
   }
 

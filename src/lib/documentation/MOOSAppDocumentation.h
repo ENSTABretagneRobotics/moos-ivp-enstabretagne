@@ -52,6 +52,7 @@ namespace ensta
       void showTitleSection(std::string title_section);
 
     protected:
+      std::string getRepositoryPath();
       void loadXML();
       bool parseXML(std::string &item_error);
       bool xmlToMoosvar(tinyxml2::XMLElement *xmlmoosvar, MOOSVarDescription &moosvar, std::string &item_error);
