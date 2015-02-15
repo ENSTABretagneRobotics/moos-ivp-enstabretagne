@@ -209,20 +209,20 @@ void RazorIMU::onRazorData(const float data[])
   {
     case RazorAHRS::YAW_PITCH_ROLL:
       m_yaw = data[0];
-      m_pitch = data[1];
-      m_roll = data[2];
+      m_pitch = data[2];
+      m_roll = data[1];
       break;
 
     case RazorAHRS::ACC_MAG_GYR_RAW:
     case RazorAHRS::ACC_MAG_GYR_CALIBRATED:
-      m_mag_x = data[3];
-      m_mag_y = data[4];
+      m_mag_x = data[4];
+      m_mag_y = data[3];
       m_mag_z = data[5];
-      m_acc_x = data[0];
-      m_acc_y = data[1];
+      m_acc_x = data[1];
+      m_acc_y = data[0];
       m_acc_z = data[2];
-      m_gyr_x = data[6];
-      m_gyr_y = data[7];
+      m_gyr_x = data[7];
+      m_gyr_y = data[6];
       m_gyr_z = data[8];
       break;
   }

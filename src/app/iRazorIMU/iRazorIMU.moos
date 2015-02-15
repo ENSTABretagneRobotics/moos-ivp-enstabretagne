@@ -8,9 +8,35 @@ ProcessConfig = iRazorIMU
 
   SERIAL_PORT = /dev/ttyUSB0
 
-  MODE = ACC_MAG_GYR_RAW // default value
+  MODE = ACC_MAG_GYR_CALIBRATED
   // MODE values:
   //    YAW_PITCH_ROLL
   //    ACC_MAG_GYR_RAW
   //    ACC_MAG_GYR_CALIBRATED
+}
+
+ProcessConfig = uXMS
+{
+  AppTick         = 4
+  CommsTick       = 4
+
+  var             = IMU_YAW, IMU_PITCH, IMU_ROLL
+  var             = IMU_ACC_X, IMU_ACC_Y, IMU_ACC_Z
+  var             = IMU_MAG_X, IMU_MAG_Y, IMU_MAG_Z
+  var             = IMU_GYR_X, IMU_GYR_Y, IMU_GYR_Z
+  source          = iRazorIMU
+
+  display_virgins = false
+  display_time    = true
+  display_all     = false
+  display_source  = false
+  display_aux_source = false
+
+  colormap        = IMU_YAW, red
+  colormap        = IMU_PITCH, green
+  colormap        = IMU_ROLL, blue
+
+  colormap        = IMU_ACC_, red
+  colormap        = IMU_MAG_, green
+  colormap        = IMU_GYR_, blue
 }
