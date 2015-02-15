@@ -22,7 +22,7 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
   ADD_SUBDIRECTORY(uJoystick)
 
 # 'i' apps
-  # ADD_SUBDIRECTORY(iModem)
+  ADD_SUBDIRECTORY(iRazorIMU)
 
 
 ##############################################################################

@@ -1,0 +1,16 @@
+//------------------------------------------------
+// iRazorIMU config block
+
+ProcessConfig = iRazorIMU
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  SERIAL_PORT = /dev/ttyUSB0
+
+  MODE = ACC_MAG_GYR_RAW // default value
+  // MODE values:
+  //    YAW_PITCH_ROLL
+  //    ACC_MAG_GYR_RAW
+  //    ACC_MAG_GYR_CALIBRATED
+}

@@ -65,13 +65,18 @@ class ${1} : public AppCastingMOOSApp
     bool OnConnectToServer();
     bool OnStartUp();
 
-  protected: // Standard AppCastingMOOSApp function to overload 
+  protected: // Standard AppCastingMOOSApp functions to overload 
     bool buildReport();
     void registerVariables();
 
+  protected: // ${1} functions
+
+
   private: // Configuration variables
 
+
   private: // State variables
+    
 
 };
 
@@ -196,7 +201,7 @@ bool ${1}::OnNewMail(MOOSMSG_LIST &NewMail)
       reportRunWarning("Unhandled Mail: " + key);
   }
 
-  return(true);
+  return true;
 }
 
 //---------------------------------------------------------
@@ -205,7 +210,7 @@ bool ${1}::OnNewMail(MOOSMSG_LIST &NewMail)
 bool ${1}::OnConnectToServer()
 {
   registerVariables();
-  return(true);
+  return true;
 }
 
 //---------------------------------------------------------
@@ -219,7 +224,7 @@ bool ${1}::Iterate()
   // Do your thing here!
 
   AppCastingMOOSApp::PostReport();
-  return(true);
+  return true;
 }
 
 //---------------------------------------------------------
@@ -260,7 +265,7 @@ bool ${1}::OnStartUp()
   }
 
   registerVariables();  
-  return(true);
+  return true;
 }
 
 //---------------------------------------------------------
@@ -289,7 +294,7 @@ bool ${1}::buildReport()
     m_msgs << actab.getFormattedString();
   #endif
 
-  return(true);
+  return true;
 }
 EOF
 
@@ -349,4 +354,5 @@ cat >> ${2}${1}.xml <<EOF
 EOF
 
 
-echo "$2${1} generated"
+echo "$2${1} generated."
+echo "Please update src/app/CMakeLists.txt file."
