@@ -16,31 +16,79 @@
 
    <documentation>
       <synopsis>
-        ...
+        The iRazorIMU application is an interface to the Inertial Measurement Unit (Razhor, from Sparkfun). In the ACC_MAG_GYR_RAW or ACC_MAG_GYR_CALIBRATED modes, it publishes magnetic and inertial values such as linear accelerations, angular speeds and magnetic values. In the YAW_PITCH_ROLL mode, it will only publish yaw, pitch and roll values.
       </synopsis>
       <interface>
          <subscriptions>
-            <!--
-            <moosvar>
-               <name>EXAMPLE_VAR_IN</name>
-               <type>string</type>
-               <info>description of the MOOSVar</info>
-            </moosvar>
-            -->
          </subscriptions>
          <publications>
-            <!--
+            <!-- if YAW_PITCH_ROLL MODE: -->
             <moosvar>
-               <name>EXAMPLE_VAR_OUT</name>
-               <type>string</type>
-               <info>description of the MOOSVar</info>
+               <name>IMU_YAW</name>
+               <type>double</type>
+               <info>angle around Z axis</info>
             </moosvar>
-            -->
+            <moosvar>
+               <name>IMU_PITCH</name>
+               <type>double</type>
+               <info>angle around Y axis</info>
+            </moosvar>
+            <moosvar>
+               <name>IMU_ROLL</name>
+               <type>double</type>
+               <info>angle around X axis</info>
+            </moosvar>
+            <!-- if ACC_MAG_GYR_{RAW|CALIBRATED} MODE: -->
+            <moosvar>
+               <name>IMU_ACC_X</name>
+               <type>double</type>
+               <info>acceleration along X axis</info>
+            </moosvar>
+            <moosvar>
+               <name>IMU_ACC_Y</name>
+               <type>double</type>
+               <info>acceleration along Y axis</info>
+            </moosvar>
+            <moosvar>
+               <name>IMU_ACC_Z</name>
+               <type>double</type>
+               <info>acceleration along Z axis</info>
+            </moosvar>
+            <moosvar>
+               <name>IMU_MAG_X</name>
+               <type>double</type>
+               <info>magnetic value along X axis</info>
+            </moosvar>
+            <moosvar>
+               <name>IMU_MAG_Y</name>
+               <type>double</type>
+               <info>magnetic value along Y axis</info>
+            </moosvar>
+            <moosvar>
+               <name>IMU_MAG_Z</name>
+               <type>double</type>
+               <info>magnetic value along Z axis</info>
+            </moosvar>
+            <moosvar>
+               <name>IMU_GYR_X</name>
+               <type>double</type>
+               <info>angular speed around X axis</info>
+            </moosvar>
+            <moosvar>
+               <name>IMU_GYR_Y</name>
+               <type>double</type>
+               <info>angular speed around Y axis</info>
+            </moosvar>
+            <moosvar>
+               <name>IMU_GYR_Z</name>
+               <type>double</type>
+               <info>angular speed around Z axis</info>
+            </moosvar>
          </publications>
       </interface>
       <!-- if there is a bug or a special fact to know.. -->
       <optional-comments>
-         No comment.
+         This application is based on the Peter Bartz's software, available on Github.
       </optional-comments>
       <!-- if something can be improved -->
       <suggested-improvements>
