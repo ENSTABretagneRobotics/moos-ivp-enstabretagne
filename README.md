@@ -9,6 +9,27 @@ Autonomy system](http://oceanai.mit.edu/moos-ivp). This includes MOOS applicatio
 IvP behaviors and mission files for [ENSTA Bretagne](http://www.ensta-bretagne.fr) 
 Robotics purposes.
 
+Documentation
+-------------
+
+MOOSApp documentation is available by command line:
+
+```shell
+Options:
+  --alias=<ProcessName>
+      Launch the MOOSApp with the given process name.
+  --example, -e
+      Display example MOOS configuration block.
+  --help, -h
+      Display this help message.
+  --interface, -i
+      Display MOOS publications and subscriptions.
+  --version,-v
+      Display all information about the MOOSApp.
+```
+
+Complete documentation can also be found in `doc/index.html`. [**Click to access**](http://rawgit.com/ENSTABretagneRobotics/moos-ivp-enstabzh/master/doc/index.html).
+
 Directory Structure
 -------------------
 
@@ -106,24 +127,3 @@ GenMOOSApp_ENSTA SimModem u "John Doe"
 ```
 
 Do not forget to add your new application to the CMake configuration file: `./src/app/CMakeLists.txt`
-
-Documentation
--------------
-
-MOOSApp documentation is also available by command line:
-
-```shell
-Options:                                                        
-  --alias=<ProcessName>                                      
-      Launch the MOOSApp with the given process name.
-  --example, -e                                                 
-      Display example MOOS configuration block.                 
-  --help, -h                                                    
-      Display this help message.                                
-  --interface, -i                                               
-      Display MOOS publications and subscriptions.              
-  --version,-v                                                  
-      Display all information about the MOOSApp.
-```
-
-Complete documentation can also be found in `doc/index.html`
