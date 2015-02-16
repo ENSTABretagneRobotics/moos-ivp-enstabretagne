@@ -1,0 +1,154 @@
+/*
+
+  MOOS-IvP-ENSTABZH Documentation stylesheet
+  Documentation files rendering
+
+  ORGN: ENSTA Bretagne
+  AUTH: Simon Rohou
+  DATE: 2015
+
+*/
+
+xmldoc
+{
+  background-color: #EBEBEB;
+  font-family: "lato", "helvetica neue", arial, helvetica, sans-serif;
+  color: #2F2F2F;
+}
+
+name, organization, date, authors, licence, 
+synopsis, subscriptions, publications, optional-comments, suggested-improvements
+{
+  display: block;
+  font-weight: bold;
+}
+
+moosapp
+{
+  width: 60%;
+  margin: 0 auto;
+  padding: 3% 5%;
+  background-color: #fff; display: block;
+}
+
+moosapp *
+{
+  padding: 5px 0;
+}
+
+name
+{
+  font-size: 2em;
+  font-weight: bold;
+  border-bottom: 1px dashed #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+organization:before, date:before, authors:before, licence:before, 
+synopsis:before, subscriptions:before, publications:before, optional-comments:before, suggested-improvements:before
+{
+  font-weight: bold;
+}
+
+organization, date, authors, licence, 
+synopsis, subscriptions, publications, optional-comments, suggested-improvements
+{
+  font-weight: normal;
+}
+
+organization:before
+{
+  content: "Organization: ";
+}
+
+date:before
+{
+  content: "Date: ";
+}
+
+authors:before
+{
+  content: "Authors: ";
+}
+
+author:before
+{
+  content: "- ";
+}
+
+author, moosvar
+{
+  display: block;
+  margin-left: 10px;
+  font-weight: normal;
+}
+
+moosvar varname
+{
+  font-weight: bold;
+}
+
+moosvar vartype:before
+{
+  content: "(";
+  text-decoration: italic;
+}
+
+moosvar vartype:after
+{
+  content: ")";
+}
+
+vartype, vartype:before, vartype:after
+{
+  font-style: italic;
+  font-size: 0.8em;
+}
+
+moosvar varinfo:before
+{
+  content: ": ";
+}
+
+licence:before
+{
+  content: "Licence: ";
+}
+
+synopsis:before, optional-comments:before, suggested-improvements:before, publications:before, subscriptions:before
+{
+  display: block;
+  margin-left: -15px;
+}
+
+synopsis, optional-comments, suggested-improvements, publications, subscriptions
+{
+  margin: 10px 0;
+  margin-left: 15px;
+}
+
+synopsis:before
+{
+  content: "Synopsis: ";
+}
+
+subscriptions:before
+{
+  content: "Subscriptions: ";
+}
+
+publications:before
+{
+  content: "Publications: ";
+}
+
+optional-comments:before
+{
+  content: "Optional comments: ";
+}
+
+suggested-improvements:before
+{
+  content: "Suggested improvements: ";
+}

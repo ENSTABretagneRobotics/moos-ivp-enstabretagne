@@ -300,57 +300,58 @@ EOF
 
 
 cat >> ${2}${1}.xml <<EOF
-<!-- This file contains ${2}${1} documentation -->
-
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains uJoystick documentation -->
+<?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?> 
+<xmldoc>
+  <moosapp>
 
-<moosapp>
+     <info>
+        <name>${2}${1}</name>
+        <organization>ENSTA Bretagne</organization>
+        <date>2015</date>
+        <authors>
+           <author>${3}</author>
+        </authors>
+        <licence>MIT</licence>
+     </info>
 
-   <info>
-      <name>${2}${1}</name>
-      <organization>ENSTA Bretagne</organization>
-      <date>2015</date>
-      <authors>
-         <author>${3}</author>
-      </authors>
-      <licence>MIT</licence>
-   </info>
+     <documentation>
+        <synopsis>
+          ...
+        </synopsis>
+        <interface>
+           <subscriptions>
+              <!--
+              <moosvar>
+                 <varname>EXAMPLE_VAR_IN</varname>
+                 <vartype>string</vartype>
+                 <varinfo>description of the MOOSVar</varinfo>
+              </moosvar>
+              -->
+           </subscriptions>
+           <publications>
+              <!--
+              <moosvar>
+                 <varname>EXAMPLE_VAR_OUT</varname>
+                 <vartype>string</vartype>
+                 <varinfo>description of the MOOSVar</varinfo>
+              </moosvar>
+              -->
+           </publications>
+        </interface>
+        <!-- if there is a bug or a special fact to know.. -->
+        <optional-comments>
+           No comment.
+        </optional-comments>
+        <!-- if something can be improved -->
+        <suggested-improvements>
+           No suggested improvements.
+        </suggested-improvements>
+     </documentation>
 
-   <documentation>
-      <synopsis>
-        ...
-      </synopsis>
-      <interface>
-         <subscriptions>
-            <!--
-            <moosvar>
-               <name>EXAMPLE_VAR_IN</name>
-               <type>string</type>
-               <info>description of the MOOSVar</info>
-            </moosvar>
-            -->
-         </subscriptions>
-         <publications>
-            <!--
-            <moosvar>
-               <name>EXAMPLE_VAR_OUT</name>
-               <type>string</type>
-               <info>description of the MOOSVar</info>
-            </moosvar>
-            -->
-         </publications>
-      </interface>
-      <!-- if there is a bug or a special fact to know.. -->
-      <optional-comments>
-         No comment.
-      </optional-comments>
-      <!-- if something can be improved -->
-      <suggested-improvements>
-         No suggested improvements.
-      </suggested-improvements>
-   </documentation>
-
-</moosapp>
+  </moosapp>
+</xmldoc>
 EOF
 
 

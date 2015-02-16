@@ -110,7 +110,7 @@ Do not forget to add your new application to the CMake configuration file: `./sr
 Documentation
 -------------
 
-MOOSApp documentation is available by command line:
+MOOSApp documentation is also available by command line:
 
 ```shell
 Options:                                                        
@@ -125,3 +125,5 @@ Options:
   --version,-v                                                  
       Display all information about the MOOSApp.
 ```
+
+Complete documentation can also be found in `doc/index.html`
