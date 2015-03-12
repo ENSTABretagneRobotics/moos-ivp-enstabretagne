@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains iModem documentation -->
+<?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?>
+<xmldoc>
+  <moosapp>
+
+     <info>
+        <name>iModem</name>
+        <organization>ENSTA Bretagne</organization>
+        <date>2015</date>
+        <authors>
+           <author>Clément Aubry</author>
+        </authors>
+        <licence>MIT</licence>
+     </info>
+
+     <documentation>
+        <synopsis>
+          This App is an interface to Tritech Micron Data Modem.
+          You can :
+            *Send/receive messages from/to other Tritech Micron Data Modem that are configured. Communication is allowed between master and slave, not between two masters or between two slaves.
+            * Configure a modem as master/slave.
+
+          To configure a modem (to master for the example) :
+            Send MODEM_CONFIGURATION_REQUIRED="master" to MOOSDB.
+            Reboot the modem with a magnetic field (below Tritech 24V DC sticker near "main" port of the modem) to put it in config mode.
+            The magnet could be powered off when the app publish MODEM_IS_ALIVE with value "true".
+            Let the app do the job.
+            When the app send the boolean variable "MODEM_CONFIGURATION_COMPLETE", configuration sequence is complete an the modem can be rebooted without the magnet.
+        </synopsis>
+        <interface>
+           <subscriptions>
+              <moosvar>
+                 <varname>MODEM_CONFIGURATION_REQUIRED</varname>
+                 <vartype>string</vartype>
+                 <varinfo>A string that signal to iModem that we need to change modem configuration. The role asked has to be contained in that string ("master" or "slave")</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>MODEM_SEND_MESSAGE</varname>
+                 <vartype>string</vartype>
+                 <varinfo>A message we want to send by the modem. Only works in communiction mode.</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>MODEM_GET_ROLE</varname>
+                 <vartype>string</vartype>
+                 <varinfo>A null string to ask the app to publish current modem role</varinfo>
+              </moosvar>
+           </subscriptions>
+           <publications>
+              <moosvar>
+                 <varname>MODEM_ROLE</varname>
+                 <vartype>string</vartype>
+                 <varinfo>A string that contain the role of the modem. Sent when receiving MODEM_GET_ROLE new mail</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>MODEM_EMISSION_TIME</varname>
+                 <vartype>MOOSTime</vartype>
+                 <varinfo>The MOOSTime when emmiting a message from the modem.</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>MODEM_MESSAGE_SENT</varname>
+                 <vartype>string</vartype>
+                 <varinfo>A message we sent to the modem.</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>MODEM_RECEPTION_TIME</varname>
+                 <vartype>MOOSTime</vartype>
+                 <varinfo>The MOOSTime when receiving a message from the modem.</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>MODEM_MESSAGE_RECEIVED</varname>
+                 <vartype>string</vartype>
+                 <varinfo>A message we receive by the modem.</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>MODEM_IS_ALIVE</varname>
+                 <vartype>bool</vartype>
+                 <varinfo>A boolean setted to true when the app receive some mtAlive messages, means that the magnet powering up process is ok (the magnet can be powered off when receiving this message).</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>MODEM_CONFIGURATION_COMPLETE</varname>
+                 <vartype>bool</vartype>
+                 <varinfo>A boolean setted to true when the configuration process is complete.</varinfo>
+              </moosvar>
+           </publications>
+        </interface>
+        <!-- if there is a bug or a special fact to know.. -->
+        <optional-comments>
+           No comment.
+        </optional-comments>
+        <!-- if something can be improved -->
+        <suggested-improvements>
+           No suggested improvements.
+        </suggested-improvements>
+     </documentation>
+
+  </moosapp>
+</xmldoc>
