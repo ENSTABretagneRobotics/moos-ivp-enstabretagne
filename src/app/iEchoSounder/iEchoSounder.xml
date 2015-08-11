@@ -16,7 +16,7 @@
 
      <documentation>
         <synopsis>
-          ...
+          Read the range value from the echo-sounder tritech sensor.
         </synopsis>
         <interface>
            <subscriptions>
@@ -29,13 +29,11 @@
               -->
            </subscriptions>
            <publications>
-              <!--
               <moosvar>
-                 <varname>EXAMPLE_VAR_OUT</varname>
-                 <vartype>string</vartype>
-                 <varinfo>description of the MOOSVar</varinfo>
+                 <varname>ECHOSOUNDER_RANGE</varname>
+                 <vartype>double</vartype>
+                 <varinfo>the range value, read from the sensor</varinfo>
               </moosvar>
-              -->
            </publications>
         </interface>
         <!-- if there is a bug or a special fact to know.. -->
@@ -44,7 +42,9 @@
         </optional-comments>
         <!-- if something can be improved -->
         <suggested-improvements>
-           No suggested improvements.
+          - improve message errors (returned values)
+          - auto-detection of the serial port
+          - data filtering
         </suggested-improvements>
      </documentation>
 
