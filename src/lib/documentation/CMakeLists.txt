@@ -11,9 +11,9 @@ SET(HEADERS
   MOOSAppDocumentation.h
 ) 
 
-ADD_LIBRARY(ensta-documentation ${SRC})
+ADD_LIBRARY(xml-documentation ${SRC})
 
-TARGET_LINK_LIBRARIES(ensta-documentation
+TARGET_LINK_LIBRARIES(xml-documentation
   tinyxml2
   mbutil
   )

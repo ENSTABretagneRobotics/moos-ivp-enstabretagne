@@ -1,3 +1,10 @@
+/************************************************************/
+/*    FILE: main.cpp
+/*    ORGN: Toutatis AUVs - ENSTA Bretagne
+/*    AUTH: Clément Aubry (from V. Drevelle iSonar App)
+/*    DATE: 2015
+/************************************************************/
+
 #include <string>
 #include "MBUtils.h"
 #include "documentation/MOOSAppDocumentation.h"
@@ -10,7 +17,7 @@ int main(int argc, char *argv[])
 {
   string mission_file;
   string run_command = argv[0];
-  ensta::MOOSAppDocumentation documentation(argv[0]);
+  xmldoc::MOOSAppDocumentation documentation(argv[0]);
 
   for(int i=1; i<argc; i++) {
     string argi = argv[i];

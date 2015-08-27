@@ -1,6 +1,7 @@
 #--------------------------------------------------------
-# The CMakeLists.txt for:                       iModem
-# Author(s):                              Clément Aubry (from V.Drevelle iSonar App (url?))
+# The CMakeLists.txt for: iModem
+# Toutatis AUVs - ENSTA Bretagne
+# Author(s): Clément Aubry (from V.Drevelle iSonar App (url?))
 #--------------------------------------------------------
 
 SET(SRC
@@ -15,7 +16,7 @@ ADD_EXECUTABLE(iModem ${SRC})
 
 TARGET_LINK_LIBRARIES(iModem
    ${MOOS_LIBRARIES}
-   ensta-documentation
+   xml-documentation
    apputil
    mbutil
    m

@@ -1,6 +1,6 @@
 /****************************************************************/
 /*    FILE: MOOSAppDoc.cpp
-/*    ORGN: ENSTA Bretagne
+/*    ORGN: Toutatis AUVs - ENSTA Bretagne
 /*    AUTH: Simon Rohou
 /*    DATE: 2015
 /****************************************************************/
@@ -15,7 +15,7 @@
 using namespace std;
 using namespace tinyxml2;
 
-namespace ensta
+namespace xmldoc
 {
   //---------------------------------------------------------
   // Constructor
@@ -53,19 +53,19 @@ namespace ensta
   string MOOSAppDocumentation::getRepositoryPath()
   {
     // Test if environment value is set
-    char* repository_path = getenv(MOOS_IVP_ENSTABZH_PATH);
+    char* repository_path = getenv(MOOS_IVP_TOUTATIS_PATH);
     if(repository_path == NULL)
     {
-      red("  ERROR: unable to read " + string(MOOS_IVP_ENSTABZH_PATH) + " environment value.");
+      red("  ERROR: unable to read " + string(MOOS_IVP_TOUTATIS_PATH) + " environment value.");
       blk("  Please update your configuration.");
       blk("  For Linux users: add an EXPORT in your ~/.bashrc file.\n");
       exit(0);
     }
 
-    // Test if MOOS_IVP_ENSTABZH_PATH is an absolute path
+    // Test if MOOS_IVP_TOUTATIS_PATH is an absolute path
     if(repository_path[0] != '/')
     {
-      red("  ERROR: " + string(MOOS_IVP_ENSTABZH_PATH) + " is not an absolute path.");
+      red("  ERROR: " + string(MOOS_IVP_TOUTATIS_PATH) + " is not an absolute path.");
       blk("  Please update your configuration.");
       blk("  For Linux users: check the EXPORT in your ~/.bashrc file.\n");
       exit(0);
