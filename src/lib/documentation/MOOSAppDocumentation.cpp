@@ -58,7 +58,8 @@ namespace xmldoc
     {
       red("  ERROR: unable to read " + string(MOOS_IVP_TOUTATIS_PATH) + " environment value.");
       blk("  Please update your configuration.");
-      blk("  For Linux users: add an EXPORT in your ~/.bashrc file.\n");
+      blk("  For Linux users: add an EXPORT in your ~/.bashrc file. Ex:");
+      blk("    export MOOS_IVP_PROJECTNAME_PATH=\"/home/user/moos-ivp-projectname\"\n");
       exit(0);
     }
 
@@ -67,7 +68,8 @@ namespace xmldoc
     {
       red("  ERROR: " + string(MOOS_IVP_TOUTATIS_PATH) + " is not an absolute path.");
       blk("  Please update your configuration.");
-      blk("  For Linux users: check the EXPORT in your ~/.bashrc file.\n");
+      blk("  For Linux users: check the EXPORT in your ~/.bashrc file. Ex:");
+      blk("    export MOOS_IVP_PROJECTNAME_PATH=\"/home/user/moos-ivp-projectname\"\n");
       exit(0);
     }
 
@@ -92,12 +94,21 @@ namespace xmldoc
       exit(0);
     }
 
-    // Test XML validity
-    string item_error = "";
+    // Test XML global validity
     m_xml_doc = new XMLDocument();
-    if(m_xml_doc->LoadFile(doc_path.c_str()) != XML_NO_ERROR || !parseXML(item_error))
+    if(m_xml_doc->LoadFile(doc_path.c_str()) != XML_NO_ERROR)
     {
       red("  ERROR: unable to load " + m_moosapp_name + ".xml documentation file.");
+      blk("  Please check XML validity at:");
+      blk("  " + doc_path + "\n");
+      exit(0);
+    }
+
+    // Test XML items validity
+    string item_error = "";
+    if(!parseXML(item_error))
+    {
+      red("  ERROR: parsing " + m_moosapp_name + ".xml documentation file.");
       if(item_error != "")
         blk("  Unable to read <" + item_error + ">");
       blk("  Please check XML validity at:");

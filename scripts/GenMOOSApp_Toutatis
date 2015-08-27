@@ -355,4 +355,4 @@ cat >> ${2}${1}.xml <<EOF
 EOF
 
 echo "$2${1} generated."
-echo "Please update src/app/CMakeLists.txt file."
+echo "Please update src/app/CMakeLists.txt and doc/index.html files."

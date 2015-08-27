@@ -9,7 +9,7 @@ Autonomy system](http://oceanai.mit.edu/moos-ivp). This includes MOOS applicatio
 IvP behaviors and mission files for AUVs Toutatis of [ENSTA Bretagne](http://www.ensta-bretagne.fr).
 
 
-Documentation
+[Documentation](http://rawgit.com/ENSTABretagneRobotics/moos-ivp-toutatis/master/doc/index.html)
 -------------
 
 MOOSApp documentation is available by command line:
@@ -105,7 +105,7 @@ to be launched from `pAntler`.
 Linux users can edit `~/.bashrc` configuration file by adding at the end:
 ```shell
 export PATH=$PATH:~/moos-ivp-toutatis/bin
-export PATH=$PATH:~/moos-ivp-toutatis/lib
+export PATH=$PATH:~/moos-ivp-toutatis/scripts
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/moos-ivp-toutatis/lib
 ```
 
@@ -114,10 +114,15 @@ should add the library directory to the `IVP_BEHAVIOR_DIRS` environment
 variable.
 
 New XML documentation is also available by command-line (e.g. typing `uJoystick -e`). 
-This can work by specifying the `MOOS_IVP_TOUTATIS_PATH` environment variable. For instance:
+This can work by specifying the `MOOS_IVP_TOUTATIS_PATH` environment variable (Linux users, update your `~/.bashrc`). For instance:
 ```shell
-export MOOS_IVP_TOUTATIS_PATH="~/moos-ivp-toutatis"
+export MOOS_IVP_TOUTATIS_PATH="/home/myname/moos-ivp-toutatis"
 ```
+Linux users may need to run, in the current terminal:
+```shell
+source ~/.bashrc
+```
+
 
 Generate a new MOOS Application
 -------------------------------
@@ -129,4 +134,4 @@ cd ./src/app
 GenMOOSApp_Toutatis SimModem u "John Doe"
 ```
 
-Do not forget to add your new application to the CMake configuration file: `./src/app/CMakeLists.txt`
+Do not forget to add your new application to the CMake configuration file: `./src/app/CMakeLists.txt` and to update the main documentation page : `./doc/index.html`.
