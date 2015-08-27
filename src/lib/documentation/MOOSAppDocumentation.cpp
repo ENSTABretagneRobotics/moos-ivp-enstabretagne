@@ -1,6 +1,6 @@
 /****************************************************************/
 /*    FILE: MOOSAppDoc.cpp
-/*    ORGN: ENSTA Bretagne
+/*    ORGN: Toutatis AUVs - ENSTA Bretagne
 /*    AUTH: Simon Rohou
 /*    DATE: 2015
 /****************************************************************/
@@ -15,7 +15,7 @@
 using namespace std;
 using namespace tinyxml2;
 
-namespace ensta
+namespace xmldoc
 {
   //---------------------------------------------------------
   // Constructor
@@ -53,21 +53,23 @@ namespace ensta
   string MOOSAppDocumentation::getRepositoryPath()
   {
     // Test if environment value is set
-    char* repository_path = getenv(MOOS_IVP_ENSTABZH_PATH);
+    char* repository_path = getenv(MOOS_IVP_TOUTATIS_PATH);
     if(repository_path == NULL)
     {
-      red("  ERROR: unable to read " + string(MOOS_IVP_ENSTABZH_PATH) + " environment value.");
+      red("  ERROR: unable to read " + string(MOOS_IVP_TOUTATIS_PATH) + " environment value.");
       blk("  Please update your configuration.");
-      blk("  For Linux users: add an EXPORT in your ~/.bashrc file.\n");
+      blk("  For Linux users: add an EXPORT in your ~/.bashrc file. Ex:");
+      blk("    export MOOS_IVP_PROJECTNAME_PATH=\"/home/user/moos-ivp-projectname\"\n");
       exit(0);
     }
 
-    // Test if MOOS_IVP_ENSTABZH_PATH is an absolute path
+    // Test if MOOS_IVP_TOUTATIS_PATH is an absolute path
     if(repository_path[0] != '/')
     {
-      red("  ERROR: " + string(MOOS_IVP_ENSTABZH_PATH) + " is not an absolute path.");
+      red("  ERROR: " + string(MOOS_IVP_TOUTATIS_PATH) + " is not an absolute path.");
       blk("  Please update your configuration.");
-      blk("  For Linux users: check the EXPORT in your ~/.bashrc file.\n");
+      blk("  For Linux users: check the EXPORT in your ~/.bashrc file. Ex:");
+      blk("    export MOOS_IVP_PROJECTNAME_PATH=\"/home/user/moos-ivp-projectname\"\n");
       exit(0);
     }
 
@@ -92,12 +94,21 @@ namespace ensta
       exit(0);
     }
 
-    // Test XML validity
-    string item_error = "";
+    // Test XML global validity
     m_xml_doc = new XMLDocument();
-    if(m_xml_doc->LoadFile(doc_path.c_str()) != XML_NO_ERROR || !parseXML(item_error))
+    if(m_xml_doc->LoadFile(doc_path.c_str()) != XML_NO_ERROR)
     {
       red("  ERROR: unable to load " + m_moosapp_name + ".xml documentation file.");
+      blk("  Please check XML validity at:");
+      blk("  " + doc_path + "\n");
+      exit(0);
+    }
+
+    // Test XML items validity
+    string item_error = "";
+    if(!parseXML(item_error))
+    {
+      red("  ERROR: parsing " + m_moosapp_name + ".xml documentation file.");
       if(item_error != "")
         blk("  Unable to read <" + item_error + ">");
       blk("  Please check XML validity at:");

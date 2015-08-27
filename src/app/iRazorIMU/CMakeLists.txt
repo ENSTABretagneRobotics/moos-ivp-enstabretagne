@@ -1,6 +1,6 @@
 #--------------------------------------------------------
 # The CMakeLists.txt for: iRazorIMU
-# ENSTA Bretagne
+# Toutatis AUVs - ENSTA Bretagne
 # Author(s): Simon Rohou
 #--------------------------------------------------------
 
@@ -17,7 +17,7 @@ ADD_EXECUTABLE(iRazorIMU ${SRC})
 
 TARGET_LINK_LIBRARIES(iRazorIMU
    ${MOOS_LIBRARIES}
-   ensta-documentation
+   xml-documentation
    apputil
    mbutil
    m

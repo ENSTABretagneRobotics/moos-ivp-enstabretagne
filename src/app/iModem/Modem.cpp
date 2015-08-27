@@ -1,3 +1,10 @@
+/************************************************************/
+/*    FILE: Modem.cpp
+/*    ORGN: Toutatis AUVs - ENSTA Bretagne
+/*    AUTH: Clément Aubry (from V. Drevelle iSonar App)
+/*    DATE: 2015
+/************************************************************/
+
 #include <iterator>
 #include "MBUtils.h"
 #include "Modem.h"

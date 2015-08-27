@@ -1,7 +1,7 @@
 #===========================================================================
-# FILE:  moos-ivp-enstabzh/CMakeLists.txt
+# FILE:  moos-ivp-toutatis/CMakeLists.txt
 # DATE:  2015
-# INFO:  Top-level CMakeLists.txt file for the moos-ivp-enstabzh project
+# INFO:  Top-level CMakeLists.txt file for the moos-ivp-toutatis project
 # NAME:  Maintained by Mike Benjamin - Original setup by Christian Convey
 #        Chris Gagner, and tips borrowed from Dave Billin
 #===========================================================================

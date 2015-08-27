@@ -1,15 +1,15 @@
-MOOS-IvP-ENSTABZH
+MOOS-IvP-TOUTATIS
 =================
 
 Introduction
 ------------
 
-The `moos-ivp-enstabzh` repository is an extension of the [MOOS-IvP
+The `moos-ivp-toutatis` repository is an extension of the [MOOS-IvP
 Autonomy system](http://oceanai.mit.edu/moos-ivp). This includes MOOS applications, 
-IvP behaviors and mission files for [ENSTA Bretagne](http://www.ensta-bretagne.fr) 
-Robotics purposes.
+IvP behaviors and mission files for AUVs Toutatis of [ENSTA Bretagne](http://www.ensta-bretagne.fr).
 
-Documentation
+
+[Documentation](http://rawgit.com/ENSTABretagneRobotics/moos-ivp-toutatis/master/doc/index.html)
 -------------
 
 MOOSApp documentation is available by command line:
@@ -28,18 +28,19 @@ Options:
       Display all information about the MOOSApp.
 ```
 
-Complete documentation can also be found in `doc/index.html`. [**Click to access**](http://rawgit.com/ENSTABretagneRobotics/moos-ivp-enstabzh/master/doc/index.html).
+Complete documentation can also be found in `doc/index.html`. [**Click to access**](http://rawgit.com/ENSTABretagneRobotics/moos-ivp-toutatis/master/doc/index.html).
+
 
 Directory Structure
 -------------------
 
-The directory structure for the `moos-ivp-enstabzh` is decribed below:
+The directory structure for the `moos-ivp-toutatis` is decribed below:
 
 | Item             | Description                              |
 |-----------------:|:-----------------------------------------|
 | `bin`            | Directory for generated executable files |
 | `build`          | Directory for build object files         |
-| `build.sh`       | Script for building moos-ivp-enstabzh    |
+| `build.sh`       | Script for building moos-ivp-toutatis    |
 | `CMakeLists.txt` | CMake configuration file for the project |
 | `data`           | Directory for storing data               |
 | `doc`            | Directory for documentation files        |
@@ -49,13 +50,14 @@ The directory structure for the `moos-ivp-enstabzh` is decribed below:
 | `scripts`        | Directory for script files               |
 | `src`            | Directory for source code (app, lib)     |
 
+
 Installation
 ------------------
 
 [MOOS-IvP](http://oceanai.mit.edu/moos-ivp) (typically v14.7.1) is supposed to be installed. 
 More information available on the official website.
 
-Additional packages are required for building `moos-ivp-enstabzh`:
+Additional packages are required for building `moos-ivp-toutatis`:
 ```shell
 sudo apt-get install libtinyxml2-dev
 ```
@@ -95,15 +97,16 @@ Alternatively, CMake can be invoked via the command line. However, you must
 specify your generator. Use `cmake --help` for a list of generators and
 additional help.
 
+
 Environment variables
 ---------------------
-The `moos-ivp-enstabzh` binaries files should be added to your path to allow them
+The `moos-ivp-toutatis` binaries files should be added to your path to allow them
 to be launched from `pAntler`. 
 Linux users can edit `~/.bashrc` configuration file by adding at the end:
 ```shell
-export PATH=$PATH:~/moos-ivp-enstabzh/bin
-export PATH=$PATH:~/moos-ivp-enstabzh/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/moos-ivp-enstabzh/lib
+export PATH=$PATH:~/moos-ivp-toutatis/bin
+export PATH=$PATH:~/moos-ivp-toutatis/scripts
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/moos-ivp-toutatis/lib
 ```
 
 In order for generated IvP Behaviors to be recognized by the IvP Helm, you
@@ -111,19 +114,24 @@ should add the library directory to the `IVP_BEHAVIOR_DIRS` environment
 variable.
 
 New XML documentation is also available by command-line (e.g. typing `uJoystick -e`). 
-This can work by specifying the `MOOS_IVP_ENSTABZH_PATH` environment variable. For instance:
+This can work by specifying the `MOOS_IVP_TOUTATIS_PATH` environment variable (Linux users, update your `~/.bashrc`). For instance:
 ```shell
-export MOOS_IVP_ENSTABZH_PATH="~/moos-ivp-enstabzh"
+export MOOS_IVP_TOUTATIS_PATH="/home/myname/moos-ivp-toutatis"
 ```
+Linux users may need to run, in the current terminal:
+```shell
+source ~/.bashrc
+```
+
 
 Generate a new MOOS Application
 -------------------------------
 
-Please use `GenMOOSApp_ENSTA` script to generate an empty structure for your new MOOSApp. For instance:
+Please use `GenMOOSApp_Toutatis` script to generate an empty structure for your new MOOSApp. For instance:
 
 ```shell
 cd ./src/app
-GenMOOSApp_ENSTA SimModem u "John Doe"
+GenMOOSApp_Toutatis SimModem u "John Doe"
 ```
 
-Do not forget to add your new application to the CMake configuration file: `./src/app/CMakeLists.txt`
+Do not forget to add your new application to the CMake configuration file: `./src/app/CMakeLists.txt` and to update the main documentation page : `./doc/index.html`.

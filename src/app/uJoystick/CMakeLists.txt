@@ -1,6 +1,6 @@
 #--------------------------------------------------------
 # The CMakeLists.txt for: uJoystick
-# ENSTA Bretagne
+# Toutatis AUVs - ENSTA Bretagne
 # Author(s): Vincent Drevelle, Simon Rohou
 #--------------------------------------------------------
 
@@ -13,7 +13,7 @@ ADD_EXECUTABLE(uJoystick ${SRC})
 
 TARGET_LINK_LIBRARIES(uJoystick
    ${MOOS_LIBRARIES}
-   ensta-documentation
+   xml-documentation
    apputil
    mbutil
    m

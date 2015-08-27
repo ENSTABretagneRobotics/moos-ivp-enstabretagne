@@ -1,6 +1,6 @@
 /****************************************************************/
 /*    FILE: MOOSAppDoc.h
-/*    ORGN: ENSTA Bretagne
+/*    ORGN: Toutatis AUVs - ENSTA Bretagne
 /*    AUTH: Simon Rohou
 /*    DATE: 2015
 /****************************************************************/
@@ -13,10 +13,10 @@
 #include <tinyxml2.h>
 #include "MOOS/libMOOS/Utils/MOOSUtilityFunctions.h"
 
-#define MOOS_IVP_ENSTABZH_PATH "MOOS_IVP_ENSTABZH_PATH"
+#define MOOS_IVP_TOUTATIS_PATH "MOOS_IVP_TOUTATIS_PATH"
 #define MESSAGE_LENGTH 60
 
-namespace ensta
+namespace xmldoc
 {
   // Utility
   std::string multiLineMessage(std::string message, int line_length = MESSAGE_LENGTH, std::string indent = "");
