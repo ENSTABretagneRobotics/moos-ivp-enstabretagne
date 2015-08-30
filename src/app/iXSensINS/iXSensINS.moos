@@ -1,0 +1,11 @@
+//------------------------------------------------
+// iXSensINS config block
+
+ProcessConfig = iXSensINS
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  UART_PORT = /dev/ttyUSB2
+  UART_BAUD_RATE = 115200
+}
