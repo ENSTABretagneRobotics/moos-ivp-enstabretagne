@@ -13,7 +13,7 @@ ADD_EXECUTABLE(iEchoSounder ${SRC})
 
 TARGET_LINK_LIBRARIES(iEchoSounder
    ${MOOS_LIBRARIES}
-   ensta-documentation
+   xml-documentation
    apputil
    mbutil
    m

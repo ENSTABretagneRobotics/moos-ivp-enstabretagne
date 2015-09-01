@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 {
   string mission_file;
   string run_command = argv[0];
-  ensta::MOOSAppDocumentation documentation(argv[0]);
+  xmldoc::MOOSAppDocumentation documentation(argv[0]);
 
   for(int i=1; i<argc; i++) {
     string argi = argv[i];
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     documentation.showHelpAndExit();
 
   cout << termColor("green");
-  cout << "uJoystick launching as " << run_command << endl;
+  cout << "iEchoSounder launching as " << run_command << endl;
   cout << termColor() << endl;
 
   EchoSounder EchoSounder;
