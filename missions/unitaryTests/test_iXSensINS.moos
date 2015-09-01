@@ -1,0 +1,31 @@
+// MOOS file
+
+ServerHost = localhost
+ServerPort = 9000
+
+Community  = AUV
+
+//------------------------------------------
+// Antler configuration  block
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+
+  Run = MOOSDB       	  @ NewConsole = true
+  
+  Run = iXSensINS @ NewConsole = true
+  
+}
+
+
+//------------------------------------------------
+// iXSensINS config block
+
+ProcessConfig = iXSensINS
+{
+  AppTick   = 25
+  CommsTick = 25
+
+  UART_PORT = /dev/ttyUSB0
+  UART_BAUD_RATE = 115200
+}

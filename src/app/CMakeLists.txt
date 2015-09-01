@@ -25,6 +25,7 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
   ADD_SUBDIRECTORY(iEchoSounder)
   ADD_SUBDIRECTORY(iRazorIMU)
   ADD_SUBDIRECTORY(iModem)
+  ADD_SUBDIRECTORY(iXSensINS)
 
 
 ##############################################################################
