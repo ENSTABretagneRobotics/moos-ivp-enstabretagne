@@ -81,18 +81,15 @@ bool XSensINS::Iterate()
     // Retrieve a packet
     XsDataPacket packet;
     packet.setMessage((*it));
-    // packet.setDeviceId(mtPort.deviceId());
 
     // Convert packet to euler
     XsEuler euler = packet.orientationEuler();
 
-    Notify("PITCH", euler.m_pitch);
-    Notify("ROLL", euler.m_roll);
-    Notify("YAW", euler.m_yaw);
+    Notify("IMU_PITCH", euler.m_pitch);
+    Notify("IMU_ROLL", euler.m_roll);
+    Notify("IMU_YAW", euler.m_yaw);
   }
   msgs.clear();
-
-  Notify("ALIVE", "OK");
 
   AppCastingMOOSApp::PostReport();
   return true;
@@ -145,7 +142,7 @@ bool XSensINS::OnStartUp()
     reportRunWarning("Could not begin the config mode");// Save INS Config
   }
 
-  XsOutputConfiguration euler(XDI_EulerAngles, 100);
+  XsOutputConfiguration euler(XDI_EulerAngles, 25);
   XsOutputConfigurationArray configArray;
   configArray.push_back(euler);
   if (!device.setOutputConfiguration(configArray)){
@@ -156,8 +153,6 @@ bool XSensINS::OnStartUp()
   if (!device.gotoMeasurement()){
     reportRunWarning("Could not start the INS"); // Save INS Config
   }
-
-  printf("END INS CONFIG \n");
 
   return true;
 }
@@ -176,16 +171,10 @@ void XSensINS::registerVariables()
 
 bool XSensINS::buildReport() 
 {
-  #if 0 // Keep these around just for template
-    m_msgs << "============================================ \n";
-    m_msgs << "File:                                        \n";
-    m_msgs << "============================================ \n";
+  #if 1 // Keep these around just for template
+    m_msgs << "UART_PORT " << UART_PORT << endl;
+    m_msgs << "UART_BAUD_RATE " << UART_BAUD_RATE << endl;
 
-    ACTable actab(4);
-    actab << "Alpha | Bravo | Charlie | Delta";
-    actab.addHeaderLines();
-    actab << "one" << "two" << "three" << "four";
-    m_msgs << actab.getFormattedString();
   #endif
 
   return true;

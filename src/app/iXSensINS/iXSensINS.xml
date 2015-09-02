@@ -29,6 +29,21 @@
               -->
            </subscriptions>
            <publications>
+               <moosvar>
+                  <varname>IMU_YAW</varname>
+                  <vartype>double</vartype>
+                  <varinfo>angle around Z axis</varinfo>
+               </moosvar>
+               <moosvar>
+                  <varname>IMU_PITCH</varname>
+                  <vartype>double</vartype>
+                  <varinfo>angle around Y axis</varinfo>
+               </moosvar>
+               <moosvar>
+                  <varname>IMU_ROLL</varname>
+                  <vartype>double</vartype>
+                  <varinfo>angle around X axis</varinfo>
+               </moosvar>
               <!--
               <moosvar>
                  <varname>EXAMPLE_VAR_OUT</varname>
