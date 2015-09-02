@@ -9,7 +9,7 @@
         <organization>Toutatis AUVs - ENSTA Bretagne</organization>
         <date>2015</date>
         <authors>
-           <author>Clement Aubry from moos-ivp-msis iSonar app/author>
+           <author>Clement Aubry from moos-ivp-msis iSonar app</author>
         </authors>
         <licence>MIT</licence>
      </info>
@@ -20,26 +20,38 @@
         </synopsis>
         <interface>
            <subscriptions>
-              <!--
-SONAR_PARAMS = Range=,Gain=,Continuous=   
               <moosvar>
-                 <varname>EXAMPLE_VAR_IN</varname>
+                 <varname>SONAR_PARAMS</varname>
                  <vartype>string</vartype>
-                 <varinfo>description of the MOOSVar</varinfo>
+                 <varinfo>SONAR_PARAMS = Range=,Gain=,Continuous=  </varinfo>
               </moosvar>
-              -->
+              <moosvar>
+                 <varname>SONAR_POLL</varname>
+                 <vartype>double</vartype>
+                 <varinfo>if 0, sonar don't send mtSendData and polling is off. When switching to 1, Sonar start polling if initialized</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>POWERED_SONAR</varname>
+                 <vartype>double</vartype>
+                 <varinfo>if 0, the sonar is not initialized and listenning thread is stopped, when switching from 0 to 1, thread is launched an sonar init process started</varinfo>
+              </moosvar>
            </subscriptions>
            <publications>
-              <!--
-  SONAR_CONNECTED = true/false
-  SONAR_RAW_DATA = bearing=,ad_interval=,scanline=
-  SONAR_DISTANCE = bearing=,distance=
               <moosvar>
-                 <varname>EXAMPLE_VAR_OUT</varname>
-                 <vartype>string</vartype>
-                 <varinfo>description of the MOOSVar</varinfo>
+                 <varname>SONAR_CONNECTED</varname>
+                 <vartype>bool</vartype>
+                 <varinfo>true/false</varinfo>
               </moosvar>
-              -->
+              <moosvar>
+                 <varname>SONAR_DISTANCE</varname>
+                 <vartype>string</vartype>
+                 <varinfo>bearing=,distance=</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>SONAR_RAW_DATA</varname>
+                 <vartype>string</vartype>
+                 <varinfo>bearing=,ad_interval=,scanline=</varinfo>
+              </moosvar>
            </publications>
         </interface>
         <!-- if there is a bug or a special fact to know.. -->
