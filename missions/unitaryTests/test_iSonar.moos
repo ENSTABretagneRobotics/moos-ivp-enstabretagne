@@ -1,3 +1,25 @@
+// MOOS file
+
+ServerHost = localhost
+ServerPort = 9000
+
+Community  = AUV
+
+//------------------------------------------
+// Antler configuration  block
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+
+  Run = MOOSDB       	  @ NewConsole = true
+  
+  Run = uMACView @ NewConsole = false
+
+  Run = iSonar @ NewConsole = true
+  
+}
+
+
 //------------------------------------------------
 // iSonar config block
 
@@ -14,5 +36,14 @@ ProcessConfig = iSonar
   CONTINUOUS = true //TRUE FOR 360  ROTATION. SET RIGHT AND LEFT LIMIT IF FALSE 
   //LEFTLIMIT = 70.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
   //RIGHTLIMIT = 110.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
+}
+
+//------------------------------------------
+// uMACView
+
+ProcessConfig = uMACView
+{
+  AppTick   = 4
+  CommsTick = 4
 }
 
