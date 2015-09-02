@@ -1,6 +1,6 @@
 #--------------------------------------------------------
 # The CMakeLists.txt for:                    lib/graphics
-# Author(s):                                  Simon Rohou
+# Author(s):
 #--------------------------------------------------------
 
 SET(SRC
@@ -11,8 +11,8 @@ SET(HEADERS
   vibes/vibes.h
 ) 
 
-ADD_LIBRARY(ensta-graphics ${SRC})
+ADD_LIBRARY(graphics ${SRC})
 
-TARGET_LINK_LIBRARIES(ensta-graphics
+TARGET_LINK_LIBRARIES(graphics
   geometry
   )

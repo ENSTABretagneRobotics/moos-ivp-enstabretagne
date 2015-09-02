@@ -1,7 +1,7 @@
 #===========================================================================
-# FILE:  moos-ivp-enstabzh/CMakeLists.txt
+# FILE:  moos-ivp-toutatis/CMakeLists.txt
 # DATE:  2015
-# INFO:  Top-level CMakeLists.txt file for the moos-ivp-enstabzh project
+# INFO:  Top-level CMakeLists.txt file for the moos-ivp-toutatis project
 # NAME:  Maintained by Mike Benjamin - Original setup by Christian Convey
 #        Chris Gagner, and tips borrowed from Dave Billin
 #===========================================================================
@@ -95,6 +95,23 @@ ELSE( ${WIN32} )
    ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
 ENDIF( ${WIN32} )
+
+#===============================================================================
+# FINDING MOOSGeodesy' HEADERS AND LIBRARIES...
+#===============================================================================
+
+# moos - http://www.robots.ox.ac.uk/~mobile/MOOS/wiki/pmwiki.php
+find_package(MOOSGeodesy)
+include_directories(${MOOSGeodesy_INCLUDE_DIRS})
+link_directories(${MOOSGeodesy_LIBRARY_PATH})
+
+message("+++++++++++++++++++++++++++++++++++++++++")
+message("MOOSGeodesy_INCLUDE_DIRS:" ${MOOSGeodesy_INCLUDE_DIRS})
+message("+++++++++++++++++++++++++++++++++++++++++")
+
+message("+++++++++++++++++++++++++++++++++++++++++")
+message("MOOSGeodesy_LIB_PATH:" ${MOOSGeodesy_LIBRARY_PATH})
+message("+++++++++++++++++++++++++++++++++++++++++")
 
 #=============================================================================
 # Add Subdirectories

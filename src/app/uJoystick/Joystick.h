@@ -1,6 +1,6 @@
 /************************************************************/
 /*    FILE: Joystick.h
-/*    ORGN: ENSTA Bretagne
+/*    ORGN: Toutatis AUVs - ENSTA Bretagne
 /*    AUTH: Vincent Drevelle, Simon Rohou
 /*    DATE: 2015
 /************************************************************/

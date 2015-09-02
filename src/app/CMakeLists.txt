@@ -1,7 +1,7 @@
 ##############################################################################
-# FILE:        moos-ivp-enstabzh/src/CMakeLists.txt
+# FILE:        moos-ivp-toutatis/src/CMakeLists.txt
 # DATE:        2015
-# DESCRIPTION: CMakeLists.txt file for the moos-ivp-enstabzh source directory
+# DESCRIPTION: CMakeLists.txt file for the moos-ivp-toutatis source directory
 ##############################################################################
 
 
@@ -22,8 +22,11 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
   ADD_SUBDIRECTORY(uJoystick)
 
 # 'i' apps
+  ADD_SUBDIRECTORY(iEchoSounder)
   ADD_SUBDIRECTORY(iRazorIMU)
   ADD_SUBDIRECTORY(iModem)
+  ADD_SUBDIRECTORY(iXSensINS)
+  ADD_SUBDIRECTORY(iGPS)
 
 
 ##############################################################################

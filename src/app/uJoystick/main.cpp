@@ -1,6 +1,6 @@
 /************************************************************/
 /*    FILE: main.cpp
-/*    ORGN: ENSTA Bretagne
+/*    ORGN: Toutatis AUVs - ENSTA Bretagne
 /*    AUTH: Vincent Drevelle, Simon Rohou
 /*    DATE: 2015
 /************************************************************/
@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 {
   string mission_file;
   string run_command = argv[0];
-  ensta::MOOSAppDocumentation documentation(argv[0]);
+  xmldoc::MOOSAppDocumentation documentation(argv[0]);
 
   for(int i=1; i<argc; i++) {
     string argi = argv[i];

@@ -1,3 +1,10 @@
+/************************************************************/
+/*    FILE: Modem.h
+/*    ORGN: Toutatis AUVs - ENSTA Bretagne
+/*    AUTH: Clément Aubry (from V. Drevelle iSonar App)
+/*    DATE: 2015
+/************************************************************/
+
 #ifndef Modem_HEADER
 #define Modem_HEADER
 
