@@ -6,8 +6,12 @@
 
 SET(SRC
   Rosen.cpp
+  Pololu.cpp
   main.cpp
 )
+
+SET(CMAKE_AUTOMOC ON)
+FIND_PACKAGE(Qt5Widgets)
 
 ADD_EXECUTABLE(iRosen ${SRC})
 
@@ -17,4 +21,5 @@ TARGET_LINK_LIBRARIES(iRosen
    apputil
    mbutil
    m
-   pthread)
+   pthread
+   Qt5::Widgets)

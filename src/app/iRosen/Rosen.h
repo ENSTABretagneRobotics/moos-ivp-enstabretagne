@@ -9,12 +9,13 @@
 #define Rosen_HEADER
 
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
+#include "Pololu.h"
 
 class Rosen : public AppCastingMOOSApp
 {
   public:
     Rosen();
-    ~Rosen() {};
+    ~Rosen();
 
   protected: // Standard MOOSApp functions to overload  
     bool OnNewMail(MOOSMSG_LIST &NewMail);
@@ -30,11 +31,10 @@ class Rosen : public AppCastingMOOSApp
 
 
   private: // Configuration variables
-
+    std::string m_device_name;
 
   private: // State variables
-    
-
+    Pololu *m_pololu;
 };
 
 #endif 

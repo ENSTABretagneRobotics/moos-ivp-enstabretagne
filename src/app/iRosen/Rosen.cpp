@@ -17,6 +17,15 @@ using namespace std;
 
 Rosen::Rosen()
 {
+
+}
+
+//---------------------------------------------------------
+// Denstructor
+
+Rosen::~Rosen()
+{
+  delete m_pololu;
 }
 
 //---------------------------------------------------------
@@ -42,8 +51,47 @@ bool Rosen::OnNewMail(MOOSMSG_LIST &NewMail)
       bool   mstr  = msg.IsString();
     #endif
 
-    if(key == "FOO") 
-      cout << "great!";
+    if(key == "POWER_CAMERA1")
+    {
+      m_pololu->turnOnRelay(0, (int)msg.GetDouble() == 1);
+      Notify("POWERED_CAMERA1", (int)msg.GetDouble());
+    }
+
+    else if(key == "POWER_CAMERA2")
+    {
+      m_pololu->turnOnRelay(1, (int)msg.GetDouble() == 1);
+      Notify("POWERED_CAMERA2", (int)msg.GetDouble());
+    }
+
+    else if(key == "POWER_MODEM")
+    {
+      m_pololu->turnOnRelay(2, (int)msg.GetDouble() == 1);
+      Notify("POWERED_MODEM", (int)msg.GetDouble());
+    }
+
+    else if(key == "POWER_MODEM_EA")
+    {
+      m_pololu->turnOnRelay(3, (int)msg.GetDouble() == 1);
+      Notify("POWERED_MODEM_EA", (int)msg.GetDouble());
+    }
+
+    else if(key == "POWER_SONAR")
+    {
+      m_pololu->turnOnRelay(4, (int)msg.GetDouble() == 1);
+      Notify("POWERED_SONAR", (int)msg.GetDouble());
+    }
+
+    else if(key == "POWER_ECHOSOUNDER")
+    {
+      m_pololu->turnOnRelay(5, (int)msg.GetDouble() == 1);
+      Notify("POWERED_ECHOSOUNDER", (int)msg.GetDouble());
+    }
+
+    else if(key == "POWER_GPS")
+    {
+      m_pololu->turnOnRelay(6, (int)msg.GetDouble() == 1);
+      Notify("POWERED_GPS", (int)msg.GetDouble());
+    }
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
       reportRunWarning("Unhandled Mail: " + key);
@@ -69,7 +117,9 @@ bool Rosen::Iterate()
 {
   AppCastingMOOSApp::Iterate();
 
-  // Do your thing here!
+  string error_message;
+  bool pololu_ok = m_pololu->isReady(error_message);
+  Notify("ROSEN_STATUS", pololu_ok ? "ok" : error_message);
 
   AppCastingMOOSApp::PostReport();
   return true;
@@ -98,13 +148,9 @@ bool Rosen::OnStartUp()
     string value = line;
     bool handled = false;
 
-    if(param == "FOO")
+    if(param == "DEVICE_NAME")
     {
-      handled = true;
-    }
-
-    else if(param == "BAR")
-    {
+      m_device_name = value;
       handled = true;
     }
 
@@ -112,6 +158,7 @@ bool Rosen::OnStartUp()
       reportUnhandledConfigWarning(orig);
   }
 
+  m_pololu = new Pololu(m_device_name);
   registerVariables();  
   return true;
 }
@@ -122,7 +169,7 @@ bool Rosen::OnStartUp()
 void Rosen::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
-  // Register("FOOBAR", 0);
+  Register("POWER_*", "*", 0);
 }
 
 //------------------------------------------------------------
@@ -130,17 +177,14 @@ void Rosen::registerVariables()
 
 bool Rosen::buildReport() 
 {
-  #if 0 // Keep these around just for template
-    m_msgs << "============================================ \n";
-    m_msgs << "File:                                        \n";
-    m_msgs << "============================================ \n";
-
-    ACTable actab(4);
-    actab << "Alpha | Bravo | Charlie | Delta";
-    actab.addHeaderLines();
-    actab << "one" << "two" << "three" << "four";
-    m_msgs << actab.getFormattedString();
-  #endif
+  m_msgs << "============================================ \n";
+  m_msgs << "iRosen:                                      \n";
+  m_msgs << "============================================ \n";
+  m_msgs << "\n";
+  
+  string error_message;
+  bool pololu_ok = m_pololu->isReady(error_message);
+  m_msgs << "Status: " << (pololu_ok ? "ok" : error_message);
 
   return true;
 }

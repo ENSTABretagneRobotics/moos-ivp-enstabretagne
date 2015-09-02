@@ -5,4 +5,9 @@ ProcessConfig = iRosen
 {
   AppTick   = 4
   CommsTick = 4
+
+  DEVICE_NAME = "/dev/ttyACM0"
+  # Linux: "/dev/ttyACM0"
+  # Windows: "\\\\.\\USBSER000", "\\\\.\\COM6" also works
+  # Mac OS X: "/dev/cu.usbmodem00034567"
 }
