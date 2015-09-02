@@ -1,6 +1,6 @@
 /************************************************************/
 /*    FILE: EchoSounder.h
-/*    ORGN: ENSTA Bretagne
+/*    ORGN: Toutatis AUVs - ENSTA Bretagne
 /*    AUTH: Simon Rohou
 /*    DATE: 2015
 /************************************************************/

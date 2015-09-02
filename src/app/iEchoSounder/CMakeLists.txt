@@ -1,6 +1,6 @@
 #--------------------------------------------------------
 # The CMakeLists.txt for: iEchoSounder
-# ENSTA Bretagne
+# Toutatis AUVs - ENSTA Bretagne
 # Author(s): Simon Rohou
 #--------------------------------------------------------
 
