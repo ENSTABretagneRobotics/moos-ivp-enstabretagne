@@ -1,5 +1,6 @@
 #include <iterator>
 #include "MBUtils.h"
+#include "ACTable.h"
 #include "Sonar.h"
 #include "seanetmsg.h"
 
@@ -15,10 +16,13 @@ Sonar::Sonar()
 	m_bSentCfg = false;
 
 	m_bSonarReady = false;
-	m_bPollSonar = true;
+	m_bPollSonar = false;
 
 	if (!m_serial_thread.Initialise(listen_sonar_messages_thread_func, (void*)this))
+	{
+	  reportRunWarning("Sonar thread initialization error...\n");
 	  MOOSFail("Sonar thread initialization error...\n");
+	}
 }
 
 Sonar::~Sonar()
@@ -30,11 +34,13 @@ Sonar::~Sonar()
  
 bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
 {
+  AppCastingMOOSApp::OnNewMail(NewMail);
 	MOOSMSG_LIST::iterator p;
 
 	for(p = NewMail.begin() ; p != NewMail.end() ; p++)
 	{
 		CMOOSMsg &msg = *p;
+    	string key    = msg.GetKey();
 
 		#if 0 // Keep these around just for template
 		string key   = msg.GetKey();
@@ -48,7 +54,7 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
 		#endif
 		
 		// Mise à jour des paramètres du sonar
-		if ( msg.GetKey() == "SONAR_PARAMS" && msg.IsString() ) 
+		if ( key == "SONAR_PARAMS" && msg.IsString() ) 
 		{
 		  string msg_val = msg.GetString();
 		  // Le message est de la forme "Range=25,Gain=45,Continuous=true"
@@ -71,6 +77,23 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
 		  // TODO: vérifier que le CMOOSSerialPort est bien thread safe. Sinon, rajouter un mutex
 		  SendSonarMessage(m_msgHeadCommand);
 		}
+		else if ( key == "SONAR_POLL") 
+		{
+			m_bPollSonar = (msg.GetDouble())?true:false;
+			if (m_bSonarReady && m_bSentCfg && !m_bNoParams)
+			{
+				SeaNetMsg_SendData msg_SendData;
+				msg_SendData.setTime(MOOSTime());
+				SendSonarMessage(msg_SendData);
+				retractRunWarning("Sonar not initialized!");
+			}
+			else
+			{
+				reportRunWarning("Sonar not initialized!");
+			}
+		}
+	    else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
+	      reportRunWarning("Unhandled Mail: " + key);
 	}
 
 	return(true);
@@ -89,8 +112,9 @@ bool Sonar::OnConnectToServer()
  
 bool Sonar::Iterate()
 {
+  	AppCastingMOOSApp::Iterate();
 	m_iterations++;
-	
+  	AppCastingMOOSApp::PostReport();
 	return(true);
 }
 
@@ -152,7 +176,7 @@ void Sonar::ListenSonarMessages()
           msg_SendData.setTime(MOOSTime());
           SendSonarMessage(msg_SendData);
           Notify("SONAR_CONNECTED", "true");
-        }   
+        }
         
         // Update m_bSonarReady
         m_bSonarReady = (!m_bNoParams) && m_bSentCfg;
@@ -193,6 +217,7 @@ void Sonar::ListenSonarMessages()
 
 bool Sonar::OnStartUp()
 {
+  	AppCastingMOOSApp::OnStartUp();
 	setlocale(LC_ALL, "C");
 	list<string> sParams;
 	m_MissionReader.EnableVerbatimQuoting(false);
@@ -267,5 +292,40 @@ bool Sonar::OnStartUp()
  
 void Sonar::RegisterVariables()
 {
+  	AppCastingMOOSApp::RegisterVariables();
 	Register("SONAR_PARAMS", 0);
+	Register("SONAR_POLL", 0);
+}
+//------------------------------------------------------------
+// Procedure: buildReport()
+
+bool Sonar::buildReport()
+{
+  #if 0 // Keep these around just for template
+    m_msgs << "============================================ \n";
+    m_msgs << "File:                                        \n";
+    m_msgs << "============================================ \n";
+
+    ACTable actab(4);
+    actab << "Alpha | Bravo | Charlie | Delta";
+    actab.addHeaderLines();
+    actab << "one" << "two" << "three" << "four";
+    m_msgs << actab.getFormattedString();
+  #endif
+    m_msgs << "==============================================================\n";
+    m_msgs << "iSonarStatus :                                                \n";
+    m_msgs << "==============================================================\n";
+    ACTable actab2(6);
+    actab2 << "Port name | Has params | Sent cfg | Is ready | Is polling | Thread running";
+    actab2.addHeaderLines();
+
+    string sonarHasParams = (m_bNoParams)?"no":"yes";
+    string sonarSentCfg = (m_bSentCfg)?"yes":"no";
+    string sonarIsReady = (m_bSonarReady)?"yes":"no";
+    string sonarIsPolling = (m_bPollSonar)?"yes":"no";
+    actab2 << m_portName << sonarHasParams << sonarSentCfg << sonarIsReady << sonarIsPolling << m_serial_thread.IsThreadRunning();
+    m_msgs << actab2.getFormattedString();
+    
+
+  return true;
 }

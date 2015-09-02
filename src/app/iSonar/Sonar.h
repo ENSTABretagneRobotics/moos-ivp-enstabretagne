@@ -1,13 +1,20 @@
 #ifndef Sonar_HEADER
 #define Sonar_HEADER
 
+#include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
+
+#ifdef _WIN32
+  #include "MOOS/libMOOS/Utils/MOOSNTSerialPort.h"
+#else
+  #include "MOOS/libMOOS/Utils/MOOSLinuxSerialPort.h"
+#endif
+
 #include "seanetmsg.h"
 
 #include <fstream>
 
-#include "MOOS/libMOOS/App/MOOSInstrument.h"
 
-class Sonar : public CMOOSInstrument
+class Sonar : public AppCastingMOOSApp
 {
 	public:
 		Sonar();
@@ -23,6 +30,9 @@ class Sonar : public CMOOSInstrument
 		void ListenSonarMessages();
 			   
 		bool SendSonarMessage(const SeaNetMsg & msg) {return (m_Port.Write(msg.data().data(), (int)msg.data().size()) == (int)msg.data().size());}
+  
+  	protected: // Standard AppCastingMOOSApp functions to overload
+    	bool buildReport();
 
 	private: // Configuration variables
 		std::string m_portName;
@@ -30,6 +40,11 @@ class Sonar : public CMOOSInstrument
 
 
 	private: // State variables
+	    #ifdef _WIN32
+	      CMOOSNTSerialPort m_Port;
+	    #else
+	      CMOOSLinuxSerialPort m_Port;
+	    #endif
 		unsigned int			m_iterations;
 		double			        m_timewarp;
 		bool m_bNoParams;
