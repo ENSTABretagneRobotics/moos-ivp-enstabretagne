@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- This file contains uJoystick documentation -->
+<!-- This file contains iEchoSounder documentation -->
 <?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?> 
 <xmldoc>
   <moosapp>
 
      <info>
         <name>iEchoSounder</name>
-        <organization>ENSTA Bretagne</organization>
+        <organization>Toutatis AUVs - ENSTA Bretagne</organization>
         <date>2015</date>
         <authors>
            <author>Simon Rohou</author>
