@@ -1,0 +1,8 @@
+//------------------------------------------------
+// iRosen config block
+
+ProcessConfig = iRosen
+{
+  AppTick   = 4
+  CommsTick = 4
+}
