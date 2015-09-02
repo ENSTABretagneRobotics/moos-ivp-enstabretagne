@@ -17,6 +17,7 @@ Sonar::Sonar()
 
 	m_bSonarReady = false;
 	m_bPollSonar = false;
+	m_bIsPowered = false;
 
 	if (!m_serial_thread.Initialise(listen_sonar_messages_thread_func, (void*)this))
 	{
@@ -91,6 +92,24 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
 			{
 				reportRunWarning("Sonar not initialized!");
 			}
+		}
+		else if ( key == "POWERED_SONAR") 
+		{
+			if (msg.GetDouble() == 0)
+			{
+				m_bIsPowered = false;
+				m_bNoParams = true;
+				m_bSentCfg = false;
+
+				m_bSonarReady = false;
+				m_bPollSonar = false;
+				m_serial_thread.Stop();
+			}
+			else
+			{
+				m_bIsPowered = true;
+				Initialization();
+			}	
 		}
 	    else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
 	      reportRunWarning("Unhandled Mail: " + key);
@@ -266,9 +285,17 @@ bool Sonar::OnStartUp()
 	m_timewarp = GetMOOSTimeWarp();
 
 	RegisterVariables();
-	m_serial_thread.Start();
         
-  //////
+  	if (m_bIsPowered)
+  		Initialization();
+        
+	return(true);
+}
+void Sonar::Initialization(void)
+{
+
+	m_serial_thread.Start();
+	//////
 	SeaNetMsg_ReBoot msg_ReBoot;
         
 	MOOSPause(50);
@@ -286,8 +313,6 @@ bool Sonar::OnStartUp()
 	Notify("SONAR_CONNECTED", "false");
 
 	//////
-        
-	return(true);
 }
  
 void Sonar::RegisterVariables()
@@ -295,6 +320,7 @@ void Sonar::RegisterVariables()
   	AppCastingMOOSApp::RegisterVariables();
 	Register("SONAR_PARAMS", 0);
 	Register("SONAR_POLL", 0);
+	Register("POWERED_SONAR", 0);
 }
 //------------------------------------------------------------
 // Procedure: buildReport()

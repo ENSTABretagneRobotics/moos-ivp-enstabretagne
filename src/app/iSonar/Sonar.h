@@ -26,6 +26,7 @@ class Sonar : public AppCastingMOOSApp
 		bool OnConnectToServer();
 		bool OnStartUp();
 		void RegisterVariables();
+		void Initialization();
 				
 		void ListenSonarMessages();
 			   
@@ -52,6 +53,7 @@ class Sonar : public AppCastingMOOSApp
 				
 		bool m_bSonarReady;
 		bool m_bPollSonar;
+		bool m_bIsPowered;
 						
 		CMOOSThread m_serial_thread;
 
