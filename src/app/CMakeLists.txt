@@ -28,7 +28,7 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
   ADD_SUBDIRECTORY(iXSensINS)
   ADD_SUBDIRECTORY(iGPS)
   ADD_SUBDIRECTORY(iSonar)
-
+  ADD_SUBDIRECTORY(iRosen)
 
 ##############################################################################
 #                           END of CMakeLists.txt
