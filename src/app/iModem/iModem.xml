@@ -21,14 +21,9 @@
 
         This App is adapted to Modem configuration with an electromagnet.
 
-        CAUTION! Tritech Micron Modem in configuration mode communicate through serial baudrate 57600 htat is not referenced for MoOOSLinuxSerialPort.
+        MOOS_V10.0.3_May1215 minimum required (MOOSCore/Core/libMOOS/Utils/MOOSLinuxSerialPort.cpp with baudrate 57600).
 
-        Please update MOOSCore/Core/libMOOS/Utils/MOOSLinuxSerialPort.cpp and add
-        case 57600:     nLinuxBaudRate = B57600;  break;
-
-        In function bool CMOOSLinuxSerialPort::Create(const char * sPort, int nBaudRate)
-
-        Finally Rebuild moos
+        In this doc, AUVx is the parameter "ROBOT_NAME" from moos config file.
 
       </synopsis>
       <interface>
@@ -36,22 +31,44 @@
           <moosvar>
             <varname>MODEM_CONFIGURATION_REQUIRED</varname>
             <vartype>string</vartype>
-            <varinfo>A string that signal to iModem that we need to change modem configuration. The role asked has to be contained in that string ("master" or "slave")</varinfo>
+            <varinfo>A string that signal to iModem that we need to change modem configuration. The role asked has to be contained in that string ("master" or "slave"). Exemple : uPokeDB MODEM_CONFIGURATION_REQUIRED="AUV1=master,AUV2=slave,AUV3=slave,AUV4=slave". Please send the entire string to the app to let it know who is the master modem.</varinfo>
           </moosvar>
           <moosvar>
             <varname>MODEM_SEND_MESSAGE</varname>
             <vartype>string</vartype>
-            <varinfo>A message we want to send by the modem. Only works in communiction mode.</varinfo>
+            <varinfo>A message we want to acousticallyby the modem. Only works in communiction mode. Exemple : uPokeDB MODEM_SEND_MESSAGE="AUV1=testMessage"</varinfo>
           </moosvar>
+          <moosvar>
+            <varname>MODEM_SEND_RNG</varname>
+            <vartype>string</vartype>
+            <varinfo>This message ask iModem App to acoustically perform a range with the master modem.</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>MODEM_SEND_RANGE</varname>
+            <vartype>string</vartype>
+            <varinfo>This message ask iModem App to acoustically transmit last range between itself and the master modem in a formated string ("dAUV1AUV2=TMO" or "dAUV1AUV2=111.222m"), exemple : uPokeDB MODEM_SEND_RANGE="AUV1=1".</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>MODEM_ACK_RANGE</varname>
+            <vartype>string</vartype>
+            <varinfo>This message ask iModem App to acoustically transmit last Range message received ("dAUV1AUV2=TMO" or "dAUV1AUV2=111.222m"), exemple : uPokeDB MODEM_ACK_RANGE="AUV1=1"</varinfo>
+          </moosvar>
+          <!--
           <moosvar>
             <varname>MODEM_TIME_BEFORE_TALKING</varname>
             <vartype>int</vartype>
-            <varinfo>An int containing a time(ms) to wait before talking on serial port after receiving a data. For more informations, ask FLB.</varinfo>
+            <varinfo>An int containing a time(ms) to wait before talking on serial port after receiving a data. FIXED</varinfo>
+          </moosvar>
+          -->
+          <moosvar>
+            <varname>POWERED_MODEM</varname>
+            <vartype>string</vartype>
+            <varinfo>This variable is setted to 1 when the modem is powered up and to 0 when powered down. Needed to perform configuration task!</varinfo>
           </moosvar>
           <moosvar>
-            <varname>FIOX_STATE</varname>
+            <varname>POWERED_MODEM_EA</varname>
             <vartype>string</vartype>
-            <varinfo>Published by iLabjack as an acknowledgement when FIOX has been changed, format : "FIO=x;VALUE=y;"</varinfo>
+            <varinfo>This variable is setted to 1 when the Electromagnet attached to Modem (EA for Electro Aimant in french...) is powered up and to 0 when powered down. Needed to perform configuration task!</varinfo>
           </moosvar>
           <moosvar>
             <varname>MODEM_STOP_ALIM</varname>
@@ -59,7 +76,56 @@
             <varinfo>When received, each instances of iModem App will send two SET_FIOX_STATE to power down the modem and the magnet</varinfo>
           </moosvar>
         </subscriptions>
+
+
         <publications>
+Notify("POWER_MODEM_EA",0.0);
+Notify("POWER_MODEM",0.0);
+          <moosvar>
+            <varname>MODEM_CONFIGURATION_COMPLETE</varname>
+            <vartype>bool</vartype>
+            <varinfo>A boolean setted to true when the configuration process is complete, exemple: MODEM_CONFIGURATION_COMPLETE="AUV1=1</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>MODEM_MESSAGE_RECEIVED</varname>
+            <vartype>string</vartype>
+            <varinfo>A message received by the modem, exemple : MODEM_MESSAGE_RECEIVED=testMessage. In general, Modem parse messages by 4 bytes, i.e. the modem will transmit us MODEM_MESSAGE_RECEIVED=test, MODEM_MESSAGE_RECEIVED=Mess, MODEM_MESSAGE_RECEIVED=age .</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>MODEM_RANGING_TIMEOUT</varname>
+            <vartype>string</vartype>
+            <varinfo>Variable emmited when ranging task is timedout (from the modem), exemple : MODEM_RANGING_TIMEOUT=AUV1=RangeTMO</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>MODEM_RANGING_Value</varname>
+            <vartype>string</vartype>
+            <varinfo>Variable emmited when ranging task return a value (from the modem), exemple : MODEM_RANGING_value=AUV1=111.222</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>MODEM_RANGE_MSG_RECEIVED</varname>
+            <vartype>string</vartype>
+            <varinfo>Variable emmited when the modem received a range message ("dAUV1AUV2=TMO" or "dAUV1AUV2=111.222m"). See subscription to MODEM_SEND_RANGE or MODEM_ACK_RANGE.</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>POWER_MODEM_EA</varname>
+            <vartype>string</vartype>
+            <varinfo>Boolean emmited when the app nedd to power up/down the electromagnet attached to the modem. Has to be subscribed from IO card (interface available for Polulu).</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>POWER_MODEM</varname>
+            <vartype>string</vartype>
+            <varinfo>Boolean emmited when the app nedd to power up/down the modem. Has to be subscribed from IO card (interface available for Polulu).</varinfo>
+          </moosvar>
+<!--           <moosvar>
+            <varname>MODEM_START_CONFIG_TIME</varname>
+            <vartype>MOOSTime</vartype>
+            <varinfo>The time it was when configuration process start.</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>MODEM_END_CONFIG_TIME</varname>
+            <vartype>MOOSTime</vartype>
+            <varinfo>The time it was when configuration process end.</varinfo>
+          </moosvar>
           <moosvar>
             <varname>MODEM_MSG_EMISSION_TIME</varname>
             <vartype>MOOSTime</vartype>
@@ -84,32 +150,7 @@
             <varname>MODEM_RECEPTION_TIME</varname>
             <vartype>MOOSTime</vartype>
             <varinfo>The MOOSTime when receiving a message from the modem.</varinfo>
-          </moosvar>
-          <moosvar>
-            <varname>MODEM_MESSAGE_RECEIVED</varname>
-            <vartype>string</vartype>
-            <varinfo>A message we receive by the modem.</varinfo>
-          </moosvar>
-          <moosvar>
-            <varname>MODEM_CONFIGURATION_COMPLETE</varname>
-            <vartype>bool</vartype>
-            <varinfo>A boolean setted to true when the configuration process is complete.</varinfo>
-          </moosvar>
-          <moosvar>
-            <varname>MODEM_START_CONFIG_TIME</varname>
-            <vartype>MOOSTime</vartype>
-            <varinfo>The time it was when configuration process start.</varinfo>
-          </moosvar>
-          <moosvar>
-            <varname>MODEM_END_CONFIG_TIME</varname>
-            <vartype>MOOSTime</vartype>
-            <varinfo>The time it was when configuration process end.</varinfo>
-          </moosvar>
-          <moosvar>
-            <varname>SET_FIOX_STATE</varname>
-            <vartype>string</vartype>
-            <varinfo>These variable ask iLabjack app to change FIOX state. The string had to be formatted as : "FIO=x;VALUE=y;" with x the number of the FIO output and y the value</varinfo>
-          </moosvar>
+          </moosvar> -->
         </publications>
       </interface>
       <!-- if there is a bug or a special fact to know.. -->
