@@ -26,6 +26,7 @@ class Pololu : public QObject
 
   public slots:
     int turnOnRelay(int id, bool turned_on = true);
+    int turnOnBistableRelay(int id_on, int id_off, bool turned_on = true);
     int setThrustersValue(int id, double value);
     void buzzOn();
     void buzzOff();

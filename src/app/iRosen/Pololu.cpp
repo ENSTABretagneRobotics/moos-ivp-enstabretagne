@@ -31,6 +31,9 @@
   }
 #endif 
 
+#define HIGH_LEVEL 7000
+#define LOW_LEVEL  5000
+
 using namespace std;
 
 Pololu::Pololu(string device_name)
@@ -75,7 +78,26 @@ bool Pololu::isReady(string &error_message)
 
 int Pololu::turnOnRelay(int id, bool turned_on)
 {
-  return setTarget(id, turned_on ? 7000 : 5000);
+  return setTarget(id, turned_on ? HIGH_LEVEL : LOW_LEVEL);
+}
+
+int Pololu::turnOnBistableRelay(int id_on, int id_off, bool turned_on)
+{
+  int success_on, success_off;
+
+  success_on = turnOnRelay(id_on, turned_on);
+  success_off = turnOnRelay(id_off, !turned_on);
+
+  if(success_on < 0 || success_off < 0)
+    return -1;
+
+  delay(50);
+  success_on = turnOnRelay(id_on, false);
+  success_off = turnOnRelay(id_off, false);
+
+  if(success_on < 0 || success_off < 0)
+    return -1;
+  return 0;
 }
 
 int Pololu::setThrustersValue(int id, double value)
@@ -85,12 +107,12 @@ int Pololu::setThrustersValue(int id, double value)
 
 void Pololu::buzzOn()
 {
-  setTarget(3, 7000);
+  setTarget(3, HIGH_LEVEL);
 }
 
 void Pololu::buzzOff()
 {
-  setTarget(3, 5000);
+  setTarget(3, LOW_LEVEL);
 }
 
 void Pololu::bipOnStartUp()
