@@ -119,7 +119,7 @@ bool Rosen::Iterate()
 
   string error_message;
   bool pololu_ok = m_pololu->isReady(error_message);
-  Notify("ROSEN_STATUS", pololu_ok ? "ok" : error_message);
+  Notify("ROSEN_POLOLU_STATUS", pololu_ok ? "ok" : error_message);
 
   AppCastingMOOSApp::PostReport();
   return true;
