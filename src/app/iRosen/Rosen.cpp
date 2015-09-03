@@ -53,44 +53,44 @@ bool Rosen::OnNewMail(MOOSMSG_LIST &NewMail)
 
     if(key == "POWER_CAMERA1")
     {
-      m_pololu->turnOnRelay(0, (int)msg.GetDouble() == 1);
-      Notify("POWERED_CAMERA1", (int)msg.GetDouble());
+      int success = m_pololu->turnOnRelay(0, (int)msg.GetDouble() == 1);
+      Notify("POWERED_CAMERA1", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
     else if(key == "POWER_CAMERA2")
     {
-      m_pololu->turnOnRelay(1, (int)msg.GetDouble() == 1);
-      Notify("POWERED_CAMERA2", (int)msg.GetDouble());
+      int success = m_pololu->turnOnRelay(0, (int)msg.GetDouble() == 1);
+      Notify("POWER_CAMERA2", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
     else if(key == "POWER_MODEM")
     {
-      m_pololu->turnOnRelay(2, (int)msg.GetDouble() == 1);
-      Notify("POWERED_MODEM", (int)msg.GetDouble());
+      int success = m_pololu->turnOnRelay(0, (int)msg.GetDouble() == 1);
+      Notify("POWER_MODEM", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
     else if(key == "POWER_MODEM_EA")
     {
-      m_pololu->turnOnRelay(3, (int)msg.GetDouble() == 1);
-      Notify("POWERED_MODEM_EA", (int)msg.GetDouble());
+      int success = m_pololu->turnOnRelay(0, (int)msg.GetDouble() == 1);
+      Notify("POWER_MODEM_EA", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
     else if(key == "POWER_SONAR")
     {
-      m_pololu->turnOnRelay(4, (int)msg.GetDouble() == 1);
-      Notify("POWERED_SONAR", (int)msg.GetDouble());
+      int success = m_pololu->turnOnRelay(0, (int)msg.GetDouble() == 1);
+      Notify("POWER_SONAR", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
     else if(key == "POWER_ECHOSOUNDER")
     {
-      m_pololu->turnOnRelay(5, (int)msg.GetDouble() == 1);
-      Notify("POWERED_ECHOSOUNDER", (int)msg.GetDouble());
+      int success = m_pololu->turnOnRelay(0, (int)msg.GetDouble() == 1);
+      Notify("POWER_ECHOSOUNDER", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
     else if(key == "POWER_GPS")
     {
-      m_pololu->turnOnRelay(6, (int)msg.GetDouble() == 1);
-      Notify("POWERED_GPS", (int)msg.GetDouble());
+      int success = m_pololu->turnOnRelay(0, (int)msg.GetDouble() == 1);
+      Notify("POWER_GPS", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp

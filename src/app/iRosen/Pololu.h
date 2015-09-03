@@ -25,8 +25,8 @@ class Pololu : public QObject
     void setErrorMessage(std::string message);
 
   public slots:
-    void turnOnRelay(int id, bool turned_on = true);
-    void setThrustersValue(int id, double value);
+    int turnOnRelay(int id, bool turned_on = true);
+    int setThrustersValue(int id, double value);
     void buzzOn();
     void buzzOff();
     void bipOnStartUp();

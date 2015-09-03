@@ -73,17 +73,14 @@ bool Pololu::isReady(string &error_message)
   return m_error == false;
 }
 
-void Pololu::turnOnRelay(int id, bool turned_on)
+int Pololu::turnOnRelay(int id, bool turned_on)
 {
-  if(turned_on)
-    setTarget(id, 7000);
-  else
-    setTarget(id, 5000);
+  return setTarget(id, turned_on ? 7000 : 5000);
 }
 
-void Pololu::setThrustersValue(int id, double value)
+int Pololu::setThrustersValue(int id, double value)
 {
-  setTarget(18 + (id - 1), 6000 + 20 * value);
+  return setTarget(18 + (id - 1), 6000 + 20 * value);
 }
 
 void Pololu::buzzOn()
