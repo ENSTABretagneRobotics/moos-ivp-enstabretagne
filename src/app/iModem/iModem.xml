@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- This file contains uJoystick documentation -->
+<!-- This file contains iModem documentation -->
 <?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?>
 <xmldoc>
   <moosapp>
@@ -53,21 +53,15 @@
             <vartype>string</vartype>
             <varinfo>This message ask iModem App to acoustically transmit last Range message received ("dAUV1AUV2=TMO" or "dAUV1AUV2=111.222m"), exemple : uPokeDB MODEM_ACK_RANGE="AUV1=1"</varinfo>
           </moosvar>
-          <!--
-          <moosvar>
-            <varname>MODEM_TIME_BEFORE_TALKING</varname>
-            <vartype>int</vartype>
-            <varinfo>An int containing a time(ms) to wait before talking on serial port after receiving a data. FIXED</varinfo>
-          </moosvar>
-          -->
+
           <moosvar>
             <varname>POWERED_MODEM</varname>
-            <vartype>string</vartype>
+            <vartype>double</vartype>
             <varinfo>This variable is setted to 1 when the modem is powered up and to 0 when powered down. Needed to perform configuration task!</varinfo>
           </moosvar>
           <moosvar>
             <varname>POWERED_MODEM_EA</varname>
-            <vartype>string</vartype>
+            <vartype>double</vartype>
             <varinfo>This variable is setted to 1 when the Electromagnet attached to Modem (EA for Electro Aimant in french...) is powered up and to 0 when powered down. Needed to perform configuration task!</varinfo>
           </moosvar>
           <moosvar>
@@ -76,11 +70,7 @@
             <varinfo>When received, each instances of iModem App will send two SET_FIOX_STATE to power down the modem and the magnet</varinfo>
           </moosvar>
         </subscriptions>
-
-
         <publications>
-Notify("POWER_MODEM_EA",0.0);
-Notify("POWER_MODEM",0.0);
           <moosvar>
             <varname>MODEM_CONFIGURATION_COMPLETE</varname>
             <vartype>bool</vartype>
@@ -97,9 +87,9 @@ Notify("POWER_MODEM",0.0);
             <varinfo>Variable emmited when ranging task is timedout (from the modem), exemple : MODEM_RANGING_TIMEOUT=AUV1=RangeTMO</varinfo>
           </moosvar>
           <moosvar>
-            <varname>MODEM_RANGING_Value</varname>
+            <varname>MODEM_RANGING_VALUE</varname>
             <vartype>string</vartype>
-            <varinfo>Variable emmited when ranging task return a value (from the modem), exemple : MODEM_RANGING_value=AUV1=111.222</varinfo>
+            <varinfo>Variable emmited when ranging task return a value (from the modem), exemple : MODEM_RANGING_value=AUV1=111.222m</varinfo>
           </moosvar>
           <moosvar>
             <varname>MODEM_RANGE_MSG_RECEIVED</varname>
@@ -108,52 +98,25 @@ Notify("POWER_MODEM",0.0);
           </moosvar>
           <moosvar>
             <varname>POWER_MODEM_EA</varname>
-            <vartype>string</vartype>
+            <vartype>double</vartype>
             <varinfo>Boolean emmited when the app nedd to power up/down the electromagnet attached to the modem. Has to be subscribed from IO card (interface available for Polulu).</varinfo>
           </moosvar>
           <moosvar>
             <varname>POWER_MODEM</varname>
-            <vartype>string</vartype>
+            <vartype>double</vartype>
             <varinfo>Boolean emmited when the app nedd to power up/down the modem. Has to be subscribed from IO card (interface available for Polulu).</varinfo>
           </moosvar>
-<!--           <moosvar>
-            <varname>MODEM_START_CONFIG_TIME</varname>
-            <vartype>MOOSTime</vartype>
-            <varinfo>The time it was when configuration process start.</varinfo>
-          </moosvar>
-          <moosvar>
-            <varname>MODEM_END_CONFIG_TIME</varname>
-            <vartype>MOOSTime</vartype>
-            <varinfo>The time it was when configuration process end.</varinfo>
-          </moosvar>
-          <moosvar>
-            <varname>MODEM_MSG_EMISSION_TIME</varname>
-            <vartype>MOOSTime</vartype>
-            <varinfo>The MOOSTime when emmiting a message from the modem.</varinfo>
-          </moosvar>
-          <moosvar>
-            <varname>MODEM_RNG_EMISSION_TIME</varname>
-            <vartype>MOOSTime</vartype>
-            <varinfo>The MOOSTime when emmiting a rng request from the modem.</varinfo>
-          </moosvar>
-          <moosvar>
-            <varname>MODEM_MESSAGE_SENT</varname>
-            <vartype>string</vartype>
-            <varinfo>A message we sent to the modem.</varinfo>
-          </moosvar>
-          <moosvar>
-            <varname>MODEM_RNG_SENT</varname>
-            <vartype>bool</vartype>
-            <varinfo>Emitted when rng has been sent</varinfo>
-          </moosvar>
-          <moosvar>
-            <varname>MODEM_RECEPTION_TIME</varname>
-            <vartype>MOOSTime</vartype>
-            <varinfo>The MOOSTime when receiving a message from the modem.</varinfo>
-          </moosvar> -->
+
         </publications>
       </interface>
-      <!-- if there is a bug or a special fact to know.. -->
+      This App allow user to use a Tritech Micron Data Modem with MOOS middleware. By default, communication is made between two Modems, 1 in master and the second in slave mode.
+
+      To send an acoustic message from a modem, publish MODEM_SEND_MESSAGE=AUVx=text to your MOOSDB. The receiving modem will publish MODEM_MESSAGE_RECEIVED=AUVx=text to his MOOSDB.
+      To perform a ranging from a modem to another, publish MODEM_SEND_RNG="text" to your MOOSDB. The app will publish MODEM_RANGING_TIMEOUT=AUV1=RangeTMO or MODEM_RANGING_value=AUV1=111.222m to the MOOSDB regarding the result of ranging task.
+
+      To performconfiguration task, i.e. in the case of a swarm of robots, you will need to put an magnetic field near the modem (exact positioning of the magnetic field could be found in Tritech documentation). This app can do the job controlling modem and electromagnet power.
+
+      To configure Modem, send ..TODO : continue doc...
       <optional-comments>
         No comment.
       </optional-comments>
@@ -163,17 +126,50 @@ Notify("POWER_MODEM",0.0);
       </suggested-improvements>
     </documentation>
   </moosapp>
-
-</interface>
-<!-- if there is a bug or a special fact to know.. -->
-<optional-comments>
-  No comment.
-</optional-comments>
-<!-- if something can be improved -->
-<suggested-improvements>
-  No suggested improvements.
-</suggested-improvements>
-</documentation>
-
-</moosapp>
 </xmldoc>
+
+<!--
+  SUBSCRIPTION commented in code
+<moosvar>
+<varname>MODEM_TIME_BEFORE_TALKING</varname>
+<vartype>int</vartype>
+<varinfo>An int containing a time(ms) to wait before talking on serial port after receiving a data. FIXED</varinfo>
+</moosvar>
+-->
+<!--
+  PUBLICATIONS commented in code
+<moosvar>
+<varname>MODEM_START_CONFIG_TIME</varname>
+<vartype>MOOSTime</vartype>
+<varinfo>The time it was when configuration process start.</varinfo>
+</moosvar>
+<moosvar>
+<varname>MODEM_END_CONFIG_TIME</varname>
+<vartype>MOOSTime</vartype>
+<varinfo>The time it was when configuration process end.</varinfo>
+</moosvar>
+<moosvar>
+<varname>MODEM_MSG_EMISSION_TIME</varname>
+<vartype>MOOSTime</vartype>
+<varinfo>The MOOSTime when emmiting a message from the modem.</varinfo>
+</moosvar>
+<moosvar>
+<varname>MODEM_RNG_EMISSION_TIME</varname>
+<vartype>MOOSTime</vartype>
+<varinfo>The MOOSTime when emmiting a rng request from the modem.</varinfo>
+</moosvar>
+<moosvar>
+<varname>MODEM_MESSAGE_SENT</varname>
+<vartype>string</vartype>
+<varinfo>A message we sent to the modem.</varinfo>
+</moosvar>
+<moosvar>
+<varname>MODEM_RNG_SENT</varname>
+<vartype>bool</vartype>
+<varinfo>Emitted when rng has been sent</varinfo>
+</moosvar>
+<moosvar>
+<varname>MODEM_RECEPTION_TIME</varname>
+<vartype>MOOSTime</vartype>
+<varinfo>The MOOSTime when receiving a message from the modem.</varinfo>
+</moosvar> -->
