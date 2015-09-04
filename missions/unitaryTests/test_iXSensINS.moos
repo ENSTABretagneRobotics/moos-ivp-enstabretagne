@@ -12,9 +12,9 @@ ProcessConfig = ANTLER
   MSBetweenLaunches = 200
 
   Run = MOOSDB       	  @ NewConsole = true
-  
+  Run = uMS             @ NewConsole=false
   Run = iXSensINS @ NewConsole = true
-  
+
 }
 
 
@@ -26,6 +26,6 @@ ProcessConfig = iXSensINS
   AppTick   = 25
   CommsTick = 25
 
-  UART_PORT = /dev/ttyUSB0
+  UART_PORT = /dev/ttyUSB4
   UART_BAUD_RATE = 115200
 }
