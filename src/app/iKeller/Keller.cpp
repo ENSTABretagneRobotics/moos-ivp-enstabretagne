@@ -98,72 +98,75 @@ bool Keller::Iterate()
   bool flag = true;
   uFloat value;
 
-  if(m_bKellerInitialized){
-    SendKellerMessage(kellerPressureRequest);
-    // msgInitKeller.print_hex();
-    MOOSPause(1);
+  if (m_port_is_initialized){
+    if(m_bKellerInitialized){
+      SendKellerMessage(kellerPressureRequest);
+      // msgInitKeller.print_hex();
+      MOOSPause(1);
 
-    int nb_read = m_serial_port.ReadNWithTimeOut(buf, 5);
-    // printf("\nreception : ");
-    // for (uint k = 0;k<nb_read;k++)
-    // {
-    //   printf("\n\t%02x",(uint8)buf[k]);
-    // }
-    //Vérifications
-    if ((uint8)buf[0] != (uint8)0xfa)
-      flag=false;
-    else if((uint8)buf[1] != (uint8)0x49)
-      flag=false;
-    else if((uint8)buf[2] != (uint8)0x01)
-      flag=false;
-    else if ((uint8)buf[3] != (uint8)0xa1)
-      flag=false;
-    else if ((uint8)buf[4] != (uint8)0xa7)
-      flag=false;
-    // printf("\n\techo recu");
-
-    if (flag){
-      MOOSPause(2);
-      nb_read = m_serial_port.ReadNWithTimeOut(buf, 9);
-
+      int nb_read = m_serial_port.ReadNWithTimeOut(buf, 5);
       // printf("\nreception : ");
-      for (uint k = 0;k<nb_read;k++)
-      {
-        // printf("\n\t%02x",(uint8)buf[k]);
-        bufui8[k] = (uint8)buf[k];
-      }
+      // for (uint k = 0;k<nb_read;k++)
+      // {
+      //   printf("\n\t%02x",(uint8)buf[k]);
+      // }
       //Vérifications
-      if ((uint8)bufui8[0] != (uint8)0xfa)
+      if ((uint8)buf[0] != (uint8)0xfa)
         flag=false;
       else if((uint8)buf[1] != (uint8)0x49)
         flag=false;
+      else if((uint8)buf[2] != (uint8)0x01)
+        flag=false;
+      else if ((uint8)buf[3] != (uint8)0xa1)
+        flag=false;
+      else if ((uint8)buf[4] != (uint8)0xa7)
+        flag=false;
+      // printf("\n\techo recu");
+
       if (flag){
-        CalcCRC16(bufui8, 9-2, &crc_h, &crc_l);
-        // printf("\n\tcrc_h%02x",crc_h);
-        // printf("\n\tcrc_l%02x",crc_l);
-        // CRC-16.
-        if (((uint8)buf[7] != crc_h)||((uint8)buf[8] != crc_l))
+        MOOSPause(2);
+        nb_read = m_serial_port.ReadNWithTimeOut(buf, 9);
+
+        // printf("\nreception : ");
+        for (uint k = 0;k<nb_read;k++)
         {
-          printf("Error reading data from a P33x : Bad CRC-16. \n");
+          // printf("\n\t%02x",(uint8)buf[k]);
+          bufui8[k] = (uint8)buf[k];
         }
-        else
-        {
-          value.c[3] = (uint8)buf[2];
-          value.c[2] = (uint8)buf[3];
-          value.c[1] = (uint8)buf[4];
-          value.c[0] = (uint8)buf[5];
-          printf("value read : %f\n",value.v);
-          Notify("KELLER_PRESSURE",value.v);
+        //Vérifications
+        if ((uint8)bufui8[0] != (uint8)0xfa)
+          flag=false;
+        else if((uint8)buf[1] != (uint8)0x49)
+          flag=false;
+        if (flag){
+          CalcCRC16(bufui8, 9-2, &crc_h, &crc_l);
+          // printf("\n\tcrc_h%02x",crc_h);
+          // printf("\n\tcrc_l%02x",crc_l);
+          // CRC-16.
+          if (((uint8)buf[7] != crc_h)||((uint8)buf[8] != crc_l))
+          {
+            printf("Error reading data from a P33x : Bad CRC-16. \n");
+          }
+          else
+          {
+            value.c[3] = (uint8)buf[2];
+            value.c[2] = (uint8)buf[3];
+            value.c[1] = (uint8)buf[4];
+            value.c[0] = (uint8)buf[5];
+            // printf("value read : %f\n",value.v);
+            Notify("KELLER_PRESSURE",value.v);
+            m_last_value = value.v;
+          }
         }
       }
-    }
-    else
-    {
-      printf("Error reading value, receiving echo\n");
+      else
+      {
+        printf("Error reading value, receiving echo\n");
+      }
     }
   }
 
-  // AppCastingMOOSApp::PostReport();
+  AppCastingMOOSApp::PostReport();
   return true;
 }
 
@@ -205,17 +208,16 @@ bool Keller::OnStartUp()
       reportUnhandledConfigWarning(orig);
   }
 
-  printf("init serial\n");
-  if(!initSerialPort())
+  m_port_is_initialized = initSerialPort();
+  if(!m_port_is_initialized){
     reportConfigWarning("Initialization failed on " + m_port_name);
-  printf("init serial ok\n");
-
-
-  // m_serial_thread.Start();
-  m_bKellerInitialized = initKeller(m_iMmaxRetries);
-  if(!m_bKellerInitialized)
-    reportConfigWarning("Init keller failed");
-
+  }
+  else
+  {
+    m_bKellerInitialized = initKeller(m_iMmaxRetries);
+    if(!m_bKellerInitialized)
+      reportConfigWarning("Init keller failed");
+  }
   registerVariables();
   return true;
 }
@@ -245,14 +247,15 @@ bool Keller::buildReport()
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
   #endif
+    m_msgs << "============================================ \n";
+    m_msgs << "iKeller Status:                              \n";
+    m_msgs << "============================================ \n";
 
-  if(m_port_is_initialized)
-    m_msgs << "Port initialized";
-  else
-    m_msgs << "Port NOT initialized";
-
-  m_msgs << " (" << m_port_name << ")";
-  m_msgs << endl << "Last value: " << m_last_value;
+    ACTable actab(4);
+    actab << "m_port_name | m_port_is_initialized | m_bKellerInitialized | m_last_value";
+    actab.addHeaderLines();
+    actab << m_port_name << m_port_is_initialized << m_bKellerInitialized << m_last_value;
+    m_msgs << actab.getFormattedString();
 
   return true;
 }
