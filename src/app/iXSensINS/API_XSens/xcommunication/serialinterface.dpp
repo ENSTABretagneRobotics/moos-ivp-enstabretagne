@@ -1,0 +1,50 @@
+serialinterface.cpp.o: serialinterface.cpp \
+ ../include/xcommunication/xcommunicationconfig.h \
+ ../include/xcommunication/serialinterface.h \
+ ../include/xcommunication/streaminterface.h \
+ ../include/xcommunication/iointerface.h \
+ ../include/xcommunication/xcommunicationconfig.h \
+ ../include/xsens/xsplatform.h ../include/xsens/xstypesconfig.h \
+ ../include/xsens/xstypedefs.h ../include/xsens/pstdint.h \
+ ../include/xsens/xsmessage.h ../include/xsens/xsbytearray.h \
+ ../include/xsens/xsarray.h ../include/xsens/xsstring.h \
+ ../include/xsens/xsdataidentifier.h ../include/xsens/xsxbusmessageid.h \
+ ../include/xsens/xstime.h ../include/xsens/xstimestamp.h \
+ ../include/xsens/xsfilepos.h ../include/xsens/xsbytearray.h \
+ ../include/xsens/xsresultvalue.h ../include/xsens/xsfile.h \
+ ../include/xsens/xsresultvalue.h ../include/xsens/xsfilepos.h \
+ ../include/xsens/xsbaud.h ../include/xsens/xsbaudcode.h \
+ ../include/xsens/xsbaudrate.h ../include/xsens/xscontrolline.h \
+ ../include/xsens/xsportinfo.h ../include/xsens/xsdeviceid.h \
+ ../include/xsens/xsbaud.h
+serialinterface.cpp:
+../include/xcommunication/xcommunicationconfig.h:
+../include/xcommunication/serialinterface.h:
+../include/xcommunication/streaminterface.h:
+../include/xcommunication/iointerface.h:
+../include/xcommunication/xcommunicationconfig.h:
+../include/xsens/xsplatform.h:
+../include/xsens/xstypesconfig.h:
+../include/xsens/xstypedefs.h:
+../include/xsens/pstdint.h:
+../include/xsens/xsmessage.h:
+../include/xsens/xsbytearray.h:
+../include/xsens/xsarray.h:
+../include/xsens/xsstring.h:
+../include/xsens/xsdataidentifier.h:
+../include/xsens/xsxbusmessageid.h:
+../include/xsens/xstime.h:
+../include/xsens/xstimestamp.h:
+../include/xsens/xsfilepos.h:
+../include/xsens/xsbytearray.h:
+../include/xsens/xsresultvalue.h:
+../include/xsens/xsfile.h:
+../include/xsens/xsresultvalue.h:
+../include/xsens/xsfilepos.h:
+../include/xsens/xsbaud.h:
+../include/xsens/xsbaudcode.h:
+../include/xsens/xsbaudrate.h:
+../include/xsens/xscontrolline.h:
+../include/xsens/xsportinfo.h:
+../include/xsens/xsdeviceid.h:
+../include/xsens/xsbaud.h:
