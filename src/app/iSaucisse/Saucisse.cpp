@@ -1,5 +1,5 @@
 /************************************************************/
-/*    FILE: Rosen.cpp
+/*    FILE: Saucisse.cpp
 /*    ORGN: Toutatis AUVs - ENSTA Bretagne
 /*    AUTH: Simon Rohou
 /*    DATE: 2015
@@ -8,14 +8,14 @@
 #include <iterator>
 #include "MBUtils.h"
 #include "ACTable.h"
-#include "Rosen.h"
+#include "Saucisse.h"
 
 using namespace std;
 
 //---------------------------------------------------------
 // Constructor
 
-Rosen::Rosen()
+Saucisse::Saucisse()
 {
 
 }
@@ -23,7 +23,7 @@ Rosen::Rosen()
 //---------------------------------------------------------
 // Denstructor
 
-Rosen::~Rosen()
+Saucisse::~Saucisse()
 {
   delete m_pololu;
 }
@@ -31,7 +31,7 @@ Rosen::~Rosen()
 //---------------------------------------------------------
 // Procedure: OnNewMail
 
-bool Rosen::OnNewMail(MOOSMSG_LIST &NewMail)
+bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
 {
   AppCastingMOOSApp::OnNewMail(NewMail);
 
@@ -103,7 +103,7 @@ bool Rosen::OnNewMail(MOOSMSG_LIST &NewMail)
 //---------------------------------------------------------
 // Procedure: OnConnectToServer
 
-bool Rosen::OnConnectToServer()
+bool Saucisse::OnConnectToServer()
 {
   registerVariables();
   return true;
@@ -113,13 +113,13 @@ bool Rosen::OnConnectToServer()
 // Procedure: Iterate()
 //            happens AppTick times per second
 
-bool Rosen::Iterate()
+bool Saucisse::Iterate()
 {
   AppCastingMOOSApp::Iterate();
 
   string error_message;
   bool pololu_ok = m_pololu->isReady(error_message);
-  Notify("ROSEN_STATUS", pololu_ok ? "ok" : error_message);
+  Notify("SAUCISSE_POLOLU_STATUS", pololu_ok ? "ok" : error_message);
 
   AppCastingMOOSApp::PostReport();
   return true;
@@ -129,7 +129,7 @@ bool Rosen::Iterate()
 // Procedure: OnStartUp()
 //            happens before connection is open
 
-bool Rosen::OnStartUp()
+bool Saucisse::OnStartUp()
 {
   AppCastingMOOSApp::OnStartUp();
 
@@ -166,7 +166,7 @@ bool Rosen::OnStartUp()
 //---------------------------------------------------------
 // Procedure: registerVariables
 
-void Rosen::registerVariables()
+void Saucisse::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
   Register("POWER_*", "*", 0);
@@ -175,7 +175,7 @@ void Rosen::registerVariables()
 //------------------------------------------------------------
 // Procedure: buildReport()
 
-bool Rosen::buildReport() 
+bool Saucisse::buildReport() 
 {
   m_msgs << "============================================ \n";
   m_msgs << "iRosen:                                      \n";

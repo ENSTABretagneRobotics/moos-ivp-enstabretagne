@@ -5,7 +5,7 @@
   <moosapp>
 
      <info>
-        <name>iRosen</name>
+        <name>iSaucisse</name>
         <organization>Toutatis AUVs - ENSTA Bretagne</organization>
         <date>2015</date>
         <authors>
@@ -16,7 +16,7 @@
 
      <documentation>
         <synopsis>
-          The iRosen application is used to control main functionalities of ROSEN AUV. It is used as a connection with thrusters, sensors power and basic electronic via the Pololu Maestro device.
+          The iSaucisse application is used to control main functionalities of SAUCISSE AUV. It is used as a connection with thrusters, sensors power and basic electronic via the Pololu Maestro device.
         </synopsis>
         <interface>
            <subscriptions>
@@ -42,6 +42,11 @@
               </moosvar>
            </subscriptions>
            <publications>
+              <moosvar>
+                 <varname>SAUCISSE_POLOLU_STATUS</varname>
+                 <vartype>string</vartype>
+                 <varinfo>message in case of error, "ok" otherwise</varinfo>
+              </moosvar>
               <moosvar>
                  <varname>POWERED_MODEM</varname>
                  <vartype>int</vartype>

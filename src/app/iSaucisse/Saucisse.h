@@ -1,21 +1,21 @@
 /************************************************************/
-/*    FILE: Rosen.h
+/*    FILE: Saucisse.h
 /*    ORGN: Toutatis AUVs - ENSTA Bretagne
 /*    AUTH: Simon Rohou
 /*    DATE: 2015
 /************************************************************/
 
-#ifndef Rosen_HEADER
-#define Rosen_HEADER
+#ifndef Saucisse_HEADER
+#define Saucisse_HEADER
 
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 #include "Pololu.h"
 
-class Rosen : public AppCastingMOOSApp
+class Saucisse : public AppCastingMOOSApp
 {
   public:
-    Rosen();
-    ~Rosen();
+    Saucisse();
+    ~Saucisse();
 
   protected: // Standard MOOSApp functions to overload  
     bool OnNewMail(MOOSMSG_LIST &NewMail);
@@ -27,7 +27,7 @@ class Rosen : public AppCastingMOOSApp
     bool buildReport();
     void registerVariables();
 
-  protected: // Rosen functions
+  protected: // Saucisse functions
 
 
   private: // Configuration variables
