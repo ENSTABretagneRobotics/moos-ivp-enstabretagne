@@ -1,11 +1,11 @@
 #--------------------------------------------------------
-# The CMakeLists.txt for: iRosen
+# The CMakeLists.txt for: iSaucisse
 # Toutatis AUVs - ENSTA Bretagne
 # Author(s): Simon Rohou
 #--------------------------------------------------------
 
 SET(SRC
-  Rosen.cpp
+  Saucisse.cpp
   Pololu.cpp
   main.cpp
 )
@@ -13,9 +13,9 @@ SET(SRC
 SET(CMAKE_AUTOMOC ON)
 FIND_PACKAGE(Qt5Widgets)
 
-ADD_EXECUTABLE(iRosen ${SRC})
+ADD_EXECUTABLE(iSaucisse ${SRC})
 
-TARGET_LINK_LIBRARIES(iRosen
+TARGET_LINK_LIBRARIES(iSaucisse
    ${MOOS_LIBRARIES}
    xml-documentation
    apputil
