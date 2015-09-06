@@ -27,6 +27,7 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
   ADD_SUBDIRECTORY(iModem)
   ADD_SUBDIRECTORY(iXSensINS)
   ADD_SUBDIRECTORY(iGPS)
+  ADD_SUBDIRECTORY(iSaucisse)
 
 
 ##############################################################################
