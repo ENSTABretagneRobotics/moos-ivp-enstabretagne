@@ -1,7 +1,7 @@
 //------------------------------------------------
 // iRosen config block
 
-ProcessConfig = iRosen
+ProcessConfig = iSaucisse
 {
   AppTick   = 4
   CommsTick = 4

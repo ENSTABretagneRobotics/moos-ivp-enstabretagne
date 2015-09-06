@@ -9,7 +9,7 @@
 #include "MBUtils.h"
 #include "documentation/MOOSAppDocumentation.h"
 #include "ColorParse.h"
-#include "Rosen.h"
+#include "Saucisse.h"
 
 using namespace std;
 
@@ -41,12 +41,12 @@ int main(int argc, char *argv[])
     documentation.showHelpAndExit();
 
   cout << termColor("green");
-  cout << "iRosen launching as " << run_command << endl;
+  cout << "iSaucisse launching as " << run_command << endl;
   cout << termColor() << endl;
 
-  Rosen Rosen;
+  Saucisse Saucisse;
 
-  Rosen.Run(run_command.c_str(), mission_file.c_str());
+  Saucisse.Run(run_command.c_str(), mission_file.c_str());
 
   return(0);
 }
