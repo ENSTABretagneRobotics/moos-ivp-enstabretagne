@@ -1,0 +1,9 @@
+//------------------------------------------------
+// iCamera config block
+
+ProcessConfig = iCamera
+{
+   AppTick   = 4
+   CommsTick = 4
+}
+
