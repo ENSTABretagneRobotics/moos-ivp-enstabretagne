@@ -19,12 +19,15 @@ using namespace std;
 Keller::Keller()
 {
   m_port_is_initialized = false;
-  m_last_value = -1.;
+  m_lastP_value = -1.0;
+  m_lastT_value = -1.0;
   m_iMmaxRetries = 1;
+  m_bTemperatureRequested = false;
 
   m_bKellerInitialized = false;
 
-  kellerPressureRequest = KellerMsg_ReadOutPressureTemperatureFloatRequest();
+  kellerPressureRequest = KellerMsg_ReadOutPressureFloatRequest();
+  kellerTemperatureRequest = KellerMsg_ReadOutTemperatureFloatRequest();
 }
 
 //---------------------------------------------------------
@@ -59,7 +62,11 @@ bool Keller::OnNewMail(MOOSMSG_LIST &NewMail)
       bool   mstr  = msg.IsString();
     #endif
 
-    if(key == "FOO")
+    if(key == "GET_KELLER_TEMPERATURE")
+    {
+      m_bTemperatureRequested = msg.GetDouble();
+    }
+    else if(key == "FOO")
       cout << "great!";
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
@@ -90,6 +97,21 @@ bool Keller::Iterate()
 {
   AppCastingMOOSApp::Iterate();
 
+  if (m_port_is_initialized)
+  {
+    if(m_bKellerInitialized)
+    {
+      ReadPressure();
+      if (m_bTemperatureRequested)
+        ReadTemperature();
+    }
+  }
+
+  AppCastingMOOSApp::PostReport();
+  return true;
+}
+bool Keller::ReadPressure()
+{
   const int buf_size = 15;
   char buf[buf_size];
   uint8 bufui8[buf_size];
@@ -98,78 +120,154 @@ bool Keller::Iterate()
   bool flag = true;
   uFloat value;
 
-  if (m_port_is_initialized){
-    if(m_bKellerInitialized){
-      SendKellerMessage(kellerPressureRequest);
-      // msgInitKeller.print_hex();
-      MOOSPause(1);
+  SendKellerMessage(kellerPressureRequest);
+  // msgInitKeller.print_hex();
+  MOOSPause(1);
 
-      int nb_read = m_serial_port.ReadNWithTimeOut(buf, 5);
-      // printf("\nreception : ");
-      // for (uint k = 0;k<nb_read;k++)
-      // {
-      //   printf("\n\t%02x",(uint8)buf[k]);
-      // }
-      //Vérifications
-      if ((uint8)buf[0] != (uint8)0xfa)
-        flag=false;
-      else if((uint8)buf[1] != (uint8)0x49)
-        flag=false;
-      else if((uint8)buf[2] != (uint8)0x01)
-        flag=false;
-      else if ((uint8)buf[3] != (uint8)0xa1)
-        flag=false;
-      else if ((uint8)buf[4] != (uint8)0xa7)
-        flag=false;
-      // printf("\n\techo recu");
+  int nb_read = m_serial_port.ReadNWithTimeOut(buf, 5);
+  // printf("\nreception : ");
+  // for (uint k = 0;k<nb_read;k++)
+  // {
+  //   printf("\n\t%02x",(uint8)buf[k]);
+  // }
+  //Vérifications
+  if ((uint8)buf[0] != (uint8)0xfa)
+    flag=false;
+  else if((uint8)buf[1] != (uint8)0x49)
+    flag=false;
+  else if((uint8)buf[2] != (uint8)0x01)
+    flag=false;
+  else if ((uint8)buf[3] != (uint8)0xa1)
+    flag=false;
+  else if ((uint8)buf[4] != (uint8)0xa7)
+    flag=false;
+  // printf("\n\techo recu");
 
-      if (flag){
-        MOOSPause(2);
-        nb_read = m_serial_port.ReadNWithTimeOut(buf, 9);
+  if (flag){
+    MOOSPause(2);
+    nb_read = m_serial_port.ReadNWithTimeOut(buf, 9);
 
-        // printf("\nreception : ");
-        for (uint k = 0;k<nb_read;k++)
-        {
-          // printf("\n\t%02x",(uint8)buf[k]);
-          bufui8[k] = (uint8)buf[k];
-        }
-        //Vérifications
-        if ((uint8)bufui8[0] != (uint8)0xfa)
-          flag=false;
-        else if((uint8)buf[1] != (uint8)0x49)
-          flag=false;
-        if (flag){
-          CalcCRC16(bufui8, 9-2, &crc_h, &crc_l);
-          // printf("\n\tcrc_h%02x",crc_h);
-          // printf("\n\tcrc_l%02x",crc_l);
-          // CRC-16.
-          if (((uint8)buf[7] != crc_h)||((uint8)buf[8] != crc_l))
-          {
-            printf("Error reading data from a P33x : Bad CRC-16. \n");
-          }
-          else
-          {
-            value.c[3] = (uint8)buf[2];
-            value.c[2] = (uint8)buf[3];
-            value.c[1] = (uint8)buf[4];
-            value.c[0] = (uint8)buf[5];
-            // printf("value read : %f\n",value.v);
-            Notify("KELLER_PRESSURE",value.v);
-            m_last_value = value.v;
-          }
-        }
+    // printf("\nreception : ");
+    for (uint k = 0;k<nb_read;k++)
+    {
+      // printf("\n\t%02x",(uint8)buf[k]);
+      bufui8[k] = (uint8)buf[k];
+    }
+    //Vérifications
+    if ((uint8)bufui8[0] != (uint8)0xfa)
+      flag=false;
+    else if((uint8)buf[1] != (uint8)0x49)
+      flag=false;
+    if (flag){
+      CalcCRC16(bufui8, 9-2, &crc_h, &crc_l);
+      // printf("\n\tcrc_h%02x",crc_h);
+      // printf("\n\tcrc_l%02x",crc_l);
+      // CRC-16.
+      if (((uint8)buf[7] != crc_h)||((uint8)buf[8] != crc_l))
+      {
+        printf("Error reading Pressure data from a P33x : Bad CRC-16. \n");
       }
       else
       {
-        printf("Error reading value, receiving echo\n");
+        value.c[3] = (uint8)buf[2];
+        value.c[2] = (uint8)buf[3];
+        value.c[1] = (uint8)buf[4];
+        value.c[0] = (uint8)buf[5];
+        // printf("value read : %f\n",value.v);
+        m_lastP_value = value.v;
+        Notify("KELLER_PRESSURE",m_lastP_value);
       }
     }
   }
-
-  AppCastingMOOSApp::PostReport();
-  return true;
+  else
+  {
+    printf("Error reading Pressure value, receiving echo\n");
+  }
 }
+bool Keller::ReadTemperature()
+{
+  const int buf_size = 15;
+  char buf[buf_size];
+  uint8 bufui8[buf_size];
+  uint8 crc_h = 0;
+  uint8 crc_l = 0;
+  bool flag = true;
+  uFloat value;
 
+  SendKellerMessage(kellerTemperatureRequest);
+  // msgInitKeller.print_hex();
+  MOOSPause(1);
+
+  int nb_read = m_serial_port.ReadNWithTimeOut(buf, 5);
+  // printf("\nreception : ");
+  // for (uint k = 0;k<nb_read;k++)
+  // {
+  //   printf("\n\t%02x",(uint8)buf[k]);
+  // }
+  //Vérifications
+  if ((uint8)buf[0] != (uint8)0xfa)
+    flag=false;
+  else if((uint8)buf[1] != (uint8)0x49)
+    flag=false;
+  else if((uint8)buf[2] != (uint8)0x04)
+    flag=false;
+  for (uint k = 0;k<nb_read;k++)
+  {
+    // printf("\n\t%02x",(uint8)buf[k]);
+    bufui8[k] = (uint8)buf[k];
+  }
+  //Vérifications
+  if (flag){
+    CalcCRC16(bufui8, 5-2, &crc_h, &crc_l);
+    if (((uint8)buf[3] != crc_h)||((uint8)buf[4] != crc_l))
+    {
+      printf("Error reading temperature data from a P33x : Bad CRC-16. \n");
+      flag=false;
+    }
+    // printf("\n\techo recu");
+
+    if (flag){
+      MOOSPause(2);
+      nb_read = m_serial_port.ReadNWithTimeOut(buf, 9);
+
+      // printf("\nreception : ");
+      for (uint k = 0;k<nb_read;k++)
+      {
+        // printf("\n\t%02x",(uint8)buf[k]);
+        bufui8[k] = (uint8)buf[k];
+      }
+      //Vérifications
+      if ((uint8)bufui8[0] != (uint8)0xfa)
+        flag=false;
+      else if((uint8)buf[1] != (uint8)0x49)
+        flag=false;
+      if (flag){
+        CalcCRC16(bufui8, 9-2, &crc_h, &crc_l);
+        // printf("\n\tcrc_h%02x",crc_h);
+        // printf("\n\tcrc_l%02x",crc_l);
+        // CRC-16.
+        if (((uint8)buf[7] != crc_h)||((uint8)buf[8] != crc_l))
+        {
+          printf("Error reading temperature data from a P33x : Bad CRC-16. \n");
+        }
+        else
+        {
+          value.c[3] = (uint8)buf[2];
+          value.c[2] = (uint8)buf[3];
+          value.c[1] = (uint8)buf[4];
+          value.c[0] = (uint8)buf[5];
+          // printf("value read : %f\n",value.v);
+          m_lastT_value = value.v;
+          Notify("KELLER_TEMPERATURE",m_lastT_value);
+        }
+      }
+    }
+    else
+    {
+      printf("Error reading value, receiving echo\n");
+    }
+  }
+}
 //---------------------------------------------------------
 // Procedure: OnStartUp()
 //            happens before connection is open
@@ -228,7 +326,7 @@ bool Keller::OnStartUp()
 void Keller::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
-  // Register("FOOBAR", 0);
+  Register("GET_KELLER_TEMPERATURE", 0);
 }
 
 //------------------------------------------------------------
@@ -251,10 +349,10 @@ bool Keller::buildReport()
     m_msgs << "iKeller Status:                              \n";
     m_msgs << "============================================ \n";
 
-    ACTable actab(4);
-    actab << "m_port_name | m_port_is_initialized | m_bKellerInitialized | m_last_value";
+    ACTable actab(5);
+    actab << "Serial Port | Serial Initialized | Keller Initialized | Last Pressure value | Last Temperature value";
     actab.addHeaderLines();
-    actab << m_port_name << m_port_is_initialized << m_bKellerInitialized << m_last_value;
+    actab << m_port_name << m_port_is_initialized << m_bKellerInitialized << m_lastP_value << m_lastT_value;
     m_msgs << actab.getFormattedString();
 
   return true;

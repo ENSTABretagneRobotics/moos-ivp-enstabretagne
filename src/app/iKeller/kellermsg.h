@@ -6,6 +6,51 @@
 
 typedef unsigned char uint8;
 
+/*
+Calculation of CRC-16 checksum over an amount of bytes in the serial buffer.
+The calculation is done without the 2 bytes from CRC-16 (receive-mode).
+
+uint8* SC_Buffer : (IN) Buffer from the serial interface.
+int SC_Amount : (IN) Amount of bytes which are received or should be transmitted (without CRC-16).
+uint8* crc_h : (INOUT) Valid pointer that should receive the MSB of the CRC-16.
+uint8* crc_l: (INOUT) Valid pointer that should receive the LSB of the CRC-16.
+
+Return : Nothing.
+*/
+inline void CalcCRC16(uint8* SC_Buffer, int SC_Amount, uint8* crc_h, uint8* crc_l)
+{
+  // Locals.
+  unsigned int Crc;
+  unsigned char n, m, x;
+
+  // Initialization.
+  Crc = 0xFFFF;
+  m = (unsigned char)SC_Amount;
+  x = 0;
+
+  // Loop over all bits.
+  while (m > 0)
+  {
+    Crc ^= SC_Buffer[x];
+    for (n = 0; n < 8 ; n++)
+    {
+      if (Crc &1)
+      {
+        Crc >>= 1;
+        Crc ^= 0xA001;
+      }
+      else
+        Crc >>= 1;
+    }
+    m--;
+    x++;
+  }
+
+  // Result.
+  *crc_h = (uint8)((Crc>>8)&0xFF);
+  *crc_l = (uint8)(Crc&0xFF);
+}
+
 class KellerMsg
 {
 protected:
@@ -65,78 +110,27 @@ public:
     m_data.assign(msg, sizeof(msg));
   }
 };
-class KellerMsg_ReadOutPressureTemperatureFloatRequest : public KellerMsg
+class KellerMsg_ReadOutPressureFloatRequest : public KellerMsg
 {
 public:
-  KellerMsg_ReadOutPressureTemperatureFloatRequest() : KellerMsg() {
+  KellerMsg_ReadOutPressureFloatRequest() : KellerMsg() {
     const char msg[] = {0xfa,0x49,0x01,0xa1,0xa7};
     m_data.assign(msg, sizeof(msg));
   }
 };
-
-// class KellerMsg_InitDeviceResponse : public KellerMsg
-// {
-// public:
-//   KellerMsg_InitDeviceResponse() : KellerMsg() {};
-
-//   // Parameters of the device
-//   struct KELLERPARAMS       {
-//     uint8 Class;  // Device ID code, 5: Series 30 digital pressure transmitter (33, 35, 36, 39)
-//     uint8 Group;  // Subdivision within a device class
-//                   // 1: Series 30 transmitter from 1999 or later
-//                   // 20: Series 30 transmitter from 2002 or later
-//                   // 21: Series 30 transmitter version X2
-//     uint8 Year;   // Firmware version
-//     uint8 Week;   // Firmware version
-//     uint8 BUF;    // Length of the internal receive buffer
-//     uint8 STAT;   // Status information
-//                   // 0: Device addressed for first time after switching on.
-//                   // 1: Device was already initialised
-//   };
-// };
-/*
-Calculation of CRC-16 checksum over an amount of bytes in the serial buffer.
-The calculation is done without the 2 bytes from CRC-16 (receive-mode).
-
-uint8* SC_Buffer : (IN) Buffer from the serial interface.
-int SC_Amount : (IN) Amount of bytes which are received or should be transmitted (without CRC-16).
-uint8* crc_h : (INOUT) Valid pointer that should receive the MSB of the CRC-16.
-uint8* crc_l: (INOUT) Valid pointer that should receive the LSB of the CRC-16.
-
-Return : Nothing.
-*/
-inline void CalcCRC16(uint8* SC_Buffer, int SC_Amount, uint8* crc_h, uint8* crc_l)
+class KellerMsg_ReadOutTemperatureFloatRequest : public KellerMsg
 {
-  // Locals.
-  unsigned int Crc;
-  unsigned char n, m, x;
+public:
+  KellerMsg_ReadOutTemperatureFloatRequest() : KellerMsg() {
+    uint8 writebuf[5];
+    writebuf[0] = (uint8)0xfa; // device address = 250
+    writebuf[1] = (uint8)0x49; // function 73
+    writebuf[2] = (uint8)0x04; // Channel to read
+    CalcCRC16(writebuf, 5-2, &(writebuf[3]), &(writebuf[4])); // CRC-16
 
-  // Initialization.
-  Crc = 0xFFFF;
-  m = (unsigned char)SC_Amount;
-  x = 0;
-
-  // Loop over all bits.
-  while (m > 0)
-  {
-    Crc ^= SC_Buffer[x];
-    for (n = 0; n < 8 ; n++)
-    {
-      if (Crc &1)
-      {
-        Crc >>= 1;
-        Crc ^= 0xA001;
-      }
-      else
-        Crc >>= 1;
-    }
-    m--;
-    x++;
+    char msg[5] = {0xfa,0x49,0x04,writebuf[3],writebuf[4]};
+    m_data.assign(msg, sizeof(msg));
   }
-
-  // Result.
-  *crc_h = (uint8)((Crc>>8)&0xFF);
-  *crc_l = (uint8)(Crc&0xFF);
-}
+};
 
 #endif // KELLERMSG_H

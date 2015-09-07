@@ -38,15 +38,22 @@ class Keller : public AppCastingMOOSApp
   protected: // Keller functions
     bool initSerialPort();
     bool initKeller(int maxRetries);
-
     bool SendKellerMessage(const KellerMsg & msg) {return (m_serial_port.Write(msg.data().data(), (int)msg.data().size()) == (int)msg.data().size());}
+    bool ReadPressure();
+    bool ReadTemperature();
 
 
   private: // Configuration variables
-
+    bool m_port_is_initialized;
+    std::string m_port_name;
+    double m_lastP_value;
+    double m_lastT_value;
+    int m_iMmaxRetries;
     bool m_bKellerInitialized;
+    bool m_bTemperatureRequested;
 
-    KellerMsg_ReadOutPressureTemperatureFloatRequest kellerPressureRequest;
+    KellerMsg_ReadOutPressureFloatRequest kellerPressureRequest;
+    KellerMsg_ReadOutTemperatureFloatRequest kellerTemperatureRequest;
 
   private: // State variables
     #ifdef _WIN32
@@ -54,10 +61,6 @@ class Keller : public AppCastingMOOSApp
     #else
       CMOOSLinuxSerialPort m_serial_port;
     #endif
-    int m_iMmaxRetries;
-    bool m_port_is_initialized;
-    std::string m_port_name;
-    double m_last_value;
 
 };
 
