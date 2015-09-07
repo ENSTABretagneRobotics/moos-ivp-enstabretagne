@@ -34,6 +34,7 @@ GPS::GPS()
   m_dLatitude = 0;
   m_dNbSat = 0;
   m_dAltitude = 0;
+  m_bIsPowered = false;
 }
 
 //---------------------------------------------------------
@@ -61,6 +62,8 @@ bool GPS::OnNewMail(MOOSMSG_LIST &NewMail)
 
     if(key == "FOO") 
       cout << "great!";
+    else if(key == "POWERED_GPS")
+      m_bIsPowered= true;
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
       reportRunWarning("Unhandled Mail: " + key);
@@ -87,7 +90,8 @@ bool GPS::Iterate()
   AppCastingMOOSApp::Iterate();
 
   m_iterations++;
-  GetData();
+  if (m_bIsPowered)
+    GetData();
 
   AppCastingMOOSApp::PostReport();
   return true;
@@ -182,7 +186,7 @@ bool GPS::OnStartUp()
 void GPS::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
-  // Register("FOOBAR", 0);
+  Register("POWERED_GPS", 0);
 }
 
 //------------------------------------------------------------
