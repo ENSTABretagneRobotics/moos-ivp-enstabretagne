@@ -14,11 +14,11 @@ SET(SRC
   deviceclass.cpp
 )
 
-add_custom_command(
-    OUTPUT ./API_XSens
-    COMMAND make
-    WORKING_DIRECTORY ./API_XSens
-)
+#add_custom_command(
+#    OUTPUT ./API_XSens
+#    COMMAND make
+#    WORKING_DIRECTORY ./API_XSens
+#)
 
 add_custom_target(
     api_xsens
