@@ -20,19 +20,32 @@
         </synopsis>
         <interface>
            <subscriptions>
-              <!--
               <moosvar>
-                 <varname>EXAMPLE_VAR_IN</varname>
-                 <vartype>string</vartype>
+                 <varname>GET_KELLER_TEMPERATURE</varname>
+                 <vartype>bool</vartype>
                  <varinfo>description of the MOOSVar</varinfo>
               </moosvar>
-              -->
+              <moosvar>
+                 <varname>RESET_KELLER_PRESSURE</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Reset zero to match current pressure</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>SET_ZERO_KELLER_PRESSURE</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Reset zero to a given value</varinfo>
+              </moosvar>
            </subscriptions>
            <publications>
               <moosvar>
-                 <varname>ECHOSOUNDER_RANGE</varname>
+                 <varname>KELLER_DEPTH</varname>
                  <vartype>double</vartype>
-                 <varinfo>the range value, read from the sensor</varinfo>
+                 <varinfo>the temperature value, read from the sensor</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>KELLER_TEMPERATURE</varname>
+                 <vartype>double</vartype>
+                 <varinfo>the temperature value, read from the sensor</varinfo>
               </moosvar>
            </publications>
         </interface>
@@ -42,9 +55,6 @@
         </optional-comments>
         <!-- if something can be improved -->
         <suggested-improvements>
-          - improve message errors (returned values)
-          - auto-detection of the serial port
-          - data filtering
         </suggested-improvements>
      </documentation>
 

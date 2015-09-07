@@ -114,7 +114,13 @@ class KellerMsg_ReadOutPressureFloatRequest : public KellerMsg
 {
 public:
   KellerMsg_ReadOutPressureFloatRequest() : KellerMsg() {
-    const char msg[] = {0xfa,0x49,0x01,0xa1,0xa7};
+    uint8 writebuf[5];
+    writebuf[0] = (uint8)0xfa; // device address = 250
+    writebuf[1] = (uint8)0x49; // function 73
+    writebuf[2] = (uint8)0x01; // Channel to read
+    CalcCRC16(writebuf, 5-2, &(writebuf[3]), &(writebuf[4])); // CRC-16
+
+    char msg[5] = {0xfa,0x49,0x01,writebuf[3],writebuf[4]};
     m_data.assign(msg, sizeof(msg));
   }
 };
@@ -129,6 +135,64 @@ public:
     CalcCRC16(writebuf, 5-2, &(writebuf[3]), &(writebuf[4])); // CRC-16
 
     char msg[5] = {0xfa,0x49,0x04,writebuf[3],writebuf[4]};
+    m_data.assign(msg, sizeof(msg));
+  }
+};
+class KellerMsg_ResetPressureRequest : public KellerMsg
+{
+public:
+  KellerMsg_ResetPressureRequest() : KellerMsg() {
+    uint8 writebuf[5];
+    writebuf[0] = (uint8)0xfa; // device address = 250
+    writebuf[1] = (uint8)0x5f; // function 95
+    writebuf[2] = (uint8)0x00; // Reset P1 channel, The zero point is calculated such that the current measured value = 0.0.
+    CalcCRC16(writebuf, 5-2, &(writebuf[3]), &(writebuf[4])); // CRC-16
+
+    char msg[5] = {0xfa,0x5f,0x00,writebuf[3],writebuf[4]};
+    m_data.assign(msg, sizeof(msg));
+  }
+};
+class KellerMsg_SetZeroPressureRequest : public KellerMsg
+{
+public:
+  KellerMsg_SetZeroPressureRequest() : KellerMsg() {
+    uint8 writebuf[9];
+    writebuf[0] = (uint8)0xfa; // device address = 250
+    writebuf[1] = (uint8)0x5f; // function 95
+    writebuf[2] = (uint8)0x00; // Reset P1 channel, The zero point is calculated such that the current measured value equals the set point (B3:B0).
+    writebuf[3] = (uint8)0x00; //B3
+    writebuf[4] = (uint8)0x00; //B2
+    writebuf[5] = (uint8)0x00; //B1
+    writebuf[6] = (uint8)0x00; //B0
+    writebuf[7] = (uint8)0x00; //crcH
+    writebuf[8] = (uint8)0x00; //crcl
+    CalcCRC16(writebuf, 9-2, &(writebuf[7]), &(writebuf[8])); // CRC-16
+
+    char msg[9];
+    for (int k=0 ; k<9;k++)
+    {
+      msg[k] = writebuf[k];
+    }
+    m_data.assign(msg, sizeof(msg));
+  }
+  KellerMsg_SetZeroPressureRequest(uint8 * value) : KellerMsg() {
+    uint8 writebuf[9];
+    writebuf[0] = (uint8)0xfa; // device address = 250
+    writebuf[1] = (uint8)0x5f; // function 95
+    writebuf[2] = (uint8)0x00; // Reset P1 channel, The zero point is calculated such that the current measured value equals the set point (B3:B0).
+    writebuf[3] = value[3]; //B3
+    writebuf[4] = value[2]; //B2
+    writebuf[5] = value[1]; //B1
+    writebuf[6] = value[0]; //B0
+    writebuf[7] = (uint8)0x00; //crcH
+    writebuf[8] = (uint8)0x00; //crcl
+    CalcCRC16(writebuf, 9-2, &(writebuf[7]), &(writebuf[8])); // CRC-16
+
+    char msg[9];
+    for (int k=0 ; k<9;k++)
+    {
+      msg[k] = writebuf[k];
+    }
     m_data.assign(msg, sizeof(msg));
   }
 };

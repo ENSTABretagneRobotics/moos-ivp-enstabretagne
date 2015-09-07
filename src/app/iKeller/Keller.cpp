@@ -25,9 +25,12 @@ Keller::Keller()
   m_bTemperatureRequested = false;
 
   m_bKellerInitialized = false;
+  m_bKellerPolling = true;
+  m_bKellerZeroPressure = 0;
 
   kellerPressureRequest = KellerMsg_ReadOutPressureFloatRequest();
   kellerTemperatureRequest = KellerMsg_ReadOutTemperatureFloatRequest();
+  kellerResetPressureRequest = KellerMsg_ResetPressureRequest();
 }
 
 //---------------------------------------------------------
@@ -66,8 +69,16 @@ bool Keller::OnNewMail(MOOSMSG_LIST &NewMail)
     {
       m_bTemperatureRequested = msg.GetDouble();
     }
-    else if(key == "FOO")
-      cout << "great!";
+    else if(key == "RESET_KELLER_PRESSURE")
+    {
+      m_bKellerPolling = false;
+      m_bKellerZeroPressure = 0;
+    }
+    else if(key == "SET_ZERO_KELLER_PRESSURE")
+    {
+      m_bKellerPolling = false;
+      m_bKellerZeroPressure = msg.GetDouble();
+    }
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
       reportRunWarning("Unhandled Mail: " + key);
@@ -101,9 +112,37 @@ bool Keller::Iterate()
   {
     if(m_bKellerInitialized)
     {
-      ReadPressure();
-      if (m_bTemperatureRequested)
-        ReadTemperature();
+      if (m_bKellerPolling)
+      {
+        if(!ReadPressure())
+          reportRunWarning("\nError reading Keller Pressure");
+        if (m_bTemperatureRequested)
+          if(!ReadTemperature())
+            reportRunWarning("\nError reading Keller Temperature");
+      }
+      else
+      {
+        bool pressureResetted= false;
+        (m_bKellerZeroPressure == 0)?pressureResetted=ResetKellerPressure():pressureResetted=SetZeroKellerPressure();
+        if(!pressureResetted)
+          reportRunWarning("\nError reseting Keller Pressure");
+
+        if(m_port_is_initialized)
+          m_serial_port.Close();
+        MOOSPause(500);
+        m_bKellerInitialized = false;
+        m_port_is_initialized = initSerialPort();
+        if(!m_port_is_initialized){
+          reportConfigWarning("Initialization failed after reset on " + m_port_name);
+        }
+        else
+        {
+          m_bKellerInitialized = initKeller(m_iMmaxRetries);
+          if(!m_bKellerInitialized)
+          reportConfigWarning("Init keller failed after reset");
+        }
+        m_bKellerPolling = true;
+      }
     }
   }
 
@@ -121,11 +160,12 @@ bool Keller::ReadPressure()
   uFloat value;
 
   SendKellerMessage(kellerPressureRequest);
-  // msgInitKeller.print_hex();
+  // printf("\nenvoi P : ");
+  // kellerPressureRequest.print_hex();
   MOOSPause(1);
 
   int nb_read = m_serial_port.ReadNWithTimeOut(buf, 5);
-  // printf("\nreception : ");
+  // printf("\nreception P : ");
   // for (uint k = 0;k<nb_read;k++)
   // {
   //   printf("\n\t%02x",(uint8)buf[k]);
@@ -141,7 +181,7 @@ bool Keller::ReadPressure()
     flag=false;
   else if ((uint8)buf[4] != (uint8)0xa7)
     flag=false;
-  // printf("\n\techo recu");
+  // printf("\n\techo recu pressure");
 
   if (flag){
     MOOSPause(2);
@@ -165,7 +205,7 @@ bool Keller::ReadPressure()
       // CRC-16.
       if (((uint8)buf[7] != crc_h)||((uint8)buf[8] != crc_l))
       {
-        printf("Error reading Pressure data from a P33x : Bad CRC-16. \n");
+        printf("\nError reading Pressure data from a P33x : Bad CRC-16.");
       }
       else
       {
@@ -174,8 +214,8 @@ bool Keller::ReadPressure()
         value.c[1] = (uint8)buf[4];
         value.c[0] = (uint8)buf[5];
         // printf("value read : %f\n",value.v);
-        m_lastP_value = value.v;
-        Notify("KELLER_PRESSURE",m_lastP_value);
+        m_lastP_value = value.v*1.0e5/(1000.0*9.81);;
+        Notify("KELLER_DEPTH",m_lastP_value);
       }
     }
   }
@@ -183,6 +223,7 @@ bool Keller::ReadPressure()
   {
     printf("Error reading Pressure value, receiving echo\n");
   }
+  return flag;
 }
 bool Keller::ReadTemperature()
 {
@@ -264,9 +305,101 @@ bool Keller::ReadTemperature()
     }
     else
     {
-      printf("Error reading value, receiving echo\n");
+      printf("Error reading temperature value, receiving echo\n");
     }
   }
+  return flag;
+}
+bool Keller::ResetKellerPressure()
+{
+  const int buf_size = 15;
+  char buf[buf_size];
+  uint8 bufui8[buf_size];
+  uint8 crc_h = 0;
+  uint8 crc_l = 0;
+  bool flag = true;
+
+  SendKellerMessage(kellerResetPressureRequest);
+  // printf("\nenvoi : ");
+  // kellerResetPressureRequest.print_hex();
+  MOOSPause(1);
+
+  int nb_read = m_serial_port.ReadNWithTimeOut(buf, 5);
+  // printf("\nreception : ");
+  // for (uint k = 0;k<nb_read;k++)
+  // {
+  //   printf("\n\t%02x",(uint8)buf[k]);
+  // }
+  //Vérifications
+  if ((uint8)buf[0] != (uint8)0xfa)
+    flag=false;
+  else if((uint8)buf[1] != (uint8)0x5f)
+    flag=false;
+  else if((uint8)buf[2] != (uint8)0x00)
+    flag=false;
+  //Vérifications
+  if (flag){
+    for (uint k = 0;k<nb_read;k++)
+    {
+      // printf("\n\t%02x",(uint8)buf[k]);
+      bufui8[k] = (uint8)buf[k];
+    }
+    CalcCRC16(bufui8, 5-2, &crc_h, &crc_l);
+    if (((uint8)buf[3] != crc_h)||((uint8)buf[4] != crc_l))
+    {
+      reportRunWarning("Error reading echo of zeroing from a P33x : Bad CRC-16.");
+      flag=false;
+    }
+    // printf("\n\techo recu");
+  }
+  return flag;
+}
+bool Keller::SetZeroKellerPressure()
+{
+  const int buf_size = 15;
+  char buf[buf_size];
+  uint8 bufui8[buf_size];
+  uint8 crc_h = 0;
+  uint8 crc_l = 0;
+  bool flag = true;
+  uFloat value;
+  value.v = m_bKellerZeroPressure;
+  kellerSetZeroPressureRequest = KellerMsg_SetZeroPressureRequest(value.c);
+
+  SendKellerMessage(kellerSetZeroPressureRequest);
+  printf("\nenvoi pz : ");
+  kellerSetZeroPressureRequest.print_hex();
+  MOOSPause(1);
+
+  int nb_read = m_serial_port.ReadNWithTimeOut(buf, 9);
+  printf("\nreception pz : ");
+  for (uint k = 0;k<nb_read;k++)
+  {
+    printf("\n\t%02x",(uint8)buf[k]);
+  }
+  //Vérifications
+  if ((uint8)buf[0] != (uint8)0xfa)
+    flag=false;
+  else if((uint8)buf[1] != (uint8)0x5f)
+    flag=false;
+  else if((uint8)buf[2] != (uint8)0x00)
+    flag=false;
+  //Vérifications
+  if (flag){
+    for (uint k = 0;k<nb_read;k++)
+    {
+      // printf("\n\t%02x",(uint8)buf[k]);
+      bufui8[k] = (uint8)buf[k];
+    }
+    CalcCRC16(bufui8, 9-2, &crc_h, &crc_l);
+    if (((uint8)buf[7] != crc_h)||((uint8)buf[8] != crc_l))
+    {
+      reportRunWarning("Error reading echo of zeroing 2 from a P33x : Bad CRC-16.");
+      flag=false;
+    }
+    // printf("\n\techo recu");
+  }
+  return flag;
 }
 //---------------------------------------------------------
 // Procedure: OnStartUp()
@@ -301,6 +434,11 @@ bool Keller::OnStartUp()
       m_iMmaxRetries = atoi(value.c_str());
       handled = true;
     }
+    else if(param == "GET_TEMPERATURE")
+    {
+      m_bTemperatureRequested = atoi(value.c_str());
+      handled = true;
+    }
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
@@ -316,6 +454,7 @@ bool Keller::OnStartUp()
     if(!m_bKellerInitialized)
       reportConfigWarning("Init keller failed");
   }
+  m_bKellerPolling = true;
   registerVariables();
   return true;
 }
@@ -327,6 +466,8 @@ void Keller::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
   Register("GET_KELLER_TEMPERATURE", 0);
+  Register("RESET_KELLER_PRESSURE", 0);
+  Register("SET_ZERO_KELLER_PRESSURE", 0);
 }
 
 //------------------------------------------------------------

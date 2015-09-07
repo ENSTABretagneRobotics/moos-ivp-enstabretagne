@@ -41,6 +41,8 @@ class Keller : public AppCastingMOOSApp
     bool SendKellerMessage(const KellerMsg & msg) {return (m_serial_port.Write(msg.data().data(), (int)msg.data().size()) == (int)msg.data().size());}
     bool ReadPressure();
     bool ReadTemperature();
+    bool ResetKellerPressure();
+    bool SetZeroKellerPressure();
 
 
   private: // Configuration variables
@@ -51,9 +53,13 @@ class Keller : public AppCastingMOOSApp
     int m_iMmaxRetries;
     bool m_bKellerInitialized;
     bool m_bTemperatureRequested;
+    bool m_bKellerPolling;
+    double m_bKellerZeroPressure;
 
     KellerMsg_ReadOutPressureFloatRequest kellerPressureRequest;
     KellerMsg_ReadOutTemperatureFloatRequest kellerTemperatureRequest;
+    KellerMsg_ResetPressureRequest kellerResetPressureRequest;
+    KellerMsg_SetZeroPressureRequest kellerSetZeroPressureRequest;
 
   private: // State variables
     #ifdef _WIN32

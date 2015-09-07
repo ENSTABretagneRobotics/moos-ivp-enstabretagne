@@ -8,4 +8,5 @@ ProcessConfig = iKeller
 
   SERIAL_PORT_NAME = /dev/ttyUSB0
   MAX_RETRIES = 10
+  GET_TEMPERATURE = 1;
 }
