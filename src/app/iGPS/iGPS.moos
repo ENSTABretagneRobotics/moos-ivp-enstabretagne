@@ -9,8 +9,9 @@ ProcessConfig = iGPS
 	AppTick   = 4
 	CommsTick = 4
 
-	PORT = /dev/ttyUSB0
+	PORT = /dev/ttyUSB1
 	BAUDRATE = 4800
 	MAX_RETRIES = 5
 	PUBLISH_RAW = true
+  POWERED_AT_START = true
 }
