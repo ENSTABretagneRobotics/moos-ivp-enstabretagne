@@ -1,0 +1,14 @@
+xslibusb.cpp.o: xslibusb.cpp ../include/xcommunication/xcommunicationconfig.h \
+ ../include/xcommunication/xslibusb.h ../include/xsens/xslibraryloader.h \
+ ../include/xsens/xstypesconfig.h ../include/xsens/xstypedefs.h \
+ ../include/xsens/pstdint.h ../include/xsens/xsstring.h \
+ ../include/xsens/xsarray.h
+xslibusb.cpp:
+../include/xcommunication/xcommunicationconfig.h:
+../include/xcommunication/xslibusb.h:
+../include/xsens/xslibraryloader.h:
+../include/xsens/xstypesconfig.h:
+../include/xsens/xstypedefs.h:
+../include/xsens/pstdint.h:
+../include/xsens/xsstring.h:
+../include/xsens/xsarray.h:

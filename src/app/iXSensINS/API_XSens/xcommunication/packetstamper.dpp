@@ -1,0 +1,58 @@
+packetstamper.cpp.o: packetstamper.cpp \
+ ../include/xcommunication/xcommunicationconfig.h \
+ ../include/xsens/xsdatapacket.h ../include/xsens/xstypedefs.h \
+ ../include/xsens/xstypesconfig.h ../include/xsens/pstdint.h \
+ ../include/xsens/xsmessage.h ../include/xsens/xsbytearray.h \
+ ../include/xsens/xsarray.h ../include/xsens/xsstring.h \
+ ../include/xsens/xsdataidentifier.h ../include/xsens/xsxbusmessageid.h \
+ ../include/xsens/xstimestamp.h ../include/xsens/xsushortvector.h \
+ ../include/xsens/xsscrdata.h ../include/xsens/xscalibrateddata.h \
+ ../include/xsens/xsvector3.h ../include/xsens/xsvector.h \
+ ../include/xsens/xsmath.h ../include/xsens/xsgpspvtdata.h \
+ ../include/xsens/xspressure.h ../include/xsens/xssdidata.h \
+ ../include/xsens/xsquaternion.h ../include/xsens/xsmatrix.h \
+ ../include/xsens/xseuler.h ../include/xsens/xsanalogindata.h \
+ ../include/xsens/xsutctime.h ../include/xsens/xsrawgpsdop.h \
+ ../include/xsens/xsrawgpssol.h ../include/xsens/xsrawgpssvinfo.h \
+ ../include/xsens/xsrawgpstimeutc.h ../include/xsens/xsrawgnsspvtdata.h \
+ ../include/xsens/xsrawgnsssatinfo.h ../include/xsens/xsdeviceid.h \
+ ../include/xsens/xsrange.h ../include/xsens/xstriggerindicationdata.h \
+ ../include/xcommunication/packetstamper.h ../include/xsens/pstdint.h
+packetstamper.cpp:
+../include/xcommunication/xcommunicationconfig.h:
+../include/xsens/xsdatapacket.h:
+../include/xsens/xstypedefs.h:
+../include/xsens/xstypesconfig.h:
+../include/xsens/pstdint.h:
+../include/xsens/xsmessage.h:
+../include/xsens/xsbytearray.h:
+../include/xsens/xsarray.h:
+../include/xsens/xsstring.h:
+../include/xsens/xsdataidentifier.h:
+../include/xsens/xsxbusmessageid.h:
+../include/xsens/xstimestamp.h:
+../include/xsens/xsushortvector.h:
+../include/xsens/xsscrdata.h:
+../include/xsens/xscalibrateddata.h:
+../include/xsens/xsvector3.h:
+../include/xsens/xsvector.h:
+../include/xsens/xsmath.h:
+../include/xsens/xsgpspvtdata.h:
+../include/xsens/xspressure.h:
+../include/xsens/xssdidata.h:
+../include/xsens/xsquaternion.h:
+../include/xsens/xsmatrix.h:
+../include/xsens/xseuler.h:
+../include/xsens/xsanalogindata.h:
+../include/xsens/xsutctime.h:
+../include/xsens/xsrawgpsdop.h:
+../include/xsens/xsrawgpssol.h:
+../include/xsens/xsrawgpssvinfo.h:
+../include/xsens/xsrawgpstimeutc.h:
+../include/xsens/xsrawgnsspvtdata.h:
+../include/xsens/xsrawgnsssatinfo.h:
+../include/xsens/xsdeviceid.h:
+../include/xsens/xsrange.h:
+../include/xsens/xstriggerindicationdata.h:
+../include/xcommunication/packetstamper.h:
+../include/xsens/pstdint.h:

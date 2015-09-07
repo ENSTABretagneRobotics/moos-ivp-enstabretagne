@@ -1,0 +1,22 @@
+packetfixeddata.cpp.o: packetfixeddata.cpp \
+ ../include/xcommunication/xcommunicationconfig.h \
+ ../include/xsens/xsdataformat.h ../include/xsens/xstypesconfig.h \
+ ../include/xsens/xstypedefs.h ../include/xsens/pstdint.h \
+ ../include/xsens/xsoutputmode.h ../include/xsens/xsoutputsettings.h \
+ ../include/xcommunication/packetfixeddata.h ../include/xsens/xsscrdata.h \
+ ../include/xsens/xsushortvector.h ../include/xsens/xsdeviceid.h \
+ ../include/xsens/xsstring.h ../include/xsens/xsarray.h
+packetfixeddata.cpp:
+../include/xcommunication/xcommunicationconfig.h:
+../include/xsens/xsdataformat.h:
+../include/xsens/xstypesconfig.h:
+../include/xsens/xstypedefs.h:
+../include/xsens/pstdint.h:
+../include/xsens/xsoutputmode.h:
+../include/xsens/xsoutputsettings.h:
+../include/xcommunication/packetfixeddata.h:
+../include/xsens/xsscrdata.h:
+../include/xsens/xsushortvector.h:
+../include/xsens/xsdeviceid.h:
+../include/xsens/xsstring.h:
+../include/xsens/xsarray.h:

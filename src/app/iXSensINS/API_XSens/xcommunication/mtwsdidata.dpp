@@ -1,0 +1,25 @@
+mtwsdidata.cpp.o: mtwsdidata.cpp \
+ ../include/xcommunication/xcommunicationconfig.h \
+ ../include/xsens/xsrange.h ../include/xsens/xstypesconfig.h \
+ ../include/xsens/xstypedefs.h ../include/xsens/pstdint.h \
+ ../include/xsens/xsrssi.h ../include/xcommunication/mtwsdidata.h \
+ ../include/xsens/pstdint.h ../include/xsens/xsvector3.h \
+ ../include/xsens/xsvector.h ../include/xsens/xsmath.h \
+ ../include/xsens/xsquaternion.h ../include/xsens/xsdeviceid.h \
+ ../include/xsens/xsstring.h ../include/xsens/xsarray.h
+mtwsdidata.cpp:
+../include/xcommunication/xcommunicationconfig.h:
+../include/xsens/xsrange.h:
+../include/xsens/xstypesconfig.h:
+../include/xsens/xstypedefs.h:
+../include/xsens/pstdint.h:
+../include/xsens/xsrssi.h:
+../include/xcommunication/mtwsdidata.h:
+../include/xsens/pstdint.h:
+../include/xsens/xsvector3.h:
+../include/xsens/xsvector.h:
+../include/xsens/xsmath.h:
+../include/xsens/xsquaternion.h:
+../include/xsens/xsdeviceid.h:
+../include/xsens/xsstring.h:
+../include/xsens/xsarray.h:
