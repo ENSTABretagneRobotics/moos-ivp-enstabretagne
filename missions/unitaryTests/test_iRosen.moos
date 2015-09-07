@@ -1,0 +1,37 @@
+// MOOS file
+
+ServerHost = localhost
+ServerPort = 9000
+
+Community  = AUV
+
+//------------------------------------------
+// Antler configuration  block
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+  Run = MOOSDB        @ NewConsole = true
+  Run = iRosen        @ NewConsole = true
+  Run = uMS           @ NewConsole = true
+}
+
+
+//------------------------------------------------
+// iRosen config block
+
+ProcessConfig = iRosen
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  DEVICE_NAME = /dev/ttyACM0
+  # Linux:
+  #     /dev/ttyACM0
+  # Windows: 
+  #     \\\\.\\USBSER000
+  #     or
+  #     \\\\.\\COM6
+  # Mac OS X:
+  #     /dev/cu.usbmodem00034567
+}

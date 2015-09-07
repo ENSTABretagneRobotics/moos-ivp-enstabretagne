@@ -1,21 +1,23 @@
 #--------------------------------------------------------
-# The CMakeLists.txt for: iModem
-# ENSTA Bretagne
-# Author(s): Clément Aubry
+# The CMakeLists.txt for: iKeller
+# Toutatis AUVs - ENSTA Bretagne
+# Author(s): Clement Aubry
 #--------------------------------------------------------
 
 SET(SRC
-  seanetmsg.cpp
-  Modem.cpp
+  kellermsg.cpp
+  Keller.cpp
   main.cpp
 )
 
-ADD_EXECUTABLE(iModem ${SRC})
+ADD_EXECUTABLE(iKeller ${SRC})
 
-TARGET_LINK_LIBRARIES(iModem
+TARGET_LINK_LIBRARIES(iKeller
    ${MOOS_LIBRARIES}
    xml-documentation
    apputil
    mbutil
    m
-   pthread)
+   pthread
+   rt
+   )

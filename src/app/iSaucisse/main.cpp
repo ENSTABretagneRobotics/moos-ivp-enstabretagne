@@ -1,7 +1,7 @@
 /************************************************************/
 /*    FILE: main.cpp
-/*    ORGN: ENSTA Bretagne
-/*    AUTH: Clément Aubry
+/*    ORGN: Toutatis AUVs - ENSTA Bretagne
+/*    AUTH: Simon Rohou
 /*    DATE: 2015
 /************************************************************/
 
@@ -9,7 +9,7 @@
 #include "MBUtils.h"
 #include "documentation/MOOSAppDocumentation.h"
 #include "ColorParse.h"
-#include "Modem.h"
+#include "Saucisse.h"
 
 using namespace std;
 
@@ -41,12 +41,12 @@ int main(int argc, char *argv[])
     documentation.showHelpAndExit();
 
   cout << termColor("green");
-  cout << "iModem launching as " << run_command << endl;
+  cout << "iSaucisse launching as " << run_command << endl;
   cout << termColor() << endl;
 
-  Modem Modem;
+  Saucisse Saucisse;
 
-  Modem.Run(run_command.c_str(), mission_file.c_str());
+  Saucisse.Run(run_command.c_str(), mission_file.c_str());
 
   return(0);
 }
