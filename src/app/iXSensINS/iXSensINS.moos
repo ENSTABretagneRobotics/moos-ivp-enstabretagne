@@ -8,4 +8,7 @@ ProcessConfig = iXSensINS
 
   UART_PORT = /dev/ttyUSB2
   UART_BAUD_RATE = 115200
+
+  // magnetic declination for Piombino (2°E)
+  YAW_DECLINATION = -2
 }

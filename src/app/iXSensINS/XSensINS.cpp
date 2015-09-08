@@ -16,6 +16,7 @@ using namespace std;
 // Constructor
 
 XSensINS::XSensINS() {
+  yaw_declination = 0.0;
 }
 
 XSensINS::~XSensINS() {
@@ -82,7 +83,7 @@ bool XSensINS::Iterate() {
       XsEuler euler = packet.orientationEuler();
       Notify("IMU_PITCH", euler.m_pitch);
       Notify("IMU_ROLL", euler.m_roll);
-      Notify("IMU_YAW", euler.m_yaw);
+      Notify("IMU_YAW", euler.m_yaw + yaw_declination);
     }
 
     // Acceleration
@@ -143,6 +144,10 @@ bool XSensINS::OnStartUp() {
     }
     else if (param == "UART_BAUD_RATE") {
       UART_BAUD_RATE = atoi(value.c_str());
+      handled = true;
+    }
+    else if (param == "YAW_DECLINATION") {
+      yaw_declination = atoi(value.c_str());
       handled = true;
     }
     if (!handled)

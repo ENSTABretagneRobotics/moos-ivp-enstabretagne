@@ -1,0 +1,9 @@
+//------------------------------------------------
+// pSensorViewer config block
+
+ProcessConfig = pSensorViewer
+{
+   AppTick   = 4
+   CommsTick = 4
+}
+

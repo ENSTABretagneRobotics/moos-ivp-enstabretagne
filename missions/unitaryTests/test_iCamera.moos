@@ -1,0 +1,46 @@
+// MOOS file
+
+ServerHost = localhost
+ServerPort = 9000
+
+Community  = AUV
+
+//------------------------------------------
+// Antler configuration  block
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+
+  Run = MOOSDB       	  @ NewConsole = true
+  Run = uMS             @ NewConsole=false
+  Run = iCamera @ NewConsole = true
+  Run = pSensorViewer @ NewConsole = true
+
+}
+
+//------------------------------------------------
+// iCamera config block
+
+ProcessConfig = iCamera
+{
+   AppTick   = 25
+   CommsTick = 25
+
+   VARIABLE_IMAGE_NAME= CAMERA_TEST
+   IDENTIFIANT_CV_CAMERA = 1
+   DISPLAY_IMAGE = true
+   INVERT_IMAGE = true
+
+   LARGEUR_IMAGE_CAMERA = 360
+   HAUTEUR_IMAGE_CAMERA = 288
+}
+
+//------------------------------------------------
+// pSensorViewer config block
+
+ProcessConfig = pSensorViewer
+{
+   AppTick   = 25
+   CommsTick = 25
+}
+

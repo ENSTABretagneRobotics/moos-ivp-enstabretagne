@@ -1,0 +1,306 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"Xs",
+				"XsVector"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "src/app/iXSensINS/XSensINS.cpp",
+			"settings":
+			{
+				"buffer_size": 5541,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 180.0,
+		"last_filter": "git add",
+		"selected_items":
+		[
+			[
+				"git add",
+				"Git: Add..."
+			],
+			[
+				"git statu",
+				"Git: Status"
+			],
+			[
+				"disea",
+				"Package Control: Disable Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"build",
+				"Build With: C++ Single File"
+			],
+			[
+				"",
+				"Build With: C++ Single File - Run"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"Disea",
+				"Package Control: Disable Package"
+			],
+			[
+				"Insta",
+				"Package Control: Install Package"
+			],
+			[
+				"Install",
+				"Package Control: Install Package"
+			],
+			[
+				"Text Pastry",
+				"Text Pastry: From 1 To X"
+			],
+			[
+				"dise",
+				"SublimeLinter: Disable Linting"
+			],
+			[
+				"lint",
+				"SublimeLinter: Disable Linter"
+			],
+			[
+				"mode",
+				"SublimeLinter: Choose Lint Mode"
+			],
+			[
+				"enable",
+				"SublimeLinter: Disable Debug Mode"
+			],
+			[
+				"Package",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 593.0
+	},
+	"console":
+	{
+		"height": 139.0,
+		"history":
+		[
+			"restart",
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/lemezoth/moos-ivp-toutatis",
+		"/home/lemezoth/moos-ivp-toutatis/src",
+		"/home/lemezoth/moos-ivp-toutatis/src/app",
+		"/home/lemezoth/moos-ivp-toutatis/src/app/iXSensINS"
+	],
+	"file_history":
+	[
+		"/home/lemezoth/moos-ivp-toutatis/toutatis.sublime-project",
+		"/home/lemezoth/sandbox/test.c",
+		"/home/lemezoth/moos-ivp-toutatis/src/app/iRazorIMU/iRazorIMU.xml",
+		"/home/lemezoth/moos-ivp-toutatis/missions/unitaryTests/test_iXSensINS.moos",
+		"/home/lemezoth/moos-ivp-toutatis/src/app/iXSensINS/XSensINS.h",
+		"/home/lemezoth/moos-ivp-toutatis/src/app/iXSensINS/CMakeLists.txt",
+		"/usr/include/modbus/modbus-rtu.h",
+		"/usr/include/modbus/modbus.h",
+		"/usr/local/lib/python2.7/dist-packages/minimalmodbus.pyc",
+		"/home/lemezoth/moos-ivp-toutatis/src/app/iXSensINS/deviceclass.cpp",
+		"/home/lemezoth/moos-ivp-toutatis/src/CMakeLists.txt",
+		"/home/lemezoth/moos-ivp-toutatis/src/app/CMakeLists.txt"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"modbus_rtu_set_echohw_mode",
+			"m_data",
+			"=0",
+			"eg[",
+			"ctx",
+			"::open",
+			"doMtSettings",
+			" $(LFLAGS) ",
+			"$(LFLAGS)",
+			"printw"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "src/app/iXSensINS/XSensINS.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5541,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								224,
+								224
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 25.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 112.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "toutatis.sublime-project",
+	"replace":
+	{
+		"height": 46.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 235.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

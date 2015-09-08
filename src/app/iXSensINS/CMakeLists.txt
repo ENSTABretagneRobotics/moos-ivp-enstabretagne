@@ -14,20 +14,18 @@ SET(SRC
   deviceclass.cpp
 )
 
-add_custom_command(
-    OUTPUT ./API_XSens
-    COMMAND make
-    WORKING_DIRECTORY ./API_XSens
-)
-
-add_custom_target(
-    api_xsens
+add_custom_target(api_xsens_build
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/API_XSens
     COMMAND make
 )
 
+add_custom_target(clean
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/API_XSens
+    COMMAND make clean
+)
+
 ADD_EXECUTABLE(iXSensINS ${SRC})
-add_dependencies(iXSensINS api_xsens)
+add_dependencies(iXSensINS api_xsens_build)
 
 TARGET_LINK_LIBRARIES(iXSensINS
    ${MOOS_LIBRARIES}
