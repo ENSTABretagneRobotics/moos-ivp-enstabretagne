@@ -10,7 +10,6 @@
 #include "MBUtils.h"
 #include "Camera.h"
 
-
 /**
  * \fn
  * \brief Constructeur de l'application MOOS
@@ -109,6 +108,10 @@ bool Camera::OnStartUp()
 
       if(param == "IDENTIFIANT_CV_CAMERA")
         identifiant_camera = atoi((char*)value.c_str());
+      if(param == "LARGEUR_IMAGE_CAMERA")
+        LARGEUR_IMAGE_CAMERA = atoi((char*)value.c_str());
+      if(param == "HAUTEUR_IMAGE_CAMERA")
+        HAUTEUR_IMAGE_CAMERA = atoi((char*)value.c_str());
 
       if(param == "VARIABLE_IMAGE_NAME")
       {

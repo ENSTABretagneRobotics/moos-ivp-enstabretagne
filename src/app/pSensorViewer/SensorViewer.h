@@ -13,8 +13,7 @@
 #include <opencv/cv.h>
 #include <opencv2/highgui/highgui.hpp>
 
-#include "Ciscrea_Images/Ciscrea_Images.h"
-
+//#include "Ciscrea_Images/Ciscrea_Images.h"
 
 using namespace std;
 

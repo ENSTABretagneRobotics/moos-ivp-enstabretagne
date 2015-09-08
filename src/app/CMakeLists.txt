@@ -31,6 +31,8 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
   ADD_SUBDIRECTORY(iKeller)
   ADD_SUBDIRECTORY(iSaucisse)
   ADD_SUBDIRECTORY(iGPSoE)
+  ADD_SUBDIRECTORY(pSensorViewer)
+  ADD_SUBDIRECTORY(iCamera)
 
 ##############################################################################
 #                           END of CMakeLists.txt
