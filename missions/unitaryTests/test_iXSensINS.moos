@@ -26,6 +26,6 @@ ProcessConfig = iXSensINS
   AppTick   = 25
   CommsTick = 25
 
-  UART_PORT = /dev/ttyUSB4
+  UART_PORT = /dev/ttyUSB1
   UART_BAUD_RATE = 115200
 }
