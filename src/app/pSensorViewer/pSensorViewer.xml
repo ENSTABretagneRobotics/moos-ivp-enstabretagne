@@ -9,7 +9,8 @@
         <organization>Toutatis AUVs - ENSTA Bretagne</organization>
         <date>2015</date>
         <authors>
-           <author></author>
+           <author>Vincent Drevelle</author>
+           <author>Thomas Le Mezo</author>
         </authors>
         <licence>MIT</licence>
      </info>
@@ -20,13 +21,35 @@
         </synopsis>
         <interface>
            <subscriptions>
-              <!--
               <moosvar>
-                 <varname>EXAMPLE_VAR_IN</varname>
-                 <vartype>string</vartype>
-                 <varinfo>description of the MOOSVar</varinfo>
+                 <varname>CAMERA_SIDE</varname>
+                 <vartype>binary</vartype>
+                 <varinfo></varinfo>
               </moosvar>
-              -->
+
+              <moosvar>
+                 <varname>CAMERA_BOTTOM</varname>
+                 <vartype>binary</vartype>
+                 <varinfo></varinfo>
+              </moosvar>
+
+              <moosvar>
+                 <varname>SONAR_RAW_DATA</varname>
+                 <vartype>binary</vartype>
+                 <varinfo></varinfo>
+              </moosvar>
+
+              <moosvar>
+                 <varname>HEADING</varname>
+                 <vartype>double</vartype>
+                 <varinfo></varinfo>
+              </moosvar>
+
+              <moosvar>
+                 <varname>YAW</varname>
+                 <vartype>double</vartype>
+                 <varinfo></varinfo>
+              </moosvar>
            </subscriptions>
            <publications>
               <!--
