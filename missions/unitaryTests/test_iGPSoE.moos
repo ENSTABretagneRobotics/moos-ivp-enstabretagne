@@ -1,0 +1,31 @@
+Community  = TOUTATIS_BUOY
+
+ServerHost = localhost
+ServerPort = 9000
+
+LatOrigin    = 48.418079
+LongOrigin   = -4.472279
+
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+  Run = MOOSDB        @ NewConsole = false
+  Run = uMS           @ NewConsole = false
+  Run = uMACView      @ NewConsole = false
+
+  Run = iGPSoE        @ NewConsole = false
+}
+
+ProcessConfig = iGPSoE
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  ADRESS = 192.168.0.34:4001
+}
+ProcessConfig = uMACView
+{
+  AppTick   = 4
+  CommsTick = 4
+}

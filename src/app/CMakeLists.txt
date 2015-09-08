@@ -30,6 +30,7 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
   ADD_SUBDIRECTORY(iSonar)
   ADD_SUBDIRECTORY(iKeller)
   ADD_SUBDIRECTORY(iSaucisse)
+  ADD_SUBDIRECTORY(iGPSoE)
 
 ##############################################################################
 #                           END of CMakeLists.txt
