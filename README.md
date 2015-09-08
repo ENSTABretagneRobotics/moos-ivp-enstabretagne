@@ -65,7 +65,7 @@ Specific configuration is required for Pololu devices. In the project repository
 ```shell
 sudo cp scripts/99-pololu.rules /etc/udev/rules.d/
 sudo udevadm control --reload-rules
-sudo adduser your_username dialout
+sudo adduser your_username dialout video
 ```
 Be careful to change `your_username`.
 
