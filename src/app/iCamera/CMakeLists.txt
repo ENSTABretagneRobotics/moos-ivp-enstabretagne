@@ -8,14 +8,15 @@
 SET(SRC
   videograbv4l2.cpp
   Camera.cpp
-  Camera_Info.cpp
   main.cpp
 )
 
 ADD_EXECUTABLE(iCamera ${SRC})
 
 TARGET_LINK_LIBRARIES(iCamera
-   MOOS
+   ${MOOS_LIBRARIES}
+   xml-documentation
+   apputil
    mbutil
    m
    pthread
@@ -25,5 +26,4 @@ TARGET_LINK_LIBRARIES(iCamera
    opencv_highgui
    opencv_video
    opencv_legacy
-   # Our libraries
-   Ciscrea_Images)
+)

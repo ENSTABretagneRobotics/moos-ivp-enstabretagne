@@ -10,6 +10,8 @@
 #include "ACTable.h"
 #include "SensorViewer.h"
 
+#define LARGEUR_IMAGE_CAMERA			360
+#define HAUTEUR_IMAGE_CAMERA			288
 
 using namespace std;
 
