@@ -1,0 +1,82 @@
+// MOOS file
+Community  = AUV
+
+ServerHost = localhost
+ServerPort = 9000
+
+
+//------------------------------------------
+// Antler configuration  block
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+  Run = MOOSDB        @ NewConsole = false
+  Run = iKeller       @ NewConsole = true
+  Run = uJoystick     @ NewConsole = false
+  Run = iSaucisse     @ NewConsole = true
+  Run = uMS           @ NewConsole = false
+  Run = uMACView      @ NewConsole = false
+
+}
+
+ProcessConfig = iKeller
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  SERIAL_PORT_NAME = /dev/ttyUSB0
+  MAX_RETRIES = 10
+}
+
+ProcessConfig = uJoystick
+{
+   AppTick   = 4
+   CommsTick = 4
+   
+   DEVICE_NAME = /dev/input/js1
+
+   INCREMENT = false
+   SCALE = 100
+   
+   AXIS = 0
+   SCALE_RATIO = 0.01
+   MOOS_DEST_VAR = DESIRED_SLIDE
+   
+   AXIS = 1
+   SCALE_RATIO = 0.01
+   MOOS_DEST_VAR = DESIRED_THRUST
+   
+   AXIS = 2
+   SCALE_RATIO = 0.01
+   MOOS_DEST_VAR = DESIRED_RUDDER
+   
+   AXIS = 3
+   SCALE_RATIO = 0.01
+   MOOS_DEST_VAR = DESIRED_ELEVATOR
+   
+   BUTTON = 1
+   SCALE_RATIO = 0.01
+   MOOS_DEST_VAR = PUSHED_BUTTON_2
+   
+   BUTTON = 2
+   SCALE_RATIO = 0.01
+   MOOS_DEST_VAR = PUSHED_BUTTON_3
+}
+
+ProcessConfig = iSaucisse
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  max_thruster_value = 1
+  coeff_matrix = 1,1,0,-1,-1,0,0,0,1
+  
+}
+
+
+ProcessConfig = uMACView
+{
+  AppTick   = 4
+  CommsTick = 4
+}

@@ -10,6 +10,7 @@
 #include "ACTable.h"
 #include "Saucisse.h"
 
+
 using namespace std;
 
 //---------------------------------------------------------
@@ -87,6 +88,45 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       Notify("POWERED_ECHOSOUNDER", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
+    /** CONTROLLER FORCE VALUES UPDATE**/
+    else if(
+      (Operation_Mode == "Autonomus" || Operation_Mode == "Semi-Autonomus") && 
+      (key == "rotational_force" || key == "z_force" || key == "forward_force"))
+    {
+
+      //update the force value
+      if(key == "rotational_force")
+        rotational_force =  msg.GetDouble();
+      else if(key == "forward_force")
+        forward_force =  msg.GetDouble();
+      else if(key == "z_force")
+        z_force =  msg.GetDouble();
+
+      //execute the calculation of the Thurster Values;
+      Saucisse::CalcThrustersValues();
+    }
+
+    /** JOYSTICK FORCE VALUES UPDATE**/
+    else if(
+      (Operation_Mode == "Manual") && 
+      (key == "DESIRED_ELEVATOR" || key == "DESIRED_THRUST" || key == "DESIRED_RUDDER"))
+    {
+
+      //update the force value
+      if(key == "DESIRED_RUDDER")
+        rotational_force =  msg.GetDouble();
+      else if(key == "DESIRED_THRUST")
+        forward_force =  msg.GetDouble();
+      else if(key == "DESIRED_ELEVATOR")
+        z_force =  msg.GetDouble();
+
+      //execute the calculation of the Thurster Values;
+      Saucisse::CalcThrustersValues();
+    }
+
+    else if(key == "Operation_Mode") 
+      Operation_Mode = msg.GetString();
+
     /*else if(key == "POWER_GPS")
     {
       int success = m_pololu->turnOnBistableRelay(14, 15, (int)msg.GetDouble() == 1);
@@ -96,6 +136,10 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
       reportRunWarning("Unhandled Mail: " + key);
   }
+
+
+  //Calculate the thrusters values
+  Saucisse::CalcThrustersValues();
 
   return true;
 }
@@ -133,6 +177,51 @@ bool Saucisse::OnStartUp()
 {
   AppCastingMOOSApp::OnStartUp();
 
+  /** DEFAULT VALUES **/
+
+  /*
+    default values for coeff_matrix
+
+       Fx   Fr   Fz
+      ---------------
+  u1 |  1   1   0 
+  u2 |  1   1   0
+  u3 |  0   0   1   
+
+  coeff_matrix = { 
+    {  1 ,  1 , 0  }, 
+    {  1 ,  1 , 0  }, 
+    {  0,   0 , 1  }
+  };
+  */
+  coeff_matrix[0][0] = 1;
+  coeff_matrix[0][1] = 1;
+  coeff_matrix[0][2] = 0;
+  coeff_matrix[1][0] = -1;
+  coeff_matrix[1][1] = -1;
+  coeff_matrix[1][2] = 0;
+  coeff_matrix[2][0] = 0;
+  coeff_matrix[2][1] = 0;
+  coeff_matrix[2][2] = 1;
+
+  max_thruster_value = 1; //[-1;1]
+
+  //zero value means thursters stopped
+  side_thruster_one = 0; 
+  side_thruster_two = 0;
+  vertical_thruster = 0;
+
+  /** variable initialization **/
+  rotational_force = 0;     
+  z_force = 0;
+  forward_force = 0;
+  saturation_value = 0;
+  saturated_thruster_value = 0;
+  Operation_Mode = "Manual";
+
+  /** END OF DEFAULT VALUES **/
+
+
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
   if(!m_MissionReader.GetConfiguration(GetAppName(), sParams))
@@ -153,6 +242,41 @@ bool Saucisse::OnStartUp()
       m_device_name = value;
       handled = true;
     }
+    else if(param == "max_thruster_value")
+    {
+      max_thruster_value = atof(value.c_str());
+      handled = true;
+    }
+    else if(param == "coeff_matrix")
+    {
+      vector<string> str_vector = parseString(value.c_str(), ',');
+
+      //check for correct array size of 9 elements (3x3)
+      if(str_vector.size() == 9)
+      {
+          //size is correct, put the values into the coeff_matrix
+          for(unsigned int i=0; i<str_vector.size(); i++)
+          {
+            for(unsigned int j=0; i<3; j++)
+            {
+              //get the string and convert it into value
+              coeff_matrix[i][j] = atof(str_vector[i+j].c_str());
+            }
+          }
+      }
+      else
+      {
+        //incorrect array size
+        //send warning
+        reportUnhandledConfigWarning("Error while parsing coeff_matrix: incorrect number of elements");
+
+      }//end of else
+
+      handled = true;
+    }
+    
+
+
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
@@ -170,6 +294,16 @@ void Saucisse::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
   Register("POWER_*", "*", 0);
+
+  Register("rotational_force", 0);
+  Register("z_force", 0);
+  Register("forward_force", 0);
+  Register("Operation_Mode", 0);
+
+  Register("DESIRED_RUDDER", 0);
+  Register("DESIRED_THRUST", 0);
+  Register("DESIRED_ELEVATOR", 0);
+
 }
 
 //------------------------------------------------------------
@@ -178,7 +312,7 @@ void Saucisse::registerVariables()
 bool Saucisse::buildReport() 
 {
   m_msgs << "============================================ \n";
-  m_msgs << "iRosen:                                      \n";
+  m_msgs << "iSaucisse:                                      \n";
   m_msgs << "============================================ \n";
   m_msgs << "\n";
   
@@ -188,3 +322,108 @@ bool Saucisse::buildReport()
 
   return true;
 }
+
+
+void Saucisse::CalcThrustersValues()
+{
+
+  /** COEFFICIENT MATRIX 
+
+    double coeff_matrix = [3][3]
+
+       Fx   Fr   Fz
+      ---------------
+  u1 | a1   b1   c1 
+  u2 | a2   b2   c2
+  u3 | a3   b3   c3
+  
+  u1 and u2 are the side thrusters
+  u3 is the vertical thrusters
+  Fx is the force in the forward-reverse direction
+  Fr is the roll (rotational) force
+  Fz is the vertical force
+
+
+  //c1, c2, a3 and b3 are tipically equal to ZERO
+  //c3 is tipically equal to one
+
+  */
+
+
+
+  /** CALCULATION OF THE SIDE THRUSTERS VALUES **/
+  
+  //u1 = a1 * Fx + b1 * Fr + c1 * Fz
+  side_thruster_one = coeff_matrix[0][0] * forward_force + coeff_matrix[0][1] * rotational_force + coeff_matrix[0][2] * z_force;
+
+  //u2 = a2 * Fx + b2 * Fr + c2 * Fz
+  side_thruster_two = coeff_matrix[1][0] * forward_force + coeff_matrix[1][1] * rotational_force + coeff_matrix[1][2] * z_force;
+
+
+
+
+
+  /** CHECK FOR SATURATION of the side thrusters **/
+    if(fabs(side_thruster_one) > max_thruster_value || fabs(side_thruster_two) > max_thruster_value)
+    {
+      //one of the two thrusters are saturated, remove the saturation
+      //find out which one of the thursters is saturated
+      if(fabs(side_thruster_one) > fabs(side_thruster_two))
+      {
+        //thruster one is saturated
+        saturated_thruster_value = side_thruster_one;
+        saturation_value = fabs(side_thruster_one) - max_thruster_value;
+      
+      }//end of if
+      else
+      {
+        //thruster two is saturated
+        saturated_thruster_value = side_thruster_two;
+        
+
+      }//end of else
+
+      //calculate the saturation value, which will be removed from the thursters values
+      saturation_value = fabs(side_thruster_two) - max_thruster_value;
+
+      //check if the saturation is in (a)forward or (b)reverse direction
+      if(saturated_thruster_value > 0)
+      {
+        //(a) saturation is in forward direction (positive) so we must REDUCE the saturated value
+        side_thruster_one = side_thruster_one - saturation_value;
+        side_thruster_two = side_thruster_two - saturation_value;
+        //from now we have non saturated value for both thrusters
+      }
+      else
+      {
+        //(b) saturation is in reverse direction (negative) so we must SUM the saturated value in order to "desaturate" the thrusters output values
+        side_thruster_one = side_thruster_one + saturation_value;
+        side_thruster_two = side_thruster_two + saturation_value;
+        //from now we have non saturated value for both thrusters
+      }
+
+    }//end of if saturation check
+    //else - the thrusters values are not saturated so they can be sent to the thursters whitout additional manipulation
+
+  /** END OF CHECK FOR SATURATION of the side thrusters **/
+
+
+
+
+  /** CALCULATION OF THE VERTICAL THRUSTER VALUE **/
+
+    //u3 = a3 * Fx + b3 * Fr + c3 * Fz
+    vertical_thruster = coeff_matrix[2][0] * forward_force + coeff_matrix[2][1] *rotational_force  + coeff_matrix[2][2] * z_force;
+
+    //check for saturation of the thruster for both positive and negative values
+    vertical_thruster = (vertical_thruster < max_thruster_value) ? vertical_thruster: max_thruster_value;
+    vertical_thruster = (vertical_thruster > -max_thruster_value) ? vertical_thruster : -max_thruster_value;
+
+
+  /** Notify the output variables **/
+    Notify("side_thruster_one", side_thruster_one);
+    Notify("side_thruster_two", side_thruster_two);
+    Notify("vertical_thruster", vertical_thruster);
+
+
+}//end of void Saucisse::CalcThrustersValues()
