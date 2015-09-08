@@ -9,7 +9,8 @@
         <organization>Toutatis AUVs - ENSTA Bretagne</organization>
         <date>2015</date>
         <authors>
-           <author></author>
+           <author>Vincent Drevelle</author>
+           <author>Thomas Le Mezo</author>
         </authors>
         <licence>MIT</licence>
      </info>
@@ -28,14 +29,12 @@
               </moosvar>
               -->
            </subscriptions>
-           <publications>
-              <!--
+           <publications>              
               <moosvar>
-                 <varname>EXAMPLE_VAR_OUT</varname>
-                 <vartype>string</vartype>
-                 <varinfo>description of the MOOSVar</varinfo>
+                 <varname>name of the camera</varname>
+                 <vartype>binary</vartype>
+                 <varinfo></varinfo>
               </moosvar>
-              -->
            </publications>
         </interface>
         <!-- if there is a bug or a special fact to know.. -->

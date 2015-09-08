@@ -18,7 +18,6 @@
 #include "MOOS/libMOOS/App/MOOSApp.h"
 
 #include "videograbv4l2.h"
-#include "Ciscrea_Images/Ciscrea_Images.h"
 
 using namespace std;
 using namespace cv;
@@ -46,6 +45,8 @@ class Camera : public CMOOSApp
     //VideoCapture  m_vc;
     VideoGrabV4L2 m_vc_v4l2;
     bool      m_affichage_image, m_inverser_image;
+
+    int LARGEUR_IMAGE_CAMERA, HAUTEUR_IMAGE_CAMERA;
 };
 
 #endif 
