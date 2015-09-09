@@ -18,4 +18,6 @@ ProcessConfig = iModem
   MODEM_RANGING_TIMEOUT_US = 3000
 
   ROBOT_NAME = AUV1
+
+  POWERED_AT_START = TRUE
 }

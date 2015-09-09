@@ -1,7 +1,7 @@
 /************************************************************/
 /*    FILE: SensorViewer.h
 /*    ORGN: Toutatis AUVs - ENSTA Bretagne
-/*    AUTH: 
+/*    AUTH:
 /*    DATE: 2015
 /************************************************************/
 
@@ -17,7 +17,7 @@
 
 using namespace std;
 
-class SensorViewer : public CMOOSApp
+class SensorViewer : public AppCastingMOOSApp
 {
 	public:
 		SensorViewer();
@@ -29,6 +29,7 @@ class SensorViewer : public CMOOSApp
 		bool OnConnectToServer();
 		bool OnStartUp();
 		void RegisterVariables();
+		bool buildReport();
 
 	private: // Configuration variables
 
@@ -41,11 +42,11 @@ class SensorViewer : public CMOOSApp
 		cv::Mat img_son_cart;
 		cv::Mat pol2cart_x;
 		cv::Mat pol2cart_y;
-		
+
 		double heading;
 		double heading_razor;
 		double heading_ciscrea;
-		
+
 		double vx;
 };
 
