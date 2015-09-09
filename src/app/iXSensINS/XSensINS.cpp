@@ -10,6 +10,8 @@
 #include "ACTable.h"
 #include "XSensINS.h"
 
+#include <math.h>
+
 using namespace std;
 
 //---------------------------------------------------------
@@ -80,7 +82,7 @@ bool XSensINS::Iterate() {
 
     // Convert packet to euler
     if(packet.containsOrientation()){
-      XsEuler euler = packet.orientationEuler();
+      euler = packet.orientationEuler();
       Notify("IMU_PITCH", euler.m_pitch);
       Notify("IMU_ROLL", euler.m_roll);
       Notify("IMU_YAW", euler.m_yaw + yaw_declination);
@@ -88,7 +90,7 @@ bool XSensINS::Iterate() {
 
     // Acceleration
     if(packet.containsCalibratedAcceleration()){
-      XsVector acceleration = packet.calibratedAcceleration();
+      acceleration = packet.calibratedAcceleration();
       Notify("IMU_ACC_X", acceleration[0]);
       Notify("IMU_ACC_Y", acceleration[1]);
       Notify("IMU_ACC_Z", acceleration[2]);
@@ -96,7 +98,7 @@ bool XSensINS::Iterate() {
 
     //Gyro
     if(packet.containsCalibratedGyroscopeData()){
-      XsVector gyro = packet.calibratedGyroscopeData();
+      gyro = packet.calibratedGyroscopeData();
       Notify("IMU_GYR_X", gyro[0]);
       Notify("IMU_GYR_Y", gyro[1]);
       Notify("IMU_GYR_Z", gyro[2]);
@@ -104,10 +106,11 @@ bool XSensINS::Iterate() {
 
     //Magneto
     if(packet.containsCalibratedMagneticField()){
-      XsVector mag = packet.calibratedMagneticField();
+      mag = packet.calibratedMagneticField();
       Notify("IMU_MAG_X", mag[0]);
       Notify("IMU_MAG_Y", mag[1]);
       Notify("IMU_MAG_Z", mag[2]);
+      Notify("IMU_MAG_N", sqrt(pow(mag[0], 2) + pow(mag[1], 2) + pow(mag[2], 2)));
     }
 
   }
@@ -202,11 +205,16 @@ void XSensINS::registerVariables() {
 // Procedure: buildReport()
 
 bool XSensINS::buildReport() {
-  #if 1  // Keep these around just for template
-    m_msgs << "UART_PORT " << UART_PORT << endl;
-    m_msgs << "UART_BAUD_RATE " << UART_BAUD_RATE << endl;
 
-  #endif
+  m_msgs << "============================================ \n";
+  m_msgs << "iXSensINS Status:                            \n";
+  m_msgs << "============================================ \n";
+
+  ACTable actab(5);
+  actab << "Serial Port | Baude rate | YAW | ROLL | PITCH";
+  actab.addHeaderLines();
+  actab << UART_PORT << UART_BAUD_RATE << euler.m_yaw + yaw_declination << euler.m_roll << euler.m_pitch;
+  m_msgs << actab.getFormattedString();
 
   return true;
 }
