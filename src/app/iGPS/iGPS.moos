@@ -12,6 +12,6 @@ ProcessConfig = iGPS
 	PORT = /dev/ttyUSB1
 	BAUDRATE = 4800
 	MAX_RETRIES = 5
-	PUBLISH_RAW = true
-  POWERED_AT_START = true
+	PUBLISH_RAW = TRUE
+  POWERED_AT_START = TRUE
 }
