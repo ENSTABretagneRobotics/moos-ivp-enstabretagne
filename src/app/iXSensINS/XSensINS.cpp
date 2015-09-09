@@ -141,7 +141,7 @@ bool XSensINS::OnStartUp() {
     string value = line;
 
     bool handled = false;
-    if (param == "UART_PORT") {
+    if (param == "UART_PORT_XSENS") {
       UART_PORT = value;
       handled = true;
     }
