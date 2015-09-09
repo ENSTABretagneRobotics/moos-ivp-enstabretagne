@@ -10,6 +10,7 @@ ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB0
 GPS_SERIAL_PORT = /dev/ttyUSB0
 KELLER_SERIAL_PORT = /dev/ttyUSB0
 SONAR_SERIAL_PORT = /dev/ttyUSB0
+XSENSINS_SERIAL_PORT = /dev/ttyUSB0
 
 //------------------------------------------
 // Antler configuration  block
@@ -45,7 +46,6 @@ ProcessConfig = iXSensINS
   AppTick        = 25
   CommsTick      = 25
 
-  UART_PORT      = /dev/ttyUSB5
   UART_BAUD_RATE = 115200
 }
 
