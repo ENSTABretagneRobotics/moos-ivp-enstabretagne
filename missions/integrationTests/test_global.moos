@@ -23,19 +23,16 @@ ProcessConfig = ANTLER
   Run = uMACView      @ NewConsole = false
   Run = uProcessWatch @ NewConsole = false
 
+  Run = pLogger       @ NewConsole = false
+
   Run = iCamera       @ NewConsole = false ~iCamera1
   Run = iCamera       @ NewConsole = false ~iCamera2
   Run = pSensorViewer @ NewConsole = false
-
   Run = iEchoSounder  @ NewConsole = false
-
   Run = iGPS          @ NewConsole = false
-
   Run = iKeller       @ NewConsole = false
-
   Run = iSonar        @ NewConsole = false
   Run = iXSensINS     @ NewConsole = false
-
 }
 
 //------------------------------------------
@@ -152,3 +149,19 @@ ProcessConfig = uProcessWatch
    CommsTick = 25
 }
 
+//------------------------------------------
+// Logger  configuration  block
+//
+ProcessConfig = pLogger
+{
+  //over  loading  basic  params
+  AppTick     = 4.0
+  CommsTick   = 4.0
+
+  File          = test_global
+  PATH          = ~/log
+  FileTimeStamp = true
+
+  AsyncLog        = true
+  WildCardLogging = true
+}
