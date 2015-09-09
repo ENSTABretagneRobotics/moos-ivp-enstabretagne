@@ -5,6 +5,13 @@ ServerPort = 9000
 
 Community  = AUV
 
+//Serial port configuration
+ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB0
+GPS_SERIAL_PORT = /dev/ttyUSB0
+KELLER_SERIAL_PORT = /dev/ttyUSB0
+SONAR_SERIAL_PORT = /dev/ttyUSB0
+XSENSINS_SERIAL_PORT = /dev/ttyUSB0
+
 //------------------------------------------
 // Antler configuration  block
 
@@ -15,17 +22,17 @@ ProcessConfig = ANTLER
   Run = uMS           @ NewConsole = false
   Run = uMACView      @ NewConsole = false
   Run = uProcessWatch @ NewConsole = false
-  
+
   Run = iCamera       @ NewConsole = false ~iCamera1
   Run = iCamera       @ NewConsole = false ~iCamera2
   Run = pSensorViewer @ NewConsole = false
-  
+
   Run = iEchoSounder  @ NewConsole = false
-  
+
   Run = iGPS          @ NewConsole = false
-  
+
   Run = iKeller       @ NewConsole = false
-  
+
   Run = iSonar        @ NewConsole = false
   Run = iXSensINS     @ NewConsole = false
 
@@ -38,8 +45,7 @@ ProcessConfig = iXSensINS
 {
   AppTick        = 25
   CommsTick      = 25
-  
-  UART_PORT      = /dev/ttyUSB5
+
   UART_BAUD_RATE = 115200
 }
 
@@ -54,11 +60,10 @@ ProcessConfig = iGPS
   AppTick   = 4
   CommsTick = 4
 
-  PORT = /dev/ttyUSB0
   BAUDRATE = 4800
   MAX_RETRIES = 5
   PUBLISH_RAW = true
-    POWERED_AT_START = true
+  POWERED_AT_START = true
 }
 
 //------------------------------------------
@@ -68,14 +73,12 @@ ProcessConfig = iSonar
 {
   AppTick          = 4
   CommsTick        = 4
-  
-  SERIAL_PORT_NAME = /dev/ttyUSB1
 
   RANGE            = 15 //IN METERS
   NBINS            = 100 //NUMBER OF SAMPLES PER SCANLINE
   ANGLESTEP        = 1.8 //ANGULAR RESOLUTION (MUST BE A MULTIPLE OF 0.09)
   GAIN             = 45 // MUST BE BETWEEN 0 AND 100 (PERCENTAGE)
-  CONTINUOUS       = true //TRUE FOR 360  ROTATION. SET RIGHT AND LEFT LIMIT IF FALSE 
+  CONTINUOUS       = true //TRUE FOR 360  ROTATION. SET RIGHT AND LEFT LIMIT IF FALSE
   //LEFTLIMIT      = 70.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
   //RIGHTLIMIT     = 110.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
 }
@@ -85,8 +88,6 @@ ProcessConfig = iEchoSounder
 {
   AppTick   = 4
   CommsTick = 4
-
-  SERIAL_PORT_NAME = /dev/ttyUSB2
 }
 
 //------------------------------------------
@@ -95,7 +96,6 @@ ProcessConfig = iKeller
   AppTick   = 4
   CommsTick = 4
 
-  SERIAL_PORT_NAME = /dev/ttyUSB4
   MAX_RETRIES = 10
 }
 
@@ -106,12 +106,12 @@ ProcessConfig = iCamera1
 {
    AppTick   = 25
    CommsTick = 25
-   
+
    VARIABLE_IMAGE_NAME   = CAMERA_FRONT
    IDENTIFIANT_CV_CAMERA = 1
    DISPLAY_IMAGE         = true
    INVERT_IMAGE          = false
-   
+
    LARGEUR_IMAGE_CAMERA  = 360
    HAUTEUR_IMAGE_CAMERA  = 288
 }
@@ -128,7 +128,7 @@ ProcessConfig = iCamera2
    IDENTIFIANT_CV_CAMERA = 0
    DISPLAY_IMAGE         = true
    INVERT_IMAGE          = false
-   
+
    LARGEUR_IMAGE_CAMERA  = 360
    HAUTEUR_IMAGE_CAMERA  = 288
 }

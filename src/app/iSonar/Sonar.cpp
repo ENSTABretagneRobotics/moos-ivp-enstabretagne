@@ -240,6 +240,8 @@ bool Sonar::OnStartUp()
 	setlocale(LC_ALL, "C");
 	list<string> sParams;
 	m_MissionReader.EnableVerbatimQuoting(false);
+  if (!m_MissionReader.GetValue("SONAR_SERIAL_PORT",m_portName))
+    reportConfigWarning("No SONAR_SERIAL_PORT config found for " + GetAppName());
 
 	if(m_MissionReader.GetConfiguration(GetAppName(), sParams))
 	{
@@ -253,11 +255,6 @@ bool Sonar::OnStartUp()
 
 			MOOSTrace(original_line);
 
-			if(param == "SERIAL_PORT_NAME")
-			{
-			    MOOSTrace("iSonar: Using %s serial port\n", value.c_str());
-			    m_portName = value;
-			}
 			if(MOOSStrCmp(param, "RANGE"))
 			    m_msgHeadCommand.setRange(atof(value.c_str()));
 			if(MOOSStrCmp(param, "NBINS"))

@@ -1,12 +1,12 @@
 //------------------------------------------------
 // iRazorIMU config block
 
+RAZORIMU_SERIAL_PORT = /dev/ttyUSB0
+
 ProcessConfig = iRazorIMU
 {
   AppTick   = 4
   CommsTick = 4
-
-  SERIAL_PORT = /dev/ttyUSB0
 
   MODE = ACC_MAG_GYR_CALIBRATED
   // MODE values:

@@ -1,7 +1,7 @@
 /************************************************************/
 /*    FILE: XSensINS.cpp
 /*    ORGN: Toutatis AUVs - ENSTA Bretagne
-/*    AUTH: 
+/*    AUTH:
 /*    DATE: 2015
 /************************************************************/
 
@@ -129,6 +129,8 @@ bool XSensINS::OnStartUp() {
 
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
+  if (!m_MissionReader.GetValue("XSENSINS_SERIAL_PORT",UART_PORT))
+    reportConfigWarning("No XSENSINS_SERIAL_PORT config found for " + GetAppName());
   if (!m_MissionReader.GetConfiguration(GetAppName(), sParams))
     reportConfigWarning("No config block found for " + GetAppName());
 
@@ -141,11 +143,7 @@ bool XSensINS::OnStartUp() {
     string value = line;
 
     bool handled = false;
-    if (param == "UART_PORT") {
-      UART_PORT = value;
-      handled = true;
-    }
-    else if (param == "UART_BAUD_RATE") {
+    if (param == "UART_BAUD_RATE") {
       UART_BAUD_RATE = atoi(value.c_str());
       handled = true;
     }

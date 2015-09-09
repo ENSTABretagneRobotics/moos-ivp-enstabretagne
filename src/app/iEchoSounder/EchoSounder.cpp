@@ -97,8 +97,11 @@ bool EchoSounder::OnStartUp()
 
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
+  if (!m_MissionReader.GetValue("ECHOSOUNDER_SERIAL_PORT",m_port_name))
+    reportConfigWarning("No ECHOSOUNDER_SERIAL_PORT config found for " + GetAppName());
   if(!m_MissionReader.GetConfiguration(GetAppName(), sParams))
     reportConfigWarning("No config block found for " + GetAppName());
+
 
   STRING_LIST::iterator p;
   sParams.reverse();
@@ -110,16 +113,19 @@ bool EchoSounder::OnStartUp()
     string value = line;
     bool handled = false;
 
-    if(param == "SERIAL_PORT_NAME")
-    {
-      handled = true;
-      if(!initSerialPort(value))
-        reportConfigWarning("Initialization failed on " + value);
-    }
+    // if(param == "SERIAL_PORT_NAME")
+    // {
+    //   handled = true;
+    //   if(!initSerialPort(value))
+    //     reportConfigWarning("Initialization failed on " + value);
+    // }
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
   }
+
+  if(!initSerialPort())
+    reportConfigWarning("Initialization failed on [" + m_port_name+"]");
 
   registerVariables();
   return true;
@@ -168,10 +174,9 @@ bool EchoSounder::buildReport()
 //------------------------------------------------------------
 // Procedure: initSerialPort
 
-bool EchoSounder::initSerialPort(string port_name)
+bool EchoSounder::initSerialPort()
 {
-  m_port_name = port_name;
-  ifstream test_file(port_name.c_str());
+  ifstream test_file(m_port_name.c_str());
   if(test_file.fail())
     return false;
 
@@ -181,7 +186,7 @@ bool EchoSounder::initSerialPort(string port_name)
     m_serial_port = CMOOSLinuxSerialPort();
   #endif
 
-  m_port_is_initialized = m_serial_port.Create((char*)port_name.c_str());
+  m_port_is_initialized = m_serial_port.Create((char*)m_port_name.c_str());
   return m_port_is_initialized;
 }
 

@@ -411,6 +411,8 @@ bool Keller::OnStartUp()
 
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
+  if (!m_MissionReader.GetValue("KELLER_SERIAL_PORT",m_port_name))
+    reportConfigWarning("No KELLER_SERIAL_PORT config found for " + GetAppName());
   if(!m_MissionReader.GetConfiguration(GetAppName(), sParams))
     reportConfigWarning("No config block found for " + GetAppName());
 
@@ -424,19 +426,14 @@ bool Keller::OnStartUp()
     string value = line;
     bool handled = false;
 
-    if(param == "SERIAL_PORT_NAME")
-    {
-      m_port_name = value;
-      handled = true;
-    }
-    else if(param == "MAX_RETRIES")
+    if(param == "MAX_RETRIES")
     {
       m_iMmaxRetries = atoi(value.c_str());
       handled = true;
     }
     else if(param == "GET_TEMPERATURE")
     {
-      m_bTemperatureRequested = atoi(value.c_str());
+      m_bTemperatureRequested = MOOSStrCmp(value.c_str(),"TRUE");
       handled = true;
     }
 

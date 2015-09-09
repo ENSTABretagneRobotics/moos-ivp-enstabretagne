@@ -5,6 +5,9 @@ ServerPort = 9000
 
 Community  = AUV
 
+//Serial port configuration
+GPS_SERIAL_PORT = /dev/ttyUSB0
+
 //------------------------------------------
 // Antler configuration  block
 ProcessConfig = ANTLER

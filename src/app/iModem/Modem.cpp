@@ -594,6 +594,8 @@ bool Modem::OnStartUp()
 
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
+  if (!m_MissionReader.GetValue("MODEM_SERIAL_PORT",m_portName))
+    reportConfigWarning("No MODEM_SERIAL_PORT config found for " + GetAppName());
   if(!m_MissionReader.GetConfiguration(GetAppName(), sParams))
     reportConfigWarning("No config block found for " + GetAppName());
 
@@ -607,13 +609,7 @@ bool Modem::OnStartUp()
     string value = line;
     bool handled = false;
 
-    if(param == "SERIAL_PORT_NAME")
-    {
-      // reportEvent("iModem: Using "+value+" serial port\n");
-      m_portName = value;
-      handled = true;
-    }
-    else if(param == "BAUD_RATE_CONF")
+    if(param == "BAUD_RATE_CONF")
     {
       // reportEvent("iModem: serial port baud rate conf setted to "+value+"\n");
       m_baudrate_conf = atoi(value.c_str());
