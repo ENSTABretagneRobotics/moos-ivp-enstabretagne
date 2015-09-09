@@ -89,43 +89,131 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
     }
 
     /** CONTROLLER FORCE VALUES UPDATE**/
-    else if(
-      (Operation_Mode == "Autonomus" || Operation_Mode == "Semi-Autonomus") && 
-      (key == "rotational_force" || key == "z_force" || key == "forward_force"))
+    else if(key == "rotational_force" || key == "z_force" || key == "forward_force")
     {
 
-      //update the force value
-      if(key == "rotational_force")
-        rotational_force =  msg.GetDouble();
-      else if(key == "forward_force")
-        forward_force =  msg.GetDouble();
-      else if(key == "z_force")
-        z_force =  msg.GetDouble();
+      if(Operation_Mode == "Autonomus" || Operation_Mode == "Semi-Autonomus")
+      {
 
-      //execute the calculation of the Thurster Values;
-      Saucisse::CalcThrustersValues();
+        //update the force value
+        if(key == "rotational_force")
+          rotational_force =  msg.GetDouble();
+        else if(key == "forward_force")
+          forward_force =  msg.GetDouble();
+        else if(key == "z_force")
+          z_force =  msg.GetDouble();
+
+        //execute the calculation of the Thurster Values;
+        Saucisse::CalcThrustersValues();
+
+      }//end of if operation mode
+      else if(Operation_Mode == "DepthControllerOnly")
+      {
+          //update the force value
+        if(key == "z_force")
+          z_force =  msg.GetDouble();
+
+        //execute the calculation of the Thurster Values;
+        Saucisse::CalcThrustersValues();
+      
+      }//end of if operation mode
+
     }
 
     /** JOYSTICK FORCE VALUES UPDATE**/
-    else if(
-      (Operation_Mode == "Manual") && 
-      (key == "DESIRED_ELEVATOR" || key == "DESIRED_THRUST" || key == "DESIRED_RUDDER"))
+    else if(key == "DESIRED_ELEVATOR" || key == "DESIRED_THRUST" || key == "DESIRED_RUDDER")
     {
 
-      //update the force value
-      if(key == "DESIRED_RUDDER")
-        rotational_force =  msg.GetDouble();
-      else if(key == "DESIRED_THRUST")
-        forward_force =  msg.GetDouble();
-      else if(key == "DESIRED_ELEVATOR")
-        z_force =  msg.GetDouble();
+      //we update the forces from joystick only o manual mode
+      if(Operation_Mode == "Manual")
+      {
+          //update the force value
+        if(key == "DESIRED_RUDDER")
+          rotational_force =  msg.GetDouble();
+        else if(key == "DESIRED_THRUST")
+          forward_force =  msg.GetDouble();
+        else if(key == "DESIRED_ELEVATOR")
+          z_force =  msg.GetDouble();
 
-      //execute the calculation of the Thurster Values;
-      Saucisse::CalcThrustersValues();
+        //execute the calculation of the Thurster Values;
+        Saucisse::CalcThrustersValues();
+      
+      }//end of if operation mode
+      else if(Operation_Mode == "DepthControllerOnly")
+      {
+          //update the force value
+        if(key == "DESIRED_RUDDER")
+          rotational_force =  msg.GetDouble();
+        else if(key == "DESIRED_THRUST")
+          forward_force =  msg.GetDouble();
+
+        //execute the calculation of the Thurster Values;
+        Saucisse::CalcThrustersValues();
+      
+      }//end of if operation mode
+      
     }
 
-    else if(key == "Operation_Mode") 
-      Operation_Mode = msg.GetString();
+    else if(key == "MANUAL_MODE_BUTTON") 
+    {
+      //toggle operation mode between Manual and Semi-Autonomus
+      if(msg.GetDouble() < 0)
+      {
+        Operation_Mode = "Manual";
+        Notify("Operation_Mode", Operation_Mode);
+      }
+    }  
+
+    else if(key == "SEMI_AUTONOMUS_MODE_BUTTON") 
+    {
+      //toggle operation mode between Manual and Semi-Autonomus
+      if(msg.GetDouble() < 0)
+      {
+        Operation_Mode = "Semi-Autonomus";
+        Notify("Operation_Mode", Operation_Mode);
+      }
+
+    }  
+
+    else if(key == "DEPTH_CONTROL_MODE_BUTTON") 
+    {
+      //put the operation mode to DepthControllerOnly
+      if(msg.GetDouble() < 0)
+      {
+        Operation_Mode = "DepthControllerOnly";
+        Notify("Operation_Mode", Operation_Mode);
+      }
+
+    }
+
+
+    
+
+    else if(key == "coeff_matrix")
+    {
+      
+      vector<string> str_vector = parseString(msg.GetString(), ',');
+      
+      //check for correct array size of 9 elements (3x3)
+      if(str_vector.size() == 9)
+      {
+        unsigned int i = 0; //index for the str_vector
+
+            for(unsigned int j=0; j<3; j++)
+            {
+              for(unsigned int k=0; k<3; k++)
+              {
+                //get the string and convert it into value
+                coeff_matrix[j][k] = atof(str_vector[i].c_str());
+                i++;
+              }//end of for k
+
+            }//end of for j
+
+      }//end of if vector size
+
+    }//end of else if
+
 
     /*else if(key == "POWER_GPS")
     {
@@ -185,7 +273,7 @@ bool Saucisse::OnStartUp()
        Fx   Fr   Fz
       ---------------
   u1 |  1   1   0 
-  u2 |  1   1   0
+  u2 |  1   -1  0
   u3 |  0   0   1   
 
   coeff_matrix = { 
@@ -197,7 +285,7 @@ bool Saucisse::OnStartUp()
   coeff_matrix[0][0] = 1;
   coeff_matrix[0][1] = 1;
   coeff_matrix[0][2] = 0;
-  coeff_matrix[1][0] = -1;
+  coeff_matrix[1][0] = 1;
   coeff_matrix[1][1] = -1;
   coeff_matrix[1][2] = 0;
   coeff_matrix[2][0] = 0;
@@ -242,27 +330,29 @@ bool Saucisse::OnStartUp()
       m_device_name = value;
       handled = true;
     }
-    else if(param == "max_thruster_value")
+    else if(param == "MAX_THRUSTER_VALUE")
     {
       max_thruster_value = atof(value.c_str());
       handled = true;
     }
-    else if(param == "coeff_matrix")
+    else if(param == "COEFF_MATRIX")
     {
-      vector<string> str_vector = parseString(value.c_str(), ',');
-
+      
+      vector<string> str_vector = parseString(value, ',');
+      
       //check for correct array size of 9 elements (3x3)
       if(str_vector.size() == 9)
       {
-          //size is correct, put the values into the coeff_matrix
-          for(unsigned int i=0; i<str_vector.size(); i++)
-          {
-            for(unsigned int j=0; i<3; j++)
+        unsigned int i = 0;
+            for(unsigned int j=0; j<3; j++)
             {
-              //get the string and convert it into value
-              coeff_matrix[i][j] = atof(str_vector[i+j].c_str());
+              for(unsigned int k=0; k<3; k++)
+              {
+                //get the string and convert it into value
+                coeff_matrix[j][k] = atof(str_vector[i].c_str());
+                i++;
+              }
             }
-          }
       }
       else
       {
@@ -271,6 +361,7 @@ bool Saucisse::OnStartUp()
         reportUnhandledConfigWarning("Error while parsing coeff_matrix: incorrect number of elements");
 
       }//end of else
+      
 
       handled = true;
     }
@@ -295,14 +386,20 @@ void Saucisse::registerVariables()
   AppCastingMOOSApp::RegisterVariables();
   Register("POWER_*", "*", 0);
 
+  Register("coeff_matrix", 0);
+  
   Register("rotational_force", 0);
   Register("z_force", 0);
   Register("forward_force", 0);
-  Register("Operation_Mode", 0);
 
   Register("DESIRED_RUDDER", 0);
   Register("DESIRED_THRUST", 0);
   Register("DESIRED_ELEVATOR", 0);
+
+  Register("MANUAL_MODE_BUTTON", 0);
+  Register("SEMI_AUTONOMUS_MODE_BUTTON", 0);
+  Register("DEPTH_CONTROL_MODE_BUTTON", 0);
+
 
 }
 
@@ -319,6 +416,37 @@ bool Saucisse::buildReport()
   string error_message;
   bool pololu_ok = m_pololu->isReady(error_message);
   m_msgs << "Status: " << (pololu_ok ? "ok" : error_message);
+  m_msgs << "\n";
+  m_msgs << "Operation_Mode: " << Operation_Mode;
+  m_msgs << "\n";
+  m_msgs << "\n";
+
+
+  m_msgs << "=========================== \n";
+  m_msgs << "Coefficient matrix:         \n";
+  m_msgs << "\n";
+  m_msgs << "     Fx   Fr   Fz \n";
+  m_msgs << " ----------------- \n";
+  m_msgs << "u1 |  "<< coeff_matrix[0][0] <<"   "<< coeff_matrix[0][1] <<"    "<< coeff_matrix[0][2] <<"  \n";
+  m_msgs << "u2 |  "<< coeff_matrix[1][0] <<"   "<< coeff_matrix[1][1] <<"    "<< coeff_matrix[1][2] <<"  \n";
+  m_msgs << "u3 |  "<< coeff_matrix[2][0] <<"   "<< coeff_matrix[2][1] <<"    "<< coeff_matrix[2][2] <<"  \n";
+  m_msgs << "\n";
+
+  m_msgs << "=========================== \n";
+  m_msgs << "Desired forces:         \n";
+  m_msgs << "Fx =  "<< forward_force <<" \n";
+  m_msgs << "Fr =  "<< rotational_force <<"\n";
+  m_msgs << "Fz =  "<< z_force <<" \n";
+  m_msgs << "\n";
+
+  m_msgs << "=========================== \n";
+  m_msgs << "Thrusters values:         \n";
+  m_msgs << "u1 =  "<< side_thruster_one <<" \n";
+  m_msgs << "u2 =  "<< side_thruster_two <<"\n";
+  m_msgs << "u3 =  "<< vertical_thruster <<" \n";
+
+
+
 
   return true;
 }
@@ -372,7 +500,6 @@ void Saucisse::CalcThrustersValues()
       {
         //thruster one is saturated
         saturated_thruster_value = side_thruster_one;
-        saturation_value = fabs(side_thruster_one) - max_thruster_value;
       
       }//end of if
       else
@@ -380,11 +507,10 @@ void Saucisse::CalcThrustersValues()
         //thruster two is saturated
         saturated_thruster_value = side_thruster_two;
         
-
       }//end of else
 
       //calculate the saturation value, which will be removed from the thursters values
-      saturation_value = fabs(side_thruster_two) - max_thruster_value;
+      saturation_value = fabs(saturated_thruster_value) - max_thruster_value;
 
       //check if the saturation is in (a)forward or (b)reverse direction
       if(saturated_thruster_value > 0)
@@ -402,8 +528,20 @@ void Saucisse::CalcThrustersValues()
         //from now we have non saturated value for both thrusters
       }
 
+
+
+      //check for the limits of the output thrusters values
+      side_thruster_one = (side_thruster_one < max_thruster_value) ? side_thruster_one: max_thruster_value;
+      side_thruster_one = (side_thruster_one > -max_thruster_value) ? side_thruster_one : -max_thruster_value;
+
+      side_thruster_two = (side_thruster_two < max_thruster_value) ? side_thruster_two: max_thruster_value;
+      side_thruster_two = (side_thruster_two > -max_thruster_value) ? side_thruster_two : -max_thruster_value;
+
     }//end of if saturation check
     //else - the thrusters values are not saturated so they can be sent to the thursters whitout additional manipulation
+
+
+
 
   /** END OF CHECK FOR SATURATION of the side thrusters **/
 

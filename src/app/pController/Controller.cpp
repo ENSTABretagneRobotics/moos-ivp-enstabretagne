@@ -111,24 +111,7 @@ bool Controller::OnConnectToServer()
 bool Controller::Iterate()
 {
   AppCastingMOOSApp::Iterate();
-
   
-  /** OUTPUT VARIABLES **/
-  double rotational_force;  //positive value means clockwise direction
-  double z_force;           //positive value means surface direction
-  double forward_force;     //positive valua means forward direction
-
-
-  /** INTERNAL VARIABLES  (local) **/
-  double error_heading;
-  double proportional_heading;
-  double derivative_heading;
-  double integral_heading;
-  double error_depth;
-  double proportional_depth;
-  double derivative_depth;
-  double integral_depth;
-  double delta_t;
 
 
   /*** Check for correct mode of operation of the robot ***/
@@ -146,28 +129,25 @@ bool Controller::Iterate()
     /** HEADING CONTROLLER */
 
       //calculate the error (actual heading - desired heading)
-      error_heading = actual_heading - desired_heading;
+      error_heading_rad = (actual_heading - desired_heading) * PI/180;
 
-      //wrap the error to +-180 degress
-      //assuming that the error is smallest or equal to 360
-      if(error_heading > 180)
-      {
-        error_heading = error_heading - 360;
+      //wrap the error into [-PI;PI]
+      error_heading_rad = -2*atan(tan(error_heading_degrees/2));
 
-      }//end of if
+      //convert error to degress
+      error_heading_degrees = error_heading_rad *180/PI;
 
       //check if the error is bigger than the min error parameter
-      if(fabs(error_heading) > min_heading_error)
+      if(fabs(error_heading_degrees) > min_heading_error)
       {
         //error is different from zero, calculate PID control
 
 
         //proportional value
-        proportional_heading = kp_heading * error_heading;
-        derivative_heading = (error_heading - old_error_heading)/delta_t;
-        integral_heading =  integral_heading + (error_heading*delta_t);
+        proportional_heading = kp_heading * error_heading_degrees;
+        derivative_heading = (error_heading_degrees - old_error_heading)/delta_t;
+        integral_heading =  integral_heading + ((error_heading_degrees + antiWindUp_heading)*delta_t); //anti-wind up below
 
-        //TODO limit integral term!?
 
         //calculate output command value
         rotational_force =  proportional_heading
@@ -179,11 +159,15 @@ bool Controller::Iterate()
         //check if the oubput command value is between the max output value
         if(fabs(rotational_force)> max_rotational_force)
          {
+
+            antiWindUp_heading = rotational_force;
+
           //output value is saturated
           if(rotational_force > 0)
           {
             //positive saturation
             rotational_force = max_rotational_force;
+
           }
           else
           {
@@ -191,7 +175,13 @@ bool Controller::Iterate()
             rotational_force = -max_rotational_force;
           }
 
+          //Anti Wind-Up for integral value of the PID
+          //for more information visit: http://fr.mathworks.com/help/simulink/examples/anti-windup-control-using-a-pid-controller.html
+          antiWindUp_heading =  (max_rotational_force - antiWindUp_heading);
+
          }//end of if check saturation 
+         else
+            antiWindUp_heading = 0;
 
       
       }//end if check error
@@ -207,12 +197,59 @@ bool Controller::Iterate()
       }//end of else
 
       //record the error heading for future iterations
-      old_error_heading = error_heading;
+      old_error_heading = error_heading_degrees;
 
    
     /** END OF HEADING CONTROLLER */
 
 
+
+
+    /** SPEED CONTROLLER **/
+
+      //maps a desired speed in meters/second in a force between [-max_forward_speed;+max_forward_speed]
+      //this mapping depends on the max_forward_speed and max_backward_speed of the vehicle
+      if(desired_speed > 0)
+        //forward speed
+        forward_force = (desired_speed * max_forward_force / max_forward_speed) * k_speed_factor;
+      else
+        //backward speed
+        forward_force = desired_speed * max_forward_force / max_backward_speed * k_speed_factor;
+
+
+      //check for saturarion
+      forward_force = (forward_force < max_forward_force) ? forward_force: max_forward_force;
+      forward_force = (forward_force > -max_forward_force) ? forward_force : -max_forward_force;
+
+    /** END OF SPEED CONTROLLER **/
+
+
+
+
+    }//end of if(Operation_Mode == "Autonomus" || Operation_Mode == "Semi-Autonomus")
+    else
+    {
+       //don't run the controllers at all
+      //erase the global variables
+      error_heading_degrees = 0;
+      error_heading_rad = 0;
+      forward_force = 0;
+      z_force = 0;
+      antiWindUp_heading = 0;
+
+      //reset integral value
+      integral_heading = 0;
+      proportional_heading = derivative_heading = 0;
+
+    }
+
+    
+    /*** Check for correct mode of operation of the robot ***/
+    //The depth controller loop will only run if the robot is in
+    //total, semi autonomus or DepthControllerOnly mode
+
+    if(Operation_Mode == "Autonomus" || Operation_Mode == "Semi-Autonomus" || Operation_Mode == "DepthControllerOnly")
+    {
     /** DEPTH CONTROLLER */
 
       //depth controller is also a PID controller
@@ -231,7 +268,7 @@ bool Controller::Iterate()
         //proportional value
         proportional_depth = kp_depth * error_depth;
         derivative_depth =  (error_depth - old_error_depth)/delta_t;
-        integral_depth =  integral_depth + (error_depth*delta_t);
+        integral_depth =  integral_depth + ((error_depth+antiWindUp_depth)*delta_t);
 
         //TODO limit integral term!?
 
@@ -246,13 +283,19 @@ bool Controller::Iterate()
         if(fabs(z_force)> max_z_force)
          {
 
+          antiWindUp_depth = z_force;
+
           //output value is saturated
           if(z_force > 0)
             z_force = max_z_force;      //positive saturation
           else
             z_force = -1 * max_z_force; //negative saturation
 
+          antiWindUp_depth = (max_z_force - antiWindUp_depth);
+
          }//end of if check saturation 
+         else
+          antiWindUp_depth = 0;
 
       
       }//end if check error
@@ -275,40 +318,20 @@ bool Controller::Iterate()
 
 
 
-    /** SPEED CONTROLLER **/
-
-      //maps a desired speed in meters/second in a force between [-max_forward_speed;+max_forward_speed]
-      //this mapping depends on the max_forward_speed and max_backward_speed of the vehicle
-      if(desired_speed > 0)
-        //forward speed
-        forward_force = (desired_speed * max_forward_force / max_forward_speed) * k_speed_factor;
-      else
-        //backward speed
-        forward_force = desired_speed * max_forward_force / max_backward_speed * k_speed_factor;
-
-
-      //check for saturarion
-      if(forward_force>max_forward_force)
-        forward_force = max_forward_force;    //positive saturation
-      else if(forward_force<max_forward_force)
-        forward_force = - max_forward_force;  //negative saturation
-
-    /** END OF SPEED CONTROLLER **/
+    
 
   }//end of if operation mode
   else
   {
-    //don't run anything at all
+    //don't run depth controller at all
     //erase the global variables
-    //TODO: Erase the used variables
     error_depth = 0;
-    error_heading = 0;
-    rotational_force = 0;
     z_force = 0;
+    antiWindUp_depth = 0;
 
     //reset integral value
-    integral_heading = 0;
     integral_depth = 0;
+    proportional_depth = derivative_depth = 0;
 
   }//end of else
 
@@ -376,6 +399,8 @@ bool Controller::OnStartUp()
   desired_speed = 0;     //setpoint for the speed in meters/second
   actual_heading = 0;    //actual heading value in degrees [0, 360)
   actual_depth = 0;      //actual depth value in meters
+  antiWindUp_heading = 0;
+  antiWindUp_depth = 0;
 
   max_forward_speed = 3;   //max forward speed of the vehicle in meters/second
   max_backward_speed = 2.82;  //max backward speed of the vechicle in meters/second
@@ -402,24 +427,24 @@ bool Controller::OnStartUp()
     bool handled = false;
 
 
-    if(param == "kp_heading") 
+    if(param == "KP_HEADING") 
     {
       kp_heading = atof(value.c_str());
       handled = true;
     } 
-    else if(param == "kd_heading") 
+    else if(param == "KD_HEADING") 
     {
       kd_heading = atof(value.c_str());
       handled = true;
     } 
 
-    else if(param == "ki_heading") 
+    else if(param == "KI_HEADING") 
     {
       ki_heading = atof(value.c_str());
       handled = true;
     } 
 
-    else if(param == "min_heading_error") 
+    else if(param == "MIN_HEADING_ERROR") 
     {
       min_heading_error = atof(value.c_str());
       handled = true;
@@ -427,25 +452,25 @@ bool Controller::OnStartUp()
 
 
 
-    else if(param == "kp_depth") 
+    else if(param == "KP_DEPTH") 
     {
       kp_depth = atof(value.c_str());
       handled = true;
     } 
 
-    else if(param == "kd_depth") 
+    else if(param == "KD_DEPTH") 
     {
       kd_depth = atof(value.c_str());
       handled = true;
     } 
 
-    else if(param == "ki_depth") 
+    else if(param == "KI_DEPTH") 
     {
       ki_depth = atof(value.c_str());
       handled = true;
     } 
 
-    else if(param == "min_depth_error") 
+    else if(param == "MIN_DEPTH_ERROR") 
     {
       min_depth_error = atof(value.c_str());
       handled = true;
@@ -453,24 +478,46 @@ bool Controller::OnStartUp()
 
 
 
-    else if(param == "k_speed_factor") 
+    else if(param == "K_SPEED_FACTOR") 
     {
       k_speed_factor = atof(value.c_str());
       handled = true;
     } 
 
 
-    else if(param == "max_forward_speed") 
+    else if(param == "MAX_FORWARD_SPEED") 
     {
       max_forward_speed = atof(value.c_str());
       handled = true;
     } 
 
-    else if(param == "max_backward_speed") 
+    else if(param == "MAX_BACKWARD_SPEED") 
     {
       max_backward_speed = atof(value.c_str());
       handled = true;
     } 
+
+
+
+    else if(param == "MAX_ROTATIONAL_FORCE") 
+    {
+      max_rotational_force = atof(value.c_str());
+      handled = true;
+    } 
+
+    else if(param == "MAX_Z_FORCE") 
+    {
+      max_z_force = atof(value.c_str());
+      handled = true;
+    } 
+
+    else if(param == "MAX_FORWARD_FORCE") 
+    {
+      max_forward_force = atof(value.c_str());
+      handled = true;
+    } 
+
+    
       
 
 
@@ -531,5 +578,57 @@ bool Controller::buildReport()
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
   #endif
+
+
+  m_msgs << "============================================ \n";
+  m_msgs << "pController:                                      \n";
+  m_msgs << "============================================ \n";
+  m_msgs << "\n";
+  m_msgs << "Operation_Mode: " << Operation_Mode;
+  m_msgs << "\n";
+  m_msgs << "\n";
+
+  m_msgs << "=========================== \n";
+  m_msgs << "Parameters:         \n";
+  m_msgs << "PID        Kp   Kd   ki \n";
+  m_msgs << "        ----------------- \n";
+  m_msgs << "Heading |  "<< kp_heading <<"   "<< kd_heading <<"    "<< ki_heading <<"  \n";
+  m_msgs << "Depth   |  "<< kp_depth <<"   "<< kd_depth <<"    "<< ki_depth <<"  \n";
+  m_msgs << "\n";
+  m_msgs << "k_speed_factor: " << k_speed_factor;
+  m_msgs << "\n";
+  m_msgs << "min_heading_error (degrees): " << min_heading_error;
+  m_msgs << "\n";
+  m_msgs << "min_depth_error   (meters) : " << min_depth_error;
+  m_msgs << "\n";
+  m_msgs << "\n";
+
+  m_msgs << "=========================== \n";
+  m_msgs << "Desired / Mesured / error values:         \n";
+  m_msgs << "Heading:  "<< desired_heading <<" / "<< actual_heading <<" / "<< error_heading_degrees <<" \n";
+  m_msgs << "Depth:  "<< desired_depth <<" / "<< actual_depth <<" / "<< error_depth <<" \n";
+  m_msgs << "\n";
+  m_msgs << "Desired Speed =  "<< desired_speed <<"\n";
+  m_msgs << "\n";
+
+
+  m_msgs << "=========================== \n";
+  m_msgs << "  PID Values                 \n";
+  m_msgs << "          Prop. / Derv. / Intg.:         \n";
+  m_msgs << "Heading:  "<< proportional_heading <<" / "<< derivative_heading <<" / "<< integral_heading <<" \n";
+  m_msgs << "Depth:    "<< proportional_depth <<" / "<< derivative_depth <<" / "<< integral_depth <<" \n";
+  m_msgs << "\n";
+
+
+
+
+  m_msgs << "=========================== \n";
+  m_msgs << "Output values:         \n";
+  m_msgs << "Fx =  "<< forward_force <<" \n";
+  m_msgs << "Fr =  "<< rotational_force <<"\n";
+  m_msgs << "Fz =  "<< z_force <<" \n";
+  m_msgs << "\n";
+
+
   return true;
 }

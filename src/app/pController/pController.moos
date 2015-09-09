@@ -7,9 +7,9 @@ ProcessConfig = pController
   CommsTick = 4
 
 
-  kp_heading = 1.0               
-  kd_heading = 0.0
-  ki_heading = 0.0
+  kp_heading = 1               
+  kd_heading = 0
+  ki_heading = 0
 
   kp_depth = 1.0
   kd_depth = 0.0

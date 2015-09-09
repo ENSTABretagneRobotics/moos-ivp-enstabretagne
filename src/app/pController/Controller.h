@@ -79,6 +79,28 @@ class Controller : public AppCastingMOOSApp
     float old_error_heading;
     float old_error_depth;
 
+    double error_heading_degrees;
+    double error_heading_rad;
+    double error_depth;
+    double delta_t;
+    
+    /** PID VARIABLES **/
+    double proportional_heading;
+    double derivative_heading;
+    double integral_heading;
+    double proportional_depth;
+    double derivative_depth;
+    double integral_depth;
+    double antiWindUp_heading;
+    double antiWindUp_depth;
+
+    /** OUTPUT VARIABLES **/
+    double rotational_force;  //positive value means clockwise direction
+    double z_force;           //positive value means surface direction
+    double forward_force;     //positive valua means forward direction
+
+
+
   private: // State variables
     
 
