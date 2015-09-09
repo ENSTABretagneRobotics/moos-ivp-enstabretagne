@@ -7,6 +7,7 @@ Community  = AUV
 
 //Serial port configuration
 ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB0
+MODEM_SERIAL_PORT = /dev/ttyUSB0
 
 //------------------------------------------
 // Antler configuration  block

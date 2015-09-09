@@ -5,6 +5,9 @@ ServerPort = 9000
 
 Community  = AUV
 
+//Serial port configuration
+MODEM_SERIAL_PORT = /dev/ttyUSB0
+
 //------------------------------------------
 // Antler configuration  block
 
@@ -59,7 +62,6 @@ ProcessConfig = iModem
   CommsTick = 4
   max_appcast_events = 8
 
-  SERIAL_PORT_NAME = /dev/ttyUSB1
   BAUD_RATE_CONF = 57600
   BAUD_RATE_COMM = 9600
 
