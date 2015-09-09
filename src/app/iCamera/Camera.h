@@ -15,14 +15,14 @@
 #include <opencv/cv.h>
 #include <opencv2/highgui/highgui.hpp>
 
-#include "MOOS/libMOOS/App/MOOSApp.h"
+#include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 
 #include "videograbv4l2.h"
 
 using namespace std;
 using namespace cv;
 
-class Camera : public CMOOSApp
+class Camera : public AppCastingMOOSApp
 {
   public:
     Camera();
@@ -34,6 +34,7 @@ class Camera : public CMOOSApp
     bool OnConnectToServer();
     bool OnStartUp();
     void RegisterVariables();
+    bool buildReport();
 
   private: // Configuration variables
 
@@ -49,4 +50,4 @@ class Camera : public CMOOSApp
     int LARGEUR_IMAGE_CAMERA, HAUTEUR_IMAGE_CAMERA;
 };
 
-#endif 
+#endif
