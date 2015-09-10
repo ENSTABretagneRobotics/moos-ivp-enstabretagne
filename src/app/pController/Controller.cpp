@@ -10,6 +10,8 @@
 #include "ACTable.h"
 #include "Controller.h"
 
+#include "math.h"
+
 using namespace std;
 
 //---------------------------------------------------------
