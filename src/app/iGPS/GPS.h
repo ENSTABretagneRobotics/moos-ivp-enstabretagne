@@ -54,6 +54,7 @@ class GPS : public AppCastingMOOSApp
     std::string   m_portName;
     int           m_baudrate;
     bool          m_bPublishRaw;
+    bool          m_bIsPowered;
 
 
   private: // State variables

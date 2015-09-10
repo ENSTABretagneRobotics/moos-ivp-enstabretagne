@@ -6,14 +6,14 @@ ProcessConfig = uJoystick
    AppTick   = 4
    CommsTick = 4
    
-   DEVICE_NAME = /dev/input/js0
+   DEVICE_NAME = /dev/input/js1
 
    INCREMENT = false
    SCALE = 100
    
    AXIS = 0
    SCALE_RATIO = 0.5
-   MOOS_DEST_VAR = DESIRED_SLIDE
+   MOOS_DEST_VAR = DESIRED_SLIDE2
    
    AXIS = 1
    SCALE_RATIO = 0.5
@@ -31,7 +31,7 @@ ProcessConfig = uJoystick
    SCALE_RATIO = 0.5
    MOOS_DEST_VAR = PUSHED_BUTTON_1
    
-   BUTTON = 1
+   BUTTON = 2
    SCALE_RATIO = 0.5
    MOOS_DEST_VAR = PUSHED_BUTTON_2
 }

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains uJoystick documentation -->
+<?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?>
+<xmldoc>
+  <moosapp>
+
+     <info>
+        <name>iGPSoE</name>
+        <organization>ENSTA Bretagne</organization>
+        <date>2015</date>
+        <authors>
+           <author>Clément Aubry from Vincent Drevelle (previously from FLB?) at ENSTA Bretagne</author>
+        </authors>
+        <licence>MIT</licence>
+     </info>
+
+     <documentation>
+        <synopsis>
+          ...
+        </synopsis>
+        <interface>
+           <subscriptions>
+              <!--
+              <moosvar>
+                 <varname>EXAMPLE_VAR_IN</varname>
+                 <vartype>string</vartype>
+                 <varinfo>description of the MOOSVar</varinfo>
+              </moosvar>
+              -->
+           </subscriptions>
+           <publications>
+              <!--
+              <moosvar>
+                 <varname>GPS_</varname>
+                 <vartype>string</vartype>
+                 <varinfo>description of the MOOSVar</varinfo>
+              </moosvar>
+              -->
+              <moosvar>
+                 <varname>GPS_RAW</varname>
+                 <vartype>string</vartype>
+                 <varinfo>NMEA Sentence returned from GPS</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>GPS_TIME</varname>
+                 <vartype>double</vartype>
+                 <varinfo>GPS time in UTC return by $GPRMC or $GPGGA, i.e. at 11h52min23sec, GPS_TIME is set to 115223</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>GPS_SPEED</varname>
+                 <vartype>double</vartype>
+                 <varinfo>GPS speed returned from $GPRMC</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>GPS_HEADING</varname>
+                 <vartype>double</vartype>
+                 <varinfo>GPS speed returned from $GPRMC in degrees</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>GPS_YAW</varname>
+                 <vartype>double</vartype>
+                 <varinfo>GPS speed from GPS_HEADING in radians</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>GPS_N</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Northern in local UTM coordinates from $GPGGA</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>GPS_E</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Eastern in local UTM coordinates from $GPGGA</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>GPS_X</varname>
+                 <vartype>double</vartype>
+                 <varinfo>X in local UTM coordinates from $GPGGA</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>GPS_Y</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Y in local UTM coordinates from $GPGGA</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>GPS_LONGITUDE</varname>
+                 <vartype>double</vartype>
+                 <varinfo>GPS Longitude from $GPGGA</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>GPS_LATITUDE</varname>
+                 <vartype>double</vartype>
+                 <varinfo>GPS Latitude from $GPGGA</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>GPS_ALTITUDE</varname>
+                 <vartype>double</vartype>
+                 <varinfo>GPS altitude above mean sea level from $GPGGA</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>GPS_NB_SAT</varname>
+                 <vartype>double</vartype>
+                 <varinfo>GPS number of satellites from $GPGGA</varinfo>
+              </moosvar>
+           </publications>
+        </interface>
+        <!-- if there is a bug or a special fact to know.. -->
+        <optional-comments>
+           Don't forget to set "LatOrigin" and "LongOrigin" as global parameters in moos config files (i.e. parameters out of iGPS ProcessConfig block)
+        </optional-comments>
+        <!-- if something can be improved -->
+        <suggested-improvements>
+           No suggested improvements.
+        </suggested-improvements>
+     </documentation>
+
+  </moosapp>
+</xmldoc>

@@ -34,6 +34,7 @@ GPS::GPS()
   m_dLatitude = 0;
   m_dNbSat = 0;
   m_dAltitude = 0;
+  m_bIsPowered = false;
 }
 
 //---------------------------------------------------------
@@ -52,15 +53,17 @@ bool GPS::OnNewMail(MOOSMSG_LIST &NewMail)
     #if 0 // Keep these around just for template
       string comm  = msg.GetCommunity();
       double dval  = msg.GetDouble();
-      string sval  = msg.GetString(); 
+      string sval  = msg.GetString();
       string msrc  = msg.GetSource();
       double mtime = msg.GetTime();
       bool   mdbl  = msg.IsDouble();
       bool   mstr  = msg.IsString();
     #endif
 
-    if(key == "FOO") 
+    if(key == "FOO")
       cout << "great!";
+    else if(key == "POWERED_GPS")
+      m_bIsPowered= msg.GetDouble();
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
       reportRunWarning("Unhandled Mail: " + key);
@@ -87,7 +90,8 @@ bool GPS::Iterate()
   AppCastingMOOSApp::Iterate();
 
   m_iterations++;
-  GetData();
+  if (m_bIsPowered)
+    GetData();
 
   AppCastingMOOSApp::PostReport();
   return true;
@@ -120,7 +124,9 @@ bool GPS::OnStartUp()
     reportConfigWarning("Geodesy initialisation failed!!!");
     return false;
   }
-  
+  if (!m_MissionReader.GetValue("GPS_SERIAL_PORT",m_portName))
+    reportConfigWarning("No GPS_SERIAL_PORT config found for " + GetAppName());
+
   int max_retries = 5;
   double dGPSPeriod = 1.0;
 
@@ -144,12 +150,6 @@ bool GPS::OnStartUp()
       max_retries = atoi(value.c_str());
       handled = true;
     }
-    else if(param == "PORT")
-    {
-      // reportEvent("iModem: Using "+value+" serial port\n");
-      m_portName = value;
-      handled = true;
-    }
     else if(param == "BAUDRATE")
     {
       // reportEvent("iModem: serial port baud rate conf setted to "+value+"\n");
@@ -160,6 +160,11 @@ bool GPS::OnStartUp()
     {
       // reportEvent("iModem: serial port baud rate conf setted to "+value+"\n");
       m_bPublishRaw = MOOSStrCmp(value.c_str(),"TRUE");
+      handled = true;
+    }
+    else if(param == "POWERED_AT_START")
+    {
+      m_bIsPowered = MOOSStrCmp(value.c_str(),"TRUE");
       handled = true;
     }
 
@@ -182,13 +187,13 @@ bool GPS::OnStartUp()
 void GPS::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
-  // Register("FOOBAR", 0);
+  Register("POWERED_GPS", 0);
 }
 
 //------------------------------------------------------------
 // Procedure: buildReport()
 
-bool GPS::buildReport() 
+bool GPS::buildReport()
 {
   #if 0 // Keep these around just for template
     m_msgs << "============================================ \n";
@@ -284,7 +289,7 @@ bool GPS::ParseNMEAString(string &sNMEAString)
     sTmp = MOOSChomp(sNMEAString, ","); // N/S
     sTmp = MOOSChomp(sNMEAString, ","); // Long
     sTmp = MOOSChomp(sNMEAString, ","); // E/W
-    
+
     sTmp = MOOSChomp(sNMEAString, ","); // Speed in knots
     double dSpeed = atof(sTmp.c_str());
 
@@ -297,7 +302,7 @@ bool GPS::ParseNMEAString(string &sNMEAString)
       // SetMOOSVar("Speed",dSpeed,dTimeMOOS);
       Notify("GPS_SPEED",dSpeed);
       m_dSpeed = dSpeed;
-      
+
       while(dHeading > 180) dHeading -= 360;
       while(dHeading < -180) dHeading += 360;
       double dYaw = -dHeading*M_PI/180.0;

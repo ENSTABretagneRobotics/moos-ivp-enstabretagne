@@ -17,6 +17,7 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
 
 # 'p' apps
   # ADD_SUBDIRECTORY(pLocalization)
+  ADD_SUBDIRECTORY(pController)
 
 # 'u' apps
   ADD_SUBDIRECTORY(uJoystick)
@@ -27,8 +28,12 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
   ADD_SUBDIRECTORY(iModem)
   ADD_SUBDIRECTORY(iXSensINS)
   ADD_SUBDIRECTORY(iGPS)
+  ADD_SUBDIRECTORY(iSonar)
+  ADD_SUBDIRECTORY(iKeller)
   ADD_SUBDIRECTORY(iSaucisse)
-
+  ADD_SUBDIRECTORY(iGPSoE)
+  ADD_SUBDIRECTORY(pSensorViewer)
+  ADD_SUBDIRECTORY(iCamera)
 
 ##############################################################################
 #                           END of CMakeLists.txt

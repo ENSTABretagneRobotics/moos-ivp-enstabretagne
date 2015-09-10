@@ -1,0 +1,167 @@
+// MOOS file
+
+ServerHost = localhost
+ServerPort = 9000
+
+Community  = AUV
+
+//Serial port configuration
+ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB0
+GPS_SERIAL_PORT = /dev/ttyUSB0
+KELLER_SERIAL_PORT = /dev/ttyUSB0
+SONAR_SERIAL_PORT = /dev/ttyUSB0
+XSENSINS_SERIAL_PORT = /dev/ttyUSB0
+
+//------------------------------------------
+// Antler configuration  block
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+  Run = MOOSDB        @ NewConsole = false
+  Run = uMS           @ NewConsole = false
+  Run = uMACView      @ NewConsole = false
+  Run = uProcessWatch @ NewConsole = false
+
+  Run = pLogger       @ NewConsole = false
+
+  Run = iCamera       @ NewConsole = false ~iCamera1
+  Run = iCamera       @ NewConsole = false ~iCamera2
+  Run = pSensorViewer @ NewConsole = false
+  Run = iEchoSounder  @ NewConsole = false
+  Run = iGPS          @ NewConsole = false
+  Run = iKeller       @ NewConsole = false
+  Run = iSonar        @ NewConsole = false
+  Run = iXSensINS     @ NewConsole = false
+}
+
+//------------------------------------------
+// iXSensINS config block
+
+ProcessConfig = iXSensINS
+{
+  AppTick        = 25
+  CommsTick      = 25
+
+  UART_BAUD_RATE = 115200
+}
+
+//------------------------------------------
+// iGPS config block
+
+LatOrigin    = 48.418079
+LongOrigin   = -4.472279
+
+ProcessConfig = iGPS
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  BAUDRATE = 4800
+  MAX_RETRIES = 5
+  PUBLISH_RAW = true
+  POWERED_AT_START = true
+}
+
+//------------------------------------------
+// iSonar config block
+
+ProcessConfig = iSonar
+{
+  AppTick          = 4
+  CommsTick        = 4
+
+  RANGE            = 15 //IN METERS
+  NBINS            = 100 //NUMBER OF SAMPLES PER SCANLINE
+  ANGLESTEP        = 1.8 //ANGULAR RESOLUTION (MUST BE A MULTIPLE OF 0.09)
+  GAIN             = 45 // MUST BE BETWEEN 0 AND 100 (PERCENTAGE)
+  CONTINUOUS       = true //TRUE FOR 360  ROTATION. SET RIGHT AND LEFT LIMIT IF FALSE
+  //LEFTLIMIT      = 70.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
+  //RIGHTLIMIT     = 110.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
+}
+
+//------------------------------------------
+ProcessConfig = iEchoSounder
+{
+  AppTick   = 4
+  CommsTick = 4
+}
+
+//------------------------------------------
+ProcessConfig = iKeller
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  MAX_RETRIES = 10
+}
+
+//------------------------------------------
+// iCamera config block
+
+ProcessConfig = iCamera1
+{
+   AppTick   = 25
+   CommsTick = 25
+
+   VARIABLE_IMAGE_NAME   = CAMERA_FRONT
+   IDENTIFIANT_CV_CAMERA = 1
+   DISPLAY_IMAGE         = true
+   INVERT_IMAGE          = false
+
+   LARGEUR_IMAGE_CAMERA  = 360
+   HAUTEUR_IMAGE_CAMERA  = 288
+}
+
+//------------------------------------------
+// iCamera config block
+
+ProcessConfig = iCamera2
+{
+   AppTick   = 25
+   CommsTick = 25
+
+   VARIABLE_IMAGE_NAME   = CAMERA_SIDE
+   IDENTIFIANT_CV_CAMERA = 0
+   DISPLAY_IMAGE         = true
+   INVERT_IMAGE          = false
+
+   LARGEUR_IMAGE_CAMERA  = 360
+   HAUTEUR_IMAGE_CAMERA  = 288
+}
+
+//------------------------------------------
+// pSensorViewer config block
+
+ProcessConfig = pSensorViewer
+{
+   AppTick   = 25
+   CommsTick = 25
+}
+ProcessConfig = uMACView
+{
+   AppTick   = 25
+   CommsTick = 25
+}
+ProcessConfig = uProcessWatch
+{
+   AppTick   = 25
+   CommsTick = 25
+}
+
+//------------------------------------------
+// Logger  configuration  block
+//
+ProcessConfig = pLogger
+{
+  //over  loading  basic  params
+  AppTick     = 4.0
+  CommsTick   = 4.0
+
+  File          = test_global
+  PATH          = ~/log
+  FileTimeStamp = true
+
+  AsyncLog        = true
+  WildCardLogging = true
+}

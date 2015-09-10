@@ -29,6 +29,70 @@
               -->
            </subscriptions>
            <publications>
+               <moosvar>
+                  <varname>IMU_YAW</varname>
+                  <vartype>double</vartype>
+                  <varinfo>angle around Z axis</varinfo>
+               </moosvar>
+               <moosvar>
+                  <varname>IMU_PITCH</varname>
+                  <vartype>double</vartype>
+                  <varinfo>angle around Y axis</varinfo>
+               </moosvar>
+               <moosvar>
+                  <varname>IMU_ROLL</varname>
+                  <vartype>double</vartype>
+                  <varinfo>angle around X axis</varinfo>
+               </moosvar>
+
+               <moosvar>
+                  <varname>IMU_ACC_X</varname>
+                  <vartype>double</vartype>
+                  <varinfo>Acceleration of X axis</varinfo>
+               </moosvar>
+               <moosvar>
+                  <varname>IMU_ACC_Y</varname>
+                  <vartype>double</vartype>
+                  <varinfo>Acceleration of Y axis</varinfo>
+               </moosvar>
+               <moosvar>
+                  <varname>IMU_ACC_Z</varname>
+                  <vartype>double</vartype>
+                  <varinfo>Acceleration of Z axis</varinfo>
+               </moosvar>
+
+               <moosvar>
+                  <varname>IMU_GYR_X</varname>
+                  <vartype>double</vartype>
+                  <varinfo>Gyration of X axis</varinfo>
+               </moosvar>
+               <moosvar>
+                  <varname>IMU_GYR_Y</varname>
+                  <vartype>double</vartype>
+                  <varinfo>Gyration of Y axis</varinfo>
+               </moosvar>
+               <moosvar>
+                  <varname>IMU_GYR_Z</varname>
+                  <vartype>double</vartype>
+                  <varinfo>Gyration of Z axis</varinfo>
+               </moosvar>
+
+               <moosvar>
+                  <varname>IMU_MAG_X</varname>
+                  <vartype>double</vartype>
+                  <varinfo>Magnetic field of X axis</varinfo>
+               </moosvar>
+               <moosvar>
+                  <varname>IMU_MAG_Y</varname>
+                  <vartype>double</vartype>
+                  <varinfo>Magnetic field of Y axis</varinfo>
+               </moosvar>
+               <moosvar>
+                  <varname>IMU_MAG_Z</varname>
+                  <vartype>double</vartype>
+                  <varinfo>Magnetic field of Z axis</varinfo>
+               </moosvar>
+
               <!--
               <moosvar>
                  <varname>EXAMPLE_VAR_OUT</varname>

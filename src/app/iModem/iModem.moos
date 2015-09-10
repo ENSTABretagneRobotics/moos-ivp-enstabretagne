@@ -1,15 +1,25 @@
 //------------------------------------------------
 // iModem config block
+ServerHost = localhost // l’adresse du serveur
+ServerPort = 9000 // le port de la communauté
 
-Comunity = #1
-ServerHost=localhost
-ServerPort = 9000
+Community = AUV1 // le nom de la communauté MOOS
+
+//Serial port configuration
+MODEM_SERIAL_PORT = /dev/ttyUSB0
 
 ProcessConfig = iModem
 {
-	AppTick   = 4
-	CommsTick = 4
-	SERIAL_PORT_NAME = /dev/ttyUSB0
-	BAUD_RATE_CONF = 57600
+  AppTick   = 4
+  CommsTick = 4
+  max_appcast_events = 8
+
+  BAUD_RATE_CONF = 57600
   BAUD_RATE_COMM = 9600
+
+  MODEM_RANGING_TIMEOUT_US = 3000
+
+  ROBOT_NAME = AUV1
+
+  POWERED_AT_START = TRUE
 }

@@ -1,0 +1,12 @@
+//------------------------------------------------
+// iCamera config block
+
+ProcessConfig = iCamera
+{
+   AppTick   = 4
+   CommsTick = 4
+
+   LARGEUR_IMAGE_CAMERA = 360
+   HAUTEUR_IMAGE_CAMERA = 288
+}
+

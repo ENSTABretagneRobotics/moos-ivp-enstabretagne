@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains iEchoSounder documentation -->
+<?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?> 
+<xmldoc>
+  <moosapp>
+
+     <info>
+        <name>iSonar</name>
+        <organization>Toutatis AUVs - ENSTA Bretagne</organization>
+        <date>2015</date>
+        <authors>
+           <author>Clement Aubry from moos-ivp-msis iSonar app</author>
+        </authors>
+        <licence>MIT</licence>
+     </info>
+
+     <documentation>
+        <synopsis>
+
+        </synopsis>
+        <interface>
+           <subscriptions>
+              <moosvar>
+                 <varname>SONAR_PARAMS</varname>
+                 <vartype>string</vartype>
+                 <varinfo>SONAR_PARAMS = Range=,Gain=,Continuous=  </varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>SONAR_POLL</varname>
+                 <vartype>double</vartype>
+                 <varinfo>if 0, sonar don't send mtSendData and polling is off. When switching to 1, Sonar start polling if initialized</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>POWERED_SONAR</varname>
+                 <vartype>double</vartype>
+                 <varinfo>if 0, the sonar is not initialized and listenning thread is stopped, when switching from 0 to 1, thread is launched an sonar init process started</varinfo>
+              </moosvar>
+           </subscriptions>
+           <publications>
+              <moosvar>
+                 <varname>SONAR_CONNECTED</varname>
+                 <vartype>bool</vartype>
+                 <varinfo>true/false</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>SONAR_DISTANCE</varname>
+                 <vartype>string</vartype>
+                 <varinfo>bearing=,distance=</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>SONAR_RAW_DATA</varname>
+                 <vartype>string</vartype>
+                 <varinfo>bearing=,ad_interval=,scanline=</varinfo>
+              </moosvar>
+           </publications>
+        </interface>
+        <!-- if there is a bug or a special fact to know.. -->
+        <optional-comments>
+           No comment.
+        </optional-comments>
+        <!-- if something can be improved -->
+        <suggested-improvements>
+           No improvements.
+        </suggested-improvements>
+     </documentation>
+
+  </moosapp>
+</xmldoc>

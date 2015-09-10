@@ -1,10 +1,10 @@
 //------------------------------------------------
 // iEchoSounder config block
 
+ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB0
+
 ProcessConfig = iEchoSounder
 {
   AppTick   = 4
   CommsTick = 4
-
-  SERIAL_PORT_NAME = /dev/ttyUSB0
 }

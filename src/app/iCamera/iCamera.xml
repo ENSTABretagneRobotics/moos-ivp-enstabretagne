@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains iCamera documentation -->
+<?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?> 
+<xmldoc>
+  <moosapp>
+
+     <info>
+        <name>iCamera</name>
+        <organization>Toutatis AUVs - ENSTA Bretagne</organization>
+        <date>2015</date>
+        <authors>
+           <author>Vincent Drevelle</author>
+           <author>Thomas Le Mezo</author>
+        </authors>
+        <licence>MIT</licence>
+     </info>
+
+     <documentation>
+        <synopsis>
+          ...
+        </synopsis>
+        <interface>
+           <subscriptions>
+              <!--
+              <moosvar>
+                 <varname>EXAMPLE_VAR_IN</varname>
+                 <vartype>string</vartype>
+                 <varinfo>description of the MOOSVar</varinfo>
+              </moosvar>
+              -->
+           </subscriptions>
+           <publications>              
+              <moosvar>
+                 <varname>name of the camera</varname>
+                 <vartype>binary</vartype>
+                 <varinfo></varinfo>
+              </moosvar>
+           </publications>
+        </interface>
+        <!-- if there is a bug or a special fact to know.. -->
+        <optional-comments>
+           No comment.
+        </optional-comments>
+        <!-- if something can be improved -->
+        <suggested-improvements>
+           No suggested improvements.
+        </suggested-improvements>
+     </documentation>
+
+  </moosapp>
+</xmldoc>
