@@ -95,9 +95,9 @@ class Controller : public AppCastingMOOSApp
     double antiWindUp_depth;
 
     /** OUTPUT VARIABLES **/
-    double rotational_force;  //positive value means clockwise direction
-    double z_force;           //positive value means surface direction
-    double forward_force;     //positive valua means forward direction
+    double FR_ROTATIONAL_FORCE;  //positive value means clockwise direction
+    double FZ_VERTICAL_FORCE;    //positive value means surface direction
+    double FX_FORWARD_FORCE;     //positive valua means forward direction
 
 
 
