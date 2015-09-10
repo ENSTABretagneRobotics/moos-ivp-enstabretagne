@@ -12,7 +12,7 @@ ProcessConfig = ANTLER
 {
   MSBetweenLaunches = 200
   Run = MOOSDB        @ NewConsole = false
-  Run = iKeller       @ NewConsole = true
+  Run = iXSensINS     @ NewConsole = true
   Run = uJoystick     @ NewConsole = false
   Run = iSaucisse     @ NewConsole = true
   Run = pController   @ NewConsole = true
@@ -21,21 +21,27 @@ ProcessConfig = ANTLER
 
 }
 
-ProcessConfig = iKeller
+
+XSENSINS_SERIAL_PORT = /dev/ttyUSB0
+
+ProcessConfig = iXSensINS
 {
   AppTick   = 4
   CommsTick = 4
 
-  SERIAL_PORT_NAME = /dev/ttyUSB0
-  MAX_RETRIES = 10
+  UART_BAUD_RATE = 115200
+
+  // magnetic declination for Piombino (2°E)
+  YAW_DECLINATION = -2
 }
+
 
 ProcessConfig = uJoystick
 {
    AppTick   = 4
    CommsTick = 4
    
-   DEVICE_NAME = /dev/input/js0
+   DEVICE_NAME = /dev/input/js1
 
    INCREMENT = false
    SCALE = 100
@@ -106,4 +112,6 @@ ProcessConfig = uMACView
 {
   AppTick   = 4
   CommsTick = 4
+
+
 }

@@ -76,7 +76,7 @@
               <moosvar>
                  <varname>DESIRED_RUDDER</varname>
                  <vartype>double</vartype>
-                 <varinfo>Desired roll motion [-1;1]. Tipically, this variable is sent by uJoystick. This value is used to drive the thrusters only when the Operation Mode is in "MANUAL" or "DEPTH_CONTROL_ONLY" mode. In other modes this value is ignored. This value is intended to move the vehicle in roll motion. </varinfo>
+                 <varinfo>Desired yaw motion [-1;1]. Tipically, this variable is sent by uJoystick. This value is used to drive the thrusters only when the Operation Mode is in "MANUAL" or "DEPTH_CONTROL_ONLY" mode. In other modes this value is ignored. This value is intended to move the vehicle in yaw motion. </varinfo>
               </moosvar>
 
               <moosvar>
@@ -152,7 +152,7 @@
               <moosvar>
                  <varname>OPERATION_MODE</varname>
                  <vartype>string</vartype>
-                 <varinfo>"MANUAL": The vehicle is operated manually (by uJoystick), receiving the DESIRED_THRUSTER, DESIRED_RUDDER and DESIRED_ELEVATOR variables. "SEMI-AUTONOMUS" and "AUTONOMUS": The thrusters are controlled by the pController by the use of variables FX_FORWARD_FORCE, FR_ROTATIONAL_FORCE, FZ_VERTICAL_FORCE. "DEPTH_CONTROL_ONLY": in this mode the depth is controlled by the pController and the forward and roll motion are controlled by the uJoystick. </varinfo>
+                 <varinfo>"MANUAL": The vehicle is operated manually (by uJoystick), receiving the DESIRED_THRUSTER, DESIRED_RUDDER and DESIRED_ELEVATOR variables. "SEMI-AUTONOMUS" and "AUTONOMUS": The thrusters are controlled by the pController by the use of variables FX_FORWARD_FORCE, FR_ROTATIONAL_FORCE, FZ_VERTICAL_FORCE. "DEPTH_CONTROL_ONLY": in this mode the depth is controlled by the pController and the forward and yaw motion are controlled by the uJoystick. </varinfo>
               </moosvar>
            </publications>
         </interface>

@@ -10,6 +10,8 @@
 #include "ACTable.h"
 #include "Controller.h"
 
+#include "math.h"
+
 using namespace std;
 
 //---------------------------------------------------------
@@ -67,7 +69,10 @@ bool Controller::OnNewMail(MOOSMSG_LIST &NewMail)
 
 
     else if(key == "IMU_YAW") 
-      actual_heading = msg.GetDouble();
+      //The IMU-YWA rate received from iXSensIMU is in interval [-180;180] 
+      //and the controller is intended to work with [0;360] values
+      actual_heading = msg.GetDouble() + 180; 
+
     else if(key == "KELLER_DEPTH") 
       actual_depth = msg.GetDouble();
 
@@ -129,13 +134,13 @@ bool Controller::Iterate()
     /** HEADING CONTROLLER */
 
       //calculate the error (actual heading - desired heading)
-      error_heading_rad = (actual_heading - desired_heading) * PI/180;
+      error_heading_rad = (actual_heading - desired_heading) * PI/180.0;
 
       //wrap the error into [-PI;PI]
-      error_heading_rad = -2*atan(tan(error_heading_degrees/2));
+      error_heading_rad = -2.0*atan(tan(error_heading_rad/2.0));
 
       //convert error to degress
-      error_heading_degrees = error_heading_rad *180/PI;
+      error_heading_degrees = error_heading_rad *180.0/PI;
 
       //check if the error is bigger than the min error parameter
       if(fabs(error_heading_degrees) > MIN_HEADING_ERROR)
