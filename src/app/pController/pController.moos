@@ -1,0 +1,28 @@
+//------------------------------------------------
+// pController config block
+
+ProcessConfig = pController
+{
+  AppTick   = 20
+  CommsTick = 4
+
+
+  kp_heading = 1               
+  kd_heading = 0
+  ki_heading = 0
+
+  kp_depth = 1.0
+  kd_depth = 0.0
+  ki_depth = 0.0
+
+  k_speed_factor = 1.0
+
+  min_heading_error = 3.0
+  min_depth_error = 0.1
+
+  max_rotational_force = 1.0
+  max_z_force = 1.0
+  max_forward_force = 1.0
+
+
+}

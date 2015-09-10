@@ -17,6 +17,7 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
 
 # 'p' apps
   # ADD_SUBDIRECTORY(pLocalization)
+  ADD_SUBDIRECTORY(pController)
 
 # 'u' apps
   ADD_SUBDIRECTORY(uJoystick)
