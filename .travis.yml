@@ -7,5 +7,9 @@ before_script:
  - svn co https://oceanai.mit.edu/svn/moos-ivp-aro/releases/moos-ivp-15.5 moos-ivp
  - cd moos-ivp
  - sudo apt-get install g++ subversion xterm cmake libfltk1.3-dev freeglut3-dev libpng12-dev libjpeg-dev libxft-dev libxinerama-dev libtiff4-dev
+ - ./build-moos.sh
+ - ./build-ivp.sh
+ - cd ../
 
-script: ./build-moos.sh && ./build-ivp.sh
+script:
+ - ./build.sh
