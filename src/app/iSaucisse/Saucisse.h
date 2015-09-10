@@ -36,25 +36,25 @@ class Saucisse : public AppCastingMOOSApp
     std::string m_device_name;
 
     /** COEFFICIENT MATRIX **/
-    double coeff_matrix[3][3];
-    //std::array<std::array<double,3>,3> coeff_matrix;
+    double COEFF_MATRIX[3][3];
+    //std::array<std::array<double,3>,3> COEFF_MATRIX;
 
     /** OUTPUT VARIABLES **/
-    double side_thruster_one;
-    double side_thruster_two;
-    double vertical_thruster;
+    double U1_SIDE_THRUSTER_ONE;
+    double U2_SIDE_THRUSTER_TWO;
+    double U3_VERTICAL_THRUSTER;
 
     /** EXTERNAL INPUT VARIABLES **/
-    double rotational_force;     //[-1;1]
-    double z_force;              //[-1;1]
-    double forward_force;        //[-1;1]
+    double FR_ROTATIONAL_FORCE;     //[-1;1]
+    double FZ_VERTICAL_FORCE;              //[-1;1]
+    double FX_FORWARD_FORCE;        //[-1;1]
 
     /** internal variables **/
     double max_thruster_value;
     double saturation_value;
     double saturated_thruster_value;
 
-    std::string Operation_Mode;
+    std::string OPERATION_MODE;
 
   private: // State variables
     Pololu *m_pololu;

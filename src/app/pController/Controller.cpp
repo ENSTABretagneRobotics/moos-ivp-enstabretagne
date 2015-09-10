@@ -42,28 +42,28 @@ bool Controller::OnNewMail(MOOSMSG_LIST &NewMail)
       bool   mstr  = msg.IsString();
     #endif
 
-    if(key == "kp_heading") 
-      kp_heading = msg.GetDouble();
-    else if(key == "kd_heading") 
-      kd_heading = msg.GetDouble();
-    else if(key == "ki_heading") 
-      ki_heading = msg.GetDouble();
-    else if(key == "min_heading_error") 
-      min_heading_error = msg.GetDouble();
+    if(key == "KP_HEADING") 
+      KP_HEADING = msg.GetDouble();
+    else if(key == "KD_HEADING") 
+      KD_HEADING = msg.GetDouble();
+    else if(key == "KI_HEADING") 
+      KI_HEADING = msg.GetDouble();
+    else if(key == "MIN_HEADING_ERROR") 
+      MIN_HEADING_ERROR = msg.GetDouble();
 
 
-    else if(key == "kp_depth") 
-      kp_depth = msg.GetDouble();
-    else if(key == "kd_depth") 
-      kd_depth = msg.GetDouble();
-    else if(key == "ki_depth") 
-      ki_depth = msg.GetDouble();
-    else if(key == "min_depth_error") 
-      min_depth_error = msg.GetDouble();
+    else if(key == "KP_DEPTH") 
+      KP_DEPTH = msg.GetDouble();
+    else if(key == "KD_DEPTH") 
+      KD_DEPTH = msg.GetDouble();
+    else if(key == "KI_DEPTH") 
+      KI_DEPTH = msg.GetDouble();
+    else if(key == "MIN_DEPTH_ERROR") 
+      MIN_DEPTH_ERROR = msg.GetDouble();
     
 
-    else if(key == "k_speed_factor") 
-      k_speed_factor = msg.GetDouble();
+    else if(key == "K_SPEED_FACTOR") 
+      K_SPEED_FACTOR = msg.GetDouble();
 
 
     else if(key == "IMU_YAW") 
@@ -72,20 +72,20 @@ bool Controller::OnNewMail(MOOSMSG_LIST &NewMail)
       actual_depth = msg.GetDouble();
 
 
-    else if(key == "Desired_Speed") 
+    else if(key == "DESIRED_SPEED") 
       desired_speed = msg.GetDouble();
-    else if(key == "Desired_Depth") 
+    else if(key == "DESIRED_DEPTH") 
       desired_depth = msg.GetDouble();
-    else if(key == "Desired_Heading") 
+    else if(key == "DESIRED_HEADING") 
       desired_heading = msg.GetDouble();
 
 
-    else if(key == "Operation_Mode") 
-      Operation_Mode = msg.GetString();
-    else if(key == "max_forward_speed") 
-      max_forward_speed = msg.GetDouble();
-    else if(key == "max_backward_speed") 
-      max_backward_speed = msg.GetDouble();
+    else if(key == "OPERATION_MODE") 
+      OPERATION_MODE = msg.GetString();
+    else if(key == "MAX_FORWARD_SPEED") 
+      MAX_FORWARD_SPEED = msg.GetDouble();
+    else if(key == "MAX_BACKWARD_SPEED") 
+      MAX_BACKWARD_SPEED = msg.GetDouble();
 
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
@@ -117,7 +117,7 @@ bool Controller::Iterate()
   /*** Check for correct mode of operation of the robot ***/
   //The controller loop will only run if the robot is in
   //total or semi autonomus mode
-  if(Operation_Mode == "Autonomus" || Operation_Mode == "Semi-Autonomus")
+  if(OPERATION_MODE == "AUTONOMUS" || OPERATION_MODE == "SEMI-AUTONOMUS")
   {
     //run the controller loop
 
@@ -138,41 +138,41 @@ bool Controller::Iterate()
       error_heading_degrees = error_heading_rad *180/PI;
 
       //check if the error is bigger than the min error parameter
-      if(fabs(error_heading_degrees) > min_heading_error)
+      if(fabs(error_heading_degrees) > MIN_HEADING_ERROR)
       {
         //error is different from zero, calculate PID control
 
 
         //proportional value
-        proportional_heading = kp_heading * error_heading_degrees;
+        proportional_heading = KP_HEADING * error_heading_degrees;
         derivative_heading = (error_heading_degrees - old_error_heading)/delta_t;
         integral_heading =  integral_heading + ((error_heading_degrees + antiWindUp_heading)*delta_t); //anti-wind up below
 
 
         //calculate output command value
-        rotational_force =  proportional_heading
-                          + kd_heading * derivative_heading
-                          + ki_heading * integral_heading;
+        FR_ROTATIONAL_FORCE =  proportional_heading
+                          + KD_HEADING * derivative_heading
+                          + KI_HEADING * integral_heading;
 
 
         //OUTPUT SATURATION CHECK
         //check if the oubput command value is between the max output value
-        if(fabs(rotational_force)> max_rotational_force)
+        if(fabs(FR_ROTATIONAL_FORCE)> max_rotational_force)
          {
 
-            antiWindUp_heading = rotational_force;
+            antiWindUp_heading = FR_ROTATIONAL_FORCE;
 
           //output value is saturated
-          if(rotational_force > 0)
+          if(FR_ROTATIONAL_FORCE > 0)
           {
             //positive saturation
-            rotational_force = max_rotational_force;
+            FR_ROTATIONAL_FORCE = max_rotational_force;
 
           }
           else
           {
             //negative saturation
-            rotational_force = -max_rotational_force;
+            FR_ROTATIONAL_FORCE = -max_rotational_force;
           }
 
           //Anti Wind-Up for integral value of the PID
@@ -189,7 +189,7 @@ bool Controller::Iterate()
       {
         //the error is small enought to be considered as zero
         //reset the output command variable
-        rotational_force = 0;
+        FR_ROTATIONAL_FORCE = 0;
 
         //reset the integral term
         integral_heading = 0;
@@ -207,34 +207,34 @@ bool Controller::Iterate()
 
     /** SPEED CONTROLLER **/
 
-      //maps a desired speed in meters/second in a force between [-max_forward_speed;+max_forward_speed]
-      //this mapping depends on the max_forward_speed and max_backward_speed of the vehicle
+      //maps a desired speed in meters/second in a force between [-MAX_FORWARD_SPEED;+MAX_FORWARD_SPEED]
+      //this mapping depends on the MAX_FORWARD_SPEED and MAX_BACKWARD_SPEED of the vehicle
       if(desired_speed > 0)
         //forward speed
-        forward_force = (desired_speed * max_forward_force / max_forward_speed) * k_speed_factor;
+        FX_FORWARD_FORCE = (desired_speed * max_forward_force / MAX_FORWARD_SPEED) * K_SPEED_FACTOR;
       else
         //backward speed
-        forward_force = desired_speed * max_forward_force / max_backward_speed * k_speed_factor;
+        FX_FORWARD_FORCE = desired_speed * max_forward_force / MAX_BACKWARD_SPEED * K_SPEED_FACTOR;
 
 
       //check for saturarion
-      forward_force = (forward_force < max_forward_force) ? forward_force: max_forward_force;
-      forward_force = (forward_force > -max_forward_force) ? forward_force : -max_forward_force;
+      FX_FORWARD_FORCE = (FX_FORWARD_FORCE < max_forward_force) ? FX_FORWARD_FORCE: max_forward_force;
+      FX_FORWARD_FORCE = (FX_FORWARD_FORCE > -max_forward_force) ? FX_FORWARD_FORCE : -max_forward_force;
 
     /** END OF SPEED CONTROLLER **/
 
 
 
 
-    }//end of if(Operation_Mode == "Autonomus" || Operation_Mode == "Semi-Autonomus")
+    }//end of if(OPERATION_MODE == "AUTONOMUS" || OPERATION_MODE == "SEMI-AUTONOMUS")
     else
     {
        //don't run the controllers at all
       //erase the global variables
       error_heading_degrees = 0;
       error_heading_rad = 0;
-      forward_force = 0;
-      z_force = 0;
+      FX_FORWARD_FORCE = 0;
+      FZ_VERTICAL_FORCE = 0;
       antiWindUp_heading = 0;
 
       //reset integral value
@@ -246,9 +246,9 @@ bool Controller::Iterate()
     
     /*** Check for correct mode of operation of the robot ***/
     //The depth controller loop will only run if the robot is in
-    //total, semi autonomus or DepthControllerOnly mode
+    //total, semi autonomus or DEPTH_CONTROL_ONLY mode
 
-    if(Operation_Mode == "Autonomus" || Operation_Mode == "Semi-Autonomus" || Operation_Mode == "DepthControllerOnly")
+    if(OPERATION_MODE == "AUTONOMUS" || OPERATION_MODE == "SEMI-AUTONOMUS" || OPERATION_MODE == "DEPTH_CONTROL_ONLY")
     {
     /** DEPTH CONTROLLER */
 
@@ -260,36 +260,36 @@ bool Controller::Iterate()
 
 
       //check if the error is bigger than the min error parameter
-      if(fabs(error_depth) > min_depth_error)
+      if(fabs(error_depth) > MIN_DEPTH_ERROR)
       {
         //error is different from zero, calculate PID control
 
 
         //proportional value
-        proportional_depth = kp_depth * error_depth;
+        proportional_depth = KP_DEPTH * error_depth;
         derivative_depth =  (error_depth - old_error_depth)/delta_t;
         integral_depth =  integral_depth + ((error_depth+antiWindUp_depth)*delta_t);
 
         //TODO limit integral term!?
 
         //calculate output command value
-        z_force =  proportional_depth
-                  + kd_depth * derivative_depth
-                  + ki_depth * integral_depth;
+        FZ_VERTICAL_FORCE =  proportional_depth
+                  + KD_DEPTH * derivative_depth
+                  + KI_DEPTH * integral_depth;
 
 
         //OUTPUT SATURATION CHECK
         //check if the oubput command value is between the max output value
-        if(fabs(z_force)> max_z_force)
+        if(fabs(FZ_VERTICAL_FORCE)> max_z_force)
          {
 
-          antiWindUp_depth = z_force;
+          antiWindUp_depth = FZ_VERTICAL_FORCE;
 
           //output value is saturated
-          if(z_force > 0)
-            z_force = max_z_force;      //positive saturation
+          if(FZ_VERTICAL_FORCE > 0)
+            FZ_VERTICAL_FORCE = max_z_force;      //positive saturation
           else
-            z_force = -1 * max_z_force; //negative saturation
+            FZ_VERTICAL_FORCE = -1 * max_z_force; //negative saturation
 
           antiWindUp_depth = (max_z_force - antiWindUp_depth);
 
@@ -303,7 +303,7 @@ bool Controller::Iterate()
       {
         //the error is small enought to be considered as zero
         //reset the output command variable
-        z_force = 0;
+        FZ_VERTICAL_FORCE = 0;
 
         //reset the integral term
         integral_depth = 0;
@@ -326,7 +326,7 @@ bool Controller::Iterate()
     //don't run depth controller at all
     //erase the global variables
     error_depth = 0;
-    z_force = 0;
+    FZ_VERTICAL_FORCE = 0;
     antiWindUp_depth = 0;
 
     //reset integral value
@@ -338,9 +338,9 @@ bool Controller::Iterate()
 
 
   //Notify the output variables
-  Notify("rotational_force", rotational_force);
-  Notify("z_force", z_force);
-  Notify("forward_force", forward_force);
+  Notify("FR_ROTATIONAL_FORCE", FR_ROTATIONAL_FORCE);
+  Notify("FZ_VERTICAL_FORCE", FZ_VERTICAL_FORCE);
+  Notify("FX_FORWARD_FORCE", FX_FORWARD_FORCE);
 
 
 
@@ -360,25 +360,25 @@ bool Controller::OnStartUp()
 
   //default config
   //Heading
-  kp_heading = 1;                //proportional constant value
-  kd_heading = 0;                //derivative constant value
-  ki_heading = 0;                //integral constant value
+  KP_HEADING = 1;                //proportional constant value
+  KD_HEADING = 0;                //derivative constant value
+  KI_HEADING = 0;                //integral constant value
 
   //Depth
-  kp_depth = 1;                //proportional constant value
-  kd_depth = 0;                //derivative constant value
-  ki_depth = 0;                //integral constant value
+  KP_DEPTH = 1;                //proportional constant value
+  KD_DEPTH = 0;                //derivative constant value
+  KI_DEPTH = 0;                //integral constant value
 
   //Speed
-  k_speed_factor = 1;          //k factor for the speed mapping, tipically = 1;
+  K_SPEED_FACTOR = 1;          //k factor for the speed mapping, tipically = 1;
 
   //Error thresholds
   //both minimun errors below are threshold values for the controller loop
   
   //minimum heading error, must be at least the precision of the heading sensor
-  min_heading_error = 3; //[0, 180] //in degress
+  MIN_HEADING_ERROR = 3; //[0, 180] //in degress
   //minimum heading error, must be at least the precision of the pressure sensor
-  min_depth_error = 0.1; //in meters
+  MIN_DEPTH_ERROR = 0.1; //in meters
 
   //Max output values
   max_rotational_force = 1;
@@ -389,10 +389,10 @@ bool Controller::OnStartUp()
   /** EXTERNAL INPUT VARIABLES **/
 
   //Possible values for Operation Mode
-  //1) Manual - when the vehicle motion is fully operated by human
-  //2) Semi-Autonomus - when the controller is used but the setpoints are setted by human operation
-  //3) Autonomus - When the setpoints are setted by a higher level controller
-  Operation_Mode = "Manual";  //When initialized, the operation mode must be manual
+  //1) MANUAL - when the vehicle motion is fully operated by human
+  //2) SEMI-AUTONOMUS - when the controller is used but the setpoints are setted by human operation
+  //3) AUTONOMUS - When the setpoints are setted by a higher level controller
+  OPERATION_MODE = "MANUAL";  //When initialized, the operation mode must start as manual
 
   desired_heading = 0;   //setpoint for the heading in degrees [0, 360)
   desired_depth = 0;     //setpoint for depth in meters
@@ -402,8 +402,8 @@ bool Controller::OnStartUp()
   antiWindUp_heading = 0;
   antiWindUp_depth = 0;
 
-  max_forward_speed = 3;   //max forward speed of the vehicle in meters/second
-  max_backward_speed = 2.82;  //max backward speed of the vechicle in meters/second
+  MAX_FORWARD_SPEED = 3;   //max forward speed of the vehicle in meters/second
+  MAX_BACKWARD_SPEED = 2.82;  //max backward speed of the vechicle in meters/second
 
 
   old_MOOSTime = 0.0;
@@ -429,24 +429,24 @@ bool Controller::OnStartUp()
 
     if(param == "KP_HEADING") 
     {
-      kp_heading = atof(value.c_str());
+      KP_HEADING = atof(value.c_str());
       handled = true;
     } 
     else if(param == "KD_HEADING") 
     {
-      kd_heading = atof(value.c_str());
+      KD_HEADING = atof(value.c_str());
       handled = true;
     } 
 
     else if(param == "KI_HEADING") 
     {
-      ki_heading = atof(value.c_str());
+      KI_HEADING = atof(value.c_str());
       handled = true;
     } 
 
     else if(param == "MIN_HEADING_ERROR") 
     {
-      min_heading_error = atof(value.c_str());
+      MIN_HEADING_ERROR = atof(value.c_str());
       handled = true;
     } 
 
@@ -454,25 +454,25 @@ bool Controller::OnStartUp()
 
     else if(param == "KP_DEPTH") 
     {
-      kp_depth = atof(value.c_str());
+      KP_DEPTH = atof(value.c_str());
       handled = true;
     } 
 
     else if(param == "KD_DEPTH") 
     {
-      kd_depth = atof(value.c_str());
+      KD_DEPTH = atof(value.c_str());
       handled = true;
     } 
 
     else if(param == "KI_DEPTH") 
     {
-      ki_depth = atof(value.c_str());
+      KI_DEPTH = atof(value.c_str());
       handled = true;
     } 
 
     else if(param == "MIN_DEPTH_ERROR") 
     {
-      min_depth_error = atof(value.c_str());
+      MIN_DEPTH_ERROR = atof(value.c_str());
       handled = true;
     } 
 
@@ -480,20 +480,20 @@ bool Controller::OnStartUp()
 
     else if(param == "K_SPEED_FACTOR") 
     {
-      k_speed_factor = atof(value.c_str());
+      K_SPEED_FACTOR = atof(value.c_str());
       handled = true;
     } 
 
 
     else if(param == "MAX_FORWARD_SPEED") 
     {
-      max_forward_speed = atof(value.c_str());
+      MAX_FORWARD_SPEED = atof(value.c_str());
       handled = true;
     } 
 
     else if(param == "MAX_BACKWARD_SPEED") 
     {
-      max_backward_speed = atof(value.c_str());
+      MAX_BACKWARD_SPEED = atof(value.c_str());
       handled = true;
     } 
 
@@ -537,28 +537,28 @@ void Controller::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
   // Register("FOOBAR", 0);
-  Register("kp_heading", 0);
-  Register("kd_heading", 0);
-  Register("ki_heading", 0);
-  Register("min_heading_error", 0);
+  Register("KP_HEADING", 0);
+  Register("KD_HEADING", 0);
+  Register("KI_HEADING", 0);
+  Register("MIN_HEADING_ERROR", 0);
 
-  Register("kp_depth", 0);
-  Register("kd_depth", 0);
-  Register("ki_depth", 0);
-  Register("min_depth_error", 0);
+  Register("KP_DEPTH", 0);
+  Register("KD_DEPTH", 0);
+  Register("KI_DEPTH", 0);
+  Register("MIN_DEPTH_ERROR", 0);
 
-  Register("k_speed_factor", 0);
+  Register("K_SPEED_FACTOR", 0);
 
   Register("IMU_YAW", 0);
   Register("KELLER_DEPTH", 0);
 
-  Register("Desired_Speed", 0);
-  Register("Desired_Depth", 0);
-  Register("Desired_Heading", 0);
+  Register("DESIRED_SPEED", 0);
+  Register("DESIRED_DEPTH", 0);
+  Register("DESIRED_HEADING", 0);
 
-  Register("Operation_Mode", 0);
-  Register("max_forward_speed", 0);
-  Register("max_backward_speed", 0);
+  Register("OPERATION_MODE", 0);
+  Register("MAX_FORWARD_SPEED", 0);
+  Register("MAX_BACKWARD_SPEED", 0);
 
 }
 
@@ -584,7 +584,7 @@ bool Controller::buildReport()
   m_msgs << "pController:                                      \n";
   m_msgs << "============================================ \n";
   m_msgs << "\n";
-  m_msgs << "Operation_Mode: " << Operation_Mode;
+  m_msgs << "OPERATION_MODE: " << OPERATION_MODE;
   m_msgs << "\n";
   m_msgs << "\n";
 
@@ -592,14 +592,14 @@ bool Controller::buildReport()
   m_msgs << "Parameters:         \n";
   m_msgs << "PID        Kp   Kd   ki \n";
   m_msgs << "        ----------------- \n";
-  m_msgs << "Heading |  "<< kp_heading <<"   "<< kd_heading <<"    "<< ki_heading <<"  \n";
-  m_msgs << "Depth   |  "<< kp_depth <<"   "<< kd_depth <<"    "<< ki_depth <<"  \n";
+  m_msgs << "Heading |  "<< KP_HEADING <<"   "<< KD_HEADING <<"    "<< KI_HEADING <<"  \n";
+  m_msgs << "Depth   |  "<< KP_DEPTH <<"   "<< KD_DEPTH <<"    "<< KI_DEPTH <<"  \n";
   m_msgs << "\n";
-  m_msgs << "k_speed_factor: " << k_speed_factor;
+  m_msgs << "K_SPEED_FACTOR: " << K_SPEED_FACTOR;
   m_msgs << "\n";
-  m_msgs << "min_heading_error (degrees): " << min_heading_error;
+  m_msgs << "MIN_HEADING_ERROR (degrees): " << MIN_HEADING_ERROR;
   m_msgs << "\n";
-  m_msgs << "min_depth_error   (meters) : " << min_depth_error;
+  m_msgs << "MIN_DEPTH_ERROR   (meters) : " << MIN_DEPTH_ERROR;
   m_msgs << "\n";
   m_msgs << "\n";
 
@@ -624,9 +624,9 @@ bool Controller::buildReport()
 
   m_msgs << "=========================== \n";
   m_msgs << "Output values:         \n";
-  m_msgs << "Fx =  "<< forward_force <<" \n";
-  m_msgs << "Fr =  "<< rotational_force <<"\n";
-  m_msgs << "Fz =  "<< z_force <<" \n";
+  m_msgs << "Fx =  "<< FX_FORWARD_FORCE <<" \n";
+  m_msgs << "Fr =  "<< FR_ROTATIONAL_FORCE <<"\n";
+  m_msgs << "Fz =  "<< FZ_VERTICAL_FORCE <<" \n";
   m_msgs << "\n";
 
 

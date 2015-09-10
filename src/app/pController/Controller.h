@@ -35,25 +35,25 @@ class Controller : public AppCastingMOOSApp
 
     //Controller constants
     //Heading
-    double kp_heading;                //proportional constant value
-    double kd_heading;                //derivative constant value
-    double ki_heading;                //integral constant value
+    double KP_HEADING;                //proportional constant value
+    double KD_HEADING;                //derivative constant value
+    double KI_HEADING;                //integral constant value
 
     //Depth
-    double kp_depth;                //proportional constant value
-    double kd_depth;                //derivative constant value
-    double ki_depth;                //integral constant value
+    double KP_DEPTH;                //proportional constant value
+    double KD_DEPTH;                //derivative constant value
+    double KI_DEPTH;                //integral constant value
 
     //Speed
-    double k_speed_factor;          //k factor for the speed mapping, tipically = 1;
+    double K_SPEED_FACTOR;          //k factor for the speed mapping, tipically = 1;
 
     //Error thresholds
     //both minimun errors below are threshold values for the controller loop
     
     //minimum heading error, must be at least the precision of the heading sensor
-    double min_heading_error; //[0, 180]
+    double MIN_HEADING_ERROR; //[0, 180]
     //minimum heading error, must be at least the precision of the pressure sensor
-    double min_depth_error;
+    double MIN_DEPTH_ERROR;
 
     //Max output values
     double max_rotational_force;
@@ -62,7 +62,7 @@ class Controller : public AppCastingMOOSApp
 
 
     /** EXTERNAL INPUT VARIABLES **/
-    std::string Operation_Mode;  //TODO set the operation mode globally in the Mission
+    std::string OPERATION_MODE;  //TODO set the operation mode globally in the Mission
 
     double desired_heading;   //setpoint for the heading in degrees [0, 360)
     double desired_depth;     //setpoint for depth in meters
@@ -70,8 +70,8 @@ class Controller : public AppCastingMOOSApp
     double actual_heading;    //actual heading value in degrees [0, 360)
     double actual_depth;      //actual depth value in meters
 
-    double max_forward_speed;   //max forward speed of the vehicle in meters/second
-    double max_backward_speed;  //max backward speed of the vechicle in meters/second
+    double MAX_FORWARD_SPEED;   //max forward speed of the vehicle in meters/second
+    double MAX_BACKWARD_SPEED;  //max backward speed of the vechicle in meters/second
 
 
     /** GLOBAL VARIABLES **/
