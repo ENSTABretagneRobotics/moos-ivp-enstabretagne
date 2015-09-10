@@ -1,4 +1,4 @@
-MOOS-IvP-TOUTATIS [![Build Status](https://travis-ci.org/nicolaje/moos-ivp-toutatis.svg)](https://travis-ci.org/nicolaje/moos-ivp-toutatis)
+MOOS-IvP-TOUTATIS [![Build Status](https://travis-ci.org/ENSTABretagneRobotics/moos-ivp-toutatis.svg)](https://travis-ci.org/ENSTABretagneRobotics/moos-ivp-toutatis)
 =================
 
 Introduction
