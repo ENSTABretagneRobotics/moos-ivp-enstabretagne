@@ -124,6 +124,8 @@ bool GPS::OnStartUp()
     reportConfigWarning("Geodesy initialisation failed!!!");
     return false;
   }
+  if (!m_MissionReader.GetValue("GPS_SERIAL_PORT",m_portName))
+    reportConfigWarning("No GPS_SERIAL_PORT config found for " + GetAppName());
 
   int max_retries = 5;
   double dGPSPeriod = 1.0;
@@ -146,12 +148,6 @@ bool GPS::OnStartUp()
     if(param == "MAX_RETRIES")
     {
       max_retries = atoi(value.c_str());
-      handled = true;
-    }
-    else if(param == "PORT")
-    {
-      // reportEvent("iModem: Using "+value+" serial port\n");
-      m_portName = value;
       handled = true;
     }
     else if(param == "BAUDRATE")

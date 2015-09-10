@@ -46,14 +46,14 @@ bool EchoSounder::OnNewMail(MOOSMSG_LIST &NewMail)
     #if 0 // Keep these around just for template
       string comm  = msg.GetCommunity();
       double dval  = msg.GetDouble();
-      string sval  = msg.GetString(); 
+      string sval  = msg.GetString();
       string msrc  = msg.GetSource();
       double mtime = msg.GetTime();
       bool   mdbl  = msg.IsDouble();
       bool   mstr  = msg.IsString();
     #endif
 
-    if(key == "FOO") 
+    if(key == "FOO")
       cout << "great!";
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
@@ -97,8 +97,11 @@ bool EchoSounder::OnStartUp()
 
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
+  if (!m_MissionReader.GetValue("ECHOSOUNDER_SERIAL_PORT",m_port_name))
+    reportConfigWarning("No ECHOSOUNDER_SERIAL_PORT config found for " + GetAppName());
   if(!m_MissionReader.GetConfiguration(GetAppName(), sParams))
     reportConfigWarning("No config block found for " + GetAppName());
+
 
   STRING_LIST::iterator p;
   sParams.reverse();
@@ -110,18 +113,21 @@ bool EchoSounder::OnStartUp()
     string value = line;
     bool handled = false;
 
-    if(param == "SERIAL_PORT_NAME")
-    {
-      handled = true;
-      if(!initSerialPort(value))
-        reportConfigWarning("Initialization failed on " + value);
-    }
+    // if(param == "SERIAL_PORT_NAME")
+    // {
+    //   handled = true;
+    //   if(!initSerialPort(value))
+    //     reportConfigWarning("Initialization failed on " + value);
+    // }
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
   }
 
-  registerVariables();  
+  if(!initSerialPort())
+    reportConfigWarning("Initialization failed on [" + m_port_name+"]");
+
+  registerVariables();
   return true;
 }
 
@@ -137,7 +143,7 @@ void EchoSounder::registerVariables()
 //------------------------------------------------------------
 // Procedure: buildReport()
 
-bool EchoSounder::buildReport() 
+bool EchoSounder::buildReport()
 {
   #if 0 // Keep these around just for template
     m_msgs << "============================================ \n";
@@ -151,13 +157,16 @@ bool EchoSounder::buildReport()
     m_msgs << actab.getFormattedString();
   #endif
 
-  if(m_port_is_initialized)
-    m_msgs << "Port initialized";
-  else
-    m_msgs << "Port NOT initialized";
+    m_msgs << "============================================ \n";
+    m_msgs << "iEchoSounder status:                         \n";
+    m_msgs << "============================================ \n";
 
-  m_msgs << " (" << m_port_name << ")";
-  m_msgs << endl << "Last value: " << m_last_value;
+    ACTable actab(4);
+    actab << "Serial Port | Baudrate | Port initialized | Depth";
+    actab.addHeaderLines();
+    string portInit = (m_port_is_initialized)?"yes":"no";
+    actab << m_port_name << m_serial_port.GetBaudRate() << portInit << m_last_value;
+    m_msgs << actab.getFormattedString();
 
   return true;
 }
@@ -165,20 +174,19 @@ bool EchoSounder::buildReport()
 //------------------------------------------------------------
 // Procedure: initSerialPort
 
-bool EchoSounder::initSerialPort(string port_name)
+bool EchoSounder::initSerialPort()
 {
-  m_port_name = port_name;
-  ifstream test_file(port_name.c_str()); 
+  ifstream test_file(m_port_name.c_str());
   if(test_file.fail())
     return false;
-  
+
   #ifdef _WIN32
     m_serial_port = MOOSNTSerialPort();
   #else
     m_serial_port = CMOOSLinuxSerialPort();
   #endif
 
-  m_port_is_initialized = m_serial_port.Create((char*)port_name.c_str());
+  m_port_is_initialized = m_serial_port.Create((char*)m_port_name.c_str());
   return m_port_is_initialized;
 }
 
@@ -189,27 +197,37 @@ double EchoSounder::getRange()
 {
   int result;
   double range;
-  
+
   if(!m_port_is_initialized)
     return -1;
-  
+
   char echo_value[ECHOSOUNDER_MAX_STRING_LENGTH];
   result = m_serial_port.ReadNWithTimeOut(echo_value, ECHOSOUNDER_MAX_STRING_LENGTH);
-  
+
   // Example of returned value: "001.567m"
   if(!dataIsValid(echo_value))
+  {
+    reportRunWarning("Data not valid");
     return -2;
+  }
+  else
+    retractRunWarning("Data not valid");
 
   if(!result)
+  {
+    reportRunWarning("No result received");
     return -1;
+  }
+  else
+    retractRunWarning("No result received");
 
   char parsed_value[8];
-  
+
   // The beginning of the string is kept
   for(int i = 0 ; i < 7 ; i ++)
     parsed_value[i] = echo_value[i];
   parsed_value[7] = '\0';
-  
+
   // Conversion into decimals
   range = atof(parsed_value);
   m_last_value = range;

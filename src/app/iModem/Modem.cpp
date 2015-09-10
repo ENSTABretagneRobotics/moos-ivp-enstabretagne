@@ -594,6 +594,8 @@ bool Modem::OnStartUp()
 
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
+  if (!m_MissionReader.GetValue("MODEM_SERIAL_PORT",m_portName))
+    reportConfigWarning("No MODEM_SERIAL_PORT config found for " + GetAppName());
   if(!m_MissionReader.GetConfiguration(GetAppName(), sParams))
     reportConfigWarning("No config block found for " + GetAppName());
 
@@ -607,13 +609,7 @@ bool Modem::OnStartUp()
     string value = line;
     bool handled = false;
 
-    if(param == "SERIAL_PORT_NAME")
-    {
-      // reportEvent("iModem: Using "+value+" serial port\n");
-      m_portName = value;
-      handled = true;
-    }
-    else if(param == "BAUD_RATE_CONF")
+    if(param == "BAUD_RATE_CONF")
     {
       // reportEvent("iModem: serial port baud rate conf setted to "+value+"\n");
       m_baudrate_conf = atoi(value.c_str());
@@ -635,6 +631,11 @@ bool Modem::OnStartUp()
       m_uiRngTimeoutUS_param = atoi(value.c_str());
       handled = true;
     }
+    else if(param == "POWERED_AT_START")
+    {
+      m_bIsModemPowered = MOOSStrCmp(value.c_str(),"TRUE");
+      handled = true;
+    }
     if(!handled)
       reportUnhandledConfigWarning(orig);
   }
@@ -650,7 +651,7 @@ bool Modem::OnStartUp()
   //Power down magnet
   Notify("POWER_MODEM_EA",0.0);
   //Power down modem, they will be powered up at any reception of modem_configuration_required
-  Notify("POWER_MODEM",0.0);
+  //Notify("POWER_MODEM",0.0);
 
   registerVariables();
   return true;
@@ -978,21 +979,21 @@ bool Modem::buildReport()
     m_msgs << "iModemStatus :                                                \n";
     m_msgs << "==============================================================\n";
 
-    ACTable actab(5);
-    actab << "SerialPort | Baudrate | ModemOutput | MagnetOutput | In config process";
+    ACTable actab(4);
+    actab << "SerialPort | Baudrate | In config process | Role ";
     actab.addHeaderLines();
     string confProcLaunched = (m_bModemConfigurationRequired)?"yes":"no";
-    actab << m_portName << m_Port.GetBaudRate() << m_sModemPowerOnLabjack << m_sMagnetPowerOnLabjack << confProcLaunched;
+    string modemRoleRequired = (m_iModemRoleRequired)?"slave":"master";
+    actab << m_portName << m_Port.GetBaudRate() << confProcLaunched << modemRoleRequired;
     m_msgs << actab.getFormattedString();
     m_msgs << "\n==============================================================\n";
 
-ACTable actab2(5);
-    actab2 << "ModemPower | MagnetPower | Last Message | Last Range | Role ";
+ACTable actab2(4);
+    actab2 << "ModemPower | MagnetPower | Last Message | Last Range";
     actab2.addHeaderLines();
     string modemPowered = (m_bIsModemPowered)?"yes":"no";
     string magnetPowered = (m_bIsMagnetPowered)?"yes":"no";
-    string modemRoleRequired = (m_iModemRoleRequired)?"slave":"master";
-    actab2 << modemPowered << magnetPowered << messageReceived << rangingValue << modemRoleRequired;
+    actab2 << modemPowered << magnetPowered << messageReceived << rangingValue;
     m_msgs << actab2.getFormattedString();
 
   return true;

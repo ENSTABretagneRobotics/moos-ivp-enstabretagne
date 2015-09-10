@@ -4,6 +4,8 @@ ServerHost = localhost
 ServerPort = 9000
 
 Community  = AUV
+//Serial port configuration
+XSENSINS_SERIAL_PORT = /dev/ttyUSB0
 
 //------------------------------------------
 // Antler configuration  block
@@ -26,6 +28,5 @@ ProcessConfig = iXSensINS
   AppTick   = 25
   CommsTick = 25
 
-  UART_PORT = /dev/ttyUSB4
   UART_BAUD_RATE = 115200
 }

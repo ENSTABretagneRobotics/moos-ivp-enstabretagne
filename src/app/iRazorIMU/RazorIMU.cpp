@@ -43,14 +43,14 @@ bool RazorIMU::OnNewMail(MOOSMSG_LIST &NewMail)
     #if 0 // Keep these around just for template
       string comm  = msg.GetCommunity();
       double dval  = msg.GetDouble();
-      string sval  = msg.GetString(); 
+      string sval  = msg.GetString();
       string msrc  = msg.GetSource();
       double mtime = msg.GetTime();
       bool   mdbl  = msg.IsDouble();
       bool   mstr  = msg.IsString();
     #endif
 
-    if(key == "FOO") 
+    if(key == "FOO")
       cout << "great!";
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
@@ -91,6 +91,8 @@ bool RazorIMU::OnStartUp()
 
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
+  if (!m_MissionReader.GetValue("RAZORIMU_SERIAL_PORT",m_serial_port))
+    reportConfigWarning("No RAZORIMU_SERIAL_PORT config found for " + GetAppName());
   if(!m_MissionReader.GetConfiguration(GetAppName(), sParams))
     reportConfigWarning("No config block found for " + GetAppName());
 
@@ -123,12 +125,6 @@ bool RazorIMU::OnStartUp()
       handled = true;
     }
 
-    else if(param == "SERIAL_PORT")
-    {
-      m_serial_port = value;
-      handled = true;
-    }
-
     if(!handled)
       reportUnhandledConfigWarning(orig);
   }
@@ -136,7 +132,7 @@ bool RazorIMU::OnStartUp()
   string msg;
   if(!initRazorIMU(msg))
   {
-    reportConfigWarning("Razor initialization failed: " + msg 
+    reportConfigWarning("Razor initialization failed: " + msg
                         + "\nCheck serial port in .moos file."
                         + "\nYou need R/W access to that port.");
     init = false;
@@ -158,7 +154,7 @@ void RazorIMU::registerVariables()
 //------------------------------------------------------------
 // Procedure: buildReport()
 
-bool RazorIMU::buildReport() 
+bool RazorIMU::buildReport()
 {
   #if 0 // Keep these around just for template
     m_msgs << "============================================ \n";
@@ -178,7 +174,7 @@ bool RazorIMU::buildReport()
 //------------------------------------------------------------
 // Procedure: initRazorIMU()
 
-bool RazorIMU::initRazorIMU(string &error_msg) 
+bool RazorIMU::initRazorIMU(string &error_msg)
 {
   bool init = true;
 

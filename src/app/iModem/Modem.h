@@ -88,11 +88,7 @@ class Modem : public AppCastingMOOSApp
     int           m_iTimeBeforeTalking;
 
     //Configuration for Modem and magnet power supply
-    std::string m_sModemPowerOnLabjack;
-    int m_iModemPowerOnLabjack;
     bool m_bIsModemPowered;
-    std::string m_sMagnetPowerOnLabjack;
-    int m_iMagnetPowerOnLabjack;
     bool m_bIsMagnetPowered;
 
     int m_iInConfigTime;
