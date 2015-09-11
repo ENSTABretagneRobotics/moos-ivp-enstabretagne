@@ -1,11 +1,11 @@
-MOOS-IvP-TOUTATIS
+MOOS-IvP-TOUTATIS [![Build Status](https://travis-ci.org/ENSTABretagneRobotics/moos-ivp-toutatis.svg)](https://travis-ci.org/ENSTABretagneRobotics/moos-ivp-toutatis)
 =================
 
 Introduction
 ------------
 
 The `moos-ivp-toutatis` repository is an extension of the [MOOS-IvP
-Autonomy system](http://oceanai.mit.edu/moos-ivp). This includes MOOS applications, 
+Autonomy system](http://oceanai.mit.edu/moos-ivp). This includes MOOS applications,
 IvP behaviors and mission files for AUVs Toutatis of [ENSTA Bretagne](http://www.ensta-bretagne.fr).
 
 
@@ -54,7 +54,7 @@ The directory structure for the `moos-ivp-toutatis` is decribed below:
 Installation
 ------------------
 
-[MOOS-IvP](http://oceanai.mit.edu/moos-ivp) (typically v14.7.1) is supposed to be installed. 
+[MOOS-IvP](http://oceanai.mit.edu/moos-ivp) (typically v14.7.1) is supposed to be installed.
 More information available on the official website.
 
 Additional packages are required for building `moos-ivp-toutatis`:
@@ -90,8 +90,8 @@ cd ..
 
 #### Windows Users
 
-To build on Windows platform, open CMake using your favorite shortcut. Then set the source 
-directory to be this directory and set the build directory to the `build` directory 
+To build on Windows platform, open CMake using your favorite shortcut. Then set the source
+directory to be this directory and set the build directory to the `build` directory
 inside this directory.
 
 The source directory is typically next to the question:
@@ -100,7 +100,7 @@ The source directory is typically next to the question:
 The build directory is typically next to the question:
    *Where to build the binaries?*
 
-Alternatively, CMake can be invoked via the command line. However, you must 
+Alternatively, CMake can be invoked via the command line. However, you must
 specify your generator. Use `cmake --help` for a list of generators and
 additional help.
 
@@ -108,7 +108,7 @@ additional help.
 Environment variables
 ---------------------
 The `moos-ivp-toutatis` binaries files should be added to your path to allow them
-to be launched from `pAntler`. 
+to be launched from `pAntler`.
 Linux users can edit `~/.bashrc` configuration file by adding at the end:
 ```shell
 export PATH=$PATH:~/moos-ivp-toutatis/bin
@@ -117,10 +117,10 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/moos-ivp-toutatis/lib
 ```
 
 In order for generated IvP Behaviors to be recognized by the IvP Helm, you
-should add the library directory to the `IVP_BEHAVIOR_DIRS` environment 
+should add the library directory to the `IVP_BEHAVIOR_DIRS` environment
 variable.
 
-New XML documentation is also available by command-line (e.g. typing `uJoystick -e`). 
+New XML documentation is also available by command-line (e.g. typing `uJoystick -e`).
 This can work by specifying the `MOOS_IVP_TOUTATIS_PATH` environment variable (Linux users, update your `~/.bashrc`). For instance:
 ```shell
 export MOOS_IVP_TOUTATIS_PATH="/home/your_username/moos-ivp-toutatis"
