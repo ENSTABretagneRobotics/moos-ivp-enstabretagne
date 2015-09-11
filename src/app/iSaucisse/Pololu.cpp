@@ -62,6 +62,7 @@ Pololu::Pololu(string device_name)
     tcsetattr(m_pololu, TCSANOW, &options);
   #endif
 
+  reset();
   bipOnStartUp();
 }
 
@@ -81,6 +82,41 @@ int Pololu::turnOnRelay(int id, bool turned_on)
   return setTarget(id, turned_on ? HIGH_LEVEL : LOW_LEVEL);
 }
 
+int Pololu::reset()
+{
+  int success_off = turnOnRelay(1, false);     // camera 1
+  success_off &= turnOnRelay(5, false);     // gps
+  success_off &= turnOnRelay(7, false);     // echosounder
+  success_off &= turnOnRelay(9, false);     // sonar
+  success_off &= turnOnRelay(11, false);    // modem
+  success_off &= turnOnRelay(3, false);     // camera 2
+
+  delay(50);
+
+  success_off &= turnOnRelay(0, true);  // camera 1
+  success_off &= turnOnRelay(4, true);     // gps
+  success_off &= turnOnRelay(6, true);     // echosounder
+  success_off &= turnOnRelay(8, true);     // sonar
+  success_off &= turnOnRelay(10, true);    // modem
+  success_off &= turnOnRelay(12, false);   // modem EA
+  success_off &= turnOnRelay(2, true);     // camera 2
+
+  delay(50);
+
+  success_off &= turnOnRelay(0, false);    // camera 1
+  success_off &= turnOnRelay(4, false);    // gps
+  success_off &= turnOnRelay(6, false);    // echosounder
+  success_off &= turnOnRelay(8, false);    // sonar
+  success_off &= turnOnRelay(10, false);   // modem
+  success_off &= turnOnRelay(12, false);   // modem EA
+  success_off &= turnOnRelay(2, false);    // camera 2
+  
+  if(success_off < 0)
+    return -1;
+
+  return 0;
+}
+
 int Pololu::turnOnBistableRelay(int id_on, int id_off, bool turned_on)
 {
   int success_on, success_off;
@@ -91,7 +127,8 @@ int Pololu::turnOnBistableRelay(int id_on, int id_off, bool turned_on)
   if(success_on < 0 || success_off < 0)
     return -1;
 
-  delay(50);
+  //delay(50);
+  delay(1000);
   success_on = turnOnRelay(id_on, false);
   success_off = turnOnRelay(id_off, false);
 
@@ -118,11 +155,8 @@ void Pololu::buzzOff()
 void Pololu::bipOnStartUp()
 {
   buzzOn();
-  delay(50);
   buzzOff();
-  delay(50);
   buzzOn();
-  delay(50);
   buzzOff();
 }
 
