@@ -84,7 +84,7 @@ int Pololu::turnOnRelay(int id, bool turned_on)
 
 int Pololu::reset()
 {
-  int success_off = turnOnRelay(1, false);     // camera 1
+  int success_off = turnOnRelay(1, false);  // camera 1
   success_off &= turnOnRelay(5, false);     // gps
   success_off &= turnOnRelay(7, false);     // echosounder
   success_off &= turnOnRelay(9, false);     // sonar
@@ -93,23 +93,23 @@ int Pololu::reset()
 
   delay(50);
 
-  success_off &= turnOnRelay(0, true);  // camera 1
-  success_off &= turnOnRelay(4, true);     // gps
-  success_off &= turnOnRelay(6, true);     // echosounder
-  success_off &= turnOnRelay(8, true);     // sonar
-  success_off &= turnOnRelay(10, true);    // modem
-  success_off &= turnOnRelay(12, false);   // modem EA
-  success_off &= turnOnRelay(2, true);     // camera 2
+  success_off &= turnOnRelay(0, true);      // camera 1
+  success_off &= turnOnRelay(4, true);      // gps
+  success_off &= turnOnRelay(6, true);      // echosounder
+  success_off &= turnOnRelay(8, true);      // sonar
+  success_off &= turnOnRelay(10, true);     // modem
+  success_off &= turnOnRelay(12, false);    // modem EA
+  success_off &= turnOnRelay(2, true);      // camera 2
 
   delay(50);
 
-  success_off &= turnOnRelay(0, false);    // camera 1
-  success_off &= turnOnRelay(4, false);    // gps
-  success_off &= turnOnRelay(6, false);    // echosounder
-  success_off &= turnOnRelay(8, false);    // sonar
-  success_off &= turnOnRelay(10, false);   // modem
-  success_off &= turnOnRelay(12, false);   // modem EA
-  success_off &= turnOnRelay(2, false);    // camera 2
+  success_off &= turnOnRelay(0, false);     // camera 1
+  success_off &= turnOnRelay(4, false);     // gps
+  success_off &= turnOnRelay(6, false);     // echosounder
+  success_off &= turnOnRelay(8, false);     // sonar
+  success_off &= turnOnRelay(10, false);    // modem
+  success_off &= turnOnRelay(12, false);    // modem EA
+  success_off &= turnOnRelay(2, false);     // camera 2
   
   if(success_off < 0)
     return -1;
@@ -127,8 +127,7 @@ int Pololu::turnOnBistableRelay(int id_on, int id_off, bool turned_on)
   if(success_on < 0 || success_off < 0)
     return -1;
 
-  //delay(50);
-  delay(1000);
+  delay(50);
   success_on = turnOnRelay(id_on, false);
   success_off = turnOnRelay(id_off, false);
 
@@ -139,24 +138,27 @@ int Pololu::turnOnBistableRelay(int id_on, int id_off, bool turned_on)
 
 int Pololu::setThrustersValue(int id, double value)
 {
-  return setTarget(18 + (id - 1), 6000 + 20 * value);
+  return setTarget(id, 6000 + 20 * value);
 }
 
 void Pololu::buzzOn()
 {
-  setTarget(3, HIGH_LEVEL);
+  setTarget(13, HIGH_LEVEL);
 }
 
 void Pololu::buzzOff()
 {
-  setTarget(3, LOW_LEVEL);
+  setTarget(13, LOW_LEVEL);
 }
 
 void Pololu::bipOnStartUp()
 {
   buzzOn();
+  delay(80);
   buzzOff();
+  delay(50);
   buzzOn();
+  delay(80);
   buzzOff();
 }
 

@@ -14,7 +14,7 @@ ProcessConfig = ANTLER
   Run = MOOSDB        @ NewConsole = true
   Run = iSaucisse     @ NewConsole = true
   Run = uMS           @ NewConsole = true
-  //Run = uTimerScript  @ NewConsole = true
+  Run = uTimerScript  @ NewConsole = true
 }
 
 
@@ -47,10 +47,10 @@ ProcessConfig = uTimerScript
   CommsTick = 4
 
   event = var=POWER_CAMERA1,    val=1, time=1.0
-  event = var=POWER_CAMERA2,    val=1, time=1.5
-  event = var=POWER_GPS,        val=1, time=2
-  event = var=POWER_ECHOSOUNDER,val=1, time=2.5
-  event = var=POWER_SONAR,      val=1, time=3
-  event = var=POWER_MODEM,      val=1, time=3.5
-  event = var=POWER_MODEM_EA,   val=1, time=4
+  event = var=POWER_CAMERA2,    val=1, time=1.2
+  event = var=POWER_GPS,        val=1, time=1.4
+  event = var=POWER_ECHOSOUNDER,val=1, time=1.6
+  event = var=POWER_SONAR,      val=1, time=1.8
+  event = var=POWER_MODEM,      val=1, time=2
+  event = var=POWER_MODEM_EA,   val=1, time=2.2
 }
