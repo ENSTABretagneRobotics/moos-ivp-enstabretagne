@@ -96,6 +96,11 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       Notify("POWERED_MODEM_EA", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
+    else if(key == "EMIT_BIPS")
+    {
+      int success = m_pololu->emitBips((int)msg.GetDouble());
+    }
+
     /** CONTROLLER FORCE VALUES UPDATE**/
     else if(key == "FR_ROTATIONAL_FORCE" || key == "FZ_VERTICAL_FORCE" || key == "FX_FORWARD_FORCE")
     {
@@ -386,6 +391,7 @@ void Saucisse::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
   Register("POWER_*", "*", 0);
+  Register("EMIT_BIPS", 0);
 
   Register("COEFF_MATRIX", 0);
   

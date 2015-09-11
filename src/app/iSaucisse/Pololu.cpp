@@ -169,6 +169,17 @@ void Pololu::bipError()
   buzzOff();
 }
 
+int Pololu::emitBips(int bip_number)
+{
+  for(int i = 0 ; i < bip_number ; i++)
+  {
+    buzzOn();
+    delay(80);
+    buzzOff();
+    delay(50);
+  }
+}
+
 int Pololu::setTarget(unsigned char channel, unsigned short target)
 {
   // Sets the target of a Maestro channel.
