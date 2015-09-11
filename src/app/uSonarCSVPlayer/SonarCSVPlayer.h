@@ -8,7 +8,18 @@
 #ifndef SonarCSVPlayer_HEADER
 #define SonarCSVPlayer_HEADER
 
+
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
+
+#include <fstream>
+#include <iostream>
+#include <sstream>
+
+typedef struct{
+    std::string SOf,dateTime,dataStr;
+    int node,status,hdrCtrl,rangeScale,gain,slope,adLow,adSpan,LeftLim,RightLim,Steps,Bearing,Dbytes;
+    std::vector<int> data;
+}ScanLine;
 
 class SonarCSVPlayer : public AppCastingMOOSApp
 {
@@ -33,8 +44,8 @@ class SonarCSVPlayer : public AppCastingMOOSApp
 
 
   private: // State variables
-    FILE* m_FileHandler = NULL;
     std::string m_sFilename;
+    std::stringstream buffer;
 
 };
 

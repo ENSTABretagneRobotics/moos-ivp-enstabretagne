@@ -6,6 +6,6 @@ ProcessConfig = uSonarCSVPlayer
   AppTick   = 4
   CommsTick = 4
 
-  SONAR_CSV_FILE = ~/ENSTABZH/CSVSonarLaSpezia2014/Seanet0_2014-10-03_14h23min51s.csv
+  SONAR_CSV_FILE =./data/Seanet0_2014-10-03_14h23min51s.csv
 
 }
