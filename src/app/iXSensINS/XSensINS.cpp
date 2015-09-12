@@ -210,7 +210,7 @@ bool XSensINS::buildReport() {
   ACTable actab(5);
   actab << "Serial Port | Baude rate | YAW | ROLL | PITCH";
   actab.addHeaderLines();
-  actab << UART_PORT << UART_BAUD_RATE << euler.m_yaw + yaw_declination << euler.m_roll << euler.m_pitch;
+  actab << UART_PORT << UART_BAUD_RATE << euler.yaw() + yaw_declination << euler.roll() << euler.pitch();
   m_msgs << actab.getFormattedString();
 
   return true;
