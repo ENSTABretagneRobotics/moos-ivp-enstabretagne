@@ -37,7 +37,7 @@ done
 #-------------------------------------------------------------------
 #  Part 2: Invoke the call to make in the build directory
 #-------------------------------------------------------------------
-mkdir build -p
+mkdir -p build
 cd build
 
 cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_JOSTICK=${JOYSTICK} ../
