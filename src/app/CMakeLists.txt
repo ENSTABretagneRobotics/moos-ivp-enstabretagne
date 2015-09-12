@@ -12,6 +12,7 @@
 option(WITH_RAZOR "Add Razor IMU support (Causes problem on OSX)" ON)
 option(WITH_JOYSTICK "Add joystick support (Unavailable on Windows and OSX)" ON)
 option(WITH_XSENS "Add XSens INS support (Precompiled lib is not available ATM for OSX)" ON)
+option(WITH_GPSoE "Add GPSoE support (Clock config not available on a Mac.)" ON)
 
 #============================================================================
 # Add the libraries in the current directory to the include path
@@ -52,9 +53,14 @@ endif (WITH_XSENS)
   ADD_SUBDIRECTORY(iSonar)
   ADD_SUBDIRECTORY(iKeller)
   ADD_SUBDIRECTORY(iSaucisse)
+if (WITH_GPSOE)
+  MESSAGE("Building with GPSOE")
   ADD_SUBDIRECTORY(iGPSoE)
+endif (WITH_GPSOE)
   ADD_SUBDIRECTORY(pSensorViewer)
+if (WITH_CAMERA)
   ADD_SUBDIRECTORY(iCamera)
+endif(WITH_CAMERA)
 
 ##############################################################################
 #                           END of CMakeLists.txt

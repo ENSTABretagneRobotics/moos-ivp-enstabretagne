@@ -6,6 +6,8 @@ CMD_LINE_ARGS=""
 JOYSTICK="ON"
 RAZOR="ON"
 XSENS="ON"
+GPSOE="ON"
+CAMERA="ON"
 
 #-------------------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
@@ -35,6 +37,10 @@ for ARGI; do
         RAZOR="OFF"
     elif [ "${ARGI}" = "--no-xsens" ] ; then
         XSENS="OFF"
+    elif [ "${ARGI}" = "--no-gpsoe" ] ; then
+        GPSOE="OFF"
+    elif [ "${ARGI}" = "--no-camera" ] ; then
+        CAMERA="OFF"
     else
 	CMD_LINE_ARGS=$CMD_LINE_ARGS" "$ARGI
     fi
@@ -46,7 +52,7 @@ done
 mkdir -p build
 cd build
 
-cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_JOYSTICK=${JOYSTICK} -DWITH_RAZOR=${RAZOR} -DWITH_XSENS=${XSENS} ../
+cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_JOYSTICK=${JOYSTICK} -DWITH_RAZOR=${RAZOR} -DWITH_XSENS=${XSENS} -DWITH_GPSOE=${GPSOE} -DWITH_CAMERA=${CAMERA} ../
 
 make ${CMD_LINE_ARGS}
 cd "${INVOCATION_ABS_DIR}"
