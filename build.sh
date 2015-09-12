@@ -3,6 +3,9 @@
 INVOCATION_ABS_DIR=`pwd`
 BUILD_TYPE="None"
 CMD_LINE_ARGS=""
+JOYSTICK="ON"
+RAZOR="ON"
+XSENS="ON"
 
 #-------------------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
@@ -10,8 +13,8 @@ CMD_LINE_ARGS=""
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
 	printf "%s [SWITCHES]                       \n" $0
-	printf "Switches:                           \n" 
-	printf "  --help, -h                        \n" 
+	printf "Switches:                           \n"
+	printf "  --help, -h                        \n"
         printf "  --debug,   -d                     \n"
         printf "  --release, -r                     \n"
 	printf "Notes:                              \n"
@@ -26,6 +29,12 @@ for ARGI; do
         BUILD_TYPE="Debug"
     elif [ "${ARGI}" = "--release" -o "${ARGI}" = "-r" ] ; then
         BUILD_TYPE="Release"
+    elif [ "${ARGI}" = "--no-joystick" ] ; then
+        JOYSTICK="OFF"
+    elif [ "${ARGI}" = "--no-razor" ] ; then
+        RAZOR="OFF"
+    elif [ "${ARGI}" = "--no-xsens" ] ; then
+        XSENS="OFF"
     else
 	CMD_LINE_ARGS=$CMD_LINE_ARGS" "$ARGI
     fi
@@ -34,10 +43,10 @@ done
 #-------------------------------------------------------------------
 #  Part 2: Invoke the call to make in the build directory
 #-------------------------------------------------------------------
-mkdir build -p
+mkdir -p build
 cd build
 
-cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ../
+cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_JOYSTICK=${JOYSTICK} -DWITH_RAZOR=${RAZOR} -DWITH_XSENS=${XSENS} ../
 
 make ${CMD_LINE_ARGS}
 cd "${INVOCATION_ABS_DIR}"

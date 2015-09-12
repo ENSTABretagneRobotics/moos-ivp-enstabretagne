@@ -1,7 +1,7 @@
 /************************************************************/
 /*    FILE: XSensINS.cpp
 /*    ORGN: Toutatis AUVs - ENSTA Bretagne
-/*    AUTH: 
+/*    AUTH:
 /*    DATE: 2015
 /************************************************************/
 
@@ -39,14 +39,14 @@ bool XSensINS::OnNewMail(MOOSMSG_LIST &NewMail)
     #if 0 // Keep these around just for template
       string comm  = msg.GetCommunity();
       double dval  = msg.GetDouble();
-      string sval  = msg.GetString(); 
+      string sval  = msg.GetString();
       string msrc  = msg.GetSource();
       double mtime = msg.GetTime();
       bool   mdbl  = msg.IsDouble();
       bool   mstr  = msg.IsString();
     #endif
 
-    if(key == "FOO") 
+    if(key == "FOO")
       cout << "great!";
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
@@ -85,9 +85,9 @@ bool XSensINS::Iterate()
     // Convert packet to euler
     XsEuler euler = packet.orientationEuler();
 
-    Notify("IMU_PITCH", euler.m_pitch);
-    Notify("IMU_ROLL", euler.m_roll);
-    Notify("IMU_YAW", euler.m_yaw);
+    Notify("IMU_PITCH", euler.pitch());
+    Notify("IMU_ROLL", euler.roll());
+    Notify("IMU_YAW", euler.yaw());
   }
   msgs.clear();
 
@@ -125,7 +125,7 @@ bool XSensINS::OnStartUp()
     else if(param == "UART_BAUD_RATE"){
       UART_BAUD_RATE = atoi(value.c_str());
       handled = true;
-    }    
+    }
     if(!handled)
       reportUnhandledConfigWarning(orig);
   }
@@ -134,7 +134,7 @@ bool XSensINS::OnStartUp()
   //------ OPEN INS ---------------//
   XsPortInfo mtPort(UART_PORT, XsBaud::numericToRate(UART_BAUD_RATE));
   if (!device.openPort(mtPort)){
-    reportRunWarning("Could not open the COM port" + UART_PORT); 
+    reportRunWarning("Could not open the COM port" + UART_PORT);
   }
 
   //------ CONFIGURE INS ---------------//
@@ -169,7 +169,7 @@ void XSensINS::registerVariables()
 //------------------------------------------------------------
 // Procedure: buildReport()
 
-bool XSensINS::buildReport() 
+bool XSensINS::buildReport()
 {
   #if 1 // Keep these around just for template
     m_msgs << "UART_PORT " << UART_PORT << endl;

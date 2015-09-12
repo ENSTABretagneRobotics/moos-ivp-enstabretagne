@@ -5,6 +5,14 @@
 ##############################################################################
 
 
+#=============================================================================
+# Options
+#=============================================================================
+
+option(WITH_RAZOR "Add Razor IMU support (Causes problem on OSX)" ON)
+option(WITH_JOYSTICK "Add joystick support (Unavailable on Windows and OSX)" ON)
+option(WITH_XSENS "Add XSens INS support (Precompiled lib is not available ATM for OSX)" ON)
+
 #============================================================================
 # Add the libraries in the current directory to the include path
 #============================================================================
@@ -19,13 +27,22 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
   # ADD_SUBDIRECTORY(pLocalization)
 
 # 'u' apps
+if (WITH_JOYSTICK)
+  MESSAGE("Building with uJoystick")
   ADD_SUBDIRECTORY(uJoystick)
+endif (WITH_JOYSTICK)
 
 # 'i' apps
   #ADD_SUBDIRECTORY(iEchoSounder)
+if (WITH_RAZOR)
+  MESSAGE("Building with iRazor IMU")
   ADD_SUBDIRECTORY(iRazorIMU)
+endif (WITH_RAZOR)
   ADD_SUBDIRECTORY(iModem)
+if (WITH_XSENS)
+  MESSAGE("Building with XSens INS")
   ADD_SUBDIRECTORY(iXSensINS)
+endif (WITH_XSENS)
   ADD_SUBDIRECTORY(iGPS)
   ADD_SUBDIRECTORY(iSonar)
 
