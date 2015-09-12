@@ -1,7 +1,7 @@
 /************************************************************/
 /*    FILE: main.cpp
-/*    ORGN: Toutatis AUVs - ENSTA Bretagne
-/*    AUTH: Clément Aubry (from V. Drevelle iSonar App)
+/*    ORGN: ENSTA Bretagne
+/*    AUTH: Clément Aubry
 /*    DATE: 2015
 /************************************************************/
 
@@ -50,4 +50,3 @@ int main(int argc, char *argv[])
 
   return(0);
 }
-

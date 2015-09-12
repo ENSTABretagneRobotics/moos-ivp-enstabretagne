@@ -4,95 +4,172 @@
 <xmldoc>
   <moosapp>
 
-     <info>
-        <name>iModem</name>
-        <organization>Toutatis AUVs - ENSTA Bretagne</organization>
-        <date>2015</date>
-        <authors>
-           <author>Clément Aubry</author>
-        </authors>
-        <licence>MIT</licence>
-     </info>
+    <info>
+      <name>iModem</name>
+      <organization>ENSTA Bretagne</organization>
+      <date>2015</date>
+      <authors>
+        <author>Clément Aubry</author>
+      </authors>
+      <licence>MIT</licence>
+    </info>
 
-     <documentation>
-        <synopsis>
-          This App is an interface to Tritech Micron Data Modem.
-          You can :
-            *Send/receive messages from/to other Tritech Micron Data Modem that are configured. Communication is allowed between master and slave, not between two masters or between two slaves.
-            * Configure a modem as master/slave.
+    <documentation>
+      <synopsis>
+        iModem App is an interface with Tritech Micron Modem.
+        Those modem could be configured to master or slave. To do so, hold a magnet near main port when powering up and use Seanet.exe to configure the modem.
 
-          To configure a modem (to master for the example) :
-            Send MODEM_CONFIGURATION_REQUIRED="master" to MOOSDB.
-            Reboot the modem with a magnetic field (below Tritech 24V DC sticker near "main" port of the modem) to put it in config mode.
-            The magnet could be powered off when the app publish MODEM_IS_ALIVE with value "true".
-            Let the app do the job.
-            When the app send the boolean variable "MODEM_CONFIGURATION_COMPLETE", configuration sequence is complete an the modem can be rebooted without the magnet.
-        </synopsis>
-        <interface>
-           <subscriptions>
-              <moosvar>
-                 <varname>MODEM_CONFIGURATION_REQUIRED</varname>
-                 <vartype>string</vartype>
-                 <varinfo>A string that signal to iModem that we need to change modem configuration. The role asked has to be contained in that string ("master" or "slave")</varinfo>
-              </moosvar>
-              <moosvar>
-                 <varname>MODEM_SEND_MESSAGE</varname>
-                 <vartype>string</vartype>
-                 <varinfo>A message we want to send by the modem. Only works in communiction mode.</varinfo>
-              </moosvar>
-              <moosvar>
-                 <varname>MODEM_GET_ROLE</varname>
-                 <vartype>string</vartype>
-                 <varinfo>A null string to ask the app to publish current modem role</varinfo>
-              </moosvar>
-           </subscriptions>
-           <publications>
-              <moosvar>
-                 <varname>MODEM_ROLE</varname>
-                 <vartype>string</vartype>
-                 <varinfo>A string that contain the role of the modem. Sent when receiving MODEM_GET_ROLE new mail</varinfo>
-              </moosvar>
-              <moosvar>
-                 <varname>MODEM_EMISSION_TIME</varname>
-                 <vartype>MOOSTime</vartype>
-                 <varinfo>The MOOSTime when emmiting a message from the modem.</varinfo>
-              </moosvar>
-              <moosvar>
-                 <varname>MODEM_MESSAGE_SENT</varname>
-                 <vartype>string</vartype>
-                 <varinfo>A message we sent to the modem.</varinfo>
-              </moosvar>
-              <moosvar>
-                 <varname>MODEM_RECEPTION_TIME</varname>
-                 <vartype>MOOSTime</vartype>
-                 <varinfo>The MOOSTime when receiving a message from the modem.</varinfo>
-              </moosvar>
-              <moosvar>
-                 <varname>MODEM_MESSAGE_RECEIVED</varname>
-                 <vartype>string</vartype>
-                 <varinfo>A message we receive by the modem.</varinfo>
-              </moosvar>
-              <moosvar>
-                 <varname>MODEM_IS_ALIVE</varname>
-                 <vartype>bool</vartype>
-                 <varinfo>A boolean setted to true when the app receive some mtAlive messages, means that the magnet powering up process is ok (the magnet can be powered off when receiving this message).</varinfo>
-              </moosvar>
-              <moosvar>
-                 <varname>MODEM_CONFIGURATION_COMPLETE</varname>
-                 <vartype>bool</vartype>
-                 <varinfo>A boolean setted to true when the configuration process is complete.</varinfo>
-              </moosvar>
-           </publications>
-        </interface>
-        <!-- if there is a bug or a special fact to know.. -->
-        <optional-comments>
-           No comment.
-        </optional-comments>
-        <!-- if something can be improved -->
-        <suggested-improvements>
-           No suggested improvements.
-        </suggested-improvements>
-     </documentation>
+        This App is adapted to Modem configuration with an electromagnet.
 
+        MOOS_V10.0.3_May1215 minimum required (MOOSCore/Core/libMOOS/Utils/MOOSLinuxSerialPort.cpp with baudrate 57600).
+
+        In this doc, AUVx is the parameter "ROBOT_NAME" from moos config file.
+
+      </synopsis>
+      <interface>
+        <subscriptions>
+          <moosvar>
+            <varname>MODEM_CONFIGURATION_REQUIRED</varname>
+            <vartype>string</vartype>
+            <varinfo>A string that signal to iModem that we need to change modem configuration. The role asked has to be contained in that string ("master" or "slave"). Exemple : uPokeDB MODEM_CONFIGURATION_REQUIRED="AUV1=master,AUV2=slave,AUV3=slave,AUV4=slave". Please send the entire string to the app to let it know who is the master modem.</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>MODEM_SEND_MESSAGE</varname>
+            <vartype>string</vartype>
+            <varinfo>A message we want to acousticallyby the modem. Only works in communiction mode. Exemple : uPokeDB MODEM_SEND_MESSAGE="AUV1=testMessage"</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>MODEM_SEND_RNG</varname>
+            <vartype>string</vartype>
+            <varinfo>This message ask iModem App to acoustically perform a range with the master modem.</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>MODEM_SEND_RANGE</varname>
+            <vartype>string</vartype>
+            <varinfo>This message ask iModem App to acoustically transmit last range between itself and the master modem in a formated string ("dAUV1AUV2=TMO" or "dAUV1AUV2=111.222m"), exemple : uPokeDB MODEM_SEND_RANGE="AUV1=1".</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>MODEM_ACK_RANGE</varname>
+            <vartype>string</vartype>
+            <varinfo>This message ask iModem App to acoustically transmit last Range message received ("dAUV1AUV2=TMO" or "dAUV1AUV2=111.222m"), exemple : uPokeDB MODEM_ACK_RANGE="AUV1=1"</varinfo>
+          </moosvar>
+
+          <moosvar>
+            <varname>POWERED_MODEM</varname>
+            <vartype>double</vartype>
+            <varinfo>This variable is setted to 1 when the modem is powered up and to 0 when powered down. Needed to perform configuration task!</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>POWERED_MODEM_EA</varname>
+            <vartype>double</vartype>
+            <varinfo>This variable is setted to 1 when the Electromagnet attached to Modem (EA for Electro Aimant in french...) is powered up and to 0 when powered down. Needed to perform configuration task!</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>MODEM_STOP_ALIM</varname>
+            <vartype>string</vartype>
+            <varinfo>When received, each instances of iModem App will send two SET_FIOX_STATE to power down the modem and the magnet</varinfo>
+          </moosvar>
+        </subscriptions>
+        <publications>
+          <moosvar>
+            <varname>MODEM_CONFIGURATION_COMPLETE</varname>
+            <vartype>bool</vartype>
+            <varinfo>A boolean setted to true when the configuration process is complete, exemple: MODEM_CONFIGURATION_COMPLETE="AUV1=1</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>MODEM_MESSAGE_RECEIVED</varname>
+            <vartype>string</vartype>
+            <varinfo>A message received by the modem, exemple : MODEM_MESSAGE_RECEIVED=testMessage. In general, Modem parse messages by 4 bytes, i.e. the modem will transmit us MODEM_MESSAGE_RECEIVED=test, MODEM_MESSAGE_RECEIVED=Mess, MODEM_MESSAGE_RECEIVED=age .</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>MODEM_RANGING_TIMEOUT</varname>
+            <vartype>string</vartype>
+            <varinfo>Variable emmited when ranging task is timedout (from the modem), exemple : MODEM_RANGING_TIMEOUT=AUV1=RangeTMO</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>MODEM_RANGING_VALUE</varname>
+            <vartype>string</vartype>
+            <varinfo>Variable emmited when ranging task return a value (from the modem), exemple : MODEM_RANGING_value=AUV1=111.222m</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>MODEM_RANGE_MSG_RECEIVED</varname>
+            <vartype>string</vartype>
+            <varinfo>Variable emmited when the modem received a range message ("dAUV1AUV2=TMO" or "dAUV1AUV2=111.222m"). See subscription to MODEM_SEND_RANGE or MODEM_ACK_RANGE.</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>POWER_MODEM_EA</varname>
+            <vartype>double</vartype>
+            <varinfo>Boolean emmited when the app nedd to power up/down the electromagnet attached to the modem. Has to be subscribed from IO card (interface available for Polulu).</varinfo>
+          </moosvar>
+          <moosvar>
+            <varname>POWER_MODEM</varname>
+            <vartype>double</vartype>
+            <varinfo>Boolean emmited when the app nedd to power up/down the modem. Has to be subscribed from IO card (interface available for Polulu).</varinfo>
+          </moosvar>
+
+        </publications>
+      </interface>
+      This App allow user to use a Tritech Micron Data Modem with MOOS middleware. By default, communication is made between two Modems, 1 in master and the second in slave mode.
+
+      To send an acoustic message from a modem, publish MODEM_SEND_MESSAGE=AUVx=text to your MOOSDB. The receiving modem will publish MODEM_MESSAGE_RECEIVED=AUVx=text to his MOOSDB.
+      To perform a ranging from a modem to another, publish MODEM_SEND_RNG="text" to your MOOSDB. The app will publish MODEM_RANGING_TIMEOUT=AUV1=RangeTMO or MODEM_RANGING_value=AUV1=111.222m to the MOOSDB regarding the result of ranging task.
+
+      To performconfiguration task, i.e. in the case of a swarm of robots, you will need to put an magnetic field near the modem (exact positioning of the magnetic field could be found in Tritech documentation). This app can do the job controlling modem and electromagnet power.
+
+      To configure Modem, send ..TODO : continue doc...
+      <optional-comments>
+        No comment.
+      </optional-comments>
+      <!-- if something can be improved -->
+      <suggested-improvements>
+        No suggested improvements.
+      </suggested-improvements>
+    </documentation>
   </moosapp>
 </xmldoc>
+
+<!--
+  SUBSCRIPTION commented in code
+<moosvar>
+<varname>MODEM_TIME_BEFORE_TALKING</varname>
+<vartype>int</vartype>
+<varinfo>An int containing a time(ms) to wait before talking on serial port after receiving a data. FIXED</varinfo>
+</moosvar>
+-->
+<!--
+  PUBLICATIONS commented in code
+<moosvar>
+<varname>MODEM_START_CONFIG_TIME</varname>
+<vartype>MOOSTime</vartype>
+<varinfo>The time it was when configuration process start.</varinfo>
+</moosvar>
+<moosvar>
+<varname>MODEM_END_CONFIG_TIME</varname>
+<vartype>MOOSTime</vartype>
+<varinfo>The time it was when configuration process end.</varinfo>
+</moosvar>
+<moosvar>
+<varname>MODEM_MSG_EMISSION_TIME</varname>
+<vartype>MOOSTime</vartype>
+<varinfo>The MOOSTime when emmiting a message from the modem.</varinfo>
+</moosvar>
+<moosvar>
+<varname>MODEM_RNG_EMISSION_TIME</varname>
+<vartype>MOOSTime</vartype>
+<varinfo>The MOOSTime when emmiting a rng request from the modem.</varinfo>
+</moosvar>
+<moosvar>
+<varname>MODEM_MESSAGE_SENT</varname>
+<vartype>string</vartype>
+<varinfo>A message we sent to the modem.</varinfo>
+</moosvar>
+<moosvar>
+<varname>MODEM_RNG_SENT</varname>
+<vartype>bool</vartype>
+<varinfo>Emitted when rng has been sent</varinfo>
+</moosvar>
+<moosvar>
+<varname>MODEM_RECEPTION_TIME</varname>
+<vartype>MOOSTime</vartype>
+<varinfo>The MOOSTime when receiving a message from the modem.</varinfo>
+</moosvar> -->

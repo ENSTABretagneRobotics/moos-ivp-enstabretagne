@@ -1,0 +1,56 @@
+// MOOS file
+
+ServerHost = localhost
+ServerPort = 9000
+
+Community  = AUV
+
+//------------------------------------------
+// Antler configuration  block
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+  Run = MOOSDB        @ NewConsole = true
+  Run = iSaucisse     @ NewConsole = true
+  Run = uMS           @ NewConsole = true
+  Run = uTimerScript  @ NewConsole = true
+}
+
+
+//------------------------------------------------
+// iSaucisse config block
+
+ProcessConfig = iSaucisse
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  DEVICE_NAME = /dev/ttyACM0
+  # Linux:
+  #     /dev/ttyACM0
+  # Windows: 
+  #     \\\\.\\USBSER000
+  #     or
+  #     \\\\.\\COM6
+  # Mac OS X:
+  #     /dev/cu.usbmodem00034567
+}
+
+
+//------------------------------------------------
+// uTimerScript config block
+
+ProcessConfig = uTimerScript                                    
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  event = var=POWER_CAMERA1,    val=1, time=1.0
+  event = var=POWER_CAMERA2,    val=1, time=1.2
+  event = var=POWER_GPS,        val=1, time=1.4
+  event = var=POWER_ECHOSOUNDER,val=1, time=1.6
+  event = var=POWER_SONAR,      val=1, time=1.8
+  event = var=POWER_MODEM,      val=1, time=2
+  event = var=POWER_MODEM_EA,   val=1, time=2.2
+}

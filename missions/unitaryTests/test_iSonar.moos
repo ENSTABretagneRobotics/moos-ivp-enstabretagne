@@ -4,6 +4,8 @@ ServerHost = localhost
 ServerPort = 9000
 
 Community  = AUV
+//Serial port configuration
+SONAR_SERIAL_PORT = /dev/ttyUSB0
 
 //------------------------------------------
 // Antler configuration  block
@@ -12,11 +14,11 @@ ProcessConfig = ANTLER
   MSBetweenLaunches = 200
 
   Run = MOOSDB       	  @ NewConsole = true
-  
+
   Run = uMACView @ NewConsole = false
 
   Run = iSonar @ NewConsole = true
-  
+
 }
 
 
@@ -28,12 +30,11 @@ ProcessConfig = iSonar
   AppTick   = 4
   CommsTick = 4
 
-  SERIAL_PORT_NAME = /dev/ttyUSB0
   RANGE = 15 //IN METERS
   NBINS = 100 //NUMBER OF SAMPLES PER SCANLINE
   ANGLESTEP = 1.8 //ANGULAR RESOLUTION (MUST BE A MULTIPLE OF 0.09)
   GAIN = 45 // MUST BE BETWEEN 0 AND 100 (PERCENTAGE)
-  CONTINUOUS = true //TRUE FOR 360  ROTATION. SET RIGHT AND LEFT LIMIT IF FALSE 
+  CONTINUOUS = true //TRUE FOR 360  ROTATION. SET RIGHT AND LEFT LIMIT IF FALSE
   //LEFTLIMIT = 70.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
   //RIGHTLIMIT = 110.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
 }

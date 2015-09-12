@@ -1,0 +1,12 @@
+//------------------------------------------------
+// iRosen config block
+
+ProcessConfig = iSaucisse
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  max_thruster_value = 1
+  coeff_matrix = 1,1,0,1,-1,0,0,0,1
+  
+}

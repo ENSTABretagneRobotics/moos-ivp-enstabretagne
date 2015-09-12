@@ -1,0 +1,117 @@
+// MOOS file
+Community  = AUV
+
+ServerHost = localhost
+ServerPort = 9000
+
+
+//------------------------------------------
+// Antler configuration  block
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+  Run = MOOSDB        @ NewConsole = false
+  Run = iXSensINS     @ NewConsole = true
+  Run = uJoystick     @ NewConsole = false
+  Run = iSaucisse     @ NewConsole = true
+  Run = pController   @ NewConsole = true
+  Run = uMS           @ NewConsole = false
+  Run = uMACView      @ NewConsole = false
+
+}
+
+
+XSENSINS_SERIAL_PORT = /dev/ttyUSB0
+
+ProcessConfig = iXSensINS
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  UART_BAUD_RATE = 115200
+
+  // magnetic declination for Piombino (2°E)
+  YAW_DECLINATION = -2
+}
+
+
+ProcessConfig = uJoystick
+{
+   AppTick   = 4
+   CommsTick = 4
+   
+   DEVICE_NAME = /dev/input/js1
+
+   INCREMENT = false
+   SCALE = 100
+   
+   AXIS = 0
+   SCALE_RATIO = 0.01
+   MOOS_DEST_VAR = DESIRED_SLIDE
+   
+   AXIS = 1
+   SCALE_RATIO = 0.01
+   MOOS_DEST_VAR = DESIRED_THRUST
+   
+   AXIS = 2
+   SCALE_RATIO = 0.01
+   MOOS_DEST_VAR = DESIRED_RUDDER
+   
+   AXIS = 3
+   SCALE_RATIO = 0.01
+   MOOS_DEST_VAR = DESIRED_ELEVATOR
+   
+   BUTTON = 1
+   SCALE_RATIO = 0.01
+   MOOS_DEST_VAR = MANUAL_MODE_BUTTON
+   
+   BUTTON = 2
+   SCALE_RATIO = 0.01
+   MOOS_DEST_VAR = SEMI_AUTONOMUS_MODE_BUTTON
+
+   BUTTON = 10
+   SCALE_RATIO = 0.01
+   MOOS_DEST_VAR = DEPTH_CONTROL_MODE_BUTTON
+}
+
+ProcessConfig = iSaucisse
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  max_thruster_value = 1
+  coeff_matrix = 1,1,0,1,-1,0,0,0,1
+  
+}
+
+ProcessConfig = pController
+{
+  AppTick   = 20
+  CommsTick = 4
+
+
+  kp_heading = 1              
+  kd_heading = 0
+  ki_heading = 0
+  kp_depth = 1
+  kd_depth = 0
+  ki_depth = 0
+  k_speed_factor = 1
+  min_heading_error = 3
+  min_depth_error = 0
+  max_rotational_force = 1
+  max_z_force = 1
+  max_forward_force = 1
+
+
+}
+
+
+ProcessConfig = uMACView
+{
+  AppTick   = 4
+  CommsTick = 4
+
+
+}

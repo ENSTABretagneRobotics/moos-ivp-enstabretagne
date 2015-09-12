@@ -1,7 +1,7 @@
 #--------------------------------------------------------
 # The CMakeLists.txt for: iModem
-# Toutatis AUVs - ENSTA Bretagne
-# Author(s): Clément Aubry (from V.Drevelle iSonar App (url?))
+# ENSTA Bretagne
+# Author(s): Clément Aubry
 #--------------------------------------------------------
 
 SET(SRC
@@ -9,8 +9,6 @@ SET(SRC
   Modem.cpp
   main.cpp
 )
-
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG")
 
 ADD_EXECUTABLE(iModem ${SRC})
 

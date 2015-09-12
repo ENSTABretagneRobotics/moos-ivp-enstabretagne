@@ -1,0 +1,41 @@
+// MOOS file
+
+ServerHost = localhost
+ServerPort = 9000
+
+Community  = AUV
+
+//Serial port configuration
+KELLER_SERIAL_PORT = /dev/ttyUSB0
+
+//------------------------------------------
+// Antler configuration  block
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+  Run = MOOSDB        @ NewConsole = false
+
+  Run = uMS           @ NewConsole = false
+  Run = uMACView      @ NewConsole = false
+
+  Run = iKeller      @ NewConsole = true
+}
+
+
+//------------------------------------------------
+// iKeller config block
+
+ProcessConfig = iKeller
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  MAX_RETRIES = 10
+}
+
+ProcessConfig = uMACView
+{
+  AppTick   = 4
+  CommsTick = 4
+}

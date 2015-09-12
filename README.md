@@ -59,8 +59,15 @@ More information available on the official website.
 
 Additional packages are required for building `moos-ivp-toutatis`:
 ```shell
-sudo apt-get install libtinyxml2-dev
+sudo apt-get install libtinyxml2-dev libusb-1.0-0-dev mono-runtime libmono-winforms2.0-cil libv4l-dev libopencv-dev
 ```
+Specific configuration is required for Pololu devices. In the project repository:
+```shell
+sudo cp scripts/99-pololu.rules /etc/udev/rules.d/
+sudo udevadm control --reload-rules
+sudo adduser your_username dialout video
+```
+Be careful to change `your_username`.
 
 
 Build Instructions
@@ -116,7 +123,7 @@ variable.
 New XML documentation is also available by command-line (e.g. typing `uJoystick -e`).
 This can work by specifying the `MOOS_IVP_TOUTATIS_PATH` environment variable (Linux users, update your `~/.bashrc`). For instance:
 ```shell
-export MOOS_IVP_TOUTATIS_PATH="/home/myname/moos-ivp-toutatis"
+export MOOS_IVP_TOUTATIS_PATH="/home/your_username/moos-ivp-toutatis"
 ```
 Linux users may need to run, in the current terminal:
 ```shell

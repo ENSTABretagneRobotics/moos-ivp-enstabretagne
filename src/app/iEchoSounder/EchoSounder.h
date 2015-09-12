@@ -25,18 +25,18 @@ class EchoSounder : public AppCastingMOOSApp
     EchoSounder();
     ~EchoSounder();
 
-  protected: // Standard MOOSApp functions to overload  
+  protected: // Standard MOOSApp functions to overload
     bool OnNewMail(MOOSMSG_LIST &NewMail);
     bool Iterate();
     bool OnConnectToServer();
     bool OnStartUp();
 
-  protected: // Standard AppCastingMOOSApp functions to overload 
+  protected: // Standard AppCastingMOOSApp functions to overload
     bool buildReport();
     void registerVariables();
 
   protected: // EchoSounder functions
-    bool initSerialPort(std::string port_name);
+    bool initSerialPort();
     double getRange();
     bool dataIsValid(std::string data);
 
@@ -54,4 +54,4 @@ class EchoSounder : public AppCastingMOOSApp
     double m_last_value;
 };
 
-#endif 
+#endif

@@ -56,10 +56,7 @@ bool Joystick::OnNewMail(MOOSMSG_LIST &NewMail)
       bool   mstr  = msg.IsString();
     #endif
 
-    if(key == "FOO") 
-      cout << "great!";
-
-    else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
+    if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
       reportRunWarning("Unhandled Mail: " + key);
   }
 
@@ -259,7 +256,9 @@ bool Joystick::OnStartUp()
 void Joystick::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
-  // Register("FOOBAR", 0);
+
+  Register("FOOBAR", 0);
+  Register("TESTVAR", 0);
 }
 
 //------------------------------------------------------------
@@ -278,6 +277,15 @@ bool Joystick::buildReport()
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
   #endif
+    m_msgs << "============================================ \n";
+    m_msgs << "uJoystick status :                           \n";
+    m_msgs << "============================================ \n";
+
+    ACTable actab(4);
+    actab << "thread Quit Request | Bravo | Charlie | Delta";
+    actab.addHeaderLines();
+    actab << m_deviceReadThread.IsQuitRequested() << "two" << "three" << "four";
+    m_msgs << actab.getFormattedString();
 
   return(true);
 }

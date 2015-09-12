@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains iRosen documentation -->
+<?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?> 
+<xmldoc>
+  <moosapp>
+
+     <info>
+        <name>iSaucisse</name>
+        <organization>Toutatis AUVs - ENSTA Bretagne</organization>
+        <date>2015</date>
+        <authors>
+           <author>Simon Rohou and Murilo Santos</author>
+        </authors>
+        <licence>MIT</licence>
+     </info>
+
+     <documentation>
+        <synopsis>
+          The iSaucisse application is used to control main functionalities of SAUCISSE AUV. It is used as a connection with thrusters, sensors power and basic electronic via the Pololu Maestro device.
+        </synopsis>
+        <interface>
+           <subscriptions>
+              <moosvar>
+                 <varname>POWER_MODEM</varname>
+                 <vartype>int</vartype>
+                 <varinfo>0 for power-off request, 1 otherwise</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>POWER_MODEM_EA</varname>
+                 <vartype>int</vartype>
+                 <varinfo>0 for power-off request, 1 otherwise</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>POWER_SONAR</varname>
+                 <vartype>int</vartype>
+                 <varinfo>0 for power-off request, 1 otherwise</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>POWER_ECHOSOUNDER</varname>
+                 <vartype>int</vartype>
+                 <varinfo>0 for power-off request, 1 otherwise</varinfo>
+              </moosvar>
+
+
+              <moosvar>
+                 <varname>COEFF_MATRIX</varname>
+                 <vartype>string</vartype>
+                 <varinfo>Coefficients for the coefficient matrix (3x3) that relates the Forces (forward, rotational and Z) to the Thrusters output values (u1, u2 and u3). Format: 1,1,0,1,-1,0,0,0,1 </varinfo>
+              </moosvar>
+
+              <moosvar>
+                 <varname>FR_ROTATIONAL_FORCE</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Desired rotational force [-1;1]. Tipically, this variable is sent by pController. This force is used to drive the thrusters only when the Operation Mode is in "SEMI-AUTONOMUS" or "AUTONOMUS" mode. In "MANUAL" or "DEPTH_CONTROL_ONLY" modes this force value is ignored. </varinfo>
+              </moosvar>
+             
+              <moosvar>
+                 <varname>FX_FORWARD_FORCE</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Desired forward/backward force [-1;1]. Tipically, this variable is sent by pController. This force is used to drive the thrusters only when the Operation Mode is in "SEMI-AUTONOMUS" or "AUTONOMUS" mode. In "MANUAL" or "DEPTH_CONTROL_ONLY" modes this force value is ignored. </varinfo>
+              </moosvar>
+
+               <moosvar>
+                 <varname>FZ_VERTICAL_FORCE</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Desired vertical force [-1;1]. Tipically, this variable is sent by pController. This force is used to drive the thrusters only when the Operation Mode is in "SEMI-AUTONOMUS", "AUTONOMUS" or "DEPTH_CONTROL_ONLY" mode. In "MANUAL"  mode this force value is ignored. </varinfo>
+              </moosvar>
+
+
+              <moosvar>
+                 <varname>DESIRED_THRUST</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Desired trust [-1;1]. Tipically, this variable is sent by uJoystick. This value is used to drive the thrusters only when the Operation Mode is in "MANUAL" or "DEPTH_CONTROL_ONLY" mode. In other modes this value is ignored. This value is intended to move the vehicle in forward/backward direction. </varinfo>
+              </moosvar>
+
+              <moosvar>
+                 <varname>DESIRED_RUDDER</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Desired yaw motion [-1;1]. Tipically, this variable is sent by uJoystick. This value is used to drive the thrusters only when the Operation Mode is in "MANUAL" or "DEPTH_CONTROL_ONLY" mode. In other modes this value is ignored. This value is intended to move the vehicle in yaw motion. </varinfo>
+              </moosvar>
+
+              <moosvar>
+                 <varname>DESIRED_ELEVATOR</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Desired elevator [-1;1]. Tipically, this variable is sent by uJoystick. This value is used to drive the thrusters only when the Operation Mode is in "MANUAL" mode. In other modes this value is ignored. </varinfo>
+              </moosvar>
+
+
+               <moosvar>
+                 <varname>MANUAL_MODE_BUTTON</varname>
+                 <vartype>int</vartype>
+                 <varinfo>-1 will change the operation mode of the iSaucisse to "MANUAL" mode. This value can be sent by a button from uJoystick </varinfo>
+              </moosvar>
+
+              <moosvar>
+                 <varname>SEMI_AUTONOMUS_MODE_BUTTON</varname>
+                 <vartype>int</vartype>
+                 <varinfo>-1 will change the operation mode of the iSaucisse to "SEMI-AUTONOMUS" mode. This value can be sent by a button from uJoystick </varinfo>
+              </moosvar>
+
+              <moosvar>
+                 <varname>DEPTH_CONTROL_MODE_BUTTON</varname>
+                 <vartype>int</vartype>
+                 <varinfo>-1 will change the operation mode of the iSaucisse to "DEPTH_CONTROL_ONLY" mode. This value can be sent by a button from uJoystick </varinfo>
+              </moosvar>
+
+
+           </subscriptions>
+           <publications>
+              <moosvar>
+                 <varname>SAUCISSE_POLOLU_STATUS</varname>
+                 <vartype>string</vartype>
+                 <varinfo>message in case of error, "ok" otherwise</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>POWERED_MODEM</varname>
+                 <vartype>int</vartype>
+                 <varinfo>0 for power-off success, 1 for power-on success, -1 for an error</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>POWERED_MODEM_EA</varname>
+                 <vartype>int</vartype>
+                 <varinfo>0 for power-off success, 1 for power-on success, -1 for an error</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>POWERED_SONAR</varname>
+                 <vartype>int</vartype>
+                 <varinfo>0 for power-off success, 1 for power-on success, -1 for an error</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>POWERED_ECHO_SOUNDER</varname>
+                 <vartype>int</vartype>
+                 <varinfo>0 for power-off success, 1 for power-on success, -1 for an error</varinfo>
+              </moosvar>
+
+              <moosvar>
+                 <varname>U1_SIDE_THRUSTER_ONE</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Thruster value [-1;1] for the side thruster one</varinfo>
+              </moosvar>
+             <moosvar>
+                 <varname>U2_SIDE_THRUSTER_TWO</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Thruster value [-1;1] for the side thruster two</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>U1_SIDE_THRUSTER_ONE</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Thruster value [-1;1] for the vertical thruster</varinfo>
+              </moosvar>
+
+              <moosvar>
+                 <varname>OPERATION_MODE</varname>
+                 <vartype>string</vartype>
+                 <varinfo>"MANUAL": The vehicle is operated manually (by uJoystick), receiving the DESIRED_THRUSTER, DESIRED_RUDDER and DESIRED_ELEVATOR variables. "SEMI-AUTONOMUS" and "AUTONOMUS": The thrusters are controlled by the pController by the use of variables FX_FORWARD_FORCE, FR_ROTATIONAL_FORCE, FZ_VERTICAL_FORCE. "DEPTH_CONTROL_ONLY": in this mode the depth is controlled by the pController and the forward and yaw motion are controlled by the uJoystick. </varinfo>
+              </moosvar>
+           </publications>
+        </interface>
+        <!-- if there is a bug or a special fact to know.. -->
+        <optional-comments>
+           No comment.
+        </optional-comments>
+        <!-- if something can be improved -->
+        <suggested-improvements>
+           No suggested improvements.
+        </suggested-improvements>
+     </documentation>
+
+  </moosapp>
+</xmldoc>

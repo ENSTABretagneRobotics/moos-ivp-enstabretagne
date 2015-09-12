@@ -25,6 +25,7 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
 
 # 'p' apps
   # ADD_SUBDIRECTORY(pLocalization)
+  ADD_SUBDIRECTORY(pController)
 
 # 'u' apps
 if (WITH_JOYSTICK)
@@ -36,6 +37,10 @@ endif (WITH_JOYSTICK)
   #ADD_SUBDIRECTORY(iEchoSounder)
 if (WITH_RAZOR)
   MESSAGE("Building with iRazor IMU")
+  ADD_SUBDIRECTORY(uSonarCSVPlayer)
+
+# 'i' apps
+  ADD_SUBDIRECTORY(iEchoSounder)
   ADD_SUBDIRECTORY(iRazorIMU)
 endif (WITH_RAZOR)
   ADD_SUBDIRECTORY(iModem)
@@ -45,7 +50,11 @@ if (WITH_XSENS)
 endif (WITH_XSENS)
   ADD_SUBDIRECTORY(iGPS)
   ADD_SUBDIRECTORY(iSonar)
-
+  ADD_SUBDIRECTORY(iKeller)
+  ADD_SUBDIRECTORY(iSaucisse)
+  ADD_SUBDIRECTORY(iGPSoE)
+  ADD_SUBDIRECTORY(pSensorViewer)
+  ADD_SUBDIRECTORY(iCamera)
 
 ##############################################################################
 #                           END of CMakeLists.txt
