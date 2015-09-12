@@ -19,7 +19,10 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
   # ADD_SUBDIRECTORY(pLocalization)
 
 # 'u' apps
+if (WITH_JOYSTICK)
+  MESSAGE("Building with uJoystick")
   ADD_SUBDIRECTORY(uJoystick)
+endif (WITH_JOYSTICK)
 
 # 'i' apps
   #ADD_SUBDIRECTORY(iEchoSounder)

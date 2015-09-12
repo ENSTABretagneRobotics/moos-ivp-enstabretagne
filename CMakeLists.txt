@@ -66,7 +66,7 @@ IF( ${WIN32} )
    #---------------------------------------------
    IF(MSVC)
       # Flags for Microsoft Visual Studio
-      SET( WALL_ON OFF CACHE BOOL 
+      SET( WALL_ON OFF CACHE BOOL
          "tell me about all compiler warnings (-Wall) ")
       IF(WALL_ON)
          SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
@@ -85,13 +85,13 @@ ELSE( ${WIN32} )
    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -g")
    IF(CMAKE_COMPILER_IS_GNUCXX)
       # Flags for the GNU C++ Compiler
-      SET( WALL_ON OFF CACHE BOOL 
+      SET( WALL_ON OFF CACHE BOOL
          "tell me about all compiler warnings (-Wall) ")
       IF(WALL_ON)
          SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
       ENDIF( WALL_ON)
    ELSE(CMAKE_COMPILER_IS_GNUCXX)
-    
+
    ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
 ENDIF( ${WIN32} )
@@ -112,6 +112,11 @@ message("+++++++++++++++++++++++++++++++++++++++++")
 message("+++++++++++++++++++++++++++++++++++++++++")
 message("MOOSGeodesy_LIB_PATH:" ${MOOSGeodesy_LIBRARY_PATH})
 message("+++++++++++++++++++++++++++++++++++++++++")
+
+#=============================================================================
+# Options (moos-ivp-toutatis specific)
+#=============================================================================
+option(WITH_JOYSTICK "Add joystick support (Unavailable on Windows and OSX)" ON)
 
 #=============================================================================
 # Add Subdirectories

@@ -3,6 +3,7 @@
 INVOCATION_ABS_DIR=`pwd`
 BUILD_TYPE="None"
 CMD_LINE_ARGS=""
+JOYSTICK="ON"
 
 #-------------------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
@@ -26,6 +27,8 @@ for ARGI; do
         BUILD_TYPE="Debug"
     elif [ "${ARGI}" = "--release" -o "${ARGI}" = "-r" ] ; then
         BUILD_TYPE="Release"
+    elif [ "${ARGI}" = "--no-joystick" ] ; then
+        JOYSTICK="OFF"
     else
 	CMD_LINE_ARGS=$CMD_LINE_ARGS" "$ARGI
     fi
@@ -37,7 +40,7 @@ done
 mkdir build -p
 cd build
 
-cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ../
+cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_JOSTICK=${JOYSTICK} ../
 
 make ${CMD_LINE_ARGS}
 cd "${INVOCATION_ABS_DIR}"
