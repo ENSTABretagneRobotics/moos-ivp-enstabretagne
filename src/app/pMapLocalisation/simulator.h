@@ -58,6 +58,7 @@ class Simulator {
 public:
     Simulator(const string& map_filename, const string& traj_filename);
     void setSonarFreq(double freq);
+    void setNbOutliers(double pNb);
     double getSonarAngle(double time);
     double genSonarDist(double px, double py, double theta, double t);
     void drawMap();
@@ -73,6 +74,7 @@ private:
     void loadMap(const string& map_filename);
     Walls walls;
     int idx;
+    double nbOutliers;
     double freq, w;
 };
 

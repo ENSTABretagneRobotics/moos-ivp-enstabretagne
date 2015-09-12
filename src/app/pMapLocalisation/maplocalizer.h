@@ -58,7 +58,7 @@ class MapLocalizer
 {
 public:
     MapLocalizer(const string &map_filename);
-    ~MapLocalizer();
+
 
     void setInitialPosition(Interval& x, Interval&y, double& time);
     void setInitialPosition(double x, double y, double time);
@@ -66,7 +66,7 @@ public:
     void setHeadingNoise(double hdg_err) {this->hdg_err = hdg_err;}
     void setBufferSize(int N) {this->bufferSize = N;}
     void setNOutliers(int q) {this->NOutliers = q;}
-    void update(Interval& rho, Interval& theta, double &time, int q);
+    void update(Interval& rho, Interval& theta, double &time);
     void predict(double &v, double &theta, double &t);
 
 
@@ -78,7 +78,6 @@ public:
 private:
 
     CtcSegment ctcSegment;
-    Function *f;
     void contract(IntervalVector &X, Interval &rho, Interval &theta, int q=0);
     void contractSegment(Interval &x, Interval &y, Wall &wall);
     void contractOneMeasurment(Interval &x, Interval &y, Interval &rho, Interval &theta, Wall &wall);

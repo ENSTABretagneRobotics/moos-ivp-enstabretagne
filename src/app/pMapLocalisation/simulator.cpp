@@ -14,6 +14,7 @@ Simulator::Simulator(const string &map_filename, const string &traj_filename)
     idx = 0;
     freq = 5;
     w = M_PI/4.;
+    nbOutliers = 0.05;
 
 }
 
@@ -22,6 +23,11 @@ Simulator::Simulator(const string &map_filename, const string &traj_filename)
 void Simulator::setSonarFreq(double freq)
 {
     this->freq  = freq;
+}
+
+void Simulator::setNbOutliers(double pNb)
+{
+    this->nbOutliers = pNb;
 }
 
 void Simulator::setSonarRotSpeed(double w){
@@ -50,7 +56,8 @@ double Simulator::genSonarDist(double px, double py, double theta, double t)
             DistanceDirSegment(dj,phij,px,py,alpha,w[0],w[1],w[2],w[3]);
             d = (dj < d) ? dj : d;
         }
-
+        if ( (rand() /( (double) RAND_MAX)) > (1 - this->nbOutliers) )
+            d-= 15;
         if (d < 100){
             vector<double> cx = {px, px+d*cos(alpha)};
             vector<double> cy = {py, py+d*sin(alpha)};

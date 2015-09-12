@@ -14,12 +14,6 @@ MapLocalizer::MapLocalizer(const string &map_filename):
 }
 
 
-MapLocalizer::~MapLocalizer()
-{
-    if(f != NULL) delete f;
-
-}
-
 void MapLocalizer::setInitialPosition(ibex::Interval &x, ibex::Interval &y, double &time)
 {
     x_inertial = x;
@@ -38,21 +32,24 @@ void MapLocalizer::setInitialPosition(double x, double y, double time)
     t_old = time;
 }
 
-void MapLocalizer::update(ibex::Interval &rho, ibex::Interval &theta, double &time, int q)
+void MapLocalizer::update(ibex::Interval &rho, ibex::Interval &theta, double &time)
 {
     // Add the new measurment to the list and remove the last entry
     data.push_front(Data_t(x_inertial, y_inertial, rho, theta, time));
     pos.push_front(X_cur);
+
+
 
     vector<IntervalVector> boxes(data.size(), pos[0]);
     ibex::Array<IntervalVector> array_boxes(pos.size());
     // case i == 0, only contraction
     Data_t &t0 = data[0];
     IntervalVector dX(2);
-    //vibes::drawBox( boxes[0][0].lb(), boxes[0][0].ub(),  boxes[0][1].lb(), boxes[0][1].ub(), "k" );
     contract(boxes[0], data[0].rho,data[0].theta);
-    //vibes::drawBox( boxes[0][0].lb(), boxes[0][0].ub(),  boxes[0][1].lb(), boxes[0][1].ub(), "k[g]" );
-    pos[0] &= boxes[0];
+    if(pos.size() <= NOutliers){ // not enough measurments in the buffer
+        pos[0] &= boxes[0];
+        return;
+    }
     array_boxes.set_ref(0, boxes[0]);
 
 
@@ -65,38 +62,17 @@ void MapLocalizer::update(ibex::Interval &rho, ibex::Interval &theta, double &ti
         double dy2 = t0.y.ub() - ti.y.ub();
         dX[1] = Interval( std::min(dy1, dy2), std::max(dy1, dy2));
         IntervalVector old_pos = pos[i];
-        const IntervalVector &cur_pos = pos[0];
-        //vibes::drawBox(cur_pos[0].lb(),cur_pos[0].ub(), cur_pos[1].lb(),cur_pos[1].ub(), "k" );
-        //vibes::drawBox(old_pos[0].lb(),old_pos[0].ub(), old_pos[1].lb(),old_pos[1].ub(), "[#0000FF22]" );
 
-        IntervalVector tmp  = cur_pos  - dX;
-        //vibes::drawBox(tmp[0].lb(),tmp[0].ub(), tmp[1].lb(),tmp[1].ub(), "[#FF0000AA]" );
-        //vibes::drawBox(old_pos[0].lb(),old_pos[0].ub(), old_pos[1].lb(),old_pos[1].ub(), "[#FF00FF22]" );
+        old_pos &= pos[0]  - dX;
         contract(old_pos, ti.rho,ti.theta);
-        //vibes::drawBox(old_pos[0].lb(),old_pos[0].ub(), old_pos[1].lb(),old_pos[1].ub(), "[#FF000022]" );
-        IntervalVector tmp1 = old_pos + dX;
-        //vibes::drawBox(tmp[0].lb(),tmp[0].ub(), tmp[1].lb(),tmp[1].ub(), "[#FF000022]" );
-        boxes[i] &= tmp1;
-        //vibes::drawBox( boxes[i][0].lb(), boxes[i][0].ub(),  boxes[i][1].lb(), boxes[i][1].ub(), "[#00FF00]" );
+
+        boxes[i] &= old_pos + dX;;
         array_boxes.set_ref(i, boxes[i]);
     }
 
 
-    for (int i = 0; i < boxes.size(); i++){
-       // if(boxes[i].is_empty())
-       //     qDebug() << "boxes " << i << "is empty !!";
-       // vibes::drawBox( boxes[i][0].lb(), boxes[i][0].ub(),  boxes[i][1].lb(), boxes[i][1].ub(), "k" );
-        //vibes::drawBox( pos[i][0].lb(), pos[i][0].ub(),  pos[i][1].lb(), pos[i][1].ub(), "k[g]" );
-        //Data_t &t = data[i];
-        //vector<double> cx = {pos[i][0].mid(), pos[i][0].mid()+t.rho.mid()*cos(t.theta.mid())};
-        //vector<double> cy = {pos[i][1].mid(), pos[i][1].mid()+t.rho.mid()*sin(t.theta.mid())};
-        //vibes::drawLine(cx, cy, "g");
-        pos[0] &= boxes[i];
-    }
-    //q = std::min(1, (int)pos.size()-1);
-    //pos[0] &= ibex::qinter_projf(array_boxes, pos.size() - q);
-    //for
-    //vibes::drawBox( pos[0][0].lb(), pos[0][0].ub(),  pos[0][1].lb(), pos[0][1].ub(), "[b]" );
+     pos[0] &= ibex::qinter_projf(array_boxes, pos.size() - this->NOutliers);
+
 
     int NMax = 30;
     if(data.size() >= NMax){
@@ -104,7 +80,7 @@ void MapLocalizer::update(ibex::Interval &rho, ibex::Interval &theta, double &ti
         pos.pop_back();
     }
     X_cur &= pos[0];
-    //setPosition(pos[0][0], pos[0][1], time);
+
 
 }
 
@@ -171,12 +147,6 @@ void MapLocalizer::contractSegment(Interval& x, Interval& y, Wall& wall){
 }
 
 void MapLocalizer::contractOneMeasurment(Interval&x, Interval&y, Interval& rho, Interval& theta, Wall& wall){
-//    vibes::clearFigure("test");
-//    vibes::drawBox(x.lb(), x.ub(), y.lb(), y.ub(), "r");
-//    vector<double> wx = {wall[0], wall[2]};
-//    vector<double> wy = {wall[1], wall[3]};
-//    vibes::drawLine(wx, wy);
-
 
     Interval ax = rho*cos(theta);
     Interval ay = rho*sin(theta);
@@ -184,11 +154,7 @@ void MapLocalizer::contractOneMeasurment(Interval&x, Interval&y, Interval& rho, 
     Interval qx = x + ax;
     Interval qy = y + ay;
 
-//    vibes::drawBox(qx.lb(), qx.ub(), qy.lb(), qy.ub(), "[g]");
-
     contractSegment(qx, qy, wall);
-
-  //  vibes::drawBox(qx.lb(), qx.ub(), qy.lb(), qy.ub(), "[y]");
 
     bwd_add(qx, x, ax);
     bwd_add(qy, y, ay);
@@ -204,10 +170,8 @@ void MapLocalizer::contract(IntervalVector& X, Interval& rho, Interval& theta, i
     IntervalVector res(IntervalVector::empty(2));
     for(int i = 0; i < walls.size(); i++){ 
         contractOneMeasurment(boxes[i][0], boxes[i][1], rho, theta, walls[i]);
-
         res |= boxes[i];
     }
-
     X &= res;
 }
 
