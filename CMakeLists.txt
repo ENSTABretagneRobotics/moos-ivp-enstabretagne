@@ -114,11 +114,6 @@ message("MOOSGeodesy_LIB_PATH:" ${MOOSGeodesy_LIBRARY_PATH})
 message("+++++++++++++++++++++++++++++++++++++++++")
 
 #=============================================================================
-# Options (moos-ivp-toutatis specific)
-#=============================================================================
-option(WITH_JOYSTICK "Add joystick support (Unavailable on Windows and OSX)" ON)
-
-#=============================================================================
 # Add Subdirectories
 #=============================================================================
 ADD_SUBDIRECTORY( src )
