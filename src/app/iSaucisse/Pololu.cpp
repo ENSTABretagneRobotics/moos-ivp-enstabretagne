@@ -63,6 +63,9 @@ Pololu::Pololu(string device_name)
   #endif
 
   bipOnStartUp();
+  setLeftThrusterValue(0.);
+  setRightThrusterValue(0.);
+  setVerticalThrusterValue(0.);
 }
 
 Pololu::~Pololu()
@@ -148,7 +151,9 @@ int Pololu::setThrusterValue(int id, double value)
   // PWM max: 2000
   // PWM mean: 1500
   // PWM min: 992 -> 1000
-  return setTarget(id, 1500 + 500 * value);
+  double mean = (LOW_LEVEL + HIGH_LEVEL) / 2;
+  double radius = (HIGH_LEVEL - LOW_LEVEL) / 2;
+  return setTarget(id, mean + radius * value);
 }
 
 int Pololu::setLeftThrusterValue(double value)
