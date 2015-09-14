@@ -26,7 +26,7 @@ class Pololu : public QObject
     int turnOnRelay(int id, bool turned_on = true);
     int turnOnBistableRelay(int id_on, int id_off, bool turned_on = true);
     int emitBips(int bip_number = 1);
-    int reset();
+    int reset(bool all_on = true);
     int setLeftThrusterValue(double value);
     int setRightThrusterValue(double value);
     int setVerticalThrusterValue(double value);

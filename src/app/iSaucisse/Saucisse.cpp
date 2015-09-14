@@ -20,7 +20,8 @@ using namespace std;
 
 Saucisse::Saucisse()
 {
-
+  m_reset_on_startup = false;
+  m_reset_all_on = true;
 }
 
 //---------------------------------------------------------
@@ -325,16 +326,30 @@ bool Saucisse::OnStartUp()
     string value = line;
     bool handled = false;
 
-    if(param == "DEVICE_NAME")
+    if(param == "RESET_ALL_ON")
+    {
+      m_reset_all_on = tolower(value) == "true";
+      handled = true;
+    }
+
+    else if(param == "RESET_ON_STARTUP")
+    {
+      m_reset_on_startup = tolower(value) == "true";
+      handled = true;
+    }
+
+    else if(param == "DEVICE_NAME")
     {
       m_device_name = value;
       handled = true;
     }
+
     else if(param == "MAX_THRUSTER_VALUE")
     {
       max_thruster_value = atof(value.c_str());
       handled = true;
     }
+
     else if(param == "COEFF_MATRIX")
     {
       
@@ -366,14 +381,15 @@ bool Saucisse::OnStartUp()
       handled = true;
     }
     
-
-
-
     if(!handled)
       reportUnhandledConfigWarning(orig);
   }
 
   m_pololu = new Pololu(m_device_name);
+
+  if(m_reset_on_startup)
+    m_pololu->reset(m_reset_all_on);
+
   registerVariables();  
   return true;
 }
