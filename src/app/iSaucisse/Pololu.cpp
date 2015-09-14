@@ -136,9 +136,28 @@ int Pololu::turnOnBistableRelay(int id_on, int id_off, bool turned_on)
   return 0;
 }
 
-int Pololu::setThrustersValue(int id, double value)
+int Pololu::setThrusterValue(int id, double value)
 {
-  return setTarget(id, 6000 + 20 * value);
+  // value in [-1.0;1.0]
+  // PWM max: 2000
+  // PWM mean: 1500
+  // PWM min: 992 -> 1000
+  return setTarget(id, 1500 + 500 * value);
+}
+
+int Pololu::setLeftThrusterValue(double value)
+{
+  return setThrusterValue(22, value);
+}
+
+int Pololu::setRightThrusterValue(double value)
+{
+  return setThrusterValue(23, value);
+}
+
+int Pololu::setVerticalThrusterValue(double value)
+{
+  return setThrusterValue(21, value);
 }
 
 void Pololu::buzzOn()

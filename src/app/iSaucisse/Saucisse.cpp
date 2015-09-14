@@ -569,6 +569,8 @@ void Saucisse::CalcThrustersValues()
     Notify("U1_SIDE_THRUSTER_ONE", U1_SIDE_THRUSTER_ONE);
     Notify("U2_SIDE_THRUSTER_TWO", U2_SIDE_THRUSTER_TWO);
     Notify("U3_VERTICAL_THRUSTER", U3_VERTICAL_THRUSTER);
-
+    m_pololu->setLeftThrusterValue(U1_SIDE_THRUSTER_ONE);
+    m_pololu->setRightThrusterValue(U2_SIDE_THRUSTER_TWO);
+    m_pololu->setVerticalThrusterValue(U3_VERTICAL_THRUSTER);
 
 }//end of void Saucisse::CalcThrustersValues()
