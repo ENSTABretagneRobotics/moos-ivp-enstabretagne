@@ -148,9 +148,6 @@ int Pololu::turnOnBistableRelay(int id_on, int id_off, bool turned_on)
 int Pololu::setThrusterValue(int id, double value)
 {
   // value in [-1.0;1.0]
-  // PWM max: 2000
-  // PWM mean: 1500
-  // PWM min: 992 -> 1000
   double mean = (LOW_LEVEL + HIGH_LEVEL) / 2;
   double radius = (HIGH_LEVEL - LOW_LEVEL) / 2;
   return setTarget(id, mean + radius * value);

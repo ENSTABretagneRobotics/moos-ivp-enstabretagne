@@ -21,6 +21,16 @@
         <interface>
            <subscriptions>
               <moosvar>
+                 <varname>POWER_CAMERAS</varname>
+                 <vartype>int</vartype>
+                 <varinfo>0 for power-off request, 1 otherwise</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>POWER_GPS</varname>
+                 <vartype>int</vartype>
+                 <varinfo>0 for power-off request, 1 otherwise</varinfo>
+              </moosvar>
+              <moosvar>
                  <varname>POWER_MODEM</varname>
                  <vartype>int</vartype>
                  <varinfo>0 for power-off request, 1 otherwise</varinfo>
@@ -40,7 +50,11 @@
                  <vartype>int</vartype>
                  <varinfo>0 for power-off request, 1 otherwise</varinfo>
               </moosvar>
-
+              <moosvar>
+                 <varname>EMIT_BIPS</varname>
+                 <vartype>int</vartype>
+                 <varinfo>arg is the number of bips to emit</varinfo>
+              </moosvar>
 
               <moosvar>
                  <varname>COEFF_MATRIX</varname>
@@ -111,6 +125,16 @@
                  <varname>SAUCISSE_POLOLU_STATUS</varname>
                  <vartype>string</vartype>
                  <varinfo>message in case of error, "ok" otherwise</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>POWERED_CAMERAS</varname>
+                 <vartype>int</vartype>
+                 <varinfo>0 for power-off success, 1 for power-on success, -1 for an error</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>POWERED_GPS</varname>
+                 <vartype>int</vartype>
+                 <varinfo>0 for power-off success, 1 for power-on success, -1 for an error</varinfo>
               </moosvar>
               <moosvar>
                  <varname>POWERED_MODEM</varname>
