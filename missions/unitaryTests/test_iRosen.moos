@@ -14,7 +14,7 @@ ProcessConfig = ANTLER
   Run = MOOSDB        @ NewConsole = true
   Run = iSaucisse     @ NewConsole = true
   Run = uMS           @ NewConsole = true
-  Run = uTimerScript  @ NewConsole = true
+  //Run = uTimerScript  @ NewConsole = true
 }
 
 
@@ -25,6 +25,9 @@ ProcessConfig = iSaucisse
 {
   AppTick   = 4
   CommsTick = 4
+
+  RESET_ON_STARTUP = true
+  RESET_ALL_ON = true
 
   DEVICE_NAME = /dev/ttyACM0
   # Linux:
