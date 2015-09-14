@@ -83,9 +83,9 @@ bool XSensINS::Iterate() {
     // Convert packet to euler
     if(packet.containsOrientation()){
       euler = packet.orientationEuler();
-      Notify("IMU_PITCH", euler.m_pitch);
-      Notify("IMU_ROLL", euler.m_roll);
-      Notify("IMU_YAW", euler.m_yaw + yaw_declination);
+      Notify("IMU_PITCH", euler.pitch());
+      Notify("IMU_ROLL", euler.roll());
+      Notify("IMU_YAW", euler.yaw() + yaw_declination);
     }
 
     // Acceleration
@@ -112,7 +112,6 @@ bool XSensINS::Iterate() {
       Notify("IMU_MAG_Z", mag[2]);
       Notify("IMU_MAG_N", sqrt(pow(mag[0], 2) + pow(mag[1], 2) + pow(mag[2], 2)));
     }
-
   }
   msgs.clear();
 
@@ -151,7 +150,7 @@ bool XSensINS::OnStartUp() {
       yaw_declination = atoi(value.c_str());
       handled = true;
     }
-    if (!handled)
+    if(!handled)
       reportUnhandledConfigWarning(orig);
   }
   registerVariables();
@@ -211,7 +210,7 @@ bool XSensINS::buildReport() {
   ACTable actab(5);
   actab << "Serial Port | Baude rate | YAW | ROLL | PITCH";
   actab.addHeaderLines();
-  actab << UART_PORT << UART_BAUD_RATE << euler.m_yaw + yaw_declination << euler.m_roll << euler.m_pitch;
+  actab << UART_PORT << UART_BAUD_RATE << euler.yaw() + yaw_declination << euler.roll() << euler.pitch();
   m_msgs << actab.getFormattedString();
 
   return true;

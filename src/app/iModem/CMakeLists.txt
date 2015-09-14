@@ -18,4 +18,10 @@ TARGET_LINK_LIBRARIES(iModem
    apputil
    mbutil
    m
-   pthread)
+   pthread
+   )
+if(APPLE)
+   MESSAGE("Building on OSX, avoid linking with realtime support")
+elseif(UNIX)
+   TARGET_LINK_LIBRARIES(iModem rt)
+endif()

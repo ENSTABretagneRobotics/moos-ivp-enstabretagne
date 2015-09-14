@@ -156,17 +156,17 @@ int main(int argc, char* argv[])
 					// Get the quaternion data
 					XsQuaternion quaternion = packet.orientationQuaternion();
 					std::cout << "\r"
-							  << "W:" << std::setw(5) << std::fixed << std::setprecision(2) << quaternion.m_w
-							  << ",X:" << std::setw(5) << std::fixed << std::setprecision(2) << quaternion.m_x
-							  << ",Y:" << std::setw(5) << std::fixed << std::setprecision(2) << quaternion.m_y
-							  << ",Z:" << std::setw(5) << std::fixed << std::setprecision(2) << quaternion.m_z
+							  << "W:" << std::setw(5) << std::fixed << std::setprecision(2) << quaternion.w()
+							  << ",X:" << std::setw(5) << std::fixed << std::setprecision(2) << quaternion.x()
+							  << ",Y:" << std::setw(5) << std::fixed << std::setprecision(2) << quaternion.y()
+							  << ",Z:" << std::setw(5) << std::fixed << std::setprecision(2) << quaternion.z()
 					;
 
 					// Convert packet to euler
 					XsEuler euler = packet.orientationEuler();
-					std::cout << ",Roll:" << std::setw(7) << std::fixed << std::setprecision(2) << euler.m_roll
-							  << ",Pitch:" << std::setw(7) << std::fixed << std::setprecision(2) << euler.m_pitch
-							  << ",Yaw:" << std::setw(7) << std::fixed << std::setprecision(2) << euler.m_yaw
+					std::cout << ",Roll:" << std::setw(7) << std::fixed << std::setprecision(2) << euler.roll()
+							  << ",Pitch:" << std::setw(7) << std::fixed << std::setprecision(2) << euler.pitch()
+							  << ",Yaw:" << std::setw(7) << std::fixed << std::setprecision(2) << euler.yaw()
 					;
 
 					std::cout << std::flush;

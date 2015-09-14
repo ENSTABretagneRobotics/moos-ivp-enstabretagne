@@ -19,5 +19,9 @@ TARGET_LINK_LIBRARIES(iKeller
    mbutil
    m
    pthread
-   rt
    )
+if(APPLE)
+   MESSAGE("Building on OSX, avoid linking with realtime support")
+elseif(UNIX)
+   TARGET_LINK_LIBRARIES(iKeller rt)
+endif()
