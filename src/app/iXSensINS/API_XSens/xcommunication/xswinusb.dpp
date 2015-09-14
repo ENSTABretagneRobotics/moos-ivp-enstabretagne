@@ -1,7 +1,5 @@
 xswinusb.cpp.o: xswinusb.cpp ../include/xcommunication/xcommunicationconfig.h \
- ../include/xcommunication/xswinusb.h \
- ../include/xcommunication/xcommunicationconfig.h
+  ../include/xcommunication/xswinusb.h
 xswinusb.cpp:
 ../include/xcommunication/xcommunicationconfig.h:
 ../include/xcommunication/xswinusb.h:
-../include/xcommunication/xcommunicationconfig.h:
