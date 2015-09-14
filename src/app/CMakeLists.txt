@@ -61,6 +61,7 @@ endif (WITH_GPSOE)
 if (WITH_CAMERA)
   ADD_SUBDIRECTORY(iCamera)
 endif(WITH_CAMERA)
+ADD_SUBDIRECTORY(pMapLocalizerParticleFilter)
 
 ##############################################################################
 #                           END of CMakeLists.txt

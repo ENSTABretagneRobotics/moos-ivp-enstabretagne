@@ -1,5 +1,6 @@
 *~
 /lib/*.a
+/lib/*.dylib
 build/*
 bin/*
 *.DS_Store

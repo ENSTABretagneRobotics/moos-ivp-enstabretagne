@@ -1,0 +1,9 @@
+//------------------------------------------------
+// pMapLocalizerParticleFilter config block
+
+ProcessConfig = pMapLocalizerParticleFilter
+{
+   AppTick   = 4
+   CommsTick = 4
+}
+
