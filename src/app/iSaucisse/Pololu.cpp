@@ -62,7 +62,7 @@ Pololu::Pololu(string device_name)
     tcsetattr(m_pololu, TCSANOW, &options);
   #endif
 
-  reset();
+  //reset();
   bipOnStartUp();
 }
 

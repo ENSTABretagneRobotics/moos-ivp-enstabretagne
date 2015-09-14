@@ -54,39 +54,33 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       bool   mstr  = msg.IsString();
     #endif
 
-    if(key == "POWER_CAMERA1")
+    if(key == "POWER_CAMERAS")
     {
-      int success = m_pololu->turnOnBistableRelay(1, 0, (int)msg.GetDouble() == 1);
-      Notify("POWERED_CAMERA1", success >= 0 ? (int)msg.GetDouble() : -1);
-    }
-
-    else if(key == "POWER_CAMERA2")
-    {
-      int success = m_pololu->turnOnBistableRelay(3, 2, (int)msg.GetDouble() == 1);
-      Notify("POWERED_CAMERA2", success >= 0 ? (int)msg.GetDouble() : -1);
+      int success = m_pololu->turnOnBistableRelay(5, 4, (int)msg.GetDouble() == 1);
+      Notify("POWERED_CAMERAS", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
     else if(key == "POWER_GPS")
     {
-      int success = m_pololu->turnOnBistableRelay(5, 4, (int)msg.GetDouble() == 1);
+      int success = m_pololu->turnOnBistableRelay(3, 2, (int)msg.GetDouble() == 1);
       Notify("POWERED_GPS", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
     else if(key == "POWER_ECHOSOUNDER")
     {
-      int success = m_pololu->turnOnBistableRelay(7, 6, (int)msg.GetDouble() == 1);
+      int success = m_pololu->turnOnBistableRelay(9, 8, (int)msg.GetDouble() == 1);
       Notify("POWERED_ECHOSOUNDER", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
     else if(key == "POWER_SONAR")
     {
-      int success = m_pololu->turnOnBistableRelay(9, 8, (int)msg.GetDouble() == 1);
+      int success = m_pololu->turnOnBistableRelay(1, 0, (int)msg.GetDouble() == 1);
       Notify("POWERED_SONAR", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
     else if(key == "POWER_MODEM")
     {
-      int success = m_pololu->turnOnBistableRelay(11, 10, (int)msg.GetDouble() == 1);
+      int success = m_pololu->turnOnBistableRelay(7, 6, (int)msg.GetDouble() == 1);
       Notify("POWERED_MODEM", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
