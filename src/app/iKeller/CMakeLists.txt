@@ -23,5 +23,5 @@ TARGET_LINK_LIBRARIES(iKeller
 if(APPLE)
    MESSAGE("Building on OSX, avoid linking with realtime support")
 elseif(UNIX)
-   TARGET_LINK_LIBRARIES(iModem rt)
+   TARGET_LINK_LIBRARIES(iKeller rt)
 endif()
