@@ -55,9 +55,7 @@ bool WallDetector::OnNewMail(MOOSMSG_LIST &NewMail)
       bool   mstr  = msg.IsString();
     #endif
 
-    if(key == "FOO") 
-      cout << "great!";
-    else if(key == "SONAR_BEARING"){
+    if(key == "SONAR_BEARING"){
       new_bearing = msg.GetDouble();
     }
     else if(key == "SONAR_SCANLINE"){
@@ -228,9 +226,11 @@ void WallDetector::registerVariables()
   AppCastingMOOSApp::RegisterVariables();
   // Register("FOOBAR", 0);
   Register("IMU_YAW", 0);
-  Register("SONAR_RAW_DATA", 0);
   Register("SONAR_PARAMS", 0);
+
   Register("WALL_THRESHOLD", 0);
+  Register("SONAR_BEARING", 0);
+  Register("SONAR_SCANLINE", 0);
 }
 
 //------------------------------------------------------------
