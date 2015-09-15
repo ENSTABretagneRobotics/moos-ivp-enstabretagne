@@ -65,10 +65,10 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       Notify("POWERED_GPS", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
-    else if(key == "POWER_ECHOSOUNDER")
+    else if(key == "POWER_SOUNDER")
     {
       int success = m_pololu->turnOnBistableRelay(9, 8, (int)msg.GetDouble() == 1);
-      Notify("POWERED_ECHOSOUNDER", success >= 0 ? (int)msg.GetDouble() : -1);
+      Notify("POWERED_SOUNDER", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
     else if(key == "POWER_SONAR")
@@ -87,6 +87,16 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
     {
       int success = m_pololu->turnOnRelay(12, (int)msg.GetDouble() == 1);
       Notify("POWERED_MODEM_EA", success >= 0 ? (int)msg.GetDouble() : -1);
+    }
+
+    else if(key == "POWER_ALL")
+    {
+      Notify("POWER_CAMERAS", msg.GetDouble());
+      Notify("POWER_GPS", msg.GetDouble());
+      Notify("POWER_SOUNDER", msg.GetDouble());
+      Notify("POWER_SONAR", msg.GetDouble());
+      Notify("POWER_MODEM", msg.GetDouble());
+      Notify("POWER_MODEM_EA", msg.GetDouble());
     }
 
     else if(key == "EMIT_BIPS")
