@@ -47,6 +47,8 @@ class SensorViewer : public AppCastingMOOSApp
 		double heading_razor;
 		double heading_ciscrea;
 
+		double m_dSonarScaleFactor;
+
 		double vx;
 };
 

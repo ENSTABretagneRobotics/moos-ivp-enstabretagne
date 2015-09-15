@@ -10,8 +10,7 @@
 
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 #include "Pololu.h"
-
-
+#include "Nuc.h"
 
 class Saucisse : public AppCastingMOOSApp
 {
@@ -59,6 +58,7 @@ class Saucisse : public AppCastingMOOSApp
     std::string OPERATION_MODE;
 
   private: // State variables
+    Nuc *m_nuc;
     Pololu *m_pololu;
 };
 

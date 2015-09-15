@@ -6,12 +6,10 @@
 /************************************************************/
 
 #include <iterator>
+#include "math.h"
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "Saucisse.h"
-
-#include "math.h"
-
 
 using namespace std;
 
@@ -22,6 +20,7 @@ Saucisse::Saucisse()
 {
   m_reset_on_startup = false;
   m_reset_all_on = true;
+  m_nuc = new Nuc();
 }
 
 //---------------------------------------------------------
@@ -67,10 +66,10 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       Notify("POWERED_GPS", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
-    else if(key == "POWER_ECHOSOUNDER")
+    else if(key == "POWER_SOUNDER")
     {
       int success = m_pololu->turnOnBistableRelay(9, 8, (int)msg.GetDouble() == 1);
-      Notify("POWERED_ECHOSOUNDER", success >= 0 ? (int)msg.GetDouble() : -1);
+      Notify("POWERED_SOUNDER", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
     else if(key == "POWER_SONAR")
@@ -91,9 +90,34 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       Notify("POWERED_MODEM_EA", success >= 0 ? (int)msg.GetDouble() : -1);
     }
 
+    else if(key == "POWER_ALL")
+    {
+      Notify("POWER_CAMERAS", msg.GetDouble());
+      Notify("POWER_GPS", msg.GetDouble());
+      Notify("POWER_SOUNDER", msg.GetDouble());
+      Notify("POWER_SONAR", msg.GetDouble());
+      Notify("POWER_MODEM", msg.GetDouble());
+      Notify("POWER_MODEM_EA", msg.GetDouble());
+    }
+
     else if(key == "EMIT_BIPS")
     {
       int success = m_pololu->emitBips((int)msg.GetDouble());
+    }
+
+    else if(key == "SET_THRUSTERS_FORCE_MIN")
+    {
+      int success = m_pololu->setAllThrustersValue(-1.);
+    }
+
+    else if(key == "SET_THRUSTERS_FORCE_NEUTRAL")
+    {
+      int success = m_pololu->setAllThrustersValue(0.);
+    }
+
+    else if(key == "SET_THRUSTERS_FORCE_MAX")
+    {
+      int success = m_pololu->setAllThrustersValue(1.);
     }
 
     /** CONTROLLER FORCE VALUES UPDATE**/
@@ -226,7 +250,6 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       reportRunWarning("Unhandled Mail: " + key);
   }
 
-
   //Calculate the thrusters values
   Saucisse::CalcThrustersValues();
 
@@ -253,6 +276,7 @@ bool Saucisse::Iterate()
   string error_message;
   bool pololu_ok = m_pololu->isReady(error_message);
   Notify("SAUCISSE_POLOLU_STATUS", pololu_ok ? "ok" : error_message);
+  Notify("NUC_TEMPERATURE", m_nuc->getTemperature());
 
   AppCastingMOOSApp::PostReport();
   return true;
@@ -402,6 +426,7 @@ void Saucisse::registerVariables()
   AppCastingMOOSApp::RegisterVariables();
   Register("POWER_*", "*", 0);
   Register("EMIT_BIPS", 0);
+  Register("SET_THRUSTERS_*", "*", 0);
 
   Register("COEFF_MATRIX", 0);
   

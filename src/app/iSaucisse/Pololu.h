@@ -23,21 +23,22 @@ class Pololu : public QObject
     bool isReady(std::string &error_message);
 
   public slots:
-    int turnOnRelay(int id, bool turned_on = true);
-    int turnOnBistableRelay(int id_on, int id_off, bool turned_on = true);
-    int emitBips(int bip_number = 1);
-    int reset(bool all_on = true);
-    int setLeftThrusterValue(double value);
-    int setRightThrusterValue(double value);
-    int setVerticalThrusterValue(double value);
+    bool turnOnRelay(int id, bool turned_on = true);
+    bool turnOnBistableRelay(int id_on, int id_off, bool turned_on = true);
+    bool emitBips(int bip_number = 1);
+    bool reset(bool all_on = true);
+    bool setLeftThrusterValue(double value);
+    bool setRightThrusterValue(double value);
+    bool setVerticalThrusterValue(double value);
+    bool setAllThrustersValue(double value);
     void bipOnStartUp();
     void bipError();
 
   protected:
     void buzzOn();
     void buzzOff();
-    int setThrusterValue(int id, double value);
-    int setTarget(unsigned char channel, unsigned short target);
+    bool setThrusterValue(int id, double value);
+    bool setTarget(unsigned char channel, unsigned short target);
     void setErrorMessage(std::string message);
     
   protected:

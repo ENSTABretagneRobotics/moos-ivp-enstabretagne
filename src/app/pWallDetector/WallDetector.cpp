@@ -6,6 +6,7 @@
 /************************************************************/
 
 #include <iterator>
+#include "math.h"
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "WallDetector.h"
