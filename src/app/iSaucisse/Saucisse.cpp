@@ -20,6 +20,7 @@ Saucisse::Saucisse()
 {
   m_reset_on_startup = false;
   m_reset_all_on = true;
+  m_nuc = new Nuc();
 }
 
 //---------------------------------------------------------
@@ -249,9 +250,8 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       reportRunWarning("Unhandled Mail: " + key);
   }
 
-
   //Calculate the thrusters values
-  //Saucisse::CalcThrustersValues();
+  Saucisse::CalcThrustersValues();
 
   return true;
 }
@@ -276,6 +276,7 @@ bool Saucisse::Iterate()
   string error_message;
   bool pololu_ok = m_pololu->isReady(error_message);
   Notify("SAUCISSE_POLOLU_STATUS", pololu_ok ? "ok" : error_message);
+  Notify("NUC_TEMPERATURE", m_nuc->getTemperature());
 
   AppCastingMOOSApp::PostReport();
   return true;
