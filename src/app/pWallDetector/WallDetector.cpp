@@ -31,6 +31,7 @@ WallDetector::WallDetector()
     new_scanline = false;
 
     threshold = 80;
+    search_zone = 20;
 }
 
 //---------------------------------------------------------
@@ -141,17 +142,21 @@ bool WallDetector::Iterate()
         }
         scanline_filtered.push_back(*min_element(tmp.begin(), tmp.end()));
       }
+      // Find the max of the scanline_filtered
+      double max_filtered; int indice_filtered;
+      findMin(scanline_filtered, max_filtered, indice_filtered, 0, scanline_filtered.size());
 
-      vector<double>::iterator max = max_element(scanline_filtered.begin(), scanline_filtered.end());
+      if(max_filtered > threshold){
+        // Find the max in the scanline near the maximum of the scanline_filtered
+        double max; int indice;
+        findMax(scanline_tab[mean_theta], max, indice, indice_filtered-search_zone, indice_filtered+search_zone);
 
-      if(*max > threshold){
-        double dist = (std::distance(scanline_filtered.begin(), max) + min_r)* sonar_range/scanline_tab[0].size();
+        double dist = (indice)* sonar_range/scanline_tab[0].size();
         stringstream ss;
         ss << "bearing=" << bearing_tab[mean_r] << ",";
         ss << "distance=" << dist << ",";
         Notify("WALL_DETECTOR", ss.str());
       }
-
     }
   }
 
@@ -210,6 +215,10 @@ bool WallDetector::OnStartUp()
       threshold = atof(value.c_str());
       handled = true;
     }
+    else if(param == "SEARCH_ZONE"){
+      search_zone = atoi(value.c_str());
+      handled = true;
+    }
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
@@ -256,4 +265,48 @@ bool WallDetector::buildReport()
 
 double WallDetector::MOOSGrad2Rad(double angle){
   return angle*M_PI/200.0;
+}
+
+void WallDetector::findMax(vector<double> list, double &max, int &indice, int begin, int end){
+
+  if(begin>= list.size())
+    begin = list.size()-1;
+  if(end > list.size())
+    end = list.size();
+  if(begin < 0)
+    begin = 0;
+  if(end < 0)
+    end = 0;
+
+  max = list[begin];
+  indice = begin;
+
+  for(int i=begin+1; i<end; i++){
+    if(list[i]>max){
+      max = list[i];
+      indice = i;
+    }
+  }
+}
+
+void WallDetector::findMin(vector<double> list, double &min, int &indice, int begin, int end){
+
+  if(begin>= list.size())
+    begin = list.size()-1;
+  if(end > list.size())
+    end = list.size();
+  if(begin < 0)
+    begin = 0;
+  if(end < 0)
+    end = 0;
+
+  min = list[begin];
+  indice = begin;
+
+  for(int i=begin; i<end; i++){
+    if(list[i]<min){
+      min = list[i];
+      indice = i;
+    }
+  }
 }

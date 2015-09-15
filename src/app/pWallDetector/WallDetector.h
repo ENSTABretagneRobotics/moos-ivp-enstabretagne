@@ -32,12 +32,15 @@ class WallDetector : public AppCastingMOOSApp
 
   protected: // WallDetector functions
     double MOOSGrad2Rad(double angle);
+    void findMin(vector<double> list, double &min, int &indice, int begin, int end);
+    void findMax(vector<double> list, double &max, int &indice, int begin, int end);
 
   private: // Configuration variables
     // FILTER CONFIGURATION
     int mean_r, mean_theta;
     int min_r;
     double threshold;
+    int search_zone;
 
     // SONAR CONFIGURATION
     double sonar_range, sonar_gain;
