@@ -2,6 +2,11 @@
 # The CMakeLists.txt for:                       pMapLocalizerParticleFilter
 # Author(s):
 #--------------------------------------------------------
+ADD_DEFINITIONS(
+  -std=c++11
+  -std=gnu++11
+  -std=c++0x
+)
 
 SET(SRC
   MapLocalizerParticleFilter.cpp

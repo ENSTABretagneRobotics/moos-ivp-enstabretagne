@@ -1,3 +1,4 @@
+lib/libparticle_filter.so
 *~
 /lib/*.a
 /lib/*.dylib
