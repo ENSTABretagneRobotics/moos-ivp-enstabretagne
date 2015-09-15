@@ -33,6 +33,8 @@ SensorViewer::SensorViewer()
 	pol2cart_x.create(400,400,CV_32FC1);
 	pol2cart_y.create(400,400,CV_32FC1);
 
+	m_dSonarScaleFactor = 4.0;
+
 	int width = 400;
 	int height = 400;
 
@@ -119,6 +121,9 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
 		if( msg.GetKey() == "CAMERA_BOTTOM") {
 		  memcpy(img2.data, msg.GetBinaryData(), img2.rows*img2.step);
 		}
+		if( msg.GetKey() == "SONAR_VIEW_SCALE") {
+		  m_dSonarScaleFactor = msg.GetDouble();
+		}
 		if( msg.GetKey() == "SONAR_RAW_DATA") {
 		  float angle = 0;
 		  MOOSValFromString(angle, msg.GetString(), "bearing");
@@ -137,8 +142,8 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
 		  float ad_interval = 0.25056;
 		  MOOSValFromString(ad_interval, msg.GetString(), "ad_interval");
 		//double scale = 60.0;
-		  double scale = 4.0;
-		  double mag_step = scale * ad_interval / 2.0;
+		  // double scale = 4.0;
+		  double mag_step = m_dSonarScaleFactor * ad_interval / 2.0;
 
 		  for (double alpha = angle-2.0; alpha <angle+2.0; alpha+=0.5){
 		  double cos_b = cos(MOOSDeg2Rad(-alpha) + heading );
@@ -273,6 +278,7 @@ void SensorViewer::RegisterVariables()
 	m_Comms.Register("YAW", 0);
 	m_Comms.Register("DESIRED_THRUST", 0);
 	m_Comms.Register("DESIRED_SLIDE", 0);
+	m_Comms.Register("SONAR_VIEW_SCALE", 0);
 }
 bool SensorViewer::buildReport()
 {
