@@ -134,6 +134,11 @@
                  <varinfo>message in case of error, "ok" otherwise</varinfo>
               </moosvar>
               <moosvar>
+                 <varname>NUC_TEMPERATURE</varname>
+                 <vartype>double</vartype>
+                 <varinfo>the temperature of the main computer</varinfo>
+              </moosvar>
+              <moosvar>
                  <varname>POWERED_CAMERAS</varname>
                  <vartype>int</vartype>
                  <varinfo>0 for power-off success, 1 for power-on success, -1 for an error</varinfo>
