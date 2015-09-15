@@ -62,6 +62,26 @@
                  <varinfo>arg is the number of bips to emit</varinfo>
               </moosvar>
               <moosvar>
+                 <varname>THRUSTERS_FORCE_MIN</varname>
+                 <vartype>-</vartype>
+                 <varinfo>put all thrusters in reverse max speed</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>THRUSTERS_FORCE_STOP</varname>
+                 <vartype>-</vartype>
+                 <varinfo>stop all thrusters</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>THRUSTERS_FORCE_MAX</varname>
+                 <vartype>-</vartype>
+                 <varinfo>put all thrusters in max speed</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>THRUSTERS_FORCE_MIN</varname>
+                 <vartype>-</vartype>
+                 <varinfo>put all thrusters in backward position</varinfo>
+              </moosvar>
+              <moosvar>
                  <varname>COEFF_MATRIX</varname>
                  <vartype>string</vartype>
                  <varinfo>Coefficients for the coefficient matrix (3x3) that relates the Forces (forward, rotational and Z) to the Thrusters output values (u1, u2 and u3). Format: 1,1,0,1,-1,0,0,0,1 </varinfo>

@@ -104,6 +104,21 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       int success = m_pololu->emitBips((int)msg.GetDouble());
     }
 
+    else if(key == "THRUSTERS_FORCE_MIN")
+    {
+      int success = m_pololu->setAllThrustersValue(-1.);
+    }
+
+    else if(key == "THRUSTERS_FORCE_NEUTRAL")
+    {
+      int success = m_pololu->setAllThrustersValue(0.);
+    }
+
+    else if(key == "THRUSTERS_FORCE_MAX")
+    {
+      int success = m_pololu->setAllThrustersValue(1.);
+    }
+
     /** CONTROLLER FORCE VALUES UPDATE**/
     else if(key == "FR_ROTATIONAL_FORCE" || key == "FZ_VERTICAL_FORCE" || key == "FX_FORWARD_FORCE")
     {
