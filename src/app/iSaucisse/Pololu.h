@@ -30,6 +30,7 @@ class Pololu : public QObject
     int setLeftThrusterValue(double value);
     int setRightThrusterValue(double value);
     int setVerticalThrusterValue(double value);
+    int setAllThrustersValue(double value);
     void bipOnStartUp();
     void bipError();
 
