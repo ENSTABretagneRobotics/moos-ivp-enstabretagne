@@ -22,6 +22,11 @@
         <interface>
            <subscriptions>
               <moosvar>
+                 <varname>POWER_ALL</varname>
+                 <vartype>int</vartype>
+                 <varinfo>Powering all sensors. 0 for power-off request, 1 otherwise</varinfo>
+              </moosvar>
+              <moosvar>
                  <varname>POWER_CAMERAS</varname>
                  <vartype>int</vartype>
                  <varinfo>0 for power-off request, 1 otherwise</varinfo>
@@ -47,7 +52,7 @@
                  <varinfo>0 for power-off request, 1 otherwise</varinfo>
               </moosvar>
               <moosvar>
-                 <varname>POWER_ECHOSOUNDER</varname>
+                 <varname>POWER_SOUNDER</varname>
                  <vartype>int</vartype>
                  <varinfo>0 for power-off request, 1 otherwise</varinfo>
               </moosvar>
@@ -55,6 +60,26 @@
                  <varname>EMIT_BIPS</varname>
                  <vartype>int</vartype>
                  <varinfo>arg is the number of bips to emit</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>THRUSTERS_FORCE_MIN</varname>
+                 <vartype>-</vartype>
+                 <varinfo>put all thrusters in reverse max speed</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>THRUSTERS_FORCE_STOP</varname>
+                 <vartype>-</vartype>
+                 <varinfo>stop all thrusters</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>THRUSTERS_FORCE_MAX</varname>
+                 <vartype>-</vartype>
+                 <varinfo>put all thrusters in max speed</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>THRUSTERS_FORCE_MIN</varname>
+                 <vartype>-</vartype>
+                 <varinfo>put all thrusters in backward position</varinfo>
               </moosvar>
               <moosvar>
                  <varname>COEFF_MATRIX</varname>
@@ -139,7 +164,7 @@
                  <varinfo>0 for power-off success, 1 for power-on success, -1 for an error</varinfo>
               </moosvar>
               <moosvar>
-                 <varname>POWERED_ECHO_SOUNDER</varname>
+                 <varname>POWERED_SOUNDER</varname>
                  <vartype>int</vartype>
                  <varinfo>0 for power-off success, 1 for power-on success, -1 for an error</varinfo>
               </moosvar>

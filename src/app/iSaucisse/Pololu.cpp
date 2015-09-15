@@ -175,6 +175,13 @@ int Pololu::setVerticalThrusterValue(double value)
   return setThrusterValue(21, value);
 }
 
+int Pololu::setAllThrustersValue(double value)
+{
+  return setLeftThrusterValue(value)
+         && setRightThrusterValue(value)
+         && setVerticalThrusterValue(value);
+}
+
 void Pololu::buzzOn()
 {
   setTarget(13, HIGH_LEVEL);
