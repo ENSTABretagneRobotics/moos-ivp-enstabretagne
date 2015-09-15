@@ -29,7 +29,7 @@ ProcessConfig = ANTLER
   //Run = pLogger       @ NewConsole = false
 
   Run = iSaucisse     @ NewConsole = false
-  Run = uTimerScript  @ NewConsole = false ~thrustersOff
+  Run = uTimerScript  @ NewConsole = false ~timerScriptAlimStartup
   Run = iCamera       @ NewConsole = false ~iCamera1
   Run = iCamera       @ NewConsole = false ~iCamera2
   Run = iEchoSounder  @ NewConsole = false
@@ -61,7 +61,7 @@ ProcessConfig = iSaucisse
   # Mac OS X:
   #     /dev/cu.usbmodem00034567
 }
-ProcessConfig = thrustersOff
+ProcessConfig = timerScriptAlimStartup
 {
   event = var=DESIRED_ELEVATOR, val=0, time=0.4
   event = var=DESIRED_RUDDER,   val=0, time=0.6
@@ -112,7 +112,7 @@ ProcessConfig = iSonar
   AppTick          = 4
   CommsTick        = 4
 
-  RANGE            = 15 //IN METERS
+  RANGE            = 5 //IN METERS
   NBINS            = 100 //NUMBER OF SAMPLES PER SCANLINE
   ANGLESTEP        = 1.8 //ANGULAR RESOLUTION (MUST BE A MULTIPLE OF 0.09)
   GAIN             = 45 // MUST BE BETWEEN 0 AND 100 (PERCENTAGE)
@@ -120,7 +120,7 @@ ProcessConfig = iSonar
   //LEFTLIMIT      = 70.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
   //RIGHTLIMIT     = 110.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
   
-  POWERED_AT_START = true
+  POWERED_AT_START = false
 }
 
 //------------------------------------------
