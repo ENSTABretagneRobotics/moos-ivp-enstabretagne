@@ -6,12 +6,10 @@
 /************************************************************/
 
 #include <iterator>
+#include "math.h"
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "Saucisse.h"
-
-#include "math.h"
-
 
 using namespace std;
 
