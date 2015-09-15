@@ -13,4 +13,5 @@ ProcessConfig = pWallDetector
 	MEAN_THETA     = 4 
 	
 	WALL_THRESHOLD = 60
+	SEARCH_ZONE = 20
 }
