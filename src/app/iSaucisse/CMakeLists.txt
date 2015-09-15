@@ -7,6 +7,7 @@
 SET(SRC
   Saucisse.cpp
   Pololu.cpp
+  Nuc.cpp
   main.cpp
 )
 
