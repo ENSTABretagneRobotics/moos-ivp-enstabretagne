@@ -6,7 +6,19 @@ ProcessConfig = iSaucisse
   AppTick   = 4
   CommsTick = 4
 
+  DEVICE_NAME = /dev/ttyACM0
+  # Linux:
+  #     /dev/ttyACM0
+  # Windows: 
+  #     \\\\.\\USBSER000
+  #     or
+  #     \\\\.\\COM6
+  # Mac OS X:
+  #     /dev/cu.usbmodem00034567
+
+  // Force relays settings at startup
   RESET_ON_STARTUP = true
+  // If requested, force relays to 'on' position at startup
   RESET_ALL_ON = false
 
   max_thruster_value = 1

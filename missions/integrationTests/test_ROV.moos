@@ -6,11 +6,14 @@ ServerPort = 9000
 Community  = AUV
 
 //Serial port configuration
-ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB0
 GPS_SERIAL_PORT = /dev/ttyUSB0
-KELLER_SERIAL_PORT = /dev/ttyUSB0
-SONAR_SERIAL_PORT = /dev/ttyUSB0
-XSENSINS_SERIAL_PORT = /dev/ttyUSB0
+XSENSINS_SERIAL_PORT = /dev/ttyUSB4
+
+ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB2
+
+SONAR_SERIAL_PORT = /dev/ttyUSB1
+
+KELLER_SERIAL_PORT = /dev/ttyUSB5
 
 //------------------------------------------
 // Antler configuration  block
@@ -23,8 +26,10 @@ ProcessConfig = ANTLER
   Run = uMACView      @ NewConsole = false
   Run = uProcessWatch @ NewConsole = false
 
-  Run = pLogger       @ NewConsole = false
+  //Run = pLogger       @ NewConsole = false
+  Run = pShare        @ NewConsole = false
 
+  Run = iSaucisse     @ NewConsole = false
   Run = iCamera       @ NewConsole = false ~iCamera1
   Run = iCamera       @ NewConsole = false ~iCamera2
   Run = pSensorViewer @ NewConsole = false
@@ -35,6 +40,24 @@ ProcessConfig = ANTLER
   Run = iXSensINS     @ NewConsole = false
 }
 
+ProcessConfig = iSaucisse
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  RESET_ON_STARTUP = false
+  RESET_ALL_ON = true
+
+  DEVICE_NAME = /dev/ttyACM0
+  # Linux:
+  #     /dev/ttyACM0
+  # Windows:
+  #     \\\\.\\USBSER000
+  #     or
+  #     \\\\.\\COM6
+  # Mac OS X:
+  #     /dev/cu.usbmodem00034567
+}
 ProcessConfig=pShare
 {
   Input = route = multicast_6
@@ -93,13 +116,15 @@ ProcessConfig = iSonar
   AppTick          = 4
   CommsTick        = 4
 
-  RANGE            = 15 //IN METERS
+  RANGE            = 5 //IN METERS
   NBINS            = 100 //NUMBER OF SAMPLES PER SCANLINE
   ANGLESTEP        = 1.8 //ANGULAR RESOLUTION (MUST BE A MULTIPLE OF 0.09)
   GAIN             = 45 // MUST BE BETWEEN 0 AND 100 (PERCENTAGE)
   CONTINUOUS       = true //TRUE FOR 360  ROTATION. SET RIGHT AND LEFT LIMIT IF FALSE
   //LEFTLIMIT      = 70.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
   //RIGHTLIMIT     = 110.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
+
+  POWERED_AT_START = true
 }
 
 //------------------------------------------
