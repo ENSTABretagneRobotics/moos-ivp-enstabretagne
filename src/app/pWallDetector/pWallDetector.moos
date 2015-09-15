@@ -1,0 +1,16 @@
+//------------------------------------------------
+// pWallDetector config block
+
+ProcessConfig = pWallDetector
+{
+	AppTick        = 10
+	CommsTick      = 10
+	
+	SONAR_RANGE    = 100.0
+	SONAR_NBINS    = 250
+	SONAR_GAIN     = 105
+	MEAN_R         = 3
+	MEAN_THETA     = 4 
+	
+	WALL_THRESHOLD = 60
+}

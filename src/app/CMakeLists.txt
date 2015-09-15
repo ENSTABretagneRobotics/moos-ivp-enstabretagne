@@ -27,6 +27,7 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
 # 'p' apps
   # ADD_SUBDIRECTORY(pLocalization)
   ADD_SUBDIRECTORY(pController)
+  ADD_SUBDIRECTORY(pWallDetector)
 
 # 'u' apps
 if (WITH_JOYSTICK)
