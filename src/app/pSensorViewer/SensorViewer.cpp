@@ -105,22 +105,36 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
 		if( msg.GetKey() == "DESIRED_THRUST") {
 		  vx = msg.GetDouble();
 		}
-		if( msg.GetKey() == "YAW") {
-		  heading_razor = MOOSDeg2Rad(msg.GetDouble());
-		  double a = MOOSDeg2Rad(-12.6), b = 0.45, c = MOOSDeg2Rad(-10.5);
-		  heading = heading_razor - ( a*sin(heading_razor+b) + c);
+		// if( msg.GetKey() == "YAW") {
+		//   heading_razor = MOOSDeg2Rad(msg.GetDouble());
+		//   double a = MOOSDeg2Rad(-12.6), b = 0.45, c = MOOSDeg2Rad(-10.5);
+		//   heading = heading_razor - ( a*sin(heading_razor+b) + c);
 
-		  heading += pool_angle;
-		}
-		if( msg.GetKey() == "HEADING") {
-		  heading_ciscrea = MOOSDeg2Rad(msg.GetDouble());
-		}
+		//   heading += pool_angle;
+		// }
+		// if( msg.GetKey() == "HEADING") {
+		//   heading_ciscrea = MOOSDeg2Rad(msg.GetDouble());
+		// }
+    if( msg.GetKey() == "IMU_YAW") {
+      heading = MOOSDeg2Rad(msg.GetDouble());
+    }
 		if( msg.GetKey() == "CAMERA_SIDE") {
 		  memcpy(img1.data, msg.GetBinaryData(), img1.rows*img1.step);
 		}
 		if( msg.GetKey() == "CAMERA_BOTTOM") {
 		  memcpy(img2.data, msg.GetBinaryData(), img2.rows*img2.step);
 		}
+    if( msg.GetKey() == "WALL_DETECTOR")
+    {
+      float bearing = 0;
+      float distance = 0;
+      MOOSValFromString(bearing, msg.GetString(), "bearing");
+      MOOSValFromString(distance, msg.GetString(), "distance");
+
+      int x = m_dSonarScaleFactor*sin(heading + bearing) + 199.5;
+      int y = m_dSonarScaleFactor*cos(heading + bearing) + 199.5;
+      img_son_cart.at<unsigned char>(x,y) = distance;
+    }
 		if( msg.GetKey() == "SONAR_VIEW_SCALE") {
 		  m_dSonarScaleFactor = msg.GetDouble();
 		}

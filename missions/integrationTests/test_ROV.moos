@@ -51,7 +51,7 @@ ProcessConfig = iSaucisse
   DEVICE_NAME = /dev/ttyACM0
   # Linux:
   #     /dev/ttyACM0
-  # Windows: 
+  # Windows:
   #     \\\\.\\USBSER000
   #     or
   #     \\\\.\\COM6
@@ -62,9 +62,22 @@ ProcessConfig=pShare
 {
   Input = route = multicast_6
 
-  Output = src_name = * ,route=multicast_8
-  //Output = src_name = IMU_* ,route=multicast_8
-
+  //Output = src_name = *,dest_name = *,route=multicast_8
+  // Camera binary flows can't pass via pShare (data.size() < 64K)
+  //Output = src_name = CAMERA_*,dest_name = CAMERA_*,route=multicast_8
+  Output = src_name = POWER*,route=multicast_8
+  Output = src_name = IMU_*,route=multicast_8
+  Output = src_name = GPS_*,route=multicast_8
+  Output = src_name = GPSOE_*,route=multicast_8
+  Output = src_name = KELLER_*,route=multicast_8
+  Output = src_name = ECHOSOUNDER_*,route=multicast_8
+  Output = src_name = MODEM_*,route=multicast_8
+  Output = src_name = SONAR_*,route=multicast_8
+  Output = src_name = OPERATION_*,route=multicast_8
+  Output = src_name = SAUCISSE*,route=multicast_8
+  Output = src_name = U1*,route=multicast_8
+  Output = src_name = U2*,route=multicast_8
+  Output = src_name = U3*,route=multicast_8
 }
 
 //------------------------------------------
@@ -110,7 +123,7 @@ ProcessConfig = iSonar
   CONTINUOUS       = true //TRUE FOR 360  ROTATION. SET RIGHT AND LEFT LIMIT IF FALSE
   //LEFTLIMIT      = 70.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
   //RIGHTLIMIT     = 110.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
-  
+
   POWERED_AT_START = true
 }
 
