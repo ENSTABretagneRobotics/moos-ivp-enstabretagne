@@ -18,6 +18,7 @@ using namespace std;
 
 Saucisse::Saucisse()
 {
+  m_alert_max_temperature = 999.;
   m_reset_on_startup = false;
   m_reset_all_on = true;
   m_nuc = new Nuc();
@@ -276,7 +277,11 @@ bool Saucisse::Iterate()
   string error_message;
   bool pololu_ok = m_pololu->isReady(error_message);
   Notify("SAUCISSE_POLOLU_STATUS", pololu_ok ? "ok" : error_message);
-  Notify("NUC_TEMPERATURE", m_nuc->getTemperature());
+
+  double current_temperature = m_nuc->getTemperature();
+  Notify("NUC_TEMPERATURE", current_temperature);
+  if(current_temperature > m_alert_max_temperature)
+    m_pololu->bipError();
 
   AppCastingMOOSApp::PostReport();
   return true;

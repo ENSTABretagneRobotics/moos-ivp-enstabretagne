@@ -32,9 +32,10 @@ class Saucisse : public AppCastingMOOSApp
     void CalcThrustersValues();
 
   private: // Configuration variables
+    std::string m_device_name;
     bool m_reset_on_startup;
     bool m_reset_all_on;
-    std::string m_device_name;
+    double m_alert_max_temperature;
 
     /** COEFFICIENT MATRIX **/
     double COEFF_MATRIX[3][3];
