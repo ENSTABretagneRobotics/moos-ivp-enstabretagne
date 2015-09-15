@@ -6,7 +6,7 @@ ServerPort = 9000
 Community  = AUV
 
 //Serial port configuration
-KELLER_SERIAL_PORT = /dev/ttyUSB0
+KELLER_SERIAL_PORT = /dev/ttyUSB5
 
 //------------------------------------------
 // Antler configuration  block
@@ -16,7 +16,7 @@ ProcessConfig = ANTLER
   MSBetweenLaunches = 200
   Run = MOOSDB        @ NewConsole = false
 
-  Run = uMS           @ NewConsole = false
+  //Run = uMS           @ NewConsole = false
   Run = uMACView      @ NewConsole = false
 
   Run = iKeller      @ NewConsole = true

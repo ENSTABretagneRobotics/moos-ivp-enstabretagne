@@ -6,12 +6,14 @@ ServerPort = 9000
 Community  = AUV
 
 //Serial port configuration
-KELLER_SERIAL_PORT = /dev/ttyUSB5
-XSENSINS_SERIAL_PORT = /dev/ttyUSB4
+GPS_SERIAL_PORT = /dev/ttyUSB0
+XSENSINS_SERIAL_PORT = /dev/ttyUSB1
 
 ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB2
-GPS_SERIAL_PORT = /dev/ttyUSB0
-SONAR_SERIAL_PORT = /dev/ttyUSB1
+
+SONAR_SERIAL_PORT = /dev/ttyUSB3
+
+KELLER_SERIAL_PORT = /dev/ttyUSB5
 
 //------------------------------------------
 // Antler configuration  block
