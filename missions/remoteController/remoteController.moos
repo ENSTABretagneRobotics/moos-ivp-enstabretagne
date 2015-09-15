@@ -1,0 +1,77 @@
+// MOOS file
+
+ServerHost = localhost
+ServerPort = 9000
+
+Community  = AUV
+
+//------------------------------------------
+// Antler configuration  block
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+  Run = MOOSDB        @ NewConsole = false
+  Run = uMACView      @ NewConsole = false
+  Run = uProcessWatch @ NewConsole = false
+
+  //Run = pLogger       @ NewConsole = false
+
+  Run = pSensorViewer @ NewConsole = false
+  Run = uJoystick     @ NewConsole = false
+}
+ProcessConfig=pShare
+{
+  Input = route = multicast_8
+
+  Output = src_name = DESIRED_*,dest_name = DESIRED_*,route=multicast_6
+}
+ProcessConfig = uJoystick
+{
+   AppTick   = 4
+   CommsTick = 4
+
+   DEVICE_NAME = /dev/input/js1
+
+   INCREMENT = false
+   SCALE = 100
+
+   AXIS = 0
+   SCALE_RATIO = 0.5
+   MOOS_DEST_VAR = DESIRED_SLIDE2
+
+   AXIS = 1
+   SCALE_RATIO = 0.5
+   MOOS_DEST_VAR = DESIRED_THRUST
+
+   AXIS = 2
+   SCALE_RATIO = 0.5
+   MOOS_DEST_VAR = DESIRED_RUDDER
+
+   AXIS = 3
+   SCALE_RATIO = 0.5
+   MOOS_DEST_VAR = DESIRED_ELEVATOR
+
+   BUTTON = 1
+   SCALE_RATIO = 0.5
+   MOOS_DEST_VAR = PUSHED_BUTTON_1
+
+   BUTTON = 2
+   SCALE_RATIO = 0.5
+   MOOS_DEST_VAR = PUSHED_BUTTON_2
+}
+ProcessConfig = pSensorViewer
+{
+   AppTick   = 25
+   CommsTick = 25
+}
+ProcessConfig = uMACView
+{
+   AppTick   = 25
+   CommsTick = 25
+}
+ProcessConfig = uProcessWatch
+{
+   AppTick   = 25
+   CommsTick = 25
+}
