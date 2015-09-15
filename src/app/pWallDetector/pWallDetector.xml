@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains pWallDetector documentation -->
+<?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?> 
+<xmldoc>
+  <moosapp>
+
+     <info>
+        <name>pWallDetector</name>
+        <organization>Toutatis AUVs - ENSTA Bretagne</organization>
+        <date>2015</date>
+        <authors>
+           <author>Thomas Le Mézo</author>
+        </authors>
+        <licence>MIT</licence>
+     </info>
+
+     <documentation>
+        <synopsis>
+          ...
+        </synopsis>
+        <interface>
+           <subscriptions>
+              <moosvar>
+                 <varname>SONAR_BEARING</varname>
+                 <vartype>double</vartype>
+                 <varinfo>description of the MOOSVar</varinfo>
+              </moosvar>
+               <moosvar>
+                 <varname>SONAR_SCANLINE</varname>
+                 <vartype>vector of int</vartype>
+                 <varinfo>description of the MOOSVar</varinfo>
+              </moosvar>
+               <moosvar>
+                 <varname>IMU_YAW</varname>
+                 <vartype>double</vartype>
+                 <varinfo>description of the MOOSVar</varinfo>
+              </moosvar>
+               <moosvar>
+                 <varname>WALL_THRESHOLD</varname>
+                 <vartype>double</vartype>
+                 <varinfo>description of the MOOSVar</varinfo>
+              </moosvar>
+               <moosvar>
+                 <varname>SONAR_PARAMS</varname>
+                 <vartype>list of doubles</vartype>
+                 <varinfo>description of the MOOSVar</varinfo>
+              </moosvar>
+           </subscriptions>
+           <publications>
+              <moosvar>
+                 <varname>WALL_DETECTOR</varname>
+                 <vartype>(string, string)</vartype>
+                 <varinfo>(bearing=rad, distance=m)</varinfo>
+              </moosvar>
+           </publications>
+        </interface>
+        <!-- if there is a bug or a special fact to know.. -->
+        <optional-comments>
+           No comment.
+        </optional-comments>
+        <!-- if something can be improved -->
+        <suggested-improvements>
+           No suggested improvements.
+        </suggested-improvements>
+     </documentation>
+
+  </moosapp>
+</xmldoc>
