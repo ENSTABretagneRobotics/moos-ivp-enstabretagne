@@ -38,6 +38,7 @@ using namespace std;
 
 Pololu::Pololu(string device_name)
 {
+  bool init_success = true;
   m_error = false;
   m_error_message = "";
 
@@ -50,6 +51,7 @@ Pololu::Pololu(string device_name)
     perror(device);
     setErrorMessage("error (loading " + string(device) + ")");
     cout << "Pololu: " << m_error_message << endl;
+    init_success = false;
   }
 
   #ifdef _WIN32
@@ -62,7 +64,15 @@ Pololu::Pololu(string device_name)
     tcsetattr(m_pololu, TCSANOW, &options);
   #endif
 
-  bipOnStartUp();
+  init_success &= setLeftThrusterValue(0.) >= 0;
+  init_success &= setRightThrusterValue(0.) >= 0;
+  init_success &= setVerticalThrusterValue(0.) >= 0;
+
+  if(!init_success)
+    bipError();
+
+  else
+    bipOnStartUp();
 }
 
 Pololu::~Pololu()
@@ -145,10 +155,9 @@ int Pololu::turnOnBistableRelay(int id_on, int id_off, bool turned_on)
 int Pololu::setThrusterValue(int id, double value)
 {
   // value in [-1.0;1.0]
-  // PWM max: 2000
-  // PWM mean: 1500
-  // PWM min: 992 -> 1000
-  return setTarget(id, 1500 + 500 * value);
+  double mean = (LOW_LEVEL + HIGH_LEVEL) / 2;
+  double radius = (HIGH_LEVEL - LOW_LEVEL) / 2;
+  return setTarget(id, mean + radius * value);
 }
 
 int Pololu::setLeftThrusterValue(double value)
@@ -189,9 +198,13 @@ void Pololu::bipOnStartUp()
 
 void Pololu::bipError()
 {
-  buzzOn();
-  delay(800);
-  buzzOff();
+  for(int i = 0 ; i < 3 ; i++)
+  {
+    buzzOn();
+    delay(2000);
+    buzzOff();
+    delay(2000);
+  }
 }
 
 int Pololu::emitBips(int bip_number)
