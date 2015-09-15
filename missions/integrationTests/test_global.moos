@@ -7,11 +7,11 @@ Community  = AUV
 
 //Serial port configuration
 GPS_SERIAL_PORT = /dev/ttyUSB0
-XSENSINS_SERIAL_PORT = /dev/ttyUSB1
+XSENSINS_SERIAL_PORT = /dev/ttyUSB4
 
 ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB2
 
-SONAR_SERIAL_PORT = /dev/ttyUSB3
+SONAR_SERIAL_PORT = /dev/ttyUSB1
 
 KELLER_SERIAL_PORT = /dev/ttyUSB5
 
