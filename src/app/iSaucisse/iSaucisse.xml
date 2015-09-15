@@ -62,24 +62,19 @@
                  <varinfo>arg is the number of bips to emit</varinfo>
               </moosvar>
               <moosvar>
-                 <varname>THRUSTERS_FORCE_MIN</varname>
+                 <varname>SET_THRUSTERS_FORCE_MIN</varname>
                  <vartype>-</vartype>
                  <varinfo>put all thrusters in reverse max speed</varinfo>
               </moosvar>
               <moosvar>
-                 <varname>THRUSTERS_FORCE_STOP</varname>
+                 <varname>SET_THRUSTERS_FORCE_STOP</varname>
                  <vartype>-</vartype>
                  <varinfo>stop all thrusters</varinfo>
               </moosvar>
               <moosvar>
-                 <varname>THRUSTERS_FORCE_MAX</varname>
+                 <varname>SET_THRUSTERS_FORCE_MAX</varname>
                  <vartype>-</vartype>
-                 <varinfo>put all thrusters in max speed</varinfo>
-              </moosvar>
-              <moosvar>
-                 <varname>THRUSTERS_FORCE_MIN</varname>
-                 <vartype>-</vartype>
-                 <varinfo>put all thrusters in backward position</varinfo>
+                 <varinfo>put all thrusters in forward max speed</varinfo>
               </moosvar>
               <moosvar>
                  <varname>COEFF_MATRIX</varname>

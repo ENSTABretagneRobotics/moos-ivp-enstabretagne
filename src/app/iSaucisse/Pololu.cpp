@@ -64,9 +64,7 @@ Pololu::Pololu(string device_name)
     tcsetattr(m_pololu, TCSANOW, &options);
   #endif
 
-  init_success &= setLeftThrusterValue(0.) >= 0;
-  init_success &= setRightThrusterValue(0.) >= 0;
-  init_success &= setVerticalThrusterValue(0.) >= 0;
+  init_success &= setAllThrustersValue(0.);
 
   if(!init_success)
     bipError();
@@ -83,76 +81,56 @@ Pololu::~Pololu()
 bool Pololu::isReady(string &error_message)
 {
   error_message = m_error_message;
-  return m_error == false;
+  return !m_error;
 }
 
-int Pololu::turnOnRelay(int id, bool turned_on)
+bool Pololu::turnOnRelay(int id, bool turned_on)
 {
   return setTarget(id, turned_on ? HIGH_LEVEL : LOW_LEVEL);
 }
 
-int Pololu::reset(bool all_on)
+bool Pololu::reset(bool all_on)
 {
-  int success = turnOnRelay(1, all_on);
+  bool success = true;
+  success &= turnOnRelay(1, all_on);
   success &= turnOnRelay(0, !all_on);
-
   delay(50);
-
   success &= turnOnRelay(3, all_on);
   success &= turnOnRelay(2, !all_on);
-  
   delay(50);
-
   success &= turnOnRelay(5, all_on);
   success &= turnOnRelay(4, !all_on);
-  
   delay(50);
-
   success &= turnOnRelay(7, all_on);
   success &= turnOnRelay(6, !all_on);
-  
   delay(50);
-
   success &= turnOnRelay(9, all_on);
   success &= turnOnRelay(8, !all_on);
-  
   delay(50);
-
   success &= turnOnRelay(11, all_on);
   success &= turnOnRelay(10, !all_on);
-  
   delay(50);
-
   success &= turnOnRelay(12, all_on);
-
   delay(50);
-  
-  if(success < 0)
-    return -1;
-
-  return 0;
+  return success;
 }
 
-int Pololu::turnOnBistableRelay(int id_on, int id_off, bool turned_on)
+bool Pololu::turnOnBistableRelay(int id_on, int id_off, bool turned_on)
 {
-  int success_on, success;
+  bool success_on, success;
 
-  success_on = turnOnRelay(id_on, turned_on);
-  success = turnOnRelay(id_off, !turned_on);
-
-  if(success_on < 0 || success < 0)
-    return -1;
+  if(!turnOnRelay(id_on, turned_on) || !turnOnRelay(id_off, !turned_on))
+    return false;
 
   delay(50);
-  success_on = turnOnRelay(id_on, false);
-  success = turnOnRelay(id_off, false);
 
-  if(success_on < 0 || success < 0)
-    return -1;
-  return 0;
+  if(!turnOnRelay(id_on, false) || !turnOnRelay(id_off, false))
+    return false;
+
+  return true;
 }
 
-int Pololu::setThrusterValue(int id, double value)
+bool Pololu::setThrusterValue(int id, double value)
 {
   // value in [-1.0;1.0]
   double mean = (LOW_LEVEL + HIGH_LEVEL) / 2;
@@ -160,22 +138,22 @@ int Pololu::setThrusterValue(int id, double value)
   return setTarget(id, mean + radius * value);
 }
 
-int Pololu::setLeftThrusterValue(double value)
+bool Pololu::setLeftThrusterValue(double value)
 {
   return setThrusterValue(22, value);
 }
 
-int Pololu::setRightThrusterValue(double value)
+bool Pololu::setRightThrusterValue(double value)
 {
   return setThrusterValue(23, value);
 }
 
-int Pololu::setVerticalThrusterValue(double value)
+bool Pololu::setVerticalThrusterValue(double value)
 {
   return setThrusterValue(21, value);
 }
 
-int Pololu::setAllThrustersValue(double value)
+bool Pololu::setAllThrustersValue(double value)
 {
   return setLeftThrusterValue(value)
          && setRightThrusterValue(value)
@@ -214,7 +192,7 @@ void Pololu::bipError()
   }
 }
 
-int Pololu::emitBips(int bip_number)
+bool Pololu::emitBips(int bip_number)
 {
   for(int i = 0 ; i < bip_number ; i++)
   {
@@ -225,7 +203,7 @@ int Pololu::emitBips(int bip_number)
   }
 }
 
-int Pololu::setTarget(unsigned char channel, unsigned short target)
+bool Pololu::setTarget(unsigned char channel, unsigned short target)
 {
   // Sets the target of a Maestro channel.
   // See the "Serial Servo Commands" section of the user's guide.
@@ -236,10 +214,10 @@ int Pololu::setTarget(unsigned char channel, unsigned short target)
   {
     setErrorMessage("error (writing)");
     perror(m_error_message.c_str());
-    return -1;
+    return false;
   }
 
-  return 0;
+  return true;
 }
 
 void Pololu::setErrorMessage(string message)
