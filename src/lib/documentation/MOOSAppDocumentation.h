@@ -30,6 +30,11 @@ namespace xmldoc
       void setName(std::string name) { MOOSTrimWhiteSpace(name);  m_name = name; };
       void setType(std::string type) { MOOSTrimWhiteSpace(type);  m_type = type; };
       void setInfo(std::string info) { MOOSTrimWhiteSpace(info);  m_info = info; };
+
+      std::string getName() { return m_name; };
+      std::string getType() { return m_type; };
+      std::string getInfo() { return multiLineMessage(m_info, MESSAGE_LENGTH, "  "); };
+
       std::string toString() { return multiLineMessage(m_name + " (" + m_type + "): " + m_info, MESSAGE_LENGTH, "  "); };
 
     private:
