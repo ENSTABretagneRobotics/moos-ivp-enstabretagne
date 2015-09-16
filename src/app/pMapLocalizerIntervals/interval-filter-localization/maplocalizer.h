@@ -67,6 +67,11 @@ public:
     void setInitialPosition(Interval& x, Interval&y, double& time);
     void setInitialPosition(double x, double y, double time);
 
+    void setGPSNoise(double gps_err)
+    {
+        this->gps_err=gps_err;
+    }
+    
     void setSpeedNoise(double spd_err) {
         this->spd_err = spd_err;
     }
@@ -84,7 +89,7 @@ public:
     }
     void update(Interval& rho, Interval& theta, double &time);
     void predict(double &v, double &theta, double &t);
-    void updateGPS(const double &easting, const double &northing, const double &gpsNoise);
+    void updateGPS(const double &easting, const double &northing);
 
     Walls walls;
     Interval x_inertial, y_inertial;
@@ -99,6 +104,7 @@ private:
     void contractOneMeasurment(Interval &x, Interval &y, Interval &rho, Interval &theta, Wall &wall);
     void loadMap(const string &map_filename);
 
+    double gps_noise;
     double spd_err;
     double hdg_err;
     int bufferSize;
