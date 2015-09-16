@@ -9,6 +9,10 @@ SET(SRC
   main.cpp
 )
 
+ADD_SUBDIRECTORY(interval-filter-localization)
+
+INCLUDE_DIRECTORIES(interval-filter-localization)
+
 ADD_EXECUTABLE(pMapLocalizerIntervals ${SRC})
 
 TARGET_LINK_LIBRARIES(pMapLocalizerIntervals
@@ -16,5 +20,6 @@ TARGET_LINK_LIBRARIES(pMapLocalizerIntervals
    apputil
    mbutil
    m
-   pthread)
+   pthread
+   interval_filter)
 

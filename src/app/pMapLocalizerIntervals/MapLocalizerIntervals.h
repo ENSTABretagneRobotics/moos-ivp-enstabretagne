@@ -9,6 +9,7 @@
 #define MapLocalizerIntervals_HEADER
 
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
+#include "interval-filter-localization/maplocalizer.h"
 
 class MapLocalizerIntervals : public AppCastingMOOSApp
 {
@@ -29,8 +30,23 @@ class MapLocalizerIntervals : public AppCastingMOOSApp
    void registerVariables();
 
  private: // Configuration variables
-
+     int qSonar;
+     std::string mapPath;
+     double speedNoise;
+     double headingNoise;
+     double gps_noise;
+     int bufferSize;
  private: // State variables
+     bool filter_easting_initialized;
+     bool filter_northing_initialized;
+     bool gps_trust;
+     double gps_easting;
+     double gps_northing;
+     double speed;
+     double theta;
+     double beamRange;
+     double beamAngle;
+     MapLocalizer localizer;
 };
 
 #endif 
