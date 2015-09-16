@@ -81,12 +81,11 @@ bool EstimSpeed::OnNewMail(MOOSMSG_LIST &NewMail) {
         CMOOSMsg &msg = *p;
         string key = msg.GetKey();
 
-        // We receive the IMU yaw, in ?? (degrees,radians?)
+        // We receive the IMU yaw, in degrees
         if (key == "IMU_YAW") {
             this->imu_yaw = msg.GetDouble();
-            double cTheta = cos(imu_yaw);
-            double sTheta = sin(imu_yaw);
-            // TODO: conventions angles
+            double cTheta = cos(MOOSDeg2Rad(imu_yaw));
+            double sTheta = sin(MOOSDeg2Rad(imu_yaw));
             rot.block<2, 2>(0, 0) = (Matrix2d() << cTheta, -sTheta, sTheta, cTheta).finished();
         }// We receive LEFT thruster value, in [-1,1]]
         else if (key == "U1_SIDE_THRUSTER_ONE") {
@@ -237,6 +236,10 @@ bool EstimSpeed::OnStartUp() {
 void EstimSpeed::registerVariables() {
 
     AppCastingMOOSApp::RegisterVariables();
+    Register("IMU_YAW",0);
+    Register("U1_SIDE_THRUSTER_ONE",0);
+    Register("U2_SIDE_THRUSTER_TWO",0);
+    Register("U3_VERTICAL_THRUSTER",0);
 }
 
 bool EstimSpeed::buildReport() {
