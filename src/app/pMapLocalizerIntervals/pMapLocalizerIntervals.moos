@@ -1,0 +1,9 @@
+//------------------------------------------------
+// pMapLocalizerIntervals config block
+
+ProcessConfig = pMapLocalizerIntervals
+{
+   AppTick   = 4
+   CommsTick = 4
+}
+
