@@ -28,6 +28,9 @@ set(HEADERS maplocalizer.h
         simulator.h
 )
 
+ADD_LIBRARY(interval_filter SHARED maplocalizer.cpp)
+TARGET_LINK_LIBRARY(interval_filter ${LIBS}) 
+
 add_executable (Example ${SRCS} ${HEADERS})
-TARGET_LINK_LIBRARIES(Example ${LIBS})
+TARGET_LINK_LIBRARIES(Example interval_filter) #${LIBS})
 
