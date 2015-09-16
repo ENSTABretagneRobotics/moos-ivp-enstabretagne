@@ -6,16 +6,19 @@ using std::ifstream;
 #include <strstream>
 #include "vibes.h"
 
+MapLocalizer::MapLocalizer() : X_cur(2), spd_err(0.01), hdg_err(0.01) {}
 
-MapLocalizer::MapLocalizer(const string &map_filename):
-    X_cur(2), spd_err(0.01), hdg_err(0.01)
+MapLocalizer::MapLocalizer(const string &map_filename) :
+X_cur(2), spd_err(0.01), hdg_err(0.01) {
+    loadMap(map_filename);
+}
+
+void MapLocalizer::setMap(const string &map_filename)
 {
     loadMap(map_filename);
 }
 
-
-void MapLocalizer::setInitialPosition(ibex::Interval &x, ibex::Interval &y, double &time)
-{
+void MapLocalizer::setInitialPosition(ibex::Interval &x, ibex::Interval &y, double &time) {
     x_inertial = x;
     y_inertial = y;
     X_cur[0] = x;
@@ -23,8 +26,7 @@ void MapLocalizer::setInitialPosition(ibex::Interval &x, ibex::Interval &y, doub
     t_old = time;
 }
 
-void MapLocalizer::setInitialPosition(double x, double y, double time)
-{
+void MapLocalizer::setInitialPosition(double x, double y, double time) {
     x_inertial = Interval(x).inflate(0.01);
     y_inertial = Interval(y).inflate(0.01);
     X_cur[0] = x_inertial;
@@ -32,8 +34,7 @@ void MapLocalizer::setInitialPosition(double x, double y, double time)
     t_old = time;
 }
 
-void MapLocalizer::update(ibex::Interval &rho, ibex::Interval &theta, double &time)
-{
+void MapLocalizer::update(ibex::Interval &rho, ibex::Interval &theta, double &time) {
     // Add the new measurment to the list and remove the last entry
     data.push_front(Data_t(x_inertial, y_inertial, rho, theta, time));
     pos.push_front(X_cur);
@@ -45,37 +46,38 @@ void MapLocalizer::update(ibex::Interval &rho, ibex::Interval &theta, double &ti
     // case i == 0, only contraction
     Data_t &t0 = data[0];
     IntervalVector dX(2);
-    contract(boxes[0], data[0].rho,data[0].theta);
-    if(pos.size() <= NOutliers){ // not enough measurments in the buffer
+    contract(boxes[0], data[0].rho, data[0].theta);
+    if (pos.size() <= NOutliers) { // not enough measurments in the buffer
         pos[0] &= boxes[0];
         return;
     }
     array_boxes.set_ref(0, boxes[0]);
 
 
-    for(int i = 1; i < data.size(); i++){
+    for (int i = 1; i < data.size(); i++) {
         Data_t &ti = data[i];
         double dx1 = t0.x.lb() - ti.x.lb();
         double dx2 = t0.x.ub() - ti.x.ub();
-        dX[0] = Interval( std::min(dx1, dx2), std::max(dx1, dx2));
+        dX[0] = Interval(std::min(dx1, dx2), std::max(dx1, dx2));
         double dy1 = t0.y.lb() - ti.y.lb();
         double dy2 = t0.y.ub() - ti.y.ub();
-        dX[1] = Interval( std::min(dy1, dy2), std::max(dy1, dy2));
+        dX[1] = Interval(std::min(dy1, dy2), std::max(dy1, dy2));
         IntervalVector old_pos = pos[i];
 
-        old_pos &= pos[0]  - dX;
-        contract(old_pos, ti.rho,ti.theta);
+        old_pos &= pos[0] - dX;
+        contract(old_pos, ti.rho, ti.theta);
 
-        boxes[i] &= old_pos + dX;;
+        boxes[i] &= old_pos + dX;
+        ;
         array_boxes.set_ref(i, boxes[i]);
     }
 
 
-     pos[0] &= ibex::qinter_projf(array_boxes, pos.size() - this->NOutliers);
+    pos[0] &= ibex::qinter_projf(array_boxes, pos.size() - this->NOutliers);
 
 
     int NMax = 30;
-    if(data.size() >= NMax){
+    if (data.size() >= NMax) {
         data.pop_back();
         pos.pop_back();
     }
@@ -91,13 +93,13 @@ void MapLocalizer::update(ibex::Interval &rho, ibex::Interval &theta, double &ti
 // ....
 // Load the map and fill <Walls> vector
 
-void MapLocalizer::loadMap(const string& map_filename){
+void MapLocalizer::loadMap(const string& map_filename) {
     // Clear the previous map
     this->walls.clear();
 
     std::ifstream in_file;
     in_file.open(map_filename, ios::in);
-    if(in_file.fail()) {
+    if (in_file.fail()) {
         std::stringstream s;
         s << "MapLocalizer [load]: cannot open file " << map_filename << "for reading the map";
         std::cerr << s << std::endl;
@@ -108,7 +110,7 @@ void MapLocalizer::loadMap(const string& map_filename){
         // Read the header and fill it in with wonderful values
         while (!in_file.eof()) {
 
-            getline (in_file, line);
+            getline(in_file, line);
             // Ignore empty lines
             if (line == "")
                 continue;
@@ -117,8 +119,8 @@ void MapLocalizer::loadMap(const string& map_filename){
             sstream >> w[0] >> w[1] >> w[2] >> w[3];
             walls.push_back(w);
             std::cout << w[0] << " " << w[1] << " "
-                              << w[2] << " " << w[3]
-                              << " " << std::endl;
+                    << w[2] << " " << w[3]
+                    << " " << std::endl;
         }
 
     } catch (std::exception& e) {
@@ -130,7 +132,7 @@ void MapLocalizer::loadMap(const string& map_filename){
 
 }
 
-void MapLocalizer::contractSegment(Interval& x, Interval& y, Wall& wall){
+void MapLocalizer::contractSegment(Interval& x, Interval& y, Wall& wall) {
     IntervalVector tmp(6);
     tmp[0] = x;
     tmp[1] = y;
@@ -141,15 +143,16 @@ void MapLocalizer::contractSegment(Interval& x, Interval& y, Wall& wall){
     this->ctcSegment.contract(tmp);
     x &= tmp[0];
     y &= tmp[1];
-    if(x.is_empty() || y.is_empty()){
-        x.set_empty(); y.set_empty();
+    if (x.is_empty() || y.is_empty()) {
+        x.set_empty();
+        y.set_empty();
     }
 }
 
-void MapLocalizer::contractOneMeasurment(Interval&x, Interval&y, Interval& rho, Interval& theta, Wall& wall){
+void MapLocalizer::contractOneMeasurment(Interval&x, Interval&y, Interval& rho, Interval& theta, Wall& wall) {
 
-    Interval ax = rho*cos(theta);
-    Interval ay = rho*sin(theta);
+    Interval ax = rho * cos(theta);
+    Interval ay = rho * sin(theta);
 
     Interval qx = x + ax;
     Interval qy = y + ay;
@@ -159,24 +162,24 @@ void MapLocalizer::contractOneMeasurment(Interval&x, Interval&y, Interval& rho, 
     bwd_add(qx, x, ax);
     bwd_add(qy, y, ay);
 
-    if(x.is_empty() || y.is_empty()){
-        x.set_empty(); y.set_empty();
+    if (x.is_empty() || y.is_empty()) {
+        x.set_empty();
+        y.set_empty();
     }
 }
 
-void MapLocalizer::contract(IntervalVector& X, Interval& rho, Interval& theta, int q){
+void MapLocalizer::contract(IntervalVector& X, Interval& rho, Interval& theta, int q) {
     // List of boxes initialized with X
     std::vector<IntervalVector> boxes(walls.size(), X);
     IntervalVector res(IntervalVector::empty(2));
-    for(int i = 0; i < walls.size(); i++){ 
+    for (int i = 0; i < walls.size(); i++) {
         contractOneMeasurment(boxes[i][0], boxes[i][1], rho, theta, walls[i]);
         res |= boxes[i];
     }
     X &= res;
 }
 
-
-void MapLocalizer::predict(double& v, double& theta, double& t){
+void MapLocalizer::predict(double& v, double& theta, double& t) {
 
     Interval iV(v);
     Interval iTheta(theta);
@@ -185,8 +188,8 @@ void MapLocalizer::predict(double& v, double& theta, double& t){
 
     double dt = t - t_old;
 
-    Interval df_x = iV*cos(iTheta)*dt;
-    Interval df_y = iV*sin(iTheta)*dt;
+    Interval df_x = iV * cos(iTheta) * dt;
+    Interval df_y = iV * sin(iTheta) * dt;
     // Update inertial tube
     x_inertial += df_x;
     y_inertial += df_y;
@@ -197,12 +200,11 @@ void MapLocalizer::predict(double& v, double& theta, double& t){
     t_old = t;
 }
 
-void MapLocalizer::updateGPS(const double &easting,const double &northing,const double &gpsNoise)
-{
+void MapLocalizer::updateGPS(const double &easting, const double &northing, const double &gpsNoise) {
     IntervalVector fix(2);
-    fix[0]=easting;
-    fix[1]=northing;
+    fix[0] = easting;
+    fix[1] = northing;
     fix.inflate(gps_noise);
-    
+
     X_cur &= fix;
 }
