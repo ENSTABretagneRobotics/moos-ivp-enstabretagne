@@ -7,6 +7,7 @@
 
 #include <string>
 #include "MBUtils.h"
+#include "documentation/MOOSAppDocumentation.h"
 #include "ColorParse.h"
 #include "EstimSpeed.h"
 #include "EstimSpeed_Info.h"
@@ -17,6 +18,7 @@ int main(int argc, char *argv[])
 {
   string mission_file;
   string run_command = argv[0];
+  xmldoc::MOOSAppDocumentation documentation(argv[0]);
 
   for(int i=1; i<argc; i++) {
     string argi = argv[i];

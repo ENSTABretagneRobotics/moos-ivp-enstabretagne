@@ -216,7 +216,7 @@ bool EstimSpeed::OnStartUp() {
             
             if (str_vector.size()==3)
             {
-                V << atof(str_vector[0]),atof(str_vector[1]),atof(str_vector[2]);
+                V << atof(str_vector[0].c_str()),atof(str_vector[1].c_str()),atof(str_vector[2].c_str());
             }else{
                 reportUnhandledConfigWarning("Error while parsing V0, the initial speed: incorrect number of elements");
             }

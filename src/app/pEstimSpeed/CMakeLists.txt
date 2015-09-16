@@ -17,6 +17,7 @@ ADD_EXECUTABLE(pEstimSpeed ${SRC})
 
 TARGET_LINK_LIBRARIES(pEstimSpeed
    ${MOOS_LIBRARIES}
+   xml-documentation
    apputil
    mbutil
    m

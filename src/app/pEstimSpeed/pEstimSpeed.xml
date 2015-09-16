@@ -44,57 +44,25 @@
            </subscriptions>
            <publications>
               <moosvar>
-                 <varname>SAUCISSE_POLOLU_STATUS</varname>
-                 <vartype>string</vartype>
-                 <varinfo>message in case of error, "ok" otherwise</varinfo>
+                 <varname>POS_DEAD_RECKONING</varname>
+                 <vartype>vector of 3 doubles</vartype>
+                 <varinfo>Position integrated using the equations of motions and the thrusters inputs.</varinfo>
               </moosvar>
               <moosvar>
-                 <varname>POWERED_MODEM</varname>
-                 <vartype>int</vartype>
-                 <varinfo>0 for power-off success, 1 for power-on success, -1 for an error</varinfo>
+                 <varname>SPEED_LOCAL_DEAD_RECKONING</varname>
+                 <vartype>vector of 3 doubles</vartype>
+                 <varinfo>Speed of the robot, expressed in its LOCAL frame. X on the antero-posterior axis pointing FORWARD, Y on the transversal axis pointing LEFT, Z pointing UP</varinfo>
               </moosvar>
               <moosvar>
-                 <varname>POWERED_MODEM_EA</varname>
-                 <vartype>int</vartype>
-                 <varinfo>0 for power-off success, 1 for power-on success, -1 for an error</varinfo>
+                 <varname>SPEED_GLOBAL_DEAD_RECKONING</varname>
+                 <vartype>vector of 3 doubles</vartype>
+                 <varinfo>Speed of the robot, expressed in the GLOBAL frame, is simply the transformation of SPEED_LOCAL_DEAD_RECKONING using the IMU_YAW angle from the INS</varinfo>
               </moosvar>
-              <moosvar>
-                 <varname>POWERED_SONAR</varname>
-                 <vartype>int</vartype>
-                 <varinfo>0 for power-off success, 1 for power-on success, -1 for an error</varinfo>
-              </moosvar>
-              <moosvar>
-                 <varname>POWERED_ECHO_SOUNDER</varname>
-                 <vartype>int</vartype>
-                 <varinfo>0 for power-off success, 1 for power-on success, -1 for an error</varinfo>
-              </moosvar>
-
-              <moosvar>
-                 <varname>U1_SIDE_THRUSTER_ONE</varname>
-                 <vartype>double</vartype>
-                 <varinfo>Thruster value [-1;1] for the side thruster one</varinfo>
-              </moosvar>
-             <moosvar>
-                 <varname>U2_SIDE_THRUSTER_TWO</varname>
-                 <vartype>double</vartype>
-                 <varinfo>Thruster value [-1;1] for the side thruster two</varinfo>
-              </moosvar>
-              <moosvar>
-                 <varname>U1_SIDE_THRUSTER_ONE</varname>
-                 <vartype>double</vartype>
-                 <varinfo>Thruster value [-1;1] for the vertical thruster</varinfo>
-              </moosvar>
-
-              <moosvar>
-                 <varname>OPERATION_MODE</varname>
-                 <vartype>string</vartype>
-                 <varinfo>"MANUAL": The vehicle is operated manually (by uJoystick), receiving the DESIRED_THRUSTER, DESIRED_RUDDER and DESIRED_ELEVATOR variables. "SEMI-AUTONOMUS" and "AUTONOMUS": The thrusters are controlled by the pController by the use of variables FX_FORWARD_FORCE, FR_ROTATIONAL_FORCE, FZ_VERTICAL_FORCE. "DEPTH_CONTROL_ONLY": in this mode the depth is controlled by the pController and the forward and yaw motion are controlled by the uJoystick. </varinfo>
-              </moosvar>
-           </publications>
+              </publications>
         </interface>
         <!-- if there is a bug or a special fact to know.. -->
         <optional-comments>
-           No comment.
+           If no identification of MASS, DAMPING, and COEFF_MATRIX have been made, don't use this, better of using the accelerometers.
         </optional-comments>
         <!-- if something can be improved -->
         <suggested-improvements>
