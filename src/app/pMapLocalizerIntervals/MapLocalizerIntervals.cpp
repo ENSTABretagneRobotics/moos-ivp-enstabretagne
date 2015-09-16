@@ -13,18 +13,20 @@
 
 using namespace std;
 
-//---------------------------------------------------------
-// Constructor
-
 MapLocalizerIntervals::MapLocalizerIntervals() {
     qSonar = 10;
     speedNoise = 0.2;
     headingNoise = 2 * M_PI / 180.;
     bufferSize = 20;
+    gps_noise = 5;
     initPos = {0, 0};
-    filter_easting_initialized=false;
-    filter_northing_initialized=false;
+    filter_easting_initialized = false;
+    filter_northing_initialized = false;
     filter_initialized = false;
+    speed = 0;
+    theta = 0;
+    beamRange = 0;
+    beamAngle = 0;
 }
 
 //---------------------------------------------------------
@@ -62,62 +64,46 @@ bool MapLocalizerIntervals::OnNewMail(MOOSMSG_LIST &NewMail) {
                     localizer.pos[0] = localizer.X_cur;
                 }
             }
-        }
-        else if(key=="GPS_E")
-        {
-            if(gps_trust)
-            {
-                gps_easting=msg.getDouble();
-                gps_easting_initialized=true;
+        } else if (key == "GPS_E") {
+            if (gps_trust) {
+                gps_easting = msg.getDouble();
+                gps_easting_initialized = true;
             }
-        }
-        else if(key=="GPS_N")
-        {
-            if(gps_trust)
-            {
-                gps_northing=msg.getDouble();
-                gps_easting_initialized=true;
+        } else if (key == "GPS_N") {
+            if (gps_trust) {
+                gps_northing = msg.getDouble();
+                gps_easting_initialized = true;
             }
-        }
-        else if(key=="GPS_TRUST")
-        {
-            gps_trust=msg.getBool();
-            if(gps_trust&&gps_easting_initialized&&gps_northing_initialized)
-            {
-                localizer.updateGPS(gps_easting,gps_northing,gps_noise);
+        } else if (key == "GPS_TRUST") {
+            gps_trust = msg.getBool();
+            if (gps_trust && gps_easting_initialized && gps_northing_initialized) {
+                if (!filter_initialized) {
+                    localizer.setInitialPosition(gps_easting, gps_northing, getMOOSTime());
+                    filter_initialized = true;
+                }
+                localizer.setGPSNoise(gps_noise);
+                localizer.updateGPS(gps_easting, gps_northing, gps_noise);
             }
-        }
-        else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
+        } else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
             reportRunWarning("Unhandled Mail: " + key);
     }
 
     return (true);
 }
 
-//---------------------------------------------------------
-// Procedure: OnConnectToServer
-
 bool MapLocalizerIntervals::OnConnectToServer() {
     registerVariables();
     return (true);
 }
 
-//---------------------------------------------------------
-// Procedure: Iterate()
-//            happens AppTick times per second
-
 bool MapLocalizerIntervals::Iterate() {
     AppCastingMOOSApp::Iterate();
     stringstream ss;
-    ss << localizer.X_cur[0].lb() << "," << localizer.X_cur[0].ub() << "," << localizer.X_cur[1].lb() << localizer.X_cur[1].ub();
+    ss << filter_initialized << "," << localizer.X_cur[0].lb() << "," << localizer.X_cur[0].ub() << "," << localizer.X_cur[1].lb() << localizer.X_cur[1].ub();
     Notify("POS_ESTIM_INTERVAL", ss.str());
     AppCastingMOOSApp::PostReport();
     return (true);
 }
-
-//---------------------------------------------------------
-// Procedure: OnStartUp()
-//            happens before connection is open
 
 bool MapLocalizerIntervals::OnStartUp() {
     AppCastingMOOSApp::OnStartUp();
@@ -137,26 +123,32 @@ bool MapLocalizerIntervals::OnStartUp() {
         bool handled = false;
         if (param == "Q_SONAR") {
             qSonar = (int) atof(value.c_str());
+            localizer.setNbOutliers(qSonar);
             handled = true;
         }
         if (param == "MAP_PATH") {
             mapPath = value;
+            localizer.setMap(mapPath);
             handled = ture;
         }
         if (param == "SPEED_NOISE") {
             speedNoise = atof(value.c_str());
+            localizer.setSpeedNoise(speedNoise);
             handled = true;
         }
         if (param == "HEADING_NOISE") {
             headingNoise = atof(value.c_str());
+            localizer.setHeadingNoise(headingNoise);
             handled = true;
         }
         if (param == "GPS_NOISE") {
             gps_noise = atof(value.c_str());
+            localizer.setGPSNoise(gps_noise);
             handled = true;
         }
         if (param == "BUFFER_SIZE") {
             buffer_size == (int) atof(value.c_str());
+            localizer.setBufferSize(buffer_size);
             handled = true;
         }
 
