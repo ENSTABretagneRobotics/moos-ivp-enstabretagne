@@ -68,7 +68,7 @@ public:
     void setNOutliers(int q) {this->NOutliers = q;}
     void update(Interval& rho, Interval& theta, double &time);
     void predict(double &v, double &theta, double &t);
-
+    void updateGPS(const double &easting,const double &northing,const double &gpsNoise);
 
     Walls walls;
     Interval x_inertial, y_inertial;

@@ -197,5 +197,12 @@ void MapLocalizer::predict(double& v, double& theta, double& t){
     t_old = t;
 }
 
-
-
+void MapLocalizer::updateGPS(const double &easting,const double &northing,const double &gpsNoise)
+{
+    IntervalVector fix(2);
+    fix[0]=easting;
+    fix[1]=northing;
+    fix.inflate(gps_noise);
+    
+    X_cur &= fix;
+}
