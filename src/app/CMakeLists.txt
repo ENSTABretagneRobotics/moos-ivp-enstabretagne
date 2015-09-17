@@ -13,6 +13,7 @@ option(WITH_RAZOR "Add Razor IMU support (Causes problem on OSX)" ON)
 option(WITH_JOYSTICK "Add joystick support (Unavailable on Windows and OSX)" ON)
 option(WITH_XSENS "Add XSens INS support (Precompiled lib is not available ATM for OSX)" ON)
 option(WITH_GPSoE "Add GPSoE support (Clock config not available on a Mac.)" ON)
+option(WITH_INTERVAL_FILTER "Add Interval filter support (recquires Ibex library)")
 
 #============================================================================
 # Add the libraries in the current directory to the include path
@@ -65,6 +66,7 @@ if (WITH_CAMERA)
   ADD_SUBDIRECTORY(iCamera)
 endif(WITH_CAMERA)
 ADD_SUBDIRECTORY(pMapLocalizerParticleFilter)
+ADD_SUBDIRECTORY(pMapLocalizerIntervals)
 ADD_SUBDIRECTORY(pTrustGPS)
 ADD_SUBDIRECTORY(pEstimSpeed)
 
