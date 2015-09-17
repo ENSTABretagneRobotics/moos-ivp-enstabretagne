@@ -62,6 +62,7 @@ if (WITH_CAMERA)
   ADD_SUBDIRECTORY(iCamera)
 endif(WITH_CAMERA)
 ADD_SUBDIRECTORY(pMapLocalizerParticleFilter)
+ADD_SUBDIRECTORY(pTrustGPS)
 
 ##############################################################################
 #                           END of CMakeLists.txt
