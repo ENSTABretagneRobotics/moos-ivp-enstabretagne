@@ -27,6 +27,7 @@ MapLocalizerIntervals::MapLocalizerIntervals() {
     theta = 0;
     beamRange = 0;
     beamAngle = 0;
+    mission_started=false;
 }
 
 //---------------------------------------------------------
@@ -75,8 +76,8 @@ bool MapLocalizerIntervals::OnNewMail(MOOSMSG_LIST &NewMail) {
                 gps_easting_initialized = true;
             }
         } else if (key == "GPS_TRUST") {
-            gps_trust = msg.getBool();
-            if (gps_trust && gps_easting_initialized && gps_northing_initialized) {
+            gps_trust = (int)msg.getDouble();
+            if (mission_started&&gps_trust && gps_easting_initialized && gps_northing_initialized) {
                 if (!filter_initialized) {
                     localizer.setInitialPosition(gps_easting, gps_northing, getMOOSTime());
                     filter_initialized = true;
@@ -84,7 +85,11 @@ bool MapLocalizerIntervals::OnNewMail(MOOSMSG_LIST &NewMail) {
                 localizer.setGPSNoise(gps_noise);
                 localizer.updateGPS(gps_easting, gps_northing, gps_noise);
             }
-        } else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
+        }else if(key=="MISSION_STARTED")
+        {
+            mission_started=(int)msg.getDouble();
+        }
+        else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
             reportRunWarning("Unhandled Mail: " + key);
     }
 
@@ -171,6 +176,7 @@ void MapLocalizerIntervals::registerVariables() {
     Register("GPS_E", 0);
     Register("GPS_N", 0);
     Register("GPS_TRUST", 0);
+    Register("MISSION_STARTED",0);
 }
 
 

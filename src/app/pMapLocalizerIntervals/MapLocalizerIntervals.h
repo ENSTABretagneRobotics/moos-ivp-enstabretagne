@@ -40,6 +40,7 @@ class MapLocalizerIntervals : public AppCastingMOOSApp
      bool filter_easting_initialized;
      bool filter_northing_initialized;
      bool gps_trust;
+     bool mission_started;
      bool filter_initialized;
      double gps_easting;
      double gps_northing;
