@@ -1,0 +1,24 @@
+//------------------------------------------------
+// pEstimSpeed config block
+
+ProcessConfig = pEstimSpeed
+{
+   AppTick   = 4
+   CommsTick = 4
+
+   // The coeff matrix maps forces (Newton) to inputs ([-1,1], adimensional)
+   // In this application, we will compute the inverse of this matrix,
+   // so that from inputs we get forces, and can apply Newton's law of motion
+   COEFF_MATRIX = 1,1,0,1,-1,0,0,0,1
+
+   // The damping matrix maps square of speeds as inputs, and return a force.
+   // In an underwater environment, the damping is not linear with respect
+   // to speed.
+   // Once we have the damping forces and the input forces, we can apply Newton's laws of motion
+   DAMPING_MATRIX = 0.4,0,0,0,0.4,0,0,0,0.4
+
+   // Initial speed. In principle, we should aim for a null speed at
+   // startup
+   V0 = 0,0,0
+}
+
