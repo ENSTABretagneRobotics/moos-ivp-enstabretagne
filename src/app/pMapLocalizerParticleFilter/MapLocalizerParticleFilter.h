@@ -56,6 +56,7 @@ private: // State variables
     bool filter_easting_initialized;
     bool filter_northing_initialized;
     bool gps_trust;
+    bool mission_started;
     
     double lastGPSE;
     double lastGPSN;

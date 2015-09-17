@@ -32,7 +32,8 @@ MapLocalizerParticleFilter::MapLocalizerParticleFilter() {
 
     this->filter_easting_initialized = false;
     this->filter_northing_initialized = false;
-
+    this->mission_started = false;
+    
     lastGPSE = 0;
     lastGPSN = 0;
 
@@ -85,7 +86,7 @@ bool MapLocalizerParticleFilter::OnNewMail(MOOSMSG_LIST &NewMail) {
                 }// If filter not initialized
                     // AND we already have received the northing
                     // then we initialize the filter on this position
-                else if (filter_northing_initialized) {
+                else if (mission_started && filter_northing_initialized) {
                     Vector2d x;
                     x << lastGPSE, lastGPSN;
                     Matrix2d xCov;
@@ -121,7 +122,11 @@ bool MapLocalizerParticleFilter::OnNewMail(MOOSMSG_LIST &NewMail) {
             lastYaw = msg.GetDouble();
         } else if (key == "GPS_TRUST") {
             gps_trust = (int) msg.GetDouble();
-        } else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
+        } else if(key=="MISSION_STARTED")
+        {
+            mission_started=true;
+        }
+        else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
             reportRunWarning("Unhandled Mail: " + key);
     }
 
@@ -239,6 +244,7 @@ void MapLocalizerParticleFilter::registerVariables() {
     Register("KELLER_DEPTH", 0); // iKeller
     Register("SPEED_ESTIM_LOCAL", 0);
     Register("IMU_YAW", 0);
+    Register("MISSION_STARTED",0);
 }
 
 bool MapLocalizerParticleFilter::buildReport() {
