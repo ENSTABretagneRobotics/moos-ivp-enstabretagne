@@ -37,17 +37,13 @@ class XSensINS : public AppCastingMOOSApp
 
   protected: // XSensINS functions
 
-
   private: // Configuration variables
-    DeviceClass device;
-    std::string UART_PORT;
-    int UART_BAUD_RATE;
+    DeviceClass m_device;
+    std::string m_uart_port;
+    int m_uart_baud_rate;
 
   private: // State variables
-    XsByteArray data;
-    XsMessageArray msgs;
-
-    double yaw_declination; // magnetic declination
+    double m_yaw_declination; // magnetic declination
 
     XsEuler m_euler;
     XsVector m_acceleration;
