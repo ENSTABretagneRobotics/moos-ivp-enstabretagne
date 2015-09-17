@@ -19,7 +19,7 @@ add_custom_target(api_xsens_build
     COMMAND make
 )
 
-add_custom_target(clean
+add_custom_target(api_xsens_clean
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/API_XSens
     COMMAND make clean
 )

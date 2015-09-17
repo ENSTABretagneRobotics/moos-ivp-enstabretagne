@@ -49,10 +49,11 @@ class XSensINS : public AppCastingMOOSApp
 
     double yaw_declination; // magnetic declination
 
-    XsEuler euler;
-    XsVector acceleration;
-    XsVector gyro;
-    XsVector mag;
+    XsEuler m_euler;
+    XsVector m_acceleration;
+    XsVector m_gyro;
+    XsVector m_mag;
+    XsVector m_latlon;
 
 };
 

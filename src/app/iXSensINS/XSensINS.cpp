@@ -80,37 +80,44 @@ bool XSensINS::Iterate() {
     XsDataPacket packet;
     packet.setMessage((*it));
 
-    // Convert packet to euler
+    // Convert packet to Euler
     if(packet.containsOrientation()){
-      euler = packet.orientationEuler();
-      Notify("IMU_PITCH", -euler.pitch());
-      Notify("IMU_ROLL", euler.roll());
-      Notify("IMU_YAW", -euler.yaw() + yaw_declination);
+      m_euler = packet.orientationEuler();
+      Notify("IMU_PITCH", -m_euler.pitch());
+      Notify("IMU_ROLL", m_euler.roll());
+      Notify("IMU_YAW", -m_euler.yaw() + yaw_declination);
     }
 
     // Acceleration
     if(packet.containsCalibratedAcceleration()){
-      acceleration = packet.calibratedAcceleration();
-      Notify("IMU_ACC_X", acceleration[0]);
-      Notify("IMU_ACC_Y", acceleration[1]);
-      Notify("IMU_ACC_Z", acceleration[2]);
+      m_acceleration = packet.calibratedAcceleration();
+      Notify("IMU_ACC_X", m_acceleration[0]);
+      Notify("IMU_ACC_Y", m_acceleration[1]);
+      Notify("IMU_ACC_Z", m_acceleration[2]);
     }
 
     //Gyro
     if(packet.containsCalibratedGyroscopeData()){
-      gyro = packet.calibratedGyroscopeData();
-      Notify("IMU_GYR_X", gyro[0]);
-      Notify("IMU_GYR_Y", gyro[1]);
-      Notify("IMU_GYR_Z", gyro[2]);
+      m_gyro = packet.calibratedGyroscopeData();
+      Notify("IMU_GYR_X", m_gyro[0]);
+      Notify("IMU_GYR_Y", m_gyro[1]);
+      Notify("IMU_GYR_Z", m_gyro[2]);
     }
 
     //Magneto
     if(packet.containsCalibratedMagneticField()){
-      mag = packet.calibratedMagneticField();
-      Notify("IMU_MAG_X", mag[0]);
-      Notify("IMU_MAG_Y", mag[1]);
-      Notify("IMU_MAG_Z", mag[2]);
-      Notify("IMU_MAG_N", sqrt(pow(mag[0], 2) + pow(mag[1], 2) + pow(mag[2], 2)));
+      m_mag = packet.calibratedMagneticField();
+      Notify("IMU_MAG_X", m_mag[0]);
+      Notify("IMU_MAG_Y", m_mag[1]);
+      Notify("IMU_MAG_Z", m_mag[2]);
+      Notify("IMU_MAG_N", sqrt(pow(m_mag[0], 2) + pow(m_mag[1], 2) + pow(m_mag[2], 2)));
+    }
+
+    //LatLon
+    if(packet.containsLatitudeLongitude()){
+      m_latlon = packet.latitudeLongitude();
+      Notify("INS_LAT", m_latlon[0]);
+      Notify("INS_LONG", m_latlon[1]);
     }
   }
   msgs.clear();
@@ -171,12 +178,14 @@ bool XSensINS::OnStartUp() {
   XsOutputConfiguration acceleration(XDI_Acceleration, 25);
   XsOutputConfiguration rateOfTurn(XDI_RateOfTurn, 25);
   XsOutputConfiguration magnetic(XDI_MagneticField, 25);
+  XsOutputConfiguration latlon(XDI_LatLon, 25);
 
   XsOutputConfigurationArray configArray;
-  configArray.push_back(euler);
+  configArray.push_back(m_euler);
   configArray.push_back(acceleration);
   configArray.push_back(rateOfTurn);
   configArray.push_back(magnetic);
+  configArray.push_back(latlon);
   // Save INS Config
   if (!device.setOutputConfiguration(configArray)) {
     reportRunWarning("Could not save config");
@@ -210,7 +219,7 @@ bool XSensINS::buildReport() {
   ACTable actab(5);
   actab << "Serial Port | Baude rate | YAW | ROLL | PITCH";
   actab.addHeaderLines();
-  actab << UART_PORT << UART_BAUD_RATE << euler.yaw() + yaw_declination << euler.roll() << euler.pitch();
+  actab << UART_PORT << UART_BAUD_RATE << m_euler.yaw() + yaw_declination << m_euler.roll() << m_euler.pitch();
   m_msgs << actab.getFormattedString();
 
   return true;

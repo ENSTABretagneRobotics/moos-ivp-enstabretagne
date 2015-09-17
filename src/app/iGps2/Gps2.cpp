@@ -90,27 +90,27 @@ bool Gps2::Iterate()
 
   if(error.value() == 0.0){ // No error from asio read
     // Extract one trame
-    std::istream is(&buffer);
+    std::istream is(&m_buffer);
     string line;
     std::getline(is, line);
     line += '\n'; // to be compatible with nmea_parser (expect \n at the end of line)
     
     // Parse NMEA
-    nmea_parse(&parser, line.c_str(), line.length(), &info);
+    nmea_parse(&m_parser, line.c_str(), line.length(), &m_info);
     nmea_info2pos(&m_info, &m_dpos); // in rad
    
     // Notify variable
-    m_fix = info.fix;
-    m_sig = info.sig;
+    m_fix = m_info.fix;
+    m_sig = m_info.sig;
     Notify("GPS_RAW_NMEA", line);
     Notify("GPS_SIG", m_sig);
     Notify("GPS_FIX", m_fix);
 
-    if(m_sig != 0.0 and fabs(m_depth) < fabs(m_depth_invalid_threshold){
-      m_lat = dpos.lat*180.0/M_PI;
-      m_lon = dpos.lon*180.0/M_PI;
-      Notify("GPS_LAT", lat);
-      Notify("GPS_LONG", lon);
+    if(m_sig != 0.0 and fabs(m_depth) < fabs(m_depth_invalid_threshold)){
+      m_lat = m_dpos.lat*180.0/M_PI;
+      m_lon = m_dpos.lon*180.0/M_PI;
+      Notify("GPS_LAT", m_lat);
+      Notify("GPS_LONG", m_lon);
       //Notify_GNSS(&lat, &lon);
     }
   }
@@ -147,16 +147,16 @@ bool Gps2::OnStartUp()
 
     bool handled = false;
     if(param == "UART_PORT"){
-      UART_PORT = value;
+      m_uart_port = value;
       handled = true;
     }
     else if(param == "UART_BAUD_RATE"){
-      UART_BAUD_RATE = atoi(value.c_str());
+      m_uart_baud_rate = atoi(value.c_str());
       handled = true;
     }
     else if(param == "DEPTH_INVALID_THRESHOLD"){
       m_depth_invalid_threshold = atoi(value.c_str());
-      handled = true
+      handled = true;
     }
     if(!handled)
       reportUnhandledConfigWarning(orig);
@@ -169,8 +169,8 @@ bool Gps2::OnStartUp()
   //   serial.close();
   // }
 
-  serial.open(UART_PORT);
-  serial.set_option(boost::asio::serial_port_base::baud_rate(UART_BAUD_RATE));
+  m_serial.open(m_uart_port);
+  m_serial.set_option(boost::asio::serial_port_base::baud_rate(m_uart_baud_rate));
   //serial.set_option(boost::asio::serial_port_base::character_size());
   //serial.set_option(boost::asio::serial_port_base::flow_control());
   //serial.set_option(boost::asio::serial_port_base::parity());

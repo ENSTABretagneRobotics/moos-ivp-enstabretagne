@@ -25,7 +25,7 @@ class Gps2 : public AppCastingMOOSApp
 {
   public:
     Gps2();
-    ~Gps2() {};
+    ~Gps2();
 
   protected: // Standard MOOSApp functions to overload  
     bool OnNewMail(MOOSMSG_LIST &NewMail);
@@ -60,6 +60,8 @@ class Gps2 : public AppCastingMOOSApp
 
     double m_depth;
     double m_lon, m_lat;
+
+    int m_sig, m_fix;
 };
 
 #endif 
