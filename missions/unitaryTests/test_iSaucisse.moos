@@ -14,7 +14,7 @@ ProcessConfig = ANTLER
   Run = MOOSDB        @ NewConsole = true
   Run = iSaucisse     @ NewConsole = true
   Run = uMS           @ NewConsole = true
-  Run = uTimerScript  @ NewConsole = true
+  //Run = uTimerScript  @ NewConsole = true
 }
 
 
@@ -29,19 +29,24 @@ ProcessConfig = iSaucisse
   DEVICE_NAME = /dev/ttyACM0
   # Linux:
   #     /dev/ttyACM0
-  # Windows: 
+  # Windows:
   #     \\\\.\\USBSER000
   #     or
   #     \\\\.\\COM6
   # Mac OS X:
   #     /dev/cu.usbmodem00034567
+
+  // Force relays settings at startup
+  RESET_ON_STARTUP = true
+  // If requested, force relays to 'on' position at startup
+  RESET_ALL_ON = false
 }
 
 
 //------------------------------------------------
 // uTimerScript config block
 
-ProcessConfig = uTimerScript                                    
+ProcessConfig = uTimerScript
 {
   AppTick   = 4
   CommsTick = 4
@@ -53,4 +58,8 @@ ProcessConfig = uTimerScript
   event = var=POWER_SONAR,      val=1, time=1.8
   event = var=POWER_MODEM,      val=1, time=2
   event = var=POWER_MODEM_EA,   val=1, time=2.2
+
+  event = var=FX_FORWARD_FORCE, val=0, time=2.4
+  event = var=FR_ROTATIONAL_FORCE,   val=0, time=2.6
+  event = var=FZ_VERTICAL_FORCE,   val=0, time=2.8
 }

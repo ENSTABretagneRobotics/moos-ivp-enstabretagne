@@ -124,12 +124,14 @@ namespace xmldoc
   {
     // Parsing...
     XMLElement *element;
-    XMLNode *root = m_xml_doc->FirstChildElement("moosapp");
-    if(root == NULL) { item_error = "moosapp"; return false; }
+    XMLNode *root = m_xml_doc->FirstChildElement("xmldoc");
+    if(root == NULL) { item_error = "xmldoc"; return false; }
+    XMLNode *subroot = root->FirstChildElement("moosapp");
+    if(subroot == NULL) { item_error = "moosapp"; return false; }
 
     // Info section
     {
-      XMLElement *info_section = root->FirstChildElement("info");
+      XMLElement *info_section = subroot->FirstChildElement("info");
       if(info_section == NULL) { item_error = "info"; return false; }
 
       // Organization
@@ -166,7 +168,7 @@ namespace xmldoc
 
     // Documentation section
     {
-      XMLElement *documentation_section = root->FirstChildElement("documentation");
+      XMLElement *documentation_section = subroot->FirstChildElement("documentation");
       if(documentation_section == NULL) { item_error = "documentation"; return false; }
 
       // Synopsis
@@ -230,21 +232,21 @@ namespace xmldoc
     XMLElement *element;
 
     // Name
-    element = xmlmoosvar->FirstChildElement("name");
+    element = xmlmoosvar->FirstChildElement("varname");
     if(element == NULL) { item_error = "moosvar/name"; return false; }
     value = element->GetText();
     MOOSTrimWhiteSpace(value);
     moosvar.setName(value);
 
     // Type
-    element = xmlmoosvar->FirstChildElement("type");
+    element = xmlmoosvar->FirstChildElement("vartype");
     if(element == NULL) { item_error = "moosvar/type"; return false; }
     value = element->GetText();
     MOOSTrimWhiteSpace(value);
     moosvar.setType(value);
 
     // Info
-    element = xmlmoosvar->FirstChildElement("info");
+    element = xmlmoosvar->FirstChildElement("varinfo");
     if(element == NULL) { item_error = "moosvar/info"; return false; }
     value = element->GetText();
     MOOSTrimWhiteSpace(value);
@@ -343,7 +345,9 @@ namespace xmldoc
 
     else
       for(int i = 0 ; i < m_subscriptions.size() ; i++)
-        blk(m_subscriptions[i].toString());
+        grn("  " + m_subscriptions[i].getName() + 
+            " (" + m_subscriptions[i].getType() + "): " + "\n", 
+            m_subscriptions[i].getInfo() + "\n");
 
     blk("                                                                ");
     blk("PUBLICATIONS:                                                   ");
@@ -354,9 +358,9 @@ namespace xmldoc
 
     else
       for(int i = 0 ; i < m_publications.size() ; i++)
-        blk(m_publications[i].toString());
-
-    blk("                                                                ");
+        grn("  " + m_publications[i].getName() + 
+            " (" + m_publications[i].getType() + "): " + "\n", 
+            m_publications[i].getInfo() + "\n");
 
     exit(0);
   }

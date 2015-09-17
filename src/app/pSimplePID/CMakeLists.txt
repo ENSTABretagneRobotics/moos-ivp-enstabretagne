@@ -1,26 +1,20 @@
 #--------------------------------------------------------
-# The CMakeLists.txt for: iSaucisse
+# The CMakeLists.txt for: pSimplePID
 # Toutatis AUVs - ENSTA Bretagne
-# Author(s): Simon Rohou
+# Author(s): Thomas Le Mezo
 #--------------------------------------------------------
 
 SET(SRC
-  Saucisse.cpp
-  Pololu.cpp
-  Nuc.cpp
+  SimplePID.cpp
   main.cpp
 )
 
-SET(CMAKE_AUTOMOC ON)
-FIND_PACKAGE(Qt5Widgets)
+ADD_EXECUTABLE(pSimplePID ${SRC})
 
-ADD_EXECUTABLE(iSaucisse ${SRC})
-
-TARGET_LINK_LIBRARIES(iSaucisse
+TARGET_LINK_LIBRARIES(pSimplePID
    ${MOOS_LIBRARIES}
    xml-documentation
    apputil
    mbutil
    m
-   pthread
-   Qt5::Widgets)
+   pthread)

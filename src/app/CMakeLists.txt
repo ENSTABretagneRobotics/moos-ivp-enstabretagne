@@ -27,6 +27,8 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
 # 'p' apps
   # ADD_SUBDIRECTORY(pLocalization)
   ADD_SUBDIRECTORY(pController)
+  ADD_SUBDIRECTORY(pWallDetector)
+  ADD_SUBDIRECTORY(pSimplePID)
 
 # 'u' apps
 if (WITH_JOYSTICK)
@@ -43,6 +45,7 @@ if (WITH_RAZOR)
 # 'i' apps
   ADD_SUBDIRECTORY(iEchoSounder)
   ADD_SUBDIRECTORY(iRazorIMU)
+  ADD_SUBDIRECTORY(iGps2)
 endif (WITH_RAZOR)
   ADD_SUBDIRECTORY(iModem)
 if (WITH_XSENS)

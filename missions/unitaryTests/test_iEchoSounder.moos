@@ -6,7 +6,7 @@ ServerPort = 9000
 Community  = AUV
 
 //Serial port configuration
-ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB0
+ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB2
 
 //------------------------------------------
 // Antler configuration  block
