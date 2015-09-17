@@ -63,7 +63,7 @@ private: // Inputs
     Eigen::Matrix3d rot; // local to global
     double old_MOOSTime;
 private: //State variables
-    bool init;
+    bool mission_started;
     Eigen::Vector3d X; // X,Y,Z, repere global
     Eigen::Vector3d V; // VX,VY,VZ repere global
     Eigen::Vector3d v; // vx,vy,vz, repere local

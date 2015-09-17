@@ -10,6 +10,7 @@
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "EstimSpeed.h"
+#include "Eigen/Dense"
 
 using namespace std;
 using namespace Eigen;
@@ -68,7 +69,7 @@ EstimSpeed::EstimSpeed() {
     v = Vector3d::Zero();
 
     old_MOOSTime = MOOSTime();
-    init = false;
+    mission_started=false;
 }
 
 bool EstimSpeed::OnNewMail(MOOSMSG_LIST &NewMail) {
@@ -81,8 +82,11 @@ bool EstimSpeed::OnNewMail(MOOSMSG_LIST &NewMail) {
         CMOOSMsg &msg = *p;
         string key = msg.GetKey();
 
-        // We receive the IMU yaw, in degrees
-        if (key == "IMU_YAW") {
+        // The mission has started, 
+        if (key == "MISSION_STARTED") {
+            mission_started = true;
+        }// We receive the IMU yaw, in degrees
+        else if (key == "IMU_YAW") {
             this->imu_yaw = msg.GetDouble();
             double cTheta = cos(MOOSDeg2Rad(imu_yaw));
             double sTheta = sin(MOOSDeg2Rad(imu_yaw));
@@ -90,16 +94,40 @@ bool EstimSpeed::OnNewMail(MOOSMSG_LIST &NewMail) {
         }// We receive LEFT thruster value, in [-1,1]]
         else if (key == "U1_SIDE_THRUSTER_ONE") {
             this->u(0) = msg.GetDouble();
+            // The Dead-reckoning is here
+            if (mission_started) {
+                double delta_t = MOOSTime() - old_MOOSTime;
+
+                X += delta_t*V;
+
+                Vector3d sumForcesLocal = (-DAMPING_MATRIX * (Vector3d(v(0) * v(0), v(1) * v(1), v(2) * v(2))) + COEFF_MATRIX_TRANSLATION_INV * u);
+                Vector3d sumForcesGlobal = rot.transpose() * sumForcesLocal;
+
+                V += delta_t * sumForcesGlobal / MASS;
+                v = rot*V;
+            }
+            old_MOOSTime = MOOSTime();
         }// We receive RIGHT thruster value, in [-1,1]]
         else if (key == "U2_SIDE_THRUSTER_TWO") {
             this->u(1) = msg.GetDouble();
         }// We receive VERTICAL thruster value, in [-1,1]]
         else if (key == "U3_VERTICAL_THRUSTER") {
             this->u(2) = msg.GetDouble();
+        } else if (key == "GPS_E") {
+            if (!mission_started) {
+                X[0] = msg.GetDouble();
+            }
+        } else if (key == "GPS_N") {
+            if (!mission_started) {
+                X[1] = msg.GetDouble();
+            }
+        } else if (key == "KELLER_DEPTH") {
+            if (!mission_started) {
+                X[2] = -msg.GetDouble();
+            }
         } else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
             reportRunWarning("Unhandled Mail: " + key);
     }
-    init = true;
     return (true);
 }
 
@@ -110,14 +138,7 @@ bool EstimSpeed::OnConnectToServer() {
 
 bool EstimSpeed::Iterate() {
     AppCastingMOOSApp::Iterate();
-    if (init) {
-        double delta_t = MOOSTime() - old_MOOSTime;
-        old_MOOSTime = MOOSTime();
-
-        X += delta_t*V;
-
-        v += delta_t * (-DAMPING_MATRIX * (Vector3d(v(0) * v(0), v(1) * v(1), v(2) * v(2))) + COEFF_MATRIX_TRANSLATION_INV * u) / MASS;
-        V = rot*v;
+    if (mission_started) {
 
         stringstream ss;
         ss << X(0) << "," << X(1) << "," << X(2);
@@ -209,18 +230,6 @@ bool EstimSpeed::OnStartUp() {
             this->MASS = atof(value.c_str());
             handled = true;
         }
-        // Initial speed
-        else if(param=="V0")
-        {
-            vector<string> str_vector=parseString(value,',');
-            
-            if (str_vector.size()==3)
-            {
-                V << atof(str_vector[0].c_str()),atof(str_vector[1].c_str()),atof(str_vector[2].c_str());
-            }else{
-                reportUnhandledConfigWarning("Error while parsing V0, the initial speed: incorrect number of elements");
-            }
-        }
         if (!handled)
             reportUnhandledConfigWarning(orig);
     }
@@ -236,10 +245,14 @@ bool EstimSpeed::OnStartUp() {
 void EstimSpeed::registerVariables() {
 
     AppCastingMOOSApp::RegisterVariables();
-    Register("IMU_YAW",0);
-    Register("U1_SIDE_THRUSTER_ONE",0);
-    Register("U2_SIDE_THRUSTER_TWO",0);
-    Register("U3_VERTICAL_THRUSTER",0);
+    Register("IMU_YAW", 0);
+    Register("U1_SIDE_THRUSTER_ONE", 0);
+    Register("U2_SIDE_THRUSTER_TWO", 0);
+    Register("U3_VERTICAL_THRUSTER", 0);
+    Register("MISSION_START", 0);
+    Register("GPS_E", 0);
+    Register("GPS_N", 0);
+    Register("KELLER_DEPTH", 0);
 }
 
 bool EstimSpeed::buildReport() {
@@ -248,10 +261,10 @@ bool EstimSpeed::buildReport() {
     m_msgs << "============================================ \n";
     m_msgs << "\n";
 
-    ACTable actab(4);
-    actab << "Yaw | Mass ";
+    ACTable actab(3);
+    actab << "Started | Yaw | Mass ";
     actab.addHeaderLines();
-    actab << imu_yaw << MASS;
+    actab << mission_started << imu_yaw << MASS;
     m_msgs << actab.getFormattedString();
 
     actab = ACTable(4);

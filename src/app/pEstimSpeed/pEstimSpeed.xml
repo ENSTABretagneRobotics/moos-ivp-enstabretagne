@@ -17,7 +17,8 @@
      <documentation>
         <synopsis>
           The pEstim process aim is to provide an estimate of the robot's speed from the inputs given to the thrusters, by integrating the dynamic model.
-            For this purpose, a MODEL IDENTIFICATION MUST have been performed. The model identification must identify the DAMPING MATRIX, i.e. ~the damping coefficients in every direction, the COEFF MATRIX, which maps Forces applied by the thrusters (in Newton) to Inputs sent to the thrusters (adimensional between [-1,1], assuming a linear relationship. The MASS will have been identified too.
+            For this purpose, a MODEL IDENTIFICATION MUST have been performed. The model identification must identify the DAMPING MATRIX, i.e. ~the damping coefficients in every direction, the COEFF MATRIX, which maps Forces applied by the thrusters (in Newton) to Inputs sent to the thrusters (adimensional between [-1,1]), assuming a linear relationship. The MASS will have been identified too.
+            The process doesn't start publishing/estimating untill the MISSION_STARTED signal has been received.
         </synopsis>
         <interface>
            <subscriptions>
@@ -41,12 +42,32 @@
                  <vartype>double</vartype>
                  <varinfo>[-1,1], vertical thruster input. We want to retrieve the force it generates this input.</varinfo>
               </moosvar>
+              <moosvar>
+                  <varname>MISSION_STARTED</varname>
+                  <vartype>bool</vartype>
+                  <varinfo>false => we use GPS, true => we cut GPS and integrate motion model</varinfo>
+              </moosvar>
+              <moosvar>
+                  <varname>GPS_E</varname>
+                  <vartype>double</vartype>
+                  <varinfo>GPS Easting, in meter, positive towards east</varinfo>
+              </moosvar>
+              <moosvar>
+                  <varname>GPS_N</varname>
+                  <vartype>double</vartype>
+                  <varinfo>GPS Northing, in meter, positive towards north</varinfo>
+              </moosvar>
+              <moosvar>
+                  <varname>KELLER_DEPTH</varname>
+                  <vartype>double</vartype>
+                  <varinfo>Keller depth, positive towards the center of earth</varinfo>
+              </moosvar>
            </subscriptions>
            <publications>
               <moosvar>
                  <varname>POS_DEAD_RECKONING</varname>
                  <vartype>vector of 3 doubles</vartype>
-                 <varinfo>Position integrated using the equations of motions and the thrusters inputs.</varinfo>
+                 <varinfo>Position integrated using the equations of motions and the thrusters inputs. Z is positive towards UP direction.</varinfo>
               </moosvar>
               <moosvar>
                  <varname>SPEED_LOCAL_DEAD_RECKONING</varname>
