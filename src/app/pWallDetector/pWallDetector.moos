@@ -1,0 +1,22 @@
+//------------------------------------------------
+// pWallDetector config block
+
+ProcessConfig = pWallDetector
+{
+	AppTick        = 10
+	CommsTick      = 10
+	
+	SONAR_RANGE    = 100.0
+	SONAR_GAIN     = 105
+
+	// Number of neighbour point for the average
+	MEAN_R         = 1
+	MEAN_THETA     = 1
+	MIN_R		   = 1
+	
+	WALL_THRESHOLD = 60
+	// Search zone in pourcentages
+	SEARCH_ZONE    = 0.2
+
+	VERTICAL_SCAN  = false
+}

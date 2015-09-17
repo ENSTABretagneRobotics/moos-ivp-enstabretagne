@@ -5,5 +5,15 @@ ProcessConfig = pMapLocalizerParticleFilter
 {
    AppTick   = 4
    CommsTick = 4
+
+   MAP_PATH = /path/to/map.txt
+   SPEED_VAR = 0.25
+   HEADING_VAR = 49
+   ALTITUDE_VAR = 0.0225
+   GPS_E_VAR = 25
+   GPS_N_VAR = 25
+   BEAM_ANGLE_VAR = 49
+   RESAMPLE_EVERY = 10
+   RESAMPLING_METHOD = RESIDUAL
 }
 

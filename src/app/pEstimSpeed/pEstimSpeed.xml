@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains pEstimSpeed documentation -->
+<?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?> 
+<xmldoc>
+  <moosapp>
+
+     <info>
+        <name>pEstimSpeed</name>
+        <organization>Toutatis AUVs - ENSTA Bretagne</organization>
+        <date>2015</date>
+        <authors>
+           <author>Jeremy NICOLA</author>
+        </authors>
+        <licence>MIT</licence>
+     </info>
+
+     <documentation>
+        <synopsis>
+          The pEstim process aim is to provide an estimate of the robot's speed from the inputs given to the thrusters, by integrating the dynamic model.
+            For this purpose, a MODEL IDENTIFICATION MUST have been performed. The model identification must identify the DAMPING MATRIX, i.e. ~the damping coefficients in every direction, the COEFF MATRIX, which maps Forces applied by the thrusters (in Newton) to Inputs sent to the thrusters (adimensional between [-1,1]), assuming a linear relationship. The MASS will have been identified too.
+            The process doesn't start publishing/estimating untill the MISSION_STARTED signal has been received.
+        </synopsis>
+        <interface>
+           <subscriptions>
+              <moosvar>
+                 <varname>IMU_YAW</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Degrees!</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>U1_SIDE_THRUSTER_ONE</varname>
+                 <vartype>double</vartype>
+                 <varinfo>[-1,1], left thruster input. We want to retrieve the force it generates this input.</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>U2_SIDE_THRUSTER_TWO</varname>
+                 <vartype>double</vartype>
+                 <varinfo>[-1,1], right thruster input. We want to retrieve the force it generates this input.</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>U3_VERTICAL_THRUSTER</varname>
+                 <vartype>double</vartype>
+                 <varinfo>[-1,1], vertical thruster input. We want to retrieve the force it generates this input.</varinfo>
+              </moosvar>
+              <moosvar>
+                  <varname>MISSION_STARTED</varname>
+                  <vartype>bool</vartype>
+                  <varinfo>false => we use GPS, true => we cut GPS and integrate motion model</varinfo>
+              </moosvar>
+              <moosvar>
+                  <varname>GPS_E</varname>
+                  <vartype>double</vartype>
+                  <varinfo>GPS Easting, in meter, positive towards east</varinfo>
+              </moosvar>
+              <moosvar>
+                  <varname>GPS_N</varname>
+                  <vartype>double</vartype>
+                  <varinfo>GPS Northing, in meter, positive towards north</varinfo>
+              </moosvar>
+              <moosvar>
+                  <varname>KELLER_DEPTH</varname>
+                  <vartype>double</vartype>
+                  <varinfo>Keller depth, positive towards the center of earth</varinfo>
+              </moosvar>
+           </subscriptions>
+           <publications>
+              <moosvar>
+                 <varname>POS_DEAD_RECKONING</varname>
+                 <vartype>vector of 3 doubles</vartype>
+                 <varinfo>Position integrated using the equations of motions and the thrusters inputs. Z is positive towards UP direction.</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>SPEED_LOCAL_DEAD_RECKONING</varname>
+                 <vartype>vector of 3 doubles</vartype>
+                 <varinfo>Speed of the robot, expressed in its LOCAL frame. X on the antero-posterior axis pointing FORWARD, Y on the transversal axis pointing LEFT, Z pointing UP</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>SPEED_GLOBAL_DEAD_RECKONING</varname>
+                 <vartype>vector of 3 doubles</vartype>
+                 <varinfo>Speed of the robot, expressed in the GLOBAL frame, is simply the transformation of SPEED_LOCAL_DEAD_RECKONING using the IMU_YAW angle from the INS</varinfo>
+              </moosvar>
+              </publications>
+        </interface>
+        <!-- if there is a bug or a special fact to know.. -->
+        <optional-comments>
+           If no identification of MASS, DAMPING, and COEFF_MATRIX have been made, don't use this, better of using the accelerometers.
+        </optional-comments>
+        <!-- if something can be improved -->
+        <suggested-improvements>
+           No suggested improvements.
+        </suggested-improvements>
+     </documentation>
+
+  </moosapp>
+</xmldoc>

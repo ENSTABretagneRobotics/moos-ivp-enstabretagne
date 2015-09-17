@@ -217,10 +217,26 @@ void Sonar::ListenSonarMessages()
 	      Write(ss, vScanline);
 	      Notify("SONAR_RAW_DATA", ss.str());
 
-	      stringstream ss2;
-	      ss2 << "bearing=" << pHdta->bearing() << ","
-	          << "distance=" << pHdta->firstObstacleDist(90, 0.5, 100.); // thd, min, max
-	      Notify("SONAR_DISTANCE", ss2.str());
+	      // ***************************************
+	      // MOSSDB data for WALL DETECTOR
+	      Notify("SONAR_BEARING", pHdta->bearing());
+
+	      stringstream ss_scanline;
+	      ss_scanline << '[' << (int)pHdta->nBins()<< ']';
+	      ss_scanline << '{';
+	      for (int k=0; k<pHdta->nBins(); k++){
+	      	ss_scanline << pHdta->scanlineData()[k];
+	      	if(k!=pHdta->nBins()-1)
+	      		ss_scanline << ',';
+	      }	      
+	      ss_scanline << '}';
+	      Notify("SONAR_SCANLINE", ss_scanline.str());
+	      // ***************************************
+
+	      // stringstream ss2;
+	      // ss2 << "bearing=" << pHdta->bearing() << ","
+	      //     << "distance=" << pHdta->firstObstacleDist(90, 0.5, 100.); // thd, min, max
+	      // Notify("SONAR_DISTANCE", ss2.str());
 
 	      if (m_bSonarReady && m_bPollSonar)
 	      {

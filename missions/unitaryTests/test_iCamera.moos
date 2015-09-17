@@ -41,7 +41,7 @@ ProcessConfig = iCamera2
    CommsTick = 25
 
    VARIABLE_IMAGE_NAME= CAMERA_SIDE
-   IDENTIFIANT_CV_CAMERA = 0
+   IDENTIFIANT_CV_CAMERA = 2
    DISPLAY_IMAGE = true
    INVERT_IMAGE = false
 
