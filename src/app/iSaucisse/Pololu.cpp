@@ -38,6 +38,7 @@ using namespace std;
 
 Pololu::Pololu(string device_name)
 {
+  bool init_success = true;
   m_error = false;
   m_error_message = "";
 
@@ -50,6 +51,7 @@ Pololu::Pololu(string device_name)
     perror(device);
     setErrorMessage("error (loading " + string(device) + ")");
     cout << "Pololu: " << m_error_message << endl;
+    init_success = false;
   }
 
   #ifdef _WIN32
@@ -62,8 +64,13 @@ Pololu::Pololu(string device_name)
     tcsetattr(m_pololu, TCSANOW, &options);
   #endif
 
-  reset();
-  bipOnStartUp();
+  init_success &= setAllThrustersValue(0.);
+
+  if(!init_success)
+    bipError();
+
+  else
+    bipOnStartUp();
 }
 
 Pololu::~Pololu()
@@ -74,71 +81,83 @@ Pololu::~Pololu()
 bool Pololu::isReady(string &error_message)
 {
   error_message = m_error_message;
-  return m_error == false;
+  return !m_error;
 }
 
-int Pololu::turnOnRelay(int id, bool turned_on)
+bool Pololu::turnOnRelay(int id, bool turned_on)
 {
   return setTarget(id, turned_on ? HIGH_LEVEL : LOW_LEVEL);
 }
 
-int Pololu::reset()
+bool Pololu::reset(bool all_on)
 {
-  int success_off = turnOnRelay(1, false);  // camera 1
-  success_off &= turnOnRelay(5, false);     // gps
-  success_off &= turnOnRelay(7, false);     // echosounder
-  success_off &= turnOnRelay(9, false);     // sonar
-  success_off &= turnOnRelay(11, false);    // modem
-  success_off &= turnOnRelay(3, false);     // camera 2
-
+  bool success = true;
+  success &= turnOnRelay(1, all_on);
+  success &= turnOnRelay(0, !all_on);
   delay(50);
-
-  success_off &= turnOnRelay(0, true);      // camera 1
-  success_off &= turnOnRelay(4, true);      // gps
-  success_off &= turnOnRelay(6, true);      // echosounder
-  success_off &= turnOnRelay(8, true);      // sonar
-  success_off &= turnOnRelay(10, true);     // modem
-  success_off &= turnOnRelay(12, false);    // modem EA
-  success_off &= turnOnRelay(2, true);      // camera 2
-
+  success &= turnOnRelay(3, all_on);
+  success &= turnOnRelay(2, !all_on);
   delay(50);
-
-  success_off &= turnOnRelay(0, false);     // camera 1
-  success_off &= turnOnRelay(4, false);     // gps
-  success_off &= turnOnRelay(6, false);     // echosounder
-  success_off &= turnOnRelay(8, false);     // sonar
-  success_off &= turnOnRelay(10, false);    // modem
-  success_off &= turnOnRelay(12, false);    // modem EA
-  success_off &= turnOnRelay(2, false);     // camera 2
-  
-  if(success_off < 0)
-    return -1;
-
-  return 0;
+  success &= turnOnRelay(5, all_on);
+  success &= turnOnRelay(4, !all_on);
+  delay(50);
+  success &= turnOnRelay(7, all_on);
+  success &= turnOnRelay(6, !all_on);
+  delay(50);
+  success &= turnOnRelay(9, all_on);
+  success &= turnOnRelay(8, !all_on);
+  delay(50);
+  success &= turnOnRelay(11, all_on);
+  success &= turnOnRelay(10, !all_on);
+  delay(50);
+  success &= turnOnRelay(12, all_on);
+  delay(50);
+  return success;
 }
 
-int Pololu::turnOnBistableRelay(int id_on, int id_off, bool turned_on)
+bool Pololu::turnOnBistableRelay(int id_on, int id_off, bool turned_on)
 {
-  int success_on, success_off;
+  bool success_on, success;
 
-  success_on = turnOnRelay(id_on, turned_on);
-  success_off = turnOnRelay(id_off, !turned_on);
-
-  if(success_on < 0 || success_off < 0)
-    return -1;
+  if(!turnOnRelay(id_on, turned_on) || !turnOnRelay(id_off, !turned_on))
+    return false;
 
   delay(50);
-  success_on = turnOnRelay(id_on, false);
-  success_off = turnOnRelay(id_off, false);
 
-  if(success_on < 0 || success_off < 0)
-    return -1;
-  return 0;
+  if(!turnOnRelay(id_on, false) || !turnOnRelay(id_off, false))
+    return false;
+
+  return true;
 }
 
-int Pololu::setThrustersValue(int id, double value)
+bool Pololu::setThrusterValue(int id, double value)
 {
-  return setTarget(id, 6000 + 20 * value);
+  // value in [-1.0;1.0]
+  double mean = (LOW_LEVEL + HIGH_LEVEL) / 2;
+  double radius = (HIGH_LEVEL - LOW_LEVEL) / 2;
+  return setTarget(id, mean + radius * value);
+}
+
+bool Pololu::setLeftThrusterValue(double value)
+{
+  return setThrusterValue(22, value);
+}
+
+bool Pololu::setRightThrusterValue(double value)
+{
+  return setThrusterValue(23, value);
+}
+
+bool Pololu::setVerticalThrusterValue(double value)
+{
+  return setThrusterValue(21, value);
+}
+
+bool Pololu::setAllThrustersValue(double value)
+{
+  return setLeftThrusterValue(value)
+         && setRightThrusterValue(value)
+         && setVerticalThrusterValue(value);
 }
 
 void Pololu::buzzOn()
@@ -164,12 +183,16 @@ void Pololu::bipOnStartUp()
 
 void Pololu::bipError()
 {
-  buzzOn();
-  delay(800);
-  buzzOff();
+  for(int i = 0 ; i < 3 ; i++)
+  {
+    buzzOn();
+    delay(2000);
+    buzzOff();
+    delay(2000);
+  }
 }
 
-int Pololu::emitBips(int bip_number)
+bool Pololu::emitBips(int bip_number)
 {
   for(int i = 0 ; i < bip_number ; i++)
   {
@@ -180,7 +203,7 @@ int Pololu::emitBips(int bip_number)
   }
 }
 
-int Pololu::setTarget(unsigned char channel, unsigned short target)
+bool Pololu::setTarget(unsigned char channel, unsigned short target)
 {
   // Sets the target of a Maestro channel.
   // See the "Serial Servo Commands" section of the user's guide.
@@ -191,10 +214,10 @@ int Pololu::setTarget(unsigned char channel, unsigned short target)
   {
     setErrorMessage("error (writing)");
     perror(m_error_message.c_str());
-    return -1;
+    return false;
   }
 
-  return 0;
+  return true;
 }
 
 void Pololu::setErrorMessage(string message)

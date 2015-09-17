@@ -22,7 +22,7 @@ Keller::Keller()
   m_lastP_value = -1.0;
   m_lastT_value = -1.0;
   m_iMmaxRetries = 1;
-  m_bTemperatureRequested = false;
+  m_bTemperatureRequested = true;
 
   m_bKellerInitialized = false;
   m_bKellerPolling = true;

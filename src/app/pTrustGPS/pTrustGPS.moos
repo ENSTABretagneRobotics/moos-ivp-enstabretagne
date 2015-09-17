@@ -1,0 +1,9 @@
+//------------------------------------------------
+// pTrustGPS config block
+
+ProcessConfig = pTrustGPS
+{
+   AppTick   = 4
+   CommsTick = 4
+}
+
