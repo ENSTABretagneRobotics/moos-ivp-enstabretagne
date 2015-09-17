@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains iGps2 documentation -->
+<?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?> 
+<xmldoc>
+  <moosapp>
+
+     <info>
+        <name>iGps2</name>
+        <organization>Toutatis AUVs - ENSTA Bretagne</organization>
+        <date>2015</date>
+        <authors>
+           <author>Thomas Le Mezo</author>
+        </authors>
+        <licence>MIT</licence>
+     </info>
+
+     <documentation>
+        <synopsis>
+          ...
+        </synopsis>
+        <interface>
+           <subscriptions>
+               <moosvar>
+                 <varname>GPS_RAW_NMEA</varname>
+                 <vartype>string</vartype>
+                 <varinfo>Raw NMEA sentence</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>GPS_SIG</varname>
+                 <vartype>int</vartype>
+                 <varinfo>Signal quality</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>GPS_FIX</varname>
+                 <vartype>int</vartype>
+                 <varinfo>Signal status (3=3D, 2=2D)</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>GPS_LAT</varname>
+                 <vartype>string</vartype>
+                 <varinfo>Latitude (degree)</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>GPS_LONG</varname>
+                 <vartype>string</vartype>
+                 <varinfo>Longitude (degree)</varinfo>
+              </moosvar>
+           </subscriptions>
+           <publications>
+              <!--
+              <moosvar>
+                 <varname>EXAMPLE_VAR_OUT</varname>
+                 <vartype>string</vartype>
+                 <varinfo>description of the MOOSVar</varinfo>
+              </moosvar>
+              -->
+           </publications>
+        </interface>
+        <!-- if there is a bug or a special fact to know.. -->
+        <optional-comments>
+           No comment.
+        </optional-comments>
+        <!-- if something can be improved -->
+        <suggested-improvements>
+           No suggested improvements.
+        </suggested-improvements>
+     </documentation>
+
+  </moosapp>
+</xmldoc>

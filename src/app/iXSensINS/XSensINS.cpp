@@ -18,11 +18,11 @@ using namespace std;
 // Constructor
 
 XSensINS::XSensINS() {
-  yaw_declination = 0.0;
+  m_yaw_declination = 0.0;
 }
 
 XSensINS::~XSensINS() {
-  device.close();
+  m_device.close();
 }
 
 //---------------------------------------------------------
@@ -72,45 +72,54 @@ bool XSensINS::Iterate() {
   AppCastingMOOSApp::Iterate();
 
   // Read Data
-  device.readDataToBuffer(data);
-  device.processBufferedData(data, msgs);
+  XsByteArray data;
+  XsMessageArray msgs;
+  m_device.readDataToBuffer(data);
+  m_device.processBufferedData(data, msgs);
 
   for (XsMessageArray::iterator it = msgs.begin(); it != msgs.end(); ++it) {
     // Retrieve a packet
     XsDataPacket packet;
     packet.setMessage((*it));
 
-    // Convert packet to euler
+    // Convert packet to Euler
     if(packet.containsOrientation()){
-      euler = packet.orientationEuler();
-      Notify("IMU_PITCH", -euler.pitch());
-      Notify("IMU_ROLL", euler.roll());
-      Notify("IMU_YAW", -euler.yaw() + yaw_declination);
+      m_euler = packet.orientationEuler();
+      Notify("IMU_PITCH", -m_euler.pitch());
+      Notify("IMU_ROLL", m_euler.roll());
+      Notify("IMU_YAW", -m_euler.yaw() + m_yaw_declination);
     }
 
     // Acceleration
     if(packet.containsCalibratedAcceleration()){
-      acceleration = packet.calibratedAcceleration();
-      Notify("IMU_ACC_X", acceleration[0]);
-      Notify("IMU_ACC_Y", acceleration[1]);
-      Notify("IMU_ACC_Z", acceleration[2]);
+      m_acceleration = packet.calibratedAcceleration();
+      Notify("IMU_ACC_X", m_acceleration[0]);
+      Notify("IMU_ACC_Y", m_acceleration[1]);
+      Notify("IMU_ACC_Z", m_acceleration[2]);
     }
 
     //Gyro
     if(packet.containsCalibratedGyroscopeData()){
-      gyro = packet.calibratedGyroscopeData();
-      Notify("IMU_GYR_X", gyro[0]);
-      Notify("IMU_GYR_Y", gyro[1]);
-      Notify("IMU_GYR_Z", gyro[2]);
+      m_gyro = packet.calibratedGyroscopeData();
+      Notify("IMU_GYR_X", m_gyro[0]);
+      Notify("IMU_GYR_Y", m_gyro[1]);
+      Notify("IMU_GYR_Z", m_gyro[2]);
     }
 
     //Magneto
     if(packet.containsCalibratedMagneticField()){
-      mag = packet.calibratedMagneticField();
-      Notify("IMU_MAG_X", mag[0]);
-      Notify("IMU_MAG_Y", mag[1]);
-      Notify("IMU_MAG_Z", mag[2]);
-      Notify("IMU_MAG_N", sqrt(pow(mag[0], 2) + pow(mag[1], 2) + pow(mag[2], 2)));
+      m_mag = packet.calibratedMagneticField();
+      Notify("IMU_MAG_X", m_mag[0]);
+      Notify("IMU_MAG_Y", m_mag[1]);
+      Notify("IMU_MAG_Z", m_mag[2]);
+      Notify("IMU_MAG_N", sqrt(pow(m_mag[0], 2) + pow(m_mag[1], 2) + pow(m_mag[2], 2)));
+    }
+
+    //LatLon
+    if(packet.containsLatitudeLongitude()){
+      m_latlon = packet.latitudeLongitude();
+      Notify("INS_LAT", m_latlon[0]);
+      Notify("INS_LONG", m_latlon[1]);
     }
   }
   msgs.clear();
@@ -128,7 +137,7 @@ bool XSensINS::OnStartUp() {
 
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
-  if (!m_MissionReader.GetValue("XSENSINS_SERIAL_PORT",UART_PORT))
+  if (!m_MissionReader.GetValue("XSENSINS_SERIAL_PORT",m_uart_port))
     reportConfigWarning("No XSENSINS_SERIAL_PORT config found for " + GetAppName());
   if (!m_MissionReader.GetConfiguration(GetAppName(), sParams))
     reportConfigWarning("No config block found for " + GetAppName());
@@ -142,12 +151,12 @@ bool XSensINS::OnStartUp() {
     string value = line;
 
     bool handled = false;
-    if (param == "UART_BAUD_RATE") {
-      UART_BAUD_RATE = atoi(value.c_str());
+    if (param == "m_uart_baud_rate") {
+      m_uart_baud_rate = atoi(value.c_str());
       handled = true;
     }
     else if (param == "YAW_DECLINATION") {
-      yaw_declination = atoi(value.c_str());
+      m_yaw_declination = atoi(value.c_str());
       handled = true;
     }
     if(!handled)
@@ -156,14 +165,14 @@ bool XSensINS::OnStartUp() {
   registerVariables();
 
   //------ OPEN INS ---------------//
-  XsPortInfo mtPort(UART_PORT, XsBaud::numericToRate(UART_BAUD_RATE));
-  if (!device.openPort(mtPort)) {
-    reportRunWarning("Could not open the COM port" + UART_PORT);
+  XsPortInfo mtPort(m_uart_port, XsBaud::numericToRate(m_uart_baud_rate));
+  if (!m_device.openPort(mtPort)) {
+    reportRunWarning("Could not open the COM port" + m_uart_port);
   }
 
   //------ CONFIGURE INS ---------------//
   // Put the device into configuration mode before configuring the device
-  if (!device.gotoConfig()) {
+  if (!m_device.gotoConfig()) {
     reportRunWarning("Could not begin the config mode");
   }
 
@@ -171,19 +180,21 @@ bool XSensINS::OnStartUp() {
   XsOutputConfiguration acceleration(XDI_Acceleration, 25);
   XsOutputConfiguration rateOfTurn(XDI_RateOfTurn, 25);
   XsOutputConfiguration magnetic(XDI_MagneticField, 25);
+  XsOutputConfiguration latlon(XDI_LatLon, 25);
 
   XsOutputConfigurationArray configArray;
   configArray.push_back(euler);
   configArray.push_back(acceleration);
   configArray.push_back(rateOfTurn);
   configArray.push_back(magnetic);
+  configArray.push_back(latlon);
   // Save INS Config
-  if (!device.setOutputConfiguration(configArray)) {
+  if (!m_device.setOutputConfiguration(configArray)) {
     reportRunWarning("Could not save config");
   }
 
   //------ START INS ---------------//
-  if (!device.gotoMeasurement()) {
+  if (!m_device.gotoMeasurement()) {
     reportRunWarning("Could not start the INS");
   }
 
@@ -210,7 +221,7 @@ bool XSensINS::buildReport() {
   ACTable actab(5);
   actab << "Serial Port | Baude rate | YAW | ROLL | PITCH";
   actab.addHeaderLines();
-  actab << UART_PORT << UART_BAUD_RATE << euler.yaw() + yaw_declination << euler.roll() << euler.pitch();
+  actab << m_uart_port << m_uart_baud_rate << m_euler.yaw() + m_yaw_declination << m_euler.roll() << m_euler.pitch();
   m_msgs << actab.getFormattedString();
 
   return true;

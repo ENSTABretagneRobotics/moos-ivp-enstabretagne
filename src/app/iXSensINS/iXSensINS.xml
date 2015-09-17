@@ -92,7 +92,16 @@
                   <vartype>double</vartype>
                   <varinfo>Magnetic field of Z axis</varinfo>
                </moosvar>
-
+               <moosvar>
+                  <varname>IMU_LAT</varname>
+                  <vartype>double</vartype>
+                  <varinfo>Latitude estimate</varinfo>
+               </moosvar>
+               <moosvar>
+                  <varname>IMU_LONG</varname>
+                  <vartype>double</vartype>
+                  <varinfo>Longitude estimate</varinfo>
+               </moosvar>
               <!--
               <moosvar>
                  <varname>EXAMPLE_VAR_OUT</varname>
