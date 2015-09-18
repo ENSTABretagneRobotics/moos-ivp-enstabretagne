@@ -33,7 +33,7 @@ ProcessConfig = ANTLER
   Run = iKeller       @ NewConsole = false
   Run = iSonar        @ NewConsole = false
   Run = iXSensINS     @ NewConsole = false
-  Run = pSensorViewer @ NewConsole = false
+  Run = uSensorsViewer @ NewConsole = false
 }
 
 //------------------------------------------
@@ -171,7 +171,7 @@ ProcessConfig = iCamera2
 }
 
 //------------------------------------------
-ProcessConfig = pSensorViewer
+ProcessConfig = uSensorsViewer
 {
   AppTick   = 25
   CommsTick = 25

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- This file contains pSensorViewer documentation -->
+<!-- This file contains uSensorsViewer documentation -->
 <?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?> 
 <xmldoc>
   <moosapp>
 
      <info>
-        <name>pSensorViewer</name>
+        <name>uSensorsViewer</name>
         <organization>Toutatis AUVs - ENSTA Bretagne</organization>
         <date>2015</date>
         <authors>
