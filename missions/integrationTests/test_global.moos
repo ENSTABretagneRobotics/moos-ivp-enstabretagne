@@ -1,23 +1,17 @@
-// MOOS file
-
 ServerHost = localhost
 ServerPort = 9000
-
 Community  = AUV
+LatOrigin  = 48.418079
+LongOrigin = -4.472279
 
 //Serial port configuration
 GPS_SERIAL_PORT = /dev/ttyUSB0
 XSENSINS_SERIAL_PORT = /dev/ttyUSB4
-
 ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB2
-
 SONAR_SERIAL_PORT = /dev/ttyUSB1
-
 KELLER_SERIAL_PORT = /dev/ttyUSB5
 
 //------------------------------------------
-// Antler configuration  block
-
 ProcessConfig = ANTLER
 {
   MSBetweenLaunches = 200
@@ -32,17 +26,31 @@ ProcessConfig = ANTLER
   Run = uTimerScript  @ NewConsole = false ~timerScriptAlimStartup
   Run = iCamera       @ NewConsole = false ~iCamera1
   Run = iCamera       @ NewConsole = false ~iCamera2
-  Run = iEchoSounder  @ NewConsole = false
+  Run = pSimplePID    @ NewConsole = false ~pSimplePID_depth
+  Run = pSimplePID    @ NewConsole = false ~pSimplePID_heading
+  Run = iSounder  @ NewConsole = false
   Run = iGPS          @ NewConsole = false
   Run = iKeller       @ NewConsole = false
   Run = iSonar        @ NewConsole = false
   Run = iXSensINS     @ NewConsole = false
-  Run = pSensorViewer @ NewConsole = false
+  Run = uSensorsViewer @ NewConsole = false
+}
+
+//------------------------------------------
+ProcessConfig = pSimplePID_depth
+{
+  AppTick   = 25
+  CommsTick = 25
+}
+
+//------------------------------------------
+ProcessConfig = pSimplePID_heading
+{
+  AppTick   = 25
+  CommsTick = 25
 }
 
 //------------------------------------------------
-// iSaucisse config block
-
 ProcessConfig = iSaucisse
 {
   AppTick   = 4
@@ -61,6 +69,8 @@ ProcessConfig = iSaucisse
   # Mac OS X:
   #     /dev/cu.usbmodem00034567
 }
+
+//------------------------------------------
 ProcessConfig = timerScriptAlimStartup
 {
   event = var=DESIRED_ELEVATOR, val=0, time=0.4
@@ -77,8 +87,6 @@ ProcessConfig = timerScriptAlimStartup
 }
 
 //------------------------------------------
-// iXSensINS config block
-
 ProcessConfig = iXSensINS
 {
   AppTick        = 25
@@ -88,11 +96,6 @@ ProcessConfig = iXSensINS
 }
 
 //------------------------------------------
-// iGPS config block
-
-LatOrigin    = 48.418079
-LongOrigin   = -4.472279
-
 ProcessConfig = iGPS
 {
   AppTick   = 4
@@ -105,8 +108,6 @@ ProcessConfig = iGPS
 }
 
 //------------------------------------------
-// iSonar config block
-
 ProcessConfig = iSonar
 {
   AppTick          = 4
@@ -119,12 +120,12 @@ ProcessConfig = iSonar
   CONTINUOUS       = true //TRUE FOR 360  ROTATION. SET RIGHT AND LEFT LIMIT IF FALSE
   //LEFTLIMIT      = 70.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
   //RIGHTLIMIT     = 110.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
-  
+
   POWERED_AT_START = false
 }
 
 //------------------------------------------
-ProcessConfig = iEchoSounder
+ProcessConfig = iSounder
 {
   AppTick   = 4
   CommsTick = 4
@@ -140,61 +141,57 @@ ProcessConfig = iKeller
 }
 
 //------------------------------------------
-// iCamera config block
-
 ProcessConfig = iCamera1
 {
-   AppTick   = 25
-   CommsTick = 25
+  AppTick   = 25
+  CommsTick = 25
 
-   VARIABLE_IMAGE_NAME   = CAMERA_FRONT
-   IDENTIFIANT_CV_CAMERA = 1
-   DISPLAY_IMAGE         = true
-   INVERT_IMAGE          = false
+  VARIABLE_IMAGE_NAME   = CAMERA_FRONT
+  IDENTIFIANT_CV_CAMERA = 1
+  DISPLAY_IMAGE         = true
+  INVERT_IMAGE          = false
 
-   LARGEUR_IMAGE_CAMERA  = 360
-   HAUTEUR_IMAGE_CAMERA  = 288
+  LARGEUR_IMAGE_CAMERA  = 360
+  HAUTEUR_IMAGE_CAMERA  = 288
 }
 
 //------------------------------------------
-// iCamera config block
-
 ProcessConfig = iCamera2
 {
-   AppTick   = 25
-   CommsTick = 25
+  AppTick   = 25
+  CommsTick = 25
 
-   VARIABLE_IMAGE_NAME   = CAMERA_SIDE
-   IDENTIFIANT_CV_CAMERA = 0
-   DISPLAY_IMAGE         = true
-   INVERT_IMAGE          = false
+  VARIABLE_IMAGE_NAME   = CAMERA_SIDE
+  IDENTIFIANT_CV_CAMERA = 0
+  DISPLAY_IMAGE         = true
+  INVERT_IMAGE          = false
 
-   LARGEUR_IMAGE_CAMERA  = 360
-   HAUTEUR_IMAGE_CAMERA  = 288
+  LARGEUR_IMAGE_CAMERA  = 360
+  HAUTEUR_IMAGE_CAMERA  = 288
 }
 
 //------------------------------------------
-// pSensorViewer config block
-
-ProcessConfig = pSensorViewer
+ProcessConfig = uSensorsViewer
 {
-   AppTick   = 25
-   CommsTick = 25
+  AppTick   = 25
+  CommsTick = 25
 }
+
+//------------------------------------------
 ProcessConfig = uMACView
 {
-   AppTick   = 25
-   CommsTick = 25
-}
-ProcessConfig = uProcessWatch
-{
-   AppTick   = 25
-   CommsTick = 25
+  AppTick   = 25
+  CommsTick = 25
 }
 
 //------------------------------------------
-// Logger  configuration  block
-//
+ProcessConfig = uProcessWatch
+{
+  AppTick   = 25
+  CommsTick = 25
+}
+
+//------------------------------------------
 ProcessConfig = pLogger
 {
   //over  loading  basic  params

@@ -26,12 +26,12 @@ ProcessConfig = ANTLER
   Run = uTimerScript  @ NewConsole = false ~timerScriptAlimStartup
   Run = iCamera       @ NewConsole = false ~iCamera1
   Run = iCamera       @ NewConsole = false ~iCamera2
-  Run = iEchoSounder  @ NewConsole = false
+  Run = iSounder  @ NewConsole = false
   Run = iGPS          @ NewConsole = false
   Run = iKeller       @ NewConsole = false
   Run = iSonar        @ NewConsole = false
   Run = iXSensINS     @ NewConsole = false
-  Run = pSensorViewer @ NewConsole = false
+  Run = uSensorsViewer @ NewConsole = false
 }
 
 //------------------------------------------------
@@ -118,7 +118,7 @@ ProcessConfig = iSonar
 }
 
 //------------------------------------------
-ProcessConfig = iEchoSounder
+ProcessConfig = iSounder
 {
   AppTick   = 4
   CommsTick = 4
@@ -168,9 +168,9 @@ ProcessConfig = iCamera2
 }
 
 //------------------------------------------
-// pSensorViewer config block
+// uSensorsViewer config block
 
-ProcessConfig = pSensorViewer
+ProcessConfig = uSensorsViewer
 {
    AppTick   = 25
    CommsTick = 25

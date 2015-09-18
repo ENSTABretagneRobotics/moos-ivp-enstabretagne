@@ -1,0 +1,11 @@
+//------------------------------------------------
+// pSonarCSVPlayer config block
+
+ProcessConfig = pSonarCSVPlayer
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  SONAR_CSV_FILE =./data/Seanet0_2014-10-03_14h23min51s.csv
+
+}
