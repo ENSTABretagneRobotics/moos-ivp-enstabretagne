@@ -50,12 +50,13 @@ ProcessConfig = pLogger
   AppTick     = 5.0
   CommsTick   = 5.0
 
-  File          = test_gps2
-  PATH          = ~/log
+  File          = test_gps
+  PATH          = ~/log-coin
   FileTimeStamp = true
 
   AsyncLog        = true
   WildCardLogging = true
+  DoublePrecision = 12
 }
 
 //------------------------------------------------
@@ -69,4 +70,3 @@ ProcessConfig = pTrustGPS
    ALTITUDE_AT_GPS_SUBMERGED = -0.5
    PARANOIA_LEVEL = 10
 }
-

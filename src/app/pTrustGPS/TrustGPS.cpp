@@ -11,6 +11,7 @@
 #include "TrustGPS.h"
 
 using namespace std;
+ostringstream oss;
 
 //---------------------------------------------------------
 // Constructor
@@ -36,9 +37,13 @@ bool TrustGPS::OnNewMail(MOOSMSG_LIST &NewMail) {
         if (key == "GPS_SIG") {
             gps_quality = (int) msg.GetDouble();
 
-            bool current_gps_trust = gps_quality &&
+            bool current_gps_trust = gps_quality >= 1 &&
                     (altitude > altitude_threshold) &&
                     (gps_fix > 0);
+
+            cout << "gps_quality: " << gps_quality << endl;
+            cout << "altitude: " << altitude << endl;
+            cout << "gps_fix: " << gps_fix << endl;
 
             memory.push_front(current_gps_trust);
 
@@ -47,6 +52,10 @@ bool TrustGPS::OnNewMail(MOOSMSG_LIST &NewMail) {
             }
 
             if (memory.size() >= paranoiaLevel) {
+                cout << "paranoiaCounter: " << paranoiaCounter << endl;
+                cout << "paranoiaLevel: " << paranoiaLevel << endl;
+                cout << "altitude: " << altitude << endl;
+                cout << "depthThres: " << altitude_threshold << endl;
                 gps_trust = paranoiaCounter >= paranoiaLevel;
                 bool back = memory.back();
                 memory.pop_back();
@@ -59,6 +68,10 @@ bool TrustGPS::OnNewMail(MOOSMSG_LIST &NewMail) {
             this->gps_fix = (int) msg.GetDouble();
         } else if (key == "KELLER_DEPTH") {
             this->altitude = -msg.GetDouble();
+        } else if (key == "GPS_LAT") {
+            oss << msg.GetDouble() << endl;
+        } else if (key == "GPS_LON") {
+            oss << msg.GetDouble() << endl;
         } else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
             reportRunWarning("Unhandled Mail: " + key);
     }
@@ -73,6 +86,7 @@ bool TrustGPS::OnConnectToServer() {
 
 bool TrustGPS::Iterate() {
     AppCastingMOOSApp::Iterate();
+    Notify("Coucou?", 0.0);
     Notify("GPS_TRUST", gps_trust ? "1" : "0");
     AppCastingMOOSApp::PostReport();
     return (true);
@@ -111,8 +125,11 @@ bool TrustGPS::OnStartUp() {
 
 void TrustGPS::registerVariables() {
     AppCastingMOOSApp::RegisterVariables();
-    Register("GPS_QUALITY", 0);
+    Register("GPS_SIG", 0);
+    Register("GPS_FIX", 0);
     Register("KELLER_DEPTH", 0);
+    Register("GPS_LAT", 0);
+    Register("GPS_LON", 0);
 }
 
 bool TrustGPS::buildReport() {
