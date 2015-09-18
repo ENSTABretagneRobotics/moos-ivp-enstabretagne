@@ -1,7 +1,7 @@
 /************************************************************/
 /*    FILE: main.cpp
 /*    ORGN: Toutatis AUVs - ENSTA Bretagne
-/*    AUTH: Thomas Le Mezo
+/*    AUTH: Simon Rohou
 /*    DATE: 2015
 /************************************************************/
 
@@ -9,7 +9,7 @@
 #include "MBUtils.h"
 #include "documentation/MOOSAppDocumentation.h"
 #include "ColorParse.h"
-#include "Gps2.h"
+#include "EchoSounder.h"
 
 using namespace std;
 
@@ -41,12 +41,12 @@ int main(int argc, char *argv[])
     documentation.showHelpAndExit();
 
   cout << termColor("green");
-  cout << "iGps2 launching as " << run_command << endl;
+  cout << "iSounder launching as " << run_command << endl;
   cout << termColor() << endl;
 
-  Gps2 Gps2;
+  EchoSounder EchoSounder;
 
-  Gps2.Run(run_command.c_str(), mission_file.c_str());
+  EchoSounder.Run(run_command.c_str(), mission_file.c_str());
 
   return(0);
 }

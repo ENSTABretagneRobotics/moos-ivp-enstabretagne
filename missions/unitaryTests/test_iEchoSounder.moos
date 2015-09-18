@@ -18,11 +18,11 @@ ProcessConfig = ANTLER
   Run = uMS           @ NewConsole = false
   Run = uMACView      @ NewConsole = false
 
-  Run = iEchoSounder  @ NewConsole = false
+  Run = iSounder  @ NewConsole = false
 }
 
 
-ProcessConfig = iEchoSounder
+ProcessConfig = iSounder
 {
   AppTick   = 4
   CommsTick = 4

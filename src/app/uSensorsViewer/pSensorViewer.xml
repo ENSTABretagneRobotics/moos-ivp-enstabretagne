@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- This file contains iGps2 documentation -->
+<!-- This file contains uSensorsViewer documentation -->
 <?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?> 
 <xmldoc>
   <moosapp>
 
      <info>
-        <name>iGps2</name>
+        <name>uSensorsViewer</name>
         <organization>Toutatis AUVs - ENSTA Bretagne</organization>
         <date>2015</date>
         <authors>
+           <author>Vincent Drevelle</author>
            <author>Thomas Le Mezo</author>
         </authors>
         <licence>MIT</licence>
@@ -20,30 +21,34 @@
         </synopsis>
         <interface>
            <subscriptions>
-               <moosvar>
-                 <varname>GPS_RAW_NMEA</varname>
-                 <vartype>string</vartype>
-                 <varinfo>Raw NMEA sentence</varinfo>
-              </moosvar>
               <moosvar>
-                 <varname>GPS_SIG</varname>
-                 <vartype>int</vartype>
-                 <varinfo>Signal quality</varinfo>
+                 <varname>CAMERA_SIDE</varname>
+                 <vartype>binary</vartype>
+                 <varinfo></varinfo>
               </moosvar>
+
               <moosvar>
-                 <varname>GPS_FIX</varname>
-                 <vartype>int</vartype>
-                 <varinfo>Signal status (3=3D, 2=2D)</varinfo>
+                 <varname>CAMERA_BOTTOM</varname>
+                 <vartype>binary</vartype>
+                 <varinfo></varinfo>
               </moosvar>
+
               <moosvar>
-                 <varname>GPS_LAT</varname>
-                 <vartype>string</vartype>
-                 <varinfo>Latitude (degree)</varinfo>
+                 <varname>SONAR_RAW_DATA</varname>
+                 <vartype>binary</vartype>
+                 <varinfo></varinfo>
               </moosvar>
+
               <moosvar>
-                 <varname>GPS_LONG</varname>
-                 <vartype>string</vartype>
-                 <varinfo>Longitude (degree)</varinfo>
+                 <varname>HEADING</varname>
+                 <vartype>double</vartype>
+                 <varinfo></varinfo>
+              </moosvar>
+
+              <moosvar>
+                 <varname>YAW</varname>
+                 <vartype>double</vartype>
+                 <varinfo></varinfo>
               </moosvar>
            </subscriptions>
            <publications>

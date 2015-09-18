@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- This file contains pSensorViewer documentation -->
+<!-- This file contains iGPS documentation -->
 <?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?> 
 <xmldoc>
   <moosapp>
 
      <info>
-        <name>pSensorViewer</name>
+        <name>iGPS</name>
         <organization>Toutatis AUVs - ENSTA Bretagne</organization>
         <date>2015</date>
         <authors>
-           <author>Vincent Drevelle</author>
            <author>Thomas Le Mezo</author>
         </authors>
         <licence>MIT</licence>
@@ -21,34 +20,30 @@
         </synopsis>
         <interface>
            <subscriptions>
-              <moosvar>
-                 <varname>CAMERA_SIDE</varname>
-                 <vartype>binary</vartype>
-                 <varinfo></varinfo>
+               <moosvar>
+                 <varname>GPS_RAW_NMEA</varname>
+                 <vartype>string</vartype>
+                 <varinfo>Raw NMEA sentence</varinfo>
               </moosvar>
-
               <moosvar>
-                 <varname>CAMERA_BOTTOM</varname>
-                 <vartype>binary</vartype>
-                 <varinfo></varinfo>
+                 <varname>GPS_SIG</varname>
+                 <vartype>int</vartype>
+                 <varinfo>Signal quality</varinfo>
               </moosvar>
-
               <moosvar>
-                 <varname>SONAR_RAW_DATA</varname>
-                 <vartype>binary</vartype>
-                 <varinfo></varinfo>
+                 <varname>GPS_FIX</varname>
+                 <vartype>int</vartype>
+                 <varinfo>Signal status (3=3D, 2=2D)</varinfo>
               </moosvar>
-
               <moosvar>
-                 <varname>HEADING</varname>
-                 <vartype>double</vartype>
-                 <varinfo></varinfo>
+                 <varname>GPS_LAT</varname>
+                 <vartype>string</vartype>
+                 <varinfo>Latitude (degree)</varinfo>
               </moosvar>
-
               <moosvar>
-                 <varname>YAW</varname>
-                 <vartype>double</vartype>
-                 <varinfo></varinfo>
+                 <varname>GPS_LONG</varname>
+                 <vartype>string</vartype>
+                 <varinfo>Longitude (degree)</varinfo>
               </moosvar>
            </subscriptions>
            <publications>

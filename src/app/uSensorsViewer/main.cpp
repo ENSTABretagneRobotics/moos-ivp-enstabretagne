@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     documentation.showHelpAndExit();
 
   cout << termColor("green");
-  cout << "pSensorViewer launching as " << run_command << endl;
+  cout << "uSensorsViewer launching as " << run_command << endl;
   cout << termColor() << endl;
 
   SensorViewer SensorViewer;
