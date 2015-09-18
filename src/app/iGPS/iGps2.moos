@@ -1,7 +1,7 @@
 //------------------------------------------------
-// iGps2 config block
+// iGPS config block
 
-ProcessConfig = iGps2
+ProcessConfig = iGPS
 {
   AppTick   = 4
   CommsTick = 4
