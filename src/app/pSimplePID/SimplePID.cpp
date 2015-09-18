@@ -22,6 +22,7 @@ SimplePID::SimplePID()
   m_state_previous              = 0.0;
   m_error                       = 0.0;
   m_command                     = 0.0;
+  m_staturate                   = 0.0;
   
   m_state_differential          = 0.0;
   m_state_previous              = 0.0;
@@ -37,6 +38,7 @@ SimplePID::SimplePID()
   m_moosvar_state               = "STATE";
   m_moosvar_consigne            = "DESIERED_STATE";
   m_moosvar_command             = "COMMAND";
+  m_moosvar_saturation          = "SATURATION";
   m_moosvar_state_diffferential = "";
   m_differential_input          = false;
 }
@@ -70,6 +72,8 @@ bool SimplePID::OnNewMail(MOOSMSG_LIST &NewMail)
       m_consigne = msg.GetDouble();
     else if(key == m_moosvar_state_diffferential)
       m_state_differential = msg.GetDouble();
+    else if(key == m_moosvar_saturation)
+      m_staturate += msg.GetDouble();
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
       reportRunWarning("Unhandled Mail: " + key);
@@ -112,11 +116,10 @@ bool SimplePID::Iterate()
   double D = m_dt * m_kd * m_state_differential;
 
   // Anti-windup
-  if(fabs(P + m_I + D) > 1.0){
-    m_I -= m_dt * m_ki * m_error;
-  }
+  double W = - m_kw * m_staturate;
+  m_staturate = 0.0;
 
-  m_command = P + m_I + D;
+  m_command = P + m_I + D + W;
   // Notify command
   Notify(m_moosvar_command,m_command);
 
@@ -167,6 +170,9 @@ bool SimplePID::OnStartUp()
     }
     else if(param == "MOOSVAR_COMMAND"){
       m_moosvar_command = value;  handled = true;
+    }
+    else if(param == "MOOSVAR_SATURATION"){
+      m_moosvar_saturation = value;  handled = true;
     }
     else if(param == "MOOSVAR_STATE_DIFFFERENTIAL"){
       m_moosvar_state_diffferential = value;
