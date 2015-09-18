@@ -8,6 +8,7 @@
 #ifndef MixThrusters_HEADER
 #define MixThrusters_HEADER
 
+#include "Eigen/Dense"
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 
 class MixThrusters : public AppCastingMOOSApp
@@ -30,11 +31,12 @@ class MixThrusters : public AppCastingMOOSApp
 
 
   private: // Configuration variables
-
+      Eigen::Matrix3d COEFF_MATRIX;
 
   private: // State variables
-    
-
+      Eigen::Vector3d desiredForces;
+      
+      Eigen::Vector3d u;
 };
 
 #endif 

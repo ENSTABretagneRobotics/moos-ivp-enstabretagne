@@ -71,6 +71,7 @@ if (WITH_INTERVAL_FILTER)
 endif(WITH_INTERVAL_FILTER)
 ADD_SUBDIRECTORY(pTrustGPS)
 ADD_SUBDIRECTORY(pEstimSpeed)
+ADD_SUBDIRECTORY(pMixThrusters)
 
 ##############################################################################
 #                           END of CMakeLists.txt

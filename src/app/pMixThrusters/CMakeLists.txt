@@ -9,6 +9,8 @@ SET(SRC
   main.cpp
 )
 
+INCLUDE_DIRECTORIES("Eigen/")
+
 ADD_EXECUTABLE(pMixThrusters ${SRC})
 
 TARGET_LINK_LIBRARIES(pMixThrusters
