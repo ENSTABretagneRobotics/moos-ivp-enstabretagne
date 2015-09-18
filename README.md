@@ -69,6 +69,19 @@ sudo adduser your_username dialout video
 ```
 Be careful to change `your_username`.
 
+Octomap is needed for the particle filter:
+```shell
+git clone https://github.com/OctoMap/octomap.git ; cd octomap/octomap/ ; mkdir build ; cd build ; cmake .. ; sudo make install
+```
+
+If you clone the repository, either use:
+```shell
+git clone --recursive
+```
+or if you already cloned, use:
+```shell
+git submodule init ; git submodule update --recursive
+```
 
 Build Instructions
 ------------------
