@@ -32,11 +32,10 @@ protected:
 
 private: // Configuration variables
     int paranoiaLevel;
-    double desired_altitude_threshold;
     double altitude_threshold;
 private: // State variables
     bool gps_quality;
-    double desired_altitude;
+    int gps_fix;
     double altitude; // Current altitude
     std::deque<bool> memory;
     int paranoiaCounter;

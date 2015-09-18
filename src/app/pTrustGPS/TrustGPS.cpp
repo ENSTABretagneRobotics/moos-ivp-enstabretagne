@@ -17,11 +17,10 @@ using namespace std;
 
 TrustGPS::TrustGPS() {
     paranoiaLevel = 10;
-    this->altitude = -10;
+    this->altitude = 0.1;
     this->altitude_threshold = 0;
-    this->desired_altitude = -10;
-    this->desired_altitude_threshold = 0;
     this->gps_quality = false;
+    this->gps_fix = 0;
     this->paranoiaCounter = 0;
     this->gps_trust = false;
 }
@@ -34,33 +33,30 @@ bool TrustGPS::OnNewMail(MOOSMSG_LIST &NewMail) {
         CMOOSMsg &msg = *p;
         string key = msg.GetKey();
 
-        if (key == "GPS_QUALITY") {
+        if (key == "GPS_SIG") {
             gps_quality = (int) msg.GetDouble();
-            
+
             bool current_gps_trust = gps_quality &&
                     (altitude > altitude_threshold) &&
-                    (desired_altitude > desired_altitude_threshold);
-            
+                    (gps_fix > 0);
+
             memory.push_front(current_gps_trust);
-            
-            if(current_gps_trust)
-            {
+
+            if (current_gps_trust) {
                 paranoiaCounter++;
             }
-            
-            if(memory.size()>=paranoiaLevel)
-            {
-                gps_trust=paranoiaCounter>=paranoiaLevel;
-                bool back=memory.back();
+
+            if (memory.size() >= paranoiaLevel) {
+                gps_trust = paranoiaCounter >= paranoiaLevel;
+                bool back = memory.back();
                 memory.pop_back();
-                if(back)
-                {
+                if (back) {
                     paranoiaCounter--;
                 }
             }
 
-        } else if (key == "DESIRED_DEPTH") {
-            this->desired_altitude = -msg.GetDouble();
+        } else if (key == "GPS_FIX") {
+            this->gps_fix = (int) msg.GetDouble();
         } else if (key == "KELLER_DEPTH") {
             this->altitude = -msg.GetDouble();
         } else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
@@ -101,9 +97,6 @@ bool TrustGPS::OnStartUp() {
         if (param == "PARANOIA_LEVEL") {
             this->paranoiaLevel = atof(value.c_str());
             handled = true;
-        } else if (param == "DESIRED_ALTITUDE_THRESHOLD") {
-            this->desired_altitude_threshold = atof(value.c_str());
-            handled = true;
         } else if (param == "ALTITUDE_AT_GPS_SUBMERGED") {
             this->altitude_threshold = atof(value.c_str());
             handled = true;
@@ -119,10 +112,8 @@ bool TrustGPS::OnStartUp() {
 void TrustGPS::registerVariables() {
     AppCastingMOOSApp::RegisterVariables();
     Register("GPS_QUALITY", 0);
-    Register("DESIRED_DEPTH", 0);
     Register("KELLER_DEPTH", 0);
 }
-
 
 bool TrustGPS::buildReport() {
     m_msgs << "============================================ \n";

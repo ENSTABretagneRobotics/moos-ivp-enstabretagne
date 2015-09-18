@@ -47,8 +47,6 @@ class Gps2 : public AppCastingMOOSApp
     boost::asio::io_service   m_io;
     boost::asio::serial_port  m_serial;
 
-    double m_depth_invalid_threshold;
-
   private: // State variables
     char* m_trame;
 
@@ -58,8 +56,8 @@ class Gps2 : public AppCastingMOOSApp
 
     boost::asio::streambuf m_buffer;
 
-    double m_depth;
     double m_lon, m_lat;
+    double m_speed, m_heading;
 
     int m_sig, m_fix;
 };

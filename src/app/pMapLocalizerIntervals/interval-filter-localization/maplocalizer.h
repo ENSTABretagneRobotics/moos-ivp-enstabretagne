@@ -69,7 +69,7 @@ public:
 
     void setGPSNoise(double gps_err)
     {
-        this->gps_err=gps_err;
+        this->gps_noise=gps_err;
     }
     
     void setSpeedNoise(double spd_err) {

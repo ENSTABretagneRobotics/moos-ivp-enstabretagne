@@ -7,8 +7,5 @@ ProcessConfig = iGps2
   CommsTick = 4
 
   UART_PORT = /dev/ttyUSB0
-  UART_BAUD_RATE = 4800
-
-  DEPTH_INVALID_THRESHOLD = 1.0
-
+  UART_BAUD_RATE = 9600
 }
