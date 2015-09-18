@@ -10,8 +10,7 @@
 
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 #include "Pololu.h"
-
-
+#include "Nuc.h"
 
 class Saucisse : public AppCastingMOOSApp
 {
@@ -30,35 +29,16 @@ class Saucisse : public AppCastingMOOSApp
     void registerVariables();
 
   protected: // Saucisse functions
-    void CalcThrustersValues();
+
 
   private: // Configuration variables
+    std::string m_device_name;
     bool m_reset_on_startup;
     bool m_reset_all_on;
-    std::string m_device_name;
-
-    /** COEFFICIENT MATRIX **/
-    double COEFF_MATRIX[3][3];
-    //std::array<std::array<double,3>,3> COEFF_MATRIX;
-
-    /** OUTPUT VARIABLES **/
-    double U1_SIDE_THRUSTER_ONE;
-    double U2_SIDE_THRUSTER_TWO;
-    double U3_VERTICAL_THRUSTER;
-
-    /** EXTERNAL INPUT VARIABLES **/
-    double FR_ROTATIONAL_FORCE;     //[-1;1]
-    double FZ_VERTICAL_FORCE;              //[-1;1]
-    double FX_FORWARD_FORCE;        //[-1;1]
-
-    /** internal variables **/
-    double max_thruster_value;
-    double saturation_value;
-    double saturated_thruster_value;
-
-    std::string OPERATION_MODE;
+    double m_alert_max_temperature;
 
   private: // State variables
+    Nuc *m_nuc;
     Pololu *m_pololu;
 };
 

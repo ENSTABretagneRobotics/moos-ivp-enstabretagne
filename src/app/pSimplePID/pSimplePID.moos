@@ -1,0 +1,17 @@
+//------------------------------------------------
+// pSimplePID config block
+
+ProcessConfig = pSimplePID
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  KI = 0.0
+  KP = 0.0
+  KD = 0.0
+  KW = 0.0
+
+  MOOSVAR_STATE = DEPTH
+  MOOSVAR_CONSIGNE = DESIERED_DEPTH
+  MOOSVAR_STATE_DIFFERENTIAL = DEPTH_DELTA
+}

@@ -13,6 +13,7 @@ option(WITH_RAZOR "Add Razor IMU support (Causes problem on OSX)" ON)
 option(WITH_JOYSTICK "Add joystick support (Unavailable on Windows and OSX)" ON)
 option(WITH_XSENS "Add XSens INS support (Precompiled lib is not available ATM for OSX)" ON)
 option(WITH_GPSoE "Add GPSoE support (Clock config not available on a Mac.)" ON)
+option(WITH_INTERVAL_FILTER "Add Interval filter support (recquires Ibex library)")
 
 #============================================================================
 # Add the libraries in the current directory to the include path
@@ -28,6 +29,7 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
   # ADD_SUBDIRECTORY(pLocalization)
   ADD_SUBDIRECTORY(pController)
   ADD_SUBDIRECTORY(pWallDetector)
+  ADD_SUBDIRECTORY(pSimplePID)
 
 # 'u' apps
 if (WITH_JOYSTICK)
@@ -44,6 +46,7 @@ if (WITH_RAZOR)
 # 'i' apps
   ADD_SUBDIRECTORY(iEchoSounder)
   ADD_SUBDIRECTORY(iRazorIMU)
+  ADD_SUBDIRECTORY(iGps2)
 endif (WITH_RAZOR)
   ADD_SUBDIRECTORY(iModem)
 if (WITH_XSENS)
@@ -62,6 +65,12 @@ endif (WITH_GPSOE)
 if (WITH_CAMERA)
   ADD_SUBDIRECTORY(iCamera)
 endif(WITH_CAMERA)
+ADD_SUBDIRECTORY(pMapLocalizerParticleFilter)
+if (WITH_INTERVAL_FILTER)
+  ADD_SUBDIRECTORY(pMapLocalizerIntervals)
+endif(WITH_INTERVAL_FILTER)
+ADD_SUBDIRECTORY(pTrustGPS)
+ADD_SUBDIRECTORY(pEstimSpeed)
 
 ##############################################################################
 #                           END of CMakeLists.txt

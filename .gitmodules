@@ -1,0 +1,6 @@
+[submodule "src/app/pMapLocalizationParticleFilter/particle-filter-localization"]
+	path = src/app/pMapLocalizationParticleFilter/particle-filter-localization
+	url = https://github.com/nicolaje/particle-filter-localization.git
+[submodule "src/app/pMapLocalizerParticleFilter/particle-filter-localization"]
+	path = src/app/pMapLocalizerParticleFilter/particle-filter-localization
+	url = https://github.com/nicolaje/particle-filter-localization.git

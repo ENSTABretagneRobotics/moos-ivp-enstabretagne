@@ -1,6 +1,9 @@
+lib/libparticle_filter.so
 *~
 /lib/*.a
+/lib/*.dylib
 build/*
 bin/*
 *.DS_Store
+nbproject
 *.dpp

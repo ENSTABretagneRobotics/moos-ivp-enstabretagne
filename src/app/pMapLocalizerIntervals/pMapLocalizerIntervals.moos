@@ -1,0 +1,17 @@
+//------------------------------------------------
+// pMapLocalizerIntervals config block
+
+ProcessConfig = pMapLocalizerIntervals
+{
+   AppTick   = 4
+   CommsTick = 4
+
+   Q_SONAR = 5
+
+   MAP_PATH = /path/to/map
+   SPEED_NOISE = 0.5
+   HEADING_NOISE = 7
+   GPS_NOISE = 5
+   BUFFER_SIZE = 20
+}
+

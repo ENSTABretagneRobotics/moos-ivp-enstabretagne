@@ -1,0 +1,72 @@
+// MOOS file
+
+ServerHost = localhost
+ServerPort = 9000
+
+Community  = AUV
+
+//Serial port configuration
+GPS_SERIAL_PORT = /dev/ttyUSB0
+
+//------------------------------------------
+// Antler configuration  block
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+
+  Run = MOOSDB       	@ NewConsole = true
+  Run = uMS             @ NewConsole=false
+  Run = iGps2           @ NewConsole = true
+  Run = pTrustGPS       @ NewConsole = true
+  Run = pLogger         @ NewConsole = false
+}
+
+//------------------------------------------
+// Global Param
+
+LatOrigin    = 48.418079
+LongOrigin   = -4.472279
+
+//------------------------------------------------
+// iGps2 config block
+
+ProcessConfig = iGps2
+{
+  AppTick   = 5
+  CommsTick = 5
+
+  UART_PORT = /dev/ttyUSB0
+  UART_BAUD_RATE = 4800
+}
+
+
+
+//------------------------------------------
+// Logger  configuration  block
+//
+ProcessConfig = pLogger
+{
+  //over  loading  basic  params
+  AppTick     = 5.0
+  CommsTick   = 5.0
+
+  File          = test_gps2
+  PATH          = ~/log
+  FileTimeStamp = true
+
+  AsyncLog        = true
+  WildCardLogging = true
+}
+
+//------------------------------------------------
+// pTrustGPS config block
+
+ProcessConfig = pTrustGPS
+{
+   AppTick   = 4
+   CommsTick = 4
+
+   ALTITUDE_AT_GPS_SUBMERGED = -0.5
+   PARANOIA_LEVEL = 10
+}
+

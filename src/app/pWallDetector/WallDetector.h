@@ -11,8 +11,6 @@
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 #include <vector>
 
-using namespace std;
-
 class WallDetector : public AppCastingMOOSApp
 {
 
@@ -32,28 +30,36 @@ class WallDetector : public AppCastingMOOSApp
 
   protected: // WallDetector functions
     double MOOSGrad2Rad(double angle);
+    void findMin(std::vector<double> list, double &min, int &indice, int begin, int end);
+    void findMax(std::vector<double> list, double &max, int &indice, int begin, int end);
 
   private: // Configuration variables
     // FILTER CONFIGURATION
-    int mean_r, mean_theta;
-    int min_r;
-    double threshold;
+    int m_mean_r, m_mean_theta;
+    int m_min_r;
+    double m_threshold;
+    int m_search_zone;
 
     // SONAR CONFIGURATION
-    double sonar_range, sonar_gain;
-    int sonar_nbins;
+    double m_sonar_range, m_sonar_gain;
+    int m_sonar_nbins;
+
+    bool m_vertical_scan;
 
   private: // State variables
-    vector< vector<double> > scanline_tab;
-    vector<double> bearing_tab;
+    std::vector< std::vector<double> > m_scanline_tab;
+    std::vector<double> m_bearing_tab;
 
     // New IMU DATA
-    double imu_yaw;
+    double m_imu_yaw;
 
     // New SONAR DATA
-    bool new_scanline;
-    vector<double> new_scanline_data;
-    double new_bearing;
+    bool m_new_scanline;
+    std::vector<double> m_new_scanline_data;
+    double m_new_bearing;
+
+    // Data Analysis
+    double m_max_filtered;
 };
 
 #endif 

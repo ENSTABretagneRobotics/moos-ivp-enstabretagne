@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains pSensorViewer documentation -->
+<?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?> 
+<xmldoc>
+  <moosapp>
+
+     <info>
+        <name>pTrustGPS</name>
+        <organization>Toutatis AUVs - ENSTA Bretagne</organization>
+        <date>2015</date>
+        <authors>
+           <author>Jeremy NICOLA</author>
+        </authors>
+        <licence>MIT</licence>
+     </info>
+
+     <documentation>
+        <synopsis>
+          This process publishes a single variable that says if we should trust GPS measurements or not.
+            If either:
+            - we send a command for the AUV to dive below a given thresold, at which we are sure the GPS sensor is submerged
+            - we measure a depth at which we are sure the GPS sensor is submerged
+            - the QUALITY signal of the GPS is false
+            we should not use the GPS.
+            When the AUV dives for some time and surface to get a GPS fix, the Kalman filter inside the GPS sensor might not converge instantly, therefore we should wait a bit before trusting its position.
+            Therefore, we check the latest PARANOIA_LEVEL number of GPS measurements. If ALL of them were considered trustable, we trust the current GPS measurements. That means that if a single GPS measurement was not considered reliable in this buffer, we don't believe the GPS for the moment.
+        </synopsis>
+        <interface>
+           <subscriptions>
+              <moosvar>
+                 <varname>DESIRED_DEPTH</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Desired depth command sent to the AUV. It is positive towards the center of earth, and we convert it internally into an altitude, in meters.</varinfo>
+              </moosvar>
+
+              <moosvar>
+                 <varname>KELLER_DEPTH</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Current depth of the AUV, measured with the Keller pressure sensor. It is positive towards the center of earth, and we convert it internally into an altitude, in meters.</varinfo>
+              </moosvar>
+
+              <moosvar>
+                 <varname>GPS_QUALITY</varname>
+                 <vartype>bool</vartype>
+                 <varinfo>GPS Quality estimation, given directly by the GPS sensor. False means we shouldn't believe the sensor, tue means we might believe it.</varinfo>
+              </moosvar>
+           </subscriptions>
+           <publications>
+              <moosvar>
+                 <varname>GPS_TRUST</varname>
+                 <vartype>bool</vartype>
+                 <varinfo>True means we can believe the current GPS measurements, false means we shouldn't.</varinfo>
+              </moosvar>
+           </publications>
+        </interface>
+
+        <optional-comments>
+           No comment.
+        </optional-comments>
+
+        <suggested-improvements>
+           No suggested improvements.
+        </suggested-improvements>
+     </documentation>
+
+  </moosapp>
+</xmldoc>

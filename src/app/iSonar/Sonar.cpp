@@ -222,6 +222,7 @@ void Sonar::ListenSonarMessages()
 	      Notify("SONAR_BEARING", pHdta->bearing());
 
 	      stringstream ss_scanline;
+	      ss_scanline << '[' << (int)pHdta->nBins()<< ']';
 	      ss_scanline << '{';
 	      for (int k=0; k<pHdta->nBins(); k++){
 	      	ss_scanline << pHdta->scanlineData()[k];

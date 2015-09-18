@@ -19,18 +19,18 @@ using namespace std;
 WallDetector::WallDetector()
 {
   // INITIALIZE VARIABLES
-    mean_r = 3;
-    mean_theta = 3;
-    min_r = 10;
-
-    sonar_range = 100.0;
-    sonar_nbins = 100;
-    sonar_gain = 105;
-
-    imu_yaw = 0.0;
-    new_scanline = false;
-
-    threshold = 80;
+    m_mean_r       = 3;
+    m_mean_theta   = 3;
+    m_min_r        = 3;
+    
+    m_sonar_range  = 100.0;
+    m_sonar_gain   = 105;
+    
+    m_imu_yaw      = 0.0;
+    m_new_scanline = false;
+    
+    m_threshold    = 80;
+    m_search_zone  = 20;
 }
 
 //---------------------------------------------------------
@@ -57,35 +57,31 @@ bool WallDetector::OnNewMail(MOOSMSG_LIST &NewMail)
     #endif
 
     if(key == "SONAR_BEARING"){
-      new_bearing = msg.GetDouble();
+      m_new_bearing = msg.GetDouble();
     }
     else if(key == "SONAR_SCANLINE"){
-      new_scanline = true;
+      m_new_scanline = true;
       int nRows, nCols;
-      MOOSVectorFromString(msg.GetString(), new_scanline_data, nRows, nCols);
+      MOOSVectorFromString(msg.GetString(), m_new_scanline_data, nRows, nCols);
+      if(m_new_scanline_data.size()==0){
+        reportRunWarning("ERROR Parsing SONAR_SCANLINE");
+      }
     }
-
     else if(key == "IMU_YAW"){
-      imu_yaw = msg.GetDouble();
+      m_imu_yaw = msg.GetDouble();
     }
+
+    // PARAMETERS
     else if(key == "WALL_THRESHOLD"){
-      threshold = msg.GetDouble();
+      m_threshold = msg.GetDouble();
     }
-
-    // Mise à jour des paramètres du sonar
     else if ( key == "SONAR_PARAMS" && msg.IsString()){
-      string msg_val = msg.GetString();
+      // Mise à jour des paramètres du sonar
       // Le message est de la forme "Range=25,Gain=45,Continuous=true"
-      double dVal=0.0; int iVal; bool bVal;
-      if (MOOSValFromString(dVal, msg_val, "Range", true))
-        sonar_range = dVal;
-      if (MOOSValFromString(iVal, msg_val, "nBins", true))
-        sonar_nbins = iVal;
-      if (MOOSValFromString(dVal, msg_val, "Gain", true))
-        sonar_gain = dVal;
-
+      MOOSValFromString(m_sonar_range, msg.GetString(), "Range", true);
+      MOOSValFromString(m_sonar_gain, msg.GetString(), "Gain", true);
       // Reset the scanline_tab to avoid size issues
-      scanline_tab.clear();
+      m_scanline_tab.clear();
     }
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
@@ -113,45 +109,58 @@ bool WallDetector::Iterate()
   AppCastingMOOSApp::Iterate();
 
   // Do your thing here!
-  if(new_scanline == true){
-    new_scanline = false;
+  if(m_new_scanline == true){
+    m_new_scanline = false;
 
     // Push back new incoming scanline
-    scanline_tab.push_back(new_scanline_data);
+    m_scanline_tab.push_back(m_new_scanline_data);
     // Convert bearing into radian + add imu_yaw
-    bearing_tab.push_back(MOOS_ANGLE_WRAP(MOOSDeg2Rad(imu_yaw) + MOOSGrad2Rad(new_bearing/16.0)));
-
+    if(m_vertical_scan == true){
+      m_bearing_tab.push_back(MOOSGrad2Rad(m_new_bearing/16.0));
+    }
+    else{
+      m_bearing_tab.push_back(MOOS_ANGLE_WRAP(MOOSDeg2Rad(m_imu_yaw) + MOOSGrad2Rad(m_new_bearing/16.0)));  
+    }
+    
     // Erase the first row of the buffer scanline_tab
-    if(scanline_tab.size()>2*mean_theta){
-      scanline_tab.erase (scanline_tab.begin());
-      bearing_tab.erase(bearing_tab.begin());
+    if(m_scanline_tab.size()>2*m_mean_theta+1){
+      m_scanline_tab.erase (m_scanline_tab.begin());
+      m_bearing_tab.erase(m_bearing_tab.begin());
     }
 
     // Compute the filtered value of the scanline
     // min value in the neighborhood
-    if(scanline_tab.size()==2*mean_theta){
+    if(m_scanline_tab.size()==2*m_mean_theta+1){
+
       vector<double> scanline_filtered;
 
-      for(int l=min_r; l<scanline_tab[0].size()-mean_r; l++){
+      for(int l=max(m_min_r, m_mean_r); l<m_scanline_tab[m_mean_theta].size()-m_mean_r; l++){
         vector<double> tmp;
-        for(int i = l-mean_r; i<l+mean_r+1; i++){
-          for(int j=0; j<scanline_tab.size(); j++){
-            tmp.push_back(scanline_tab[j][i]);
+        for(int r = l-m_mean_r; r<l+m_mean_r; r++){
+          for(int theta=0; theta<m_scanline_tab.size(); theta++){            
+            tmp.push_back(m_scanline_tab[theta][r]);
           }
         }
         scanline_filtered.push_back(*min_element(tmp.begin(), tmp.end()));
       }
 
-      vector<double>::iterator max = max_element(scanline_filtered.begin(), scanline_filtered.end());
+      // Find the max of the scanline_filtered
+      int indice_filtered;
+      findMax(scanline_filtered, m_max_filtered, indice_filtered, 0, scanline_filtered.size());
 
-      if(*max > threshold){
-        double dist = (std::distance(scanline_filtered.begin(), max) + min_r)* sonar_range/scanline_tab[0].size();
+      if(m_max_filtered > m_threshold){
+        // Find the max in the scanline near the maximum of the scanline_filtered
+        double max; int indice;
+        int search_zone = round(m_search_zone*m_scanline_tab[0].size());
+        findMax(m_scanline_tab[m_mean_theta], max, indice, indice_filtered-search_zone, indice_filtered+search_zone);
+
+        double dist = (indice)* m_sonar_range/m_scanline_tab[0].size();
         stringstream ss;
-        ss << "bearing=" << bearing_tab[mean_r] << ",";
+        ss << "bearing=" << m_bearing_tab[m_mean_r] << ",";
         ss << "distance=" << dist << ",";
+        ss << "vertical=" << m_vertical_scan;
         Notify("WALL_DETECTOR", ss.str());
       }
-
     }
   }
 
@@ -183,32 +192,45 @@ bool WallDetector::OnStartUp()
     bool handled = false;
 
     if(param == "SONAR_RANGE"){
-      sonar_range = atof(value.c_str());
-      handled = true;
-    }
-    else if(param == "SONAR_NBINS"){
-      sonar_nbins = atoi(value.c_str());
+      m_sonar_range = atof(value.c_str());
       handled = true;
     }
     else if(param == "SONAR_GAIN"){
-      sonar_gain = atof(value.c_str());
+      m_sonar_gain = atof(value.c_str());
       handled = true;
     }
     else if(param == "MEAN_R"){
-      mean_r = atoi(value.c_str());
+      m_mean_r = atoi(value.c_str());
       handled = true;
     }
     else if(param == "MEAN_THETA"){
-      mean_theta = atoi(value.c_str());
+      m_mean_theta = atoi(value.c_str());
       handled = true;
     }
     else if(param == "MIN_R"){
-      min_r = atoi(value.c_str());
+      m_min_r = atoi(value.c_str());
       handled = true;
     }
     else if(param == "WALL_THRESHOLD"){
-      threshold = atof(value.c_str());
+      m_threshold = atof(value.c_str());
       handled = true;
+    }
+    else if(param == "SEARCH_ZONE"){
+      m_search_zone = atoi(value.c_str());
+      handled = true;
+    }
+    else if(param == "VERTICAL_SCAN"){
+      if(toupper(value) == "TRUE"){
+        m_vertical_scan = true;
+        handled = true;  
+      }
+      else if(toupper(value) == "FALSE"){
+        m_vertical_scan = false;
+        handled = true;
+      }
+      else{
+        handled = false;
+      }
     }
 
     if(!handled)
@@ -250,10 +272,68 @@ bool WallDetector::buildReport()
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
   #endif
+    m_msgs << "============================================ \n";
+    m_msgs << "File: pWallDetector                          \n";
+    m_msgs << "============================================ \n";
+
+    ACTable actab(5);
+    actab << "Nb Data | Size Data | Max filtered | Wall Threshold | Max Range";
+    actab.addHeaderLines();
+    if(m_scanline_tab.size()==0)
+      actab << (int)m_scanline_tab.size() << "x" << m_max_filtered << m_threshold << m_sonar_range;
+    else
+      actab << (int)m_scanline_tab.size() << (int)m_scanline_tab[0].size() << m_max_filtered << m_threshold << m_sonar_range;
+    m_msgs << actab.getFormattedString();
 
   return true;
 }
 
 double WallDetector::MOOSGrad2Rad(double angle){
   return angle*M_PI/200.0;
+}
+
+void WallDetector::findMax(vector<double> list, double &max, int &indice, int begin, int end){
+
+  if(begin>= list.size())
+    begin = list.size()-1;
+  if(end > list.size())
+    end = list.size();
+  if(begin < 0)
+    begin = 0;
+  if(end < 0)
+    end = 0;
+
+  max = list[begin];
+  indice = begin;
+
+  for(int i=begin+1; i<end; i++){
+    if(list[i]>max){
+      max = list[i];
+      indice = i;
+    }
+  }
+}
+
+void WallDetector::findMin(vector<double> list, double &min, int &indice, int begin, int end){
+
+  if(begin>= list.size())
+    begin = list.size()-1;
+  if(end > list.size())
+    end = list.size();
+  if(begin < 0)
+    begin = 0;
+  if(end < 0)
+    end = 0;
+
+  min = list[begin];
+  indice = begin;
+
+  for(int i=begin+1; i<end; i++){
+    if(list[i]<min){
+      min = list[i];
+      indice = i;
+    }
+  }
+
+  cout << min;
 }

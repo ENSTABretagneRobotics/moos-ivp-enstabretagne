@@ -1,0 +1,12 @@
+//------------------------------------------------
+// pTrustGPS config block
+
+ProcessConfig = pTrustGPS
+{
+   AppTick   = 4
+   CommsTick = 4
+
+   ALTITUDE_THRESHOLD = -0.5
+   PARANOIA_LEVEL = 10000
+}
+

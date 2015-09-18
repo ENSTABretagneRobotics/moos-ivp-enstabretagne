@@ -59,7 +59,7 @@ More information available on the official website.
 
 Additional packages are required for building `moos-ivp-toutatis`:
 ```shell
-sudo apt-get install libtinyxml2-dev libusb-1.0-0-dev mono-runtime libmono-winforms2.0-cil libv4l-dev libopencv-dev
+sudo apt-get install libtinyxml2-dev libusb-1.0-0-dev mono-runtime libmono-winforms2.0-cil libv4l-dev libopencv-dev libboost1.55-dev libboost-system1.55-dev
 ```
 Specific configuration is required for Pololu devices. In the project repository:
 ```shell
@@ -69,6 +69,17 @@ sudo adduser your_username dialout video
 ```
 Be careful to change `your_username`.
 
+If you cloned the repository, either use:
+git clone --recursive
+or if you already cloned, use:
+git submodule init git submodule update --recursive
+
+Octomap is needed for the particle filter
+git clone https://github.com/OctoMap/octomap.git
+cd octomap/octomap/
+mkdir build
+cd build
+cmake && sudo cmake install
 
 Build Instructions
 ------------------
