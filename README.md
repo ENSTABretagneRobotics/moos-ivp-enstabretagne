@@ -59,7 +59,7 @@ More information available on the official website.
 
 Additional packages are required for building `moos-ivp-toutatis`:
 ```shell
-sudo apt-get install libtinyxml2-dev libusb-1.0-0-dev mono-runtime libmono-winforms2.0-cil libv4l-dev libopencv-dev
+sudo apt-get install libtinyxml2-dev libusb-1.0-0-dev mono-runtime libmono-winforms2.0-cil libv4l-dev libopencv-dev libboost1.55-dev libboost-system1.55-dev
 ```
 Specific configuration is required for Pololu devices. In the project repository:
 ```shell
