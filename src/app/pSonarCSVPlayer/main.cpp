@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     documentation.showHelpAndExit();
 
   cout << termColor("green");
-  cout << "uSonarCSVPlayer launching as " << run_command << endl;
+  cout << "pSonarCSVPlayer launching as " << run_command << endl;
   cout << termColor() << endl;
 
   SonarCSVPlayer SonarCSVPlayer;

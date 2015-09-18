@@ -1,5 +1,5 @@
 #--------------------------------------------------------
-# The CMakeLists.txt for: uSonarCSVPlayer
+# The CMakeLists.txt for: pSonarCSVPlayer
 # Toutatis AUVs - ENSTA Bretagne
 # Author(s): Clément Aubry
 #--------------------------------------------------------
@@ -9,9 +9,9 @@ SET(SRC
   main.cpp
 )
 
-ADD_EXECUTABLE(uSonarCSVPlayer ${SRC})
+ADD_EXECUTABLE(pSonarCSVPlayer ${SRC})
 
-TARGET_LINK_LIBRARIES(uSonarCSVPlayer
+TARGET_LINK_LIBRARIES(pSonarCSVPlayer
    ${MOOS_LIBRARIES}
    xml-documentation
    apputil

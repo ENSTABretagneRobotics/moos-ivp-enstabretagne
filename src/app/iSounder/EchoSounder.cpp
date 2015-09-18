@@ -158,7 +158,7 @@ bool EchoSounder::buildReport()
   #endif
 
     m_msgs << "============================================ \n";
-    m_msgs << "iEchoSounder status:                         \n";
+    m_msgs << "iSounder status:                         \n";
     m_msgs << "============================================ \n";
 
     ACTable actab(4);
