@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 project(pMapLocalizer)
 
 # C++11 for GCC 4.6
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -fPIC")
 set(CMAKE_BUILD_TYPE Debug)
 
 # Find Ibex libs
@@ -29,7 +29,7 @@ set(HEADERS maplocalizer.h
 )
 
 ADD_LIBRARY(interval_filter SHARED maplocalizer.cpp)
-TARGET_LINK_LIBRARY(interval_filter ${LIBS}) 
+TARGET_LINK_LIBRARIES(interval_filter ${LIBS}) 
 
 add_executable (Example ${SRCS} ${HEADERS})
 TARGET_LINK_LIBRARIES(Example interval_filter) #${LIBS})

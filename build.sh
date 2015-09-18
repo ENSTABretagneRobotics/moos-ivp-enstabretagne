@@ -8,6 +8,7 @@ RAZOR="ON"
 XSENS="ON"
 GPSOE="ON"
 CAMERA="ON"
+INTERVALS="ON"
 
 #-------------------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
@@ -41,6 +42,8 @@ for ARGI; do
         GPSOE="OFF"
     elif [ "${ARGI}" = "--no-camera" ] ; then
         CAMERA="OFF"
+    elif [ "${ARGI}" = "--no-intervals" ] ; then
+        INTERVALS="OFF"
     else
 	CMD_LINE_ARGS=$CMD_LINE_ARGS" "$ARGI
     fi
