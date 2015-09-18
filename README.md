@@ -69,17 +69,19 @@ sudo adduser your_username dialout video
 ```
 Be careful to change `your_username`.
 
-If you cloned the repository, either use:
-git clone --recursive
-or if you already cloned, use:
-git submodule init git submodule update --recursive
+Octomap is needed for the particle filter:
+```shell
+git clone https://github.com/OctoMap/octomap.git ; cd octomap/octomap/ ; mkdir build ; cd build ; cmake .. ; sudo make install
+```
 
-Octomap is needed for the particle filter
-git clone https://github.com/OctoMap/octomap.git
-cd octomap/octomap/
-mkdir build
-cd build
-cmake && sudo cmake install
+If you clone the repository, either use:
+```shell
+git clone --recursive
+```
+or if you already cloned, use:
+```shell
+git submodule init ; git submodule update --recursive
+```
 
 Build Instructions
 ------------------
