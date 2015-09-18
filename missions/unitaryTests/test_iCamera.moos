@@ -15,7 +15,7 @@ ProcessConfig = ANTLER
   Run = uMS             @ NewConsole=false
   Run = iCamera @ NewConsole = true ~iCamera1
   Run = iCamera @ NewConsole = true ~iCamera2
-  Run = pSensorViewer @ NewConsole = true
+  Run = uSensorsViewer @ NewConsole = true
 }
 
 //------------------------------------------------
@@ -50,9 +50,9 @@ ProcessConfig = iCamera2
 }
 
 //------------------------------------------------
-// pSensorViewer config block
+// uSensorsViewer config block
 
-ProcessConfig = pSensorViewer
+ProcessConfig = uSensorsViewer
 {
    AppTick   = 25
    CommsTick = 25
