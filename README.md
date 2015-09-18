@@ -69,6 +69,10 @@ sudo adduser your_username dialout video
 ```
 Be careful to change `your_username`.
 
+If you cloned the repository, either use:
+git clone --recursive
+or if you already cloned, use:
+git submodule init git submodule update --recursive
 
 Build Instructions
 ------------------
