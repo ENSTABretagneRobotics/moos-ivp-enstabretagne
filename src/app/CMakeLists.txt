@@ -41,7 +41,7 @@ endif (WITH_JOYSTICK)
   #ADD_SUBDIRECTORY(iEchoSounder)
 if (WITH_RAZOR)
   MESSAGE("Building with iRazor IMU")
-  ADD_SUBDIRECTORY(uSonarCSVPlayer)
+  ADD_SUBDIRECTORY(pSonarCSVPlayer)
 
 # 'i' apps
   ADD_SUBDIRECTORY(iEchoSounder)

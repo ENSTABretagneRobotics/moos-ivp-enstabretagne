@@ -1,7 +1,7 @@
 //------------------------------------------------
-// uSonarCSVPlayer config block
+// pSonarCSVPlayer config block
 
-ProcessConfig = uSonarCSVPlayer
+ProcessConfig = pSonarCSVPlayer
 {
   AppTick   = 4
   CommsTick = 4
