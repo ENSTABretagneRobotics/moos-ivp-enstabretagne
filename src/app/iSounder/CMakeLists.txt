@@ -1,5 +1,5 @@
 #--------------------------------------------------------
-# The CMakeLists.txt for: iEchoSounder
+# The CMakeLists.txt for: iSounder
 # Toutatis AUVs - ENSTA Bretagne
 # Author(s): Simon Rohou
 #--------------------------------------------------------
@@ -9,9 +9,9 @@ SET(SRC
   main.cpp
 )
 
-ADD_EXECUTABLE(iEchoSounder ${SRC})
+ADD_EXECUTABLE(iSounder ${SRC})
 
-TARGET_LINK_LIBRARIES(iEchoSounder
+TARGET_LINK_LIBRARIES(iSounder
    ${MOOS_LIBRARIES}
    xml-documentation
    apputil
