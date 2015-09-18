@@ -26,7 +26,6 @@ Gps2::Gps2()
 
     m_speed = 0;
     m_heading = 0;
-    cout << "TARACE"<<endl;
 }
 
 Gps2::~Gps2() {
@@ -76,16 +75,14 @@ bool Gps2::OnConnectToServer() {
 bool Gps2::Iterate() {
     AppCastingMOOSApp::Iterate();
     // Read trame from COM port
-    cout << "TARACE_ITERATE"<<endl;
-    boost::system::error_code error;
-    boost::asio::read_until(m_serial, m_buffer, "\r\n", error);
-
+    
+    boost::asio::read_until(m_serial, m_buffer, "\r\n", m_error);
+    
     // Debug
     //Notify("GPS_buffer_size", buffer.size()); // Debug
     //Notify("GPS_ERROR", error.message()); // Debug
 
-    Notify("Test",0.0);
-    if (error.value() == 0.0) { // No error from asio read
+    if (m_error.value() == 0.0) { // No error from asio read
         // Extract one trame
         std::istream is(&m_buffer);
         string line;
@@ -107,13 +104,13 @@ bool Gps2::Iterate() {
         Notify("GPS_FIX", m_fix); // 1,2,3 dimension
         Notify("GPS_SPEED", m_speed);
         Notify("GPS_HEADING", m_heading); // En degres
-
-
+        
         m_lat = m_dpos.lat * 180.0 / M_PI;
         m_lon = m_dpos.lon * 180.0 / M_PI;
+        
         Notify("GPS_LAT", m_lat);
-        Notify("GPS_LONG", m_lon);
-
+        Notify("GPS_LON", m_lon);
+        
         /*if(m_sig != 0.0 and m_depth < m_depth_invalid_threshold){
           m_lat = m_dpos.lat*180.0/M_PI;
           m_lon = m_dpos.lon*180.0/M_PI;
@@ -121,10 +118,10 @@ bool Gps2::Iterate() {
           Notify("GPS_LONG", m_lon);
           //Notify_GNSS(&lat, &lon);
         }*/
-    } else if (error.value() == 2.0) {
+    } else if (m_error.value() == 2.0) {
         //Case end of line beacause the trame is not arrived completly yet
     } else {
-        reportRunWarning("Error reading GPS Com : " + error.message());
+        reportRunWarning("Error reading GPS Com : " + m_error.message());
     }
 
     //AppCastingMOOSApp::PostReport();

@@ -46,6 +46,7 @@ class Gps2 : public AppCastingMOOSApp
 
     boost::asio::io_service   m_io;
     boost::asio::serial_port  m_serial;
+    boost::system::error_code m_error;
 
   private: // State variables
     char* m_trame;
