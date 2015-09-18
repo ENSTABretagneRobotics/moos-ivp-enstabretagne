@@ -20,22 +20,33 @@
         </synopsis>
         <interface>
            <subscriptions>
-              <!--
               <moosvar>
-                 <varname>EXAMPLE_VAR_IN</varname>
-                 <vartype>string</vartype>
-                 <varinfo>description of the MOOSVar</varinfo>
+                 <varname>MOOSVAR_STATE</varname>
+                 <vartype>double</vartype>
+                 <varinfo>State</varinfo>
               </moosvar>
-              -->
+              <moosvar>
+                 <varname>MOOSVAR_CONSIGNE</varname>
+                 <vartype>double</vartype>
+                 <varinfo>consigne</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>MOOSVAR_STATE_DIFFFERENTIAL</varname>
+                 <vartype>double</vartype>
+                 <varinfo>differential state</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>MOOSVAR_SATURATION</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Saturation from engine</varinfo>
+              </moosvar>
            </subscriptions>
            <publications>
-              <!--
               <moosvar>
-                 <varname>EXAMPLE_VAR_OUT</varname>
-                 <vartype>string</vartype>
-                 <varinfo>description of the MOOSVar</varinfo>
+                 <varname>MOOSVAR_COMMAND</varname>
+                 <vartype>double</vartype>
+                 <varinfo>Saturation from engine</varinfo>
               </moosvar>
-              -->
            </publications>
         </interface>
         <!-- if there is a bug or a special fact to know.. -->
