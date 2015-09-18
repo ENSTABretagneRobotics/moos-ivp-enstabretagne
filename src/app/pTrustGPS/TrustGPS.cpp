@@ -41,10 +41,6 @@ bool TrustGPS::OnNewMail(MOOSMSG_LIST &NewMail) {
                     (altitude > altitude_threshold) &&
                     (gps_fix > 0);
 
-            cout << "gps_quality: " << gps_quality << endl;
-            cout << "altitude: " << altitude << endl;
-            cout << "gps_fix: " << gps_fix << endl;
-
             memory.push_front(current_gps_trust);
 
             if (current_gps_trust) {
@@ -52,10 +48,6 @@ bool TrustGPS::OnNewMail(MOOSMSG_LIST &NewMail) {
             }
 
             if (memory.size() >= paranoiaLevel) {
-                cout << "paranoiaCounter: " << paranoiaCounter << endl;
-                cout << "paranoiaLevel: " << paranoiaLevel << endl;
-                cout << "altitude: " << altitude << endl;
-                cout << "depthThres: " << altitude_threshold << endl;
                 gps_trust = paranoiaCounter >= paranoiaLevel;
                 bool back = memory.back();
                 memory.pop_back();
