@@ -74,6 +74,13 @@ git clone --recursive
 or if you already cloned, use:
 git submodule init git submodule update --recursive
 
+Octomap is needed for the particle filter
+git clone https://github.com/OctoMap/octomap.git
+cd octomap/octomap/
+mkdir build
+cd build
+cmake && sudo cmake install
+
 Build Instructions
 ------------------
 
