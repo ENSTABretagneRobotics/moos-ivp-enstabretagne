@@ -11,7 +11,7 @@
 #include "ACTable.h"
 #include "particle-filter-localization/Eigen/Dense"
 #include "MapLocalizerParticleFilter.h"
-#include "eigen3/Eigen/Dense"
+#include "particle-filter-localization/Eigen/Dense"
 
 using namespace std;
 using namespace Eigen;
