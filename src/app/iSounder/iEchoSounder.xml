@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- This file contains iEchoSounder documentation -->
+<!-- This file contains iSounder documentation -->
 <?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?> 
 <xmldoc>
   <moosapp>
 
      <info>
-        <name>iEchoSounder</name>
+        <name>iSounder</name>
         <organization>Toutatis AUVs - ENSTA Bretagne</organization>
         <date>2015</date>
         <authors>

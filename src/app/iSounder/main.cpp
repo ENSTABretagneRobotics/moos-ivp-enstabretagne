@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     documentation.showHelpAndExit();
 
   cout << termColor("green");
-  cout << "iEchoSounder launching as " << run_command << endl;
+  cout << "iSounder launching as " << run_command << endl;
   cout << termColor() << endl;
 
   EchoSounder EchoSounder;

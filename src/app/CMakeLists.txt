@@ -38,13 +38,13 @@ if (WITH_JOYSTICK)
 endif (WITH_JOYSTICK)
 
 # 'i' apps
-  #ADD_SUBDIRECTORY(iEchoSounder)
+  #ADD_SUBDIRECTORY(iSounder)
 if (WITH_RAZOR)
   MESSAGE("Building with iRazor IMU")
   ADD_SUBDIRECTORY(pSonarCSVPlayer)
 
 # 'i' apps
-  ADD_SUBDIRECTORY(iEchoSounder)
+  ADD_SUBDIRECTORY(iSounder)
   ADD_SUBDIRECTORY(iRazorIMU)
   ADD_SUBDIRECTORY(iGPS)
 endif (WITH_RAZOR)
@@ -53,7 +53,6 @@ if (WITH_XSENS)
   MESSAGE("Building with XSens INS")
   ADD_SUBDIRECTORY(iXSensINS)
 endif (WITH_XSENS)
-  ADD_SUBDIRECTORY(iGPS)
   ADD_SUBDIRECTORY(iSonar)
   ADD_SUBDIRECTORY(iKeller)
   ADD_SUBDIRECTORY(iSaucisse)
