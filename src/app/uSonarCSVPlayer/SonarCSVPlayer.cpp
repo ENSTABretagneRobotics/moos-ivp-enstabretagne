@@ -76,7 +76,7 @@ bool SonarCSVPlayer::Iterate()
   if (getline( buffer, ligne ))
   {
     // cout<< "line : " << ligne <<endl;
-    Notify("SONAR_RAW_DATA", ligne);
+    Notify("SONAR_CSV_LINE", ligne);
     //SOf,DateTime,Node,Status,Hdctrl,Rangescale,Gain,Slope,AdLow,AdSpan,LeftLim,RightLim,Steps,Bearing,Dbytes,Dbytes of DATA
     //SON,14:23:52.021,2,16,8963,750,105,125,9,79,0,0,32,3200,400,107,105,93,49,9,1,1,1,1,1,1,1,1,1,4,1,2,2,1,1,6,6,2,1,1,1,2,2,5,1,...
 
@@ -85,11 +85,19 @@ bool SonarCSVPlayer::Iterate()
     * This code decode a scanline to put it in a typedef defined in SonarCSVPlayer.h
     * USELESS here cause the line had to be sent as a string
     * Could be usefull decoding scanline for treatment
-    *
+    */
+    char lineChar[9000];
+    sprintf(lineChar,"%s",ligne.c_str());
+    stringstream ss_scanline;
+    // ss_scanline << '{';
+
     ScanLine scanLine;
     int k=0;
+    string tok = ",\r\n";
+    pChar = strtok (lineChar,tok.c_str());
     while (pChar != NULL)
     {
+      Notify("SONAR_PCHAR",pChar);
       switch (k)
       {
         case 0:scanLine.SOf = pChar;break;
@@ -108,13 +116,32 @@ bool SonarCSVPlayer::Iterate()
         case 13:scanLine.Bearing = atoi(pChar);break;
         case 14:scanLine.Dbytes = atoi(pChar);break;
         default:
-          scanLine.data.push_back(atoi(pChar));
+          ss_scanline << pChar;
+          if (k < scanLine.Dbytes+14)
+            ss_scanline << ',';
           break;
       }
-      pChar = strtok (NULL, " ,.-");
+      pChar = strtok (NULL, tok.c_str());
       k++;
     }
-    */
+    // ss_scanline << '}';bui
+    double adinterval = ((2*scanLine.rangeScale / scanLine.Dbytes) / 1500) / 640.e-9 ;
+    sprintf(lineChar,"bearing=%d,ad_interval=%lf,scanline=%s",scanLine.Bearing, adinterval, ss_scanline.str().c_str());
+    Notify("SONAR_RAW_DATA", lineChar);
+    Notify("SONAR_SCANLINE", ss_scanline.str());
+    // // ***************************************
+    // // MOSSDB data for WALL DETECTOR
+    Notify("SONAR_BEARING", scanLine.Bearing);
+
+    // for (int k=0; k<pHdta->nBins(); k++){
+    //   ss_scanline << pHdta->scanlineData()[k];
+    //   if(k!=pHdta->nBins()-1)
+    //     ss_scanline << ',';
+    // }
+    // ss_scanline << '}';
+    // Notify("SONAR_SCANLINE", ss_scanline.str());
+    // // ***************************************
+
 
   }
 
@@ -161,7 +188,8 @@ bool SonarCSVPlayer::OnStartUp()
 
   //WORKING
   // ifstream ifs( "/home/clement/ENSTABZH/moos-ivp-toutatis/data/test.txt" );
-  ifstream ifs( "/home/clement/ENSTABZH/moos-ivp-toutatis/data/Seanet0_2014-10-03_14h23min51s.csv" );
+  // ifstream ifs( "/home/clement/ENSTABZH/moos-ivp-toutatis/data/Seanet0_2014-10-03_14h23min51s.csv" );
+  ifstream ifs( m_sFilename.c_str() );
   if ( ! ifs.is_open() ) {
     cout <<" Failed to open" << endl;
   }
