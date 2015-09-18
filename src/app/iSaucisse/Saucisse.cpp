@@ -121,6 +121,21 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       int success = m_pololu->setAllThrustersValue(1.);
     }
 
+    else if(key == "SET_THRUSTER_LEFT")
+    {
+      int success = m_pololu->setLeftThrusterValue(msg.GetDouble());
+    }
+
+    else if(key == "SET_THRUSTER_RIGHT")
+    {
+      int success = m_pololu->setRightThrusterValue(msg.GetDouble());
+    }
+
+    else if(key == "SET_THRUSTER_VERTICAL")
+    {
+      int success = m_pololu->setVerticalThrusterValue(msg.GetDouble());
+    }
+
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
       reportRunWarning("Unhandled Mail: " + key);
   }
@@ -220,7 +235,7 @@ void Saucisse::registerVariables()
   AppCastingMOOSApp::RegisterVariables();
   Register("POWER_*", "*", 0);
   Register("EMIT_BIPS", 0);
-  Register("SET_THRUSTERS_*", "*", 0);
+  Register("SET_THRUSTER*", "*", 0);
 }
 
 //------------------------------------------------------------

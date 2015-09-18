@@ -76,6 +76,21 @@
                  <vartype>-</vartype>
                  <varinfo>put all thrusters in forward max speed</varinfo>
               </moosvar>
+              <moosvar>
+                 <varname>SET_THRUSTER_LEFT</varname>
+                 <vartype>double</vartype>
+                 <varinfo>set left thruster's value: in [-1;1]</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>SET_THRUSTER_RIGHT</varname>
+                 <vartype>double</vartype>
+                 <varinfo>set right thruster's value: in [-1;1]</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>SET_THRUSTER_VERTICAL</varname>
+                 <vartype>double</vartype>
+                 <varinfo>set vertical thruster's value: in [-1;1]</varinfo>
+              </moosvar>
            </subscriptions>
            <publications>
               <moosvar>

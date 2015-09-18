@@ -24,5 +24,4 @@ ProcessConfig = iSaucisse
   // Emit a signal when computer's too hot
   ALERT_MAX_TEMPERATURE = 999 // °C
   // WARNING: must be used when Pololu will be multithreaded!
-  
 }
