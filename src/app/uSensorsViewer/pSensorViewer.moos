@@ -1,0 +1,9 @@
+//------------------------------------------------
+// uSensorsViewer config block
+
+ProcessConfig = uSensorsViewer
+{
+   AppTick   = 4
+   CommsTick = 4
+}
+

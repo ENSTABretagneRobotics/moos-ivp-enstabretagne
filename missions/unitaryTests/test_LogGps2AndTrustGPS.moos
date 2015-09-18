@@ -16,7 +16,7 @@ ProcessConfig = ANTLER
 
   Run = MOOSDB       	@ NewConsole = true
   Run = uMS             @ NewConsole=false
-  Run = iGps2           @ NewConsole = true
+  Run = iGPS           @ NewConsole = true
   Run = pTrustGPS       @ NewConsole = true
   Run = pLogger         @ NewConsole = false
 }
@@ -28,9 +28,9 @@ LatOrigin    = 48.418079
 LongOrigin   = -4.472279
 
 //------------------------------------------------
-// iGps2 config block
+// iGPS config block
 
-ProcessConfig = iGps2
+ProcessConfig = iGPS
 {
   AppTick   = 5
   CommsTick = 5
