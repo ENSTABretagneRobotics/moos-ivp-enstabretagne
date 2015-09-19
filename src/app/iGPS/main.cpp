@@ -9,7 +9,7 @@
 #include "MBUtils.h"
 #include "documentation/MOOSAppDocumentation.h"
 #include "ColorParse.h"
-#include "Gps2.h"
+#include "Gps.h"
 
 using namespace std;
 
@@ -44,9 +44,9 @@ int main(int argc, char *argv[])
   cout << "iGPS launching as " << run_command << endl;
   cout << termColor() << endl;
 
-  Gps2 Gps2;
+  Gps Gps;
 
-  Gps2.Run(run_command.c_str(), mission_file.c_str());
+  Gps.Run(run_command.c_str(), mission_file.c_str());
 
   return(0);
 }

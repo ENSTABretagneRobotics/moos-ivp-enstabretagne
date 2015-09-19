@@ -1,5 +1,5 @@
 /************************************************************/
-/*    FILE: Gps2.cpp
+/*    FILE: Gps.cpp
 /*    ORGN: Toutatis AUVs - ENSTA Bretagne
 /*    AUTH: Thomas Le Mezo
 /*    DATE: 2015
@@ -8,14 +8,14 @@
 #include <iterator>
 #include "MBUtils.h"
 #include "ACTable.h"
-#include "Gps2.h"
+#include "Gps.h"
 
 using namespace std;
 
 //---------------------------------------------------------
 // Constructor
 
-Gps2::Gps2()
+Gps::Gps()
 : m_io(), m_serial(m_io) {
     m_uart_port = "/dev/ttyUSB0";
 
@@ -28,14 +28,14 @@ Gps2::Gps2()
     m_heading = 0;
 }
 
-Gps2::~Gps2() {
+Gps::~Gps() {
     m_serial.close();
 }
 
 //---------------------------------------------------------
 // Procedure: OnNewMail
 
-bool Gps2::OnNewMail(MOOSMSG_LIST &NewMail) {
+bool Gps::OnNewMail(MOOSMSG_LIST &NewMail) {
     AppCastingMOOSApp::OnNewMail(NewMail);
 
     MOOSMSG_LIST::iterator p;
@@ -63,7 +63,7 @@ bool Gps2::OnNewMail(MOOSMSG_LIST &NewMail) {
 //---------------------------------------------------------
 // Procedure: OnConnectToServer
 
-bool Gps2::OnConnectToServer() {
+bool Gps::OnConnectToServer() {
     registerVariables();
     return (true);
 }
@@ -72,12 +72,12 @@ bool Gps2::OnConnectToServer() {
 // Procedure: Iterate()
 //            happens AppTick times per second
 
-bool Gps2::Iterate() {
+bool Gps::Iterate() {
     AppCastingMOOSApp::Iterate();
     // Read trame from COM port
-    
+
     boost::asio::read_until(m_serial, m_buffer, "\r\n", m_error);
-    
+
     // Debug
     //Notify("GPS_buffer_size", buffer.size()); // Debug
     //Notify("GPS_ERROR", error.message()); // Debug
@@ -100,17 +100,17 @@ bool Gps2::Iterate() {
         m_heading = m_info.track;
 
         Notify("GPS_RAW_NMEA", line);
-        Notify("GPS_SIG", m_sig); // 
+        Notify("GPS_SIG", m_sig); //
         Notify("GPS_FIX", m_fix); // 1,2,3 dimension
         Notify("GPS_SPEED", m_speed);
         Notify("GPS_HEADING", m_heading); // En degres
-        
+
         m_lat = m_dpos.lat * 180.0 / M_PI;
         m_lon = m_dpos.lon * 180.0 / M_PI;
-        
+
         Notify("GPS_LAT", m_lat);
         Notify("GPS_LON", m_lon);
-        
+
         /*if(m_sig != 0.0 and m_depth < m_depth_invalid_threshold){
           m_lat = m_dpos.lat*180.0/M_PI;
           m_lon = m_dpos.lon*180.0/M_PI;
@@ -124,7 +124,7 @@ bool Gps2::Iterate() {
         reportRunWarning("Error reading GPS Com : " + m_error.message());
     }
 
-    //AppCastingMOOSApp::PostReport();
+    AppCastingMOOSApp::PostReport();
     return (true);
 }
 
@@ -132,11 +132,13 @@ bool Gps2::Iterate() {
 // Procedure: OnStartUp()
 //            happens before connection is open
 
-bool Gps2::OnStartUp() {
+bool Gps::OnStartUp() {
     AppCastingMOOSApp::OnStartUp();
 
     STRING_LIST sParams;
     m_MissionReader.EnableVerbatimQuoting(false);
+    if (!m_MissionReader.GetValue("GPS_SERIAL_PORT",m_uart_port))
+        reportConfigWarning("No GPS_SERIAL_PORT config found for " + GetAppName() + "(previously iGps)");
     if (!m_MissionReader.GetConfiguration(GetAppName(), sParams))
         reportConfigWarning("No config block found for " + GetAppName());
 
@@ -148,10 +150,7 @@ bool Gps2::OnStartUp() {
         string value = line;
 
         bool handled = false;
-        if (param == "UART_PORT") {
-            m_uart_port = value;
-            handled = true;
-        } else if (param == "UART_BAUD_RATE") {
+        if (param == "UART_BAUD_RATE") {
             m_uart_baud_rate = atoi(value.c_str());
             handled = true;
         }
@@ -180,7 +179,7 @@ bool Gps2::OnStartUp() {
 //---------------------------------------------------------
 // Procedure: registerVariables
 
-void Gps2::registerVariables() {
+void Gps::registerVariables() {
     AppCastingMOOSApp::RegisterVariables();
 }
 
@@ -188,7 +187,7 @@ void Gps2::registerVariables() {
 //------------------------------------------------------------
 // Procedure: buildReport()
 
-bool Gps2::buildReport() {
+bool Gps::buildReport() {
 #if 0 // Keep these around just for template
     m_msgs << "============================================ \n";
     m_msgs << "File:                                        \n";
@@ -201,10 +200,10 @@ bool Gps2::buildReport() {
     m_msgs << actab.getFormattedString();
 #endif
     m_msgs << "============================================ \n";
-    m_msgs << "File: iGPS2                                  \n";
+    m_msgs << "File: iGps                                  \n";
     m_msgs << "============================================ \n";
 
-    ACTable actab(3);
+    ACTable actab(4);
     actab << "Fix | Sig | Lat | Lon";
     actab.addHeaderLines();
     actab << m_fix << m_sig << m_lat << m_lon;
@@ -213,7 +212,7 @@ bool Gps2::buildReport() {
     return true;
 }
 
-bool Gps2::Notify_GNSS(float *lat, float *lon) {
+bool Gps::Notify_GNSS(float *lat, float *lon) {
     string msg;
     msg += "LAT=" + doubleToString(*lat, 6) + ",";
     msg += "LON=" + doubleToString(*lon, 6);
