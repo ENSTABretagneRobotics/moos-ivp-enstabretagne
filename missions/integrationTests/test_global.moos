@@ -15,25 +15,25 @@ KELLER_SERIAL_PORT = /dev/ttyUSB5
 ProcessConfig = ANTLER
 {
   MSBetweenLaunches = 200
-  Run = MOOSDB        @ NewConsole = false
-  Run = uMS           @ NewConsole = false
-  Run = uMACView      @ NewConsole = false
-  Run = uProcessWatch @ NewConsole = false
+  Run = MOOSDB          @ NewConsole = false
+  Run = uMS             @ NewConsole = false
+  Run = uMACView        @ NewConsole = false
+  Run = uProcessWatch   @ NewConsole = false
 
   //Run = pLogger       @ NewConsole = false
 
-  Run = iSaucisse     @ NewConsole = false
-  Run = uTimerScript  @ NewConsole = false ~timerScriptAlimStartup
-  Run = iCamera       @ NewConsole = false ~iCamera1
-  Run = iCamera       @ NewConsole = false ~iCamera2
-  Run = pSimplePID    @ NewConsole = false ~pSimplePID_depth
-  Run = pSimplePID    @ NewConsole = false ~pSimplePID_heading
-  Run = iSounder  @ NewConsole = false
-  Run = iGPS          @ NewConsole = false
-  Run = iKeller       @ NewConsole = false
-  Run = iSonar        @ NewConsole = false
-  Run = iXSensINS     @ NewConsole = false
-  Run = uSensorsViewer @ NewConsole = false
+  Run = iSaucisse       @ NewConsole = false
+  Run = uTimerScript    @ NewConsole = false ~timerScriptAlimStartup
+  Run = iCamera         @ NewConsole = false ~iCamera1
+  Run = iCamera         @ NewConsole = false ~iCamera2
+  Run = pSimplePID      @ NewConsole = false ~pSimplePID_depth
+  Run = pSimplePID      @ NewConsole = false ~pSimplePID_heading
+  Run = iSounder        @ NewConsole = false
+  Run = iGPS            @ NewConsole = false
+  Run = iKeller         @ NewConsole = false
+  Run = iSonar          @ NewConsole = false
+  Run = iXSensINS       @ NewConsole = false
+  Run = uSensorsViewer  @ NewConsole = false
 }
 
 //------------------------------------------
