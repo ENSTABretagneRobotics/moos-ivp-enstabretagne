@@ -21,7 +21,7 @@ ProcessConfig = ANTLER
   Run = uProcessWatch   @ NewConsole = false
 
   Run = pLogger         @ NewConsole = false
-  Run = pShare          @ NewConsole 
+  Run = pShare          @ NewConsole = false 
 
   // ************** ENGINE CONTROL *********
   Run = iSaucisse       @ NewConsole = false
