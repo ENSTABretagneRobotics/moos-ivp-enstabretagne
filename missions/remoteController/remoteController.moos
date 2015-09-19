@@ -21,13 +21,12 @@ ProcessConfig = ANTLER
 
   //Run = uSensorsViewer @ NewConsole = false
   Run = uJoystick     @ NewConsole = false
-  Run = pMarineViewer @ NewConsole = false
+  //Run = pMarineViewer @ NewConsole = false
 }
 ProcessConfig=pShare
 {
-  Input = route = multicast_8
-
-  Output = src_name = DESIRED_*, route = multicast_6
+  Input = route = 192.168.1.42:24468
+  Output = src_name = DESIRED_*, route = 192.168.1.42:24466
 }
 ProcessConfig = uJoystick
 {
@@ -44,11 +43,11 @@ ProcessConfig = uJoystick
    //MOOS_DEST_VAR = DESIRED_SLIDE2
 
    AXIS = 1
-   SCALE_RATIO = 0.01
+   SCALE_RATIO = -0.01
    MOOS_DEST_VAR = DESIRED_FX
 
    AXIS = 2
-   SCALE_RATIO = 0.01
+   SCALE_RATIO = -0.01
    MOOS_DEST_VAR = DESIRED_RZ
 
    AXIS = 3
