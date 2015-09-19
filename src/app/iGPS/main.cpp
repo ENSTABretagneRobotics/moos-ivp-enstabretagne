@@ -1,7 +1,7 @@
 /************************************************************/
 /*    FILE: main.cpp
-/*    ORGN: ENSTA Bretagne
-/*    AUTH: 
+/*    ORGN: Toutatis AUVs - ENSTA Bretagne
+/*    AUTH: Thomas Le Mezo
 /*    DATE: 2015
 /************************************************************/
 
@@ -9,7 +9,7 @@
 #include "MBUtils.h"
 #include "documentation/MOOSAppDocumentation.h"
 #include "ColorParse.h"
-#include "GPS.h"
+#include "Gps2.h"
 
 using namespace std;
 
@@ -44,9 +44,9 @@ int main(int argc, char *argv[])
   cout << "iGPS launching as " << run_command << endl;
   cout << termColor() << endl;
 
-  GPS GPS;
+  Gps2 Gps2;
 
-  GPS.Run(run_command.c_str(), mission_file.c_str());
+  Gps2.Run(run_command.c_str(), mission_file.c_str());
 
   return(0);
 }
