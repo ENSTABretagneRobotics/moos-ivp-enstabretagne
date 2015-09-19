@@ -6,6 +6,7 @@
 /************************************************************/
 
 #include <iterator>
+#include <list>
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "MixThrusters.h"
@@ -39,7 +40,7 @@ MixThrusters::MixThrusters() {
 
 bool MixThrusters::OnNewMail(MOOSMSG_LIST &NewMail) {
     AppCastingMOOSApp::OnNewMail(NewMail);
-
+    cout << "ONNEWMAIL" << endl;
     MOOSMSG_LIST::iterator p;
     for (p = NewMail.begin(); p != NewMail.end(); p++) {
         CMOOSMsg &msg = *p;
@@ -54,6 +55,11 @@ bool MixThrusters::OnNewMail(MOOSMSG_LIST &NewMail) {
         } else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
             reportRunWarning("Unhandled Mail: " + key);
     }
+    cout << "FX_SUBSCRIPTION_NAME " << FX_SUBSCRIPTION_NAME << endl;
+    cout << "RZ_SUBSCRIPTION_NAME " << RZ_SUBSCRIPTION_NAME << endl;
+    cout << "FZ_SUBSCRIPTION_NAME " << FZ_SUBSCRIPTION_NAME << endl;
+
+    cout << "DESIRED_FORCES: " << endl << desiredForces << endl;
 
     return true;
 }
@@ -66,14 +72,34 @@ bool MixThrusters::OnConnectToServer() {
 bool MixThrusters::Iterate() {
     AppCastingMOOSApp::Iterate();
 
+    cout << "ITERATE" << endl;
+
+    cout << "U1_PUBLICATION_NAME: " << U1_PUBLICATION_NAME << endl;
+    cout << "U2_PUBLICATION_NAME: " << U2_PUBLICATION_NAME << endl;
+    cout << "U3_PUBLICATION_NAME: " << U3_PUBLICATION_NAME << endl;
+
     u = COEFF_MATRIX*desiredForces;
 
-    // Saturation
-    u.block<2, 1>(0, 0) /= fmax(fabs(u[0]), fabs(u[1]));
     
-    Notify(U1_PUBLICATION_NAME,u[0]);
-    Notify(U2_PUBLICATION_NAME,u[1]);
-    Notify(U3_PUBLICATION_NAME,u[2]);
+    cout << "COEFF_MATRIX: " << endl << COEFF_MATRIX << endl;
+    cout << "u avant sat: " << endl << u << endl << endl;
+
+    // Saturation
+    if (fmax(fabs(u[0]), fabs(u[1])) > 1) {
+        u.block<2, 1>(0, 0) /= fmax(fabs(u[0]), fabs(u[1]));
+    }
+
+    // Normalize so that u3 is in [-1,1]
+    if(fabs(u[2])>1)
+    {
+        u[2]/=fabs(u[2]);
+    }
+    
+    Notify(U1_PUBLICATION_NAME, u[0]);
+    Notify(U2_PUBLICATION_NAME, u[1]);
+    Notify(U3_PUBLICATION_NAME, u[2]);
+
+    cout << "u apres sat: " << endl << u << endl << endl;
 
     AppCastingMOOSApp::PostReport();
     return true;
@@ -82,10 +108,14 @@ bool MixThrusters::Iterate() {
 bool MixThrusters::OnStartUp() {
     AppCastingMOOSApp::OnStartUp();
 
+    string res;
     STRING_LIST sParams;
     m_MissionReader.EnableVerbatimQuoting(false);
     if (!m_MissionReader.GetConfiguration(GetAppName(), sParams))
         reportConfigWarning("No config block found for " + GetAppName());
+    if (!m_MissionReader.GetValue("COEFF_MATRIX", res)) {
+        reportConfigWarning("No COEFF_MATRIX config found for " + GetAppName());
+    }
 
     STRING_LIST::iterator p;
     sParams.reverse();
@@ -113,7 +143,7 @@ bool MixThrusters::OnStartUp() {
                 //send warning
                 reportUnhandledConfigWarning("Error while parsing COEFF_MATRIX: incorrect number of elements");
             }//end of else
-
+            handled = true;
         } else if (param == "FX_SUBSCRIPTION_NAME") {
             FX_SUBSCRIPTION_NAME = value;
             handled = true;
@@ -123,7 +153,7 @@ bool MixThrusters::OnStartUp() {
         } else if (param == "FZ_SUBSCRIPTION_NAME") {
             FZ_SUBSCRIPTION_NAME = value;
             handled = true;
-        }else if (param == "U1_PUBLICATION_NAME") {
+        } else if (param == "U1_PUBLICATION_NAME") {
             U1_PUBLICATION_NAME = value;
             handled = true;
         } else if (param == "U2_PUBLICATION_NAME") {
@@ -136,14 +166,16 @@ bool MixThrusters::OnStartUp() {
         if (!handled)
             reportUnhandledConfigWarning(orig);
 
-        registerVariables();
-        return true;
     }
+    registerVariables();
+    return true;
 }
 
 void MixThrusters::registerVariables() {
     AppCastingMOOSApp::RegisterVariables();
-    // Register("FOOBAR", 0);
+    Register(FX_SUBSCRIPTION_NAME, 0);
+    Register(RZ_SUBSCRIPTION_NAME, 0);
+    Register(FZ_SUBSCRIPTION_NAME, 0);
 }
 
 bool MixThrusters::buildReport() {
