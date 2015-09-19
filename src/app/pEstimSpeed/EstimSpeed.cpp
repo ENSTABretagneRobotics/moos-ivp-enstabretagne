@@ -11,6 +11,7 @@
 #include "ACTable.h"
 #include "EstimSpeed.h"
 #include "Eigen/Dense"
+#include <cmath>
 
 using namespace std;
 using namespace Eigen;
@@ -40,21 +41,16 @@ EstimSpeed::EstimSpeed() {
     // Wild guesses until we receive
     // the configuration
     COEFF_MATRIX(0, 0) = 1;
-    COEFF_MATRIX(0, 1) = 1;
+    COEFF_MATRIX(0, 1) = -1;
     COEFF_MATRIX(0, 2) = 0;
     COEFF_MATRIX(1, 0) = 1;
-    COEFF_MATRIX(1, 1) = -1;
+    COEFF_MATRIX(1, 1) = 1;
     COEFF_MATRIX(1, 2) = 0;
     COEFF_MATRIX(2, 0) = 0;
     COEFF_MATRIX(2, 1) = 0;
     COEFF_MATRIX(2, 2) = 1;
 
-    COEFF_MATRIX_TRANSLATION = Matrix3d::Zero();
-
-    COEFF_MATRIX_TRANSLATION.block<3, 1>(0, 0) = COEFF_MATRIX.block<3, 1>(0, 0);
-    COEFF_MATRIX_TRANSLATION.block<3, 1>(0, 2) = COEFF_MATRIX.block<3, 1>(0, 2);
-
-    COEFF_MATRIX_TRANSLATION_INV = COEFF_MATRIX_TRANSLATION.inverse();
+    COEFF_MATRIX_INV = COEFF_MATRIX.inverse();
 
     DAMPING_MATRIX = Matrix3d::Identity()*0.4;
 
@@ -69,7 +65,7 @@ EstimSpeed::EstimSpeed() {
     v = Vector3d::Zero();
 
     old_MOOSTime = MOOSTime();
-    mission_started=false;
+    mission_started = false;
 }
 
 bool EstimSpeed::OnNewMail(MOOSMSG_LIST &NewMail) {
@@ -94,19 +90,6 @@ bool EstimSpeed::OnNewMail(MOOSMSG_LIST &NewMail) {
         }// We receive LEFT thruster value, in [-1,1]]
         else if (key == "U1_SIDE_THRUSTER_ONE") {
             this->u(0) = msg.GetDouble();
-            // The Dead-reckoning is here
-            if (mission_started) {
-                double delta_t = MOOSTime() - old_MOOSTime;
-
-                X += delta_t*V;
-
-                Vector3d sumForcesLocal = (-DAMPING_MATRIX * (Vector3d(v(0) * v(0), v(1) * v(1), v(2) * v(2))) + COEFF_MATRIX_TRANSLATION_INV * u);
-                Vector3d sumForcesGlobal = rot.transpose() * sumForcesLocal;
-
-                V += delta_t * sumForcesGlobal / MASS;
-                v = rot*V;
-            }
-            old_MOOSTime = MOOSTime();
         }// We receive RIGHT thruster value, in [-1,1]]
         else if (key == "U2_SIDE_THRUSTER_TWO") {
             this->u(1) = msg.GetDouble();
@@ -123,7 +106,7 @@ bool EstimSpeed::OnNewMail(MOOSMSG_LIST &NewMail) {
             }
         } else if (key == "KELLER_DEPTH") {
             if (!mission_started) {
-                X[2] = -msg.GetDouble();
+                X[2] = abs(fmin(0,msg.GetDouble()));
             }
         } else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
             reportRunWarning("Unhandled Mail: " + key);
@@ -140,6 +123,20 @@ bool EstimSpeed::Iterate() {
     AppCastingMOOSApp::Iterate();
     if (mission_started) {
 
+        // The Dead-reckoning is here
+        if (mission_started) {
+            double delta_t = MOOSTime() - old_MOOSTime;
+
+            X += delta_t*V;
+
+            Vector3d sumForcesLocal = (-DAMPING_MATRIX * (Vector3d(v(0) * v(0), v(1) * v(1), v(2) * v(2))) + COEFF_MATRIX_INV * u);
+            Vector3d sumForcesGlobal = rot.transpose() * sumForcesLocal;
+
+            V += delta_t * sumForcesGlobal / MASS;
+            v = rot*V;
+        }
+        old_MOOSTime = MOOSTime();
+        
         stringstream ss;
         ss << X(0) << "," << X(1) << "," << X(2);
 
@@ -194,10 +191,7 @@ bool EstimSpeed::OnStartUp() {
                         i++;
                     }
                 }
-                COEFF_MATRIX_TRANSLATION.block<3, 1>(0, 0) = COEFF_MATRIX.block<3, 1>(0, 0);
-                COEFF_MATRIX_TRANSLATION.block<3, 1>(0, 2) = COEFF_MATRIX.block<3, 1>(0, 2);
-
-                COEFF_MATRIX_TRANSLATION_INV = COEFF_MATRIX_TRANSLATION.inverse();
+                COEFF_MATRIX_INV = COEFF_MATRIX.inverse();
             } else {
                 //incorrect array size
                 //send warning
@@ -229,6 +223,39 @@ bool EstimSpeed::OnStartUp() {
         } else if (param == "MASS") {
             this->MASS = atof(value.c_str());
             handled = true;
+        } else if (param == "YAW_REGISTRATION_NAME") {
+            this->YAW_REGISTRATION_NAME = value;
+            handled = true;
+        } else if(param=="U1_SUBSCRIPTION_NAME"){
+            this->U1_SUBSCRIPTION_NAME=value;
+            handled=true;
+        }else if(param=="U2_SUBSCRIPTION_NAME"){
+            this->U2_SUBSCRIPTION_NAME=value;
+            handled=true;
+        }else if(param=="U3_SUBSCRIPTION_NAME"){
+            this->U3_SUBSCRIPTION_NAME=value;
+            handled=true;
+        }else if(param=="POS_DEAD_RECKONING_PUBLICATION_NAME"){
+            this->POS_DEAD_RECKONING_PUBLICATION_NAME=value;
+            handled=true;
+        }else if(param=="SPEED_LOCAL_DEAD_RECKONING_PUBLICATION_NAME"){
+            this->SPEED_LOCAL_DEAD_RECKONING_PUBLICATION_NAME=value;
+            handled=true;
+        }else if(param=="SPEED_GLOBAL_DEAD_RECKONING_PUBLICATION_NAME"){
+            this->SPEED_GLOBAL_DEAD_RECKONING_PUBLICATION_NAME=value;
+            handled=true;
+        }else if(param=="MISSION_STARTED_SUBSCRIPTION_NAME"){
+            this->MISSION_STARTED_SUBSCRIPTION_NAME=value;
+            handled=true;
+        }else if(param=="GPS_E_SUBSCRIPTION_NAME"){
+            this->GPS_E_SUBSCRIPTION_NAME=value;
+            handled=true;
+        }else if(param=="GPS_N_SUBSCRIPTION_NAME"){
+            this->GPS_N_SUBSCRIPTION_NAME=value;
+            handled=true;
+        }else if(param=="KELLER_DEPTH_SUBSCRIPTION_NAME"){
+            this->KELLER_DEPTH_SUBSCRIPTION_NAME=value;
+            handled=true;
         }
         if (!handled)
             reportUnhandledConfigWarning(orig);
@@ -245,10 +272,10 @@ bool EstimSpeed::OnStartUp() {
 void EstimSpeed::registerVariables() {
 
     AppCastingMOOSApp::RegisterVariables();
-    Register("IMU_YAW", 0);
-    Register("U1_SIDE_THRUSTER_ONE", 0);
-    Register("U2_SIDE_THRUSTER_TWO", 0);
-    Register("U3_VERTICAL_THRUSTER", 0);
+    Register(YAW_REGISTRATION_NAME, 0);
+    Register(U1_SUBSCRIPTION_NAME, 0);
+    Register(U2_SUBSCRIPTION_NAME, 0);
+    Register(U3_SUBSCRIPTION_NAME, 0);
     Register("MISSION_START", 0);
     Register("GPS_E", 0);
     Register("GPS_N", 0);
@@ -284,9 +311,9 @@ bool EstimSpeed::buildReport() {
     m_msgs << actab.getFormattedString();
     actab = ACTable(4);
     actab << " (local) | u1 | u2 | u3";
-    actab << "Fx" << COEFF_MATRIX_TRANSLATION_INV(0, 0) << COEFF_MATRIX_TRANSLATION_INV(0, 1) << COEFF_MATRIX_TRANSLATION_INV(0, 2);
-    actab << "Fy" << COEFF_MATRIX_TRANSLATION_INV(1, 0) << COEFF_MATRIX_TRANSLATION_INV(1, 1) << COEFF_MATRIX_TRANSLATION_INV(1, 2);
-    actab << "Fz" << COEFF_MATRIX_TRANSLATION_INV(2, 0) << COEFF_MATRIX_TRANSLATION_INV(2, 1) << COEFF_MATRIX_TRANSLATION_INV(2, 2);
+    actab << "Fx" << COEFF_MATRIX_INV(0, 0) << COEFF_MATRIX_INV(0, 1) << COEFF_MATRIX_INV(0, 2);
+    actab << "Fy" << COEFF_MATRIX_INV(1, 0) << COEFF_MATRIX_INV(1, 1) << COEFF_MATRIX_INV(1, 2);
+    actab << "Fz" << COEFF_MATRIX_INV(2, 0) << COEFF_MATRIX_INV(2, 1) << COEFF_MATRIX_INV(2, 2);
     m_msgs << actab.getFormattedString();
     return (true);
 }
