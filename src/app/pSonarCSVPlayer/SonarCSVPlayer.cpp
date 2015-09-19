@@ -6,6 +6,7 @@
 /************************************************************/
 
 #include <iterator>
+#include "string.h"
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "SonarCSVPlayer.h"
