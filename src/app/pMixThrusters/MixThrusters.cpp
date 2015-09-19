@@ -69,8 +69,11 @@ bool MixThrusters::Iterate() {
     u = COEFF_MATRIX*desiredForces;
 
     // Saturation
-
-    // Publication
+    u.block<2, 1>(0, 0) /= fmax(fabs(u[0]), fabs(u[1]));
+    
+    Notify(U1_PUBLICATION_NAME,u[0]);
+    Notify(U2_PUBLICATION_NAME,u[1]);
+    Notify(U3_PUBLICATION_NAME,u[2]);
 
     AppCastingMOOSApp::PostReport();
     return true;
@@ -111,9 +114,27 @@ bool MixThrusters::OnStartUp() {
                 reportUnhandledConfigWarning("Error while parsing COEFF_MATRIX: incorrect number of elements");
             }//end of else
 
-            if (!handled)
-                reportUnhandledConfigWarning(orig);
+        } else if (param == "U1_SUBSCRIPTION_NAME") {
+            U1_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "U2_SUBSCRIPTION_NAME") {
+            U2_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "U3_SUBSCRIPTION_NAME") {
+            U3_SUBSCRIPTION_NAME = value;
+            handled = true;
+        }else if (param == "U1_PUBLICATION_NAME") {
+            U1_PUBLICATION_NAME = value;
+            handled = true;
+        } else if (param == "U2_PUBLICATION_NAME") {
+            U2_PUBLICATION_NAME = value;
+            handled = true;
+        } else if (param == "U3_PUBLICATION_NAME") {
+            U3_PUBLICATION_NAME = value;
+            handled = true;
         }
+        if (!handled)
+            reportUnhandledConfigWarning(orig);
 
         registerVariables();
         return true;
