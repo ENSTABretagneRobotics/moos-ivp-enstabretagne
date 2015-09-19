@@ -1,6 +1,8 @@
 ServerHost = localhost
 ServerPort = 9000
 Community  = AUV
+LatOrigin  = 42.954271
+LongOrigin = 10.601702
 
 //Serial port configuration
 GPS_SERIAL_PORT = /dev/ttyUSB0
@@ -10,33 +12,48 @@ SONAR_SERIAL_PORT = /dev/ttyUSB1
 KELLER_SERIAL_PORT = /dev/ttyUSB5
 
 //------------------------------------------
-// Antler configuration  block
-
 ProcessConfig = ANTLER
 {
   MSBetweenLaunches = 200
-  Run = MOOSDB        @ NewConsole = false
-  Run = uMS           @ NewConsole = false
-  Run = uMACView      @ NewConsole = false
-  Run = uProcessWatch @ NewConsole = false
+  Run = MOOSDB          @ NewConsole = false
+  //Run = uMS             @ NewConsole = false
+  //Run = uMACView        @ NewConsole = false
+  //Run = uProcessWatch   @ NewConsole = false
+//
+//  ////Run = pLogger       @ NewConsole = false
+//
+//  //Run = iSaucisse       @ NewConsole = false
+//  //Run = uTimerScript    @ NewConsole = false ~timerScriptAlimStartup
+//  //Run = iCamera         @ NewConsole = false ~iCamera1
+//  //Run = iCamera         @ NewConsole = false ~iCamera2
+//  //Run = pSimplePID      @ NewConsole = false ~pSimplePID_depth
+//  //Run = pSimplePID      @ NewConsole = false ~pSimplePID_heading
+//  //Run = iSounder        @ NewConsole = false
+//  //Run = iGPS            @ NewConsole = false
+//  //Run = iKeller         @ NewConsole = false
+//  //Run = iSonar          @ NewConsole = false
+//  //Run = iXSensINS       @ NewConsole = false
+  //Run = uSensorsViewer  @ NewConsole = false
 
-  //Run = pLogger       @ NewConsole = false
+  Run = pMarineViewer   @ NewConsole = false
+  Run = uTimerScript    @ NewConsole = false ~euRathlonItems
+}
 
-  Run = iSaucisse     @ NewConsole = false
-  Run = uTimerScript  @ NewConsole = false ~timerScriptAlimStartup
-  Run = iCamera       @ NewConsole = false ~iCamera1
-  Run = iCamera       @ NewConsole = false ~iCamera2
-  Run = iSounder  @ NewConsole = false
-  Run = iGPS          @ NewConsole = false
-  Run = iKeller       @ NewConsole = false
-  Run = iSonar        @ NewConsole = false
-  Run = iXSensINS     @ NewConsole = false
-  Run = uSensorsViewer @ NewConsole = false
+//------------------------------------------
+ProcessConfig = pSimplePID_depth
+{
+  AppTick   = 25
+  CommsTick = 25
+}
+
+//------------------------------------------
+ProcessConfig = pSimplePID_heading
+{
+  AppTick   = 25
+  CommsTick = 25
 }
 
 //------------------------------------------------
-// iSaucisse config block
-
 ProcessConfig = iSaucisse
 {
   AppTick   = 4
@@ -55,6 +72,8 @@ ProcessConfig = iSaucisse
   # Mac OS X:
   #     /dev/cu.usbmodem00034567
 }
+
+//------------------------------------------
 ProcessConfig = timerScriptAlimStartup
 {
   event = var=DESIRED_ELEVATOR, val=0, time=0.4
@@ -71,8 +90,6 @@ ProcessConfig = timerScriptAlimStartup
 }
 
 //------------------------------------------
-// iXSensINS config block
-
 ProcessConfig = iXSensINS
 {
   AppTick        = 25
@@ -82,11 +99,6 @@ ProcessConfig = iXSensINS
 }
 
 //------------------------------------------
-// iGPS config block
-
-LatOrigin    = 48.418079
-LongOrigin   = -4.472279
-
 ProcessConfig = iGPS
 {
   AppTick   = 4
@@ -99,8 +111,6 @@ ProcessConfig = iGPS
 }
 
 //------------------------------------------
-// iSonar config block
-
 ProcessConfig = iSonar
 {
   AppTick          = 4
@@ -113,7 +123,7 @@ ProcessConfig = iSonar
   CONTINUOUS       = true //TRUE FOR 360  ROTATION. SET RIGHT AND LEFT LIMIT IF FALSE
   //LEFTLIMIT      = 70.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
   //RIGHTLIMIT     = 110.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
-  
+
   POWERED_AT_START = false
 }
 
@@ -134,61 +144,57 @@ ProcessConfig = iKeller
 }
 
 //------------------------------------------
-// iCamera config block
-
 ProcessConfig = iCamera1
 {
-   AppTick   = 25
-   CommsTick = 25
+  AppTick   = 25
+  CommsTick = 25
 
-   VARIABLE_IMAGE_NAME   = CAMERA_FRONT
-   IDENTIFIANT_CV_CAMERA = 1
-   DISPLAY_IMAGE         = true
-   INVERT_IMAGE          = false
+  VARIABLE_IMAGE_NAME   = CAMERA_FRONT
+  IDENTIFIANT_CV_CAMERA = 1
+  DISPLAY_IMAGE         = true
+  INVERT_IMAGE          = false
 
-   LARGEUR_IMAGE_CAMERA  = 360
-   HAUTEUR_IMAGE_CAMERA  = 288
+  LARGEUR_IMAGE_CAMERA  = 360
+  HAUTEUR_IMAGE_CAMERA  = 288
 }
 
 //------------------------------------------
-// iCamera config block
-
 ProcessConfig = iCamera2
 {
-   AppTick   = 25
-   CommsTick = 25
+  AppTick   = 25
+  CommsTick = 25
 
-   VARIABLE_IMAGE_NAME   = CAMERA_SIDE
-   IDENTIFIANT_CV_CAMERA = 0
-   DISPLAY_IMAGE         = true
-   INVERT_IMAGE          = false
+  VARIABLE_IMAGE_NAME   = CAMERA_SIDE
+  IDENTIFIANT_CV_CAMERA = 0
+  DISPLAY_IMAGE         = true
+  INVERT_IMAGE          = false
 
-   LARGEUR_IMAGE_CAMERA  = 360
-   HAUTEUR_IMAGE_CAMERA  = 288
+  LARGEUR_IMAGE_CAMERA  = 360
+  HAUTEUR_IMAGE_CAMERA  = 288
 }
 
 //------------------------------------------
-// uSensorsViewer config block
-
 ProcessConfig = uSensorsViewer
 {
-   AppTick   = 25
-   CommsTick = 25
-}
-ProcessConfig = uMACView
-{
-   AppTick   = 25
-   CommsTick = 25
-}
-ProcessConfig = uProcessWatch
-{
-   AppTick   = 25
-   CommsTick = 25
+  AppTick   = 25
+  CommsTick = 25
 }
 
 //------------------------------------------
-// Logger  configuration  block
-//
+ProcessConfig = uMACView
+{
+  AppTick   = 25
+  CommsTick = 25
+}
+
+//------------------------------------------
+ProcessConfig = uProcessWatch
+{
+  AppTick   = 25
+  CommsTick = 25
+}
+
+//------------------------------------------
 ProcessConfig = pLogger
 {
   //over  loading  basic  params
@@ -201,4 +207,84 @@ ProcessConfig = pLogger
 
   AsyncLog        = true
   WildCardLogging = true
+}
+
+//------------------------------------------
+ProcessConfig = euRathlonItems                                   
+{
+
+}
+
+//------------------------------------------
+ProcessConfig = pMarineViewer                                   
+{
+  AppTick   = 4
+  CommsTick = 4
+  
+  // BackView Options ==========================================
+  tiff_file            = img/piombino.tif
+  set_pan_x            = 0
+  set_pan_y            = -400
+  zoom                 = 0.5
+  vehicle_shape_scale  = 2
+
+  // BackView Pull-Down Menu ===================================
+  hash_delta           = 10    // {10,50,200,500}
+  hash_shade           = 0.4   // [0.0, 1.0]
+  hash_viewable        = false  // {TRUE, false}
+  full_screen          = false // {true, FALSE}
+
+  // GeoAttributes Pull-Down Menu ==============================
+  polygon_viewable_all     = true  // {TRUE, false}
+  polygon_viewable_labels  = true  // {TRUE, false}
+  seglist_viewable_all     = true  // {TRUE, false}
+  seglist_viewable_labels  = true  // {TRUE, false}
+  point_viewable_all       = true  // {TRUE, false}
+  point_viewable_labels    = true  // {TRUE, false}
+  vector_viewable_all      = true  // {TRUE, false}
+  vector_viewable_labels   = true  // {TRUE, false}
+  circle_viewable_all      = true  // {TRUE, false}
+  circle_viewable_labels   = true  // {TRUE, false}
+  grid_viewable_all        = false  // {TRUE, false}
+  grid_viewable_labels     = false  // {TRUE, false}
+  grid_opaqueness          = 0.3   // {0.1, 0.2, ..., 1.0}
+  datum_viewable_all       = true  // {TRUE, false}
+  datum_viewable_labels    = true  // {TRUE, false}
+  marker_viewable_all      = true  // {TRUE, false}
+  marker_viewable_labels   = true  // {TRUE, false}
+  oparea_viewable_all      = true  // {TRUE, false}
+  oparea_viewable_labels   = true  // {TRUE, false}
+  drop_point_viewable_all  = true  // {TRUE, false} 
+  drop_point_coords        = as-dropped  // {lat-lon,local-grid}
+  drop_point_vertex_size   = true  // {1, 2, 3, ..., 10}
+   comms_pulse_viewable_all = true  // {TRUE, false}
+
+  // Vehicles Pull-Down Menu ===================================
+  vehicles_viewable       = true   // {TRUE, false}
+  vehicles_name_mode      = names+depth // {names, names+depth, off  
+                                        //names+mode, names+auxmode
+                                        //names+shortmode}
+  stale_report_thresh     = 30     // [5, inf)
+  stale_remove_thresh     = 30     // [0, inf)
+  vehicles_active_color   = red    // {yellow,white,blue,green}
+  vehicles_inactive_color = yellow // {red,white,blue,green}
+  trails_viewable         = true   // {TRUE, false}
+  trails_color            = white  // {WHITE, yellow, green}
+  bearing_lines           = true   // {TRUE, false}
+
+  // Vehicles Pull-Down Menu
+  appcast_viewable     = true
+  refresh_mode         = events   // {paused, streaming}
+  nodes_font_size      = medium   // {large, small, xsmall}
+  procs_font_size      = medium   // {large, small, xsmall}
+  appcast_font_size    = small    // {large, medium, xsmall}
+  appcast_color_scheme = default  // {default, indigo, beige}
+  appcast_width        = 30       // {20, 25, 30, ..., 65, 70}
+  appcast_height       = 70       // {30, 35, 40, ..., 85, 90}
+
+  //button_one   = DEPLOY # DEPLOY=true
+  //button_one   = MOOS_MANUAL_OVERIDE=false # RETURN=false
+  //button_two   = RETURN # RETURN=true
+  //button_three = SURVEY-true # SURVEY=true
+  //button_four  = SURVEY-false # SURVEY=false
 }
