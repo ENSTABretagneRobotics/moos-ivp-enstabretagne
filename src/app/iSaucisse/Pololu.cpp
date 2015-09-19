@@ -89,9 +89,14 @@ bool Pololu::turnOnRelay(int id, bool turned_on)
   return setTarget(id, turned_on ? HIGH_LEVEL : LOW_LEVEL);
 }
 
-bool Pololu::reset(bool all_on)
+bool Pololu::reset(bool all_on, double left_thr_value, double right_thr_value, double vert_thr_value)
 {
   bool success = true;
+
+  success &= setLeftThrusterValue(left_thr_value);
+  success &= setRightThrusterValue(right_thr_value);
+  success &= setVerticalThrusterValue(vert_thr_value);
+
   success &= turnOnRelay(1, all_on);
   success &= turnOnRelay(0, !all_on);
   delay(50);

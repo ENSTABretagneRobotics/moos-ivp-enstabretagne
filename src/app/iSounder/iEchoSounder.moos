@@ -1,0 +1,10 @@
+//------------------------------------------------
+// iSounder config block
+
+ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB0
+
+ProcessConfig = iSounder
+{
+  AppTick   = 4
+  CommsTick = 4
+}
