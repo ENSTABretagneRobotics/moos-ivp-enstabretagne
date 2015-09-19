@@ -10,7 +10,7 @@ ProcessConfig = pWallDetector
 	SONAR_GAIN     = 105
 
 	// Number of neighbour point for the average
-	MEAN_R         = 1
+	MEAN_R         = 2
 	MEAN_THETA     = 1
 	MIN_R		   = 1
 	

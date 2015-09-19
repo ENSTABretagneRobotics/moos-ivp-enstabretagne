@@ -29,21 +29,45 @@ ProcessConfig = ANTLER
   //Run = pLogger       @ NewConsole = false
   Run = pShare        @ NewConsole = false
 
+  // ************** ENGINE CONTROL *********
   Run = iSaucisse     @ NewConsole = false
+  Run = pMixThrusters     @ NewConsole = false
+
+  // ************** SENSORS *********
+ 
   Run = iCamera       @ NewConsole = false ~iCamera1
   Run = iCamera       @ NewConsole = false ~iCamera2
-  Run = pSensorViewer @ NewConsole = false
-  Run = iEchoSounder  @ NewConsole = false
+  Run = uSensorsViewer @ NewConsole = false
+  Run = iSounder  @ NewConsole = false
   Run = iGPS          @ NewConsole = false
   Run = iKeller       @ NewConsole = false
   Run = iSonar        @ NewConsole = false
   Run = iXSensINS     @ NewConsole = false
 }
 
+//------------------------------------------------
+// pMixThrusters config block
+
+ProcessConfig = pMixThrusters
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  FX_SUBSCRIPTION_NAME=DESIRED_FX
+  RZ_SUBSCRIPTION_NAME=DESIRED_RZ
+  FZ_SUBSCRIPTION_NAME=DESIRED_FZ
+
+  U1_PUBLICATION_NAME=SET_THRUSTER_LEFT
+  U2_PUBLICATION_NAME=SET_THRUSTER_RIGHT
+  U3_PUBLICATION_NAME=SET_THRUSTER_VERTICAL
+
+  COEFF_MATRIX=1,0,0,0,1,0,0,0,1
+}
+
 ProcessConfig = iSaucisse
 {
-  AppTick   = 4
-  CommsTick = 4
+  AppTick   = 10
+  CommsTick = 10
 
   RESET_ON_STARTUP = false
   RESET_ALL_ON = true
@@ -75,9 +99,7 @@ ProcessConfig=pShare
   Output = src_name = SONAR_*,route=multicast_8
   Output = src_name = OPERATION_*,route=multicast_8
   Output = src_name = SAUCISSE*,route=multicast_8
-  Output = src_name = U1*,route=multicast_8
-  Output = src_name = U2*,route=multicast_8
-  Output = src_name = U3*,route=multicast_8
+  Output = src_name = DESIRED_*,route=multicast_8
 }
 
 //------------------------------------------
@@ -128,7 +150,7 @@ ProcessConfig = iSonar
 }
 
 //------------------------------------------
-ProcessConfig = iEchoSounder
+ProcessConfig = iSounder
 {
   AppTick   = 4
   CommsTick = 4
@@ -178,9 +200,9 @@ ProcessConfig = iCamera2
 }
 
 //------------------------------------------
-// pSensorViewer config block
+// uSensorsViewer config block
 
-ProcessConfig = pSensorViewer
+ProcessConfig = uSensorsViewer
 {
    AppTick   = 25
    CommsTick = 25
@@ -208,6 +230,8 @@ ProcessConfig = pLogger
   File          = test_global
   PATH          = ~/log
   FileTimeStamp = true
+
+  DoublePrecision = 12
 
   AsyncLog        = true
   WildCardLogging = true
