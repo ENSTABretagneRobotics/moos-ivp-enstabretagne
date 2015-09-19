@@ -22,6 +22,16 @@ Saucisse::Saucisse()
   m_reset_on_startup = false;
   m_reset_all_on = true;
   m_nuc = new Nuc();
+
+  m_status_cameras = -2;  // undefined
+  m_status_modem = -2;    // undefined
+  m_status_sonar = -2;    // undefined
+  m_status_sounder = -2;  // undefined
+  m_status_gps = -2;      // undefined
+
+  m_left_thruster_value = 0.;
+  m_right_thruster_value = 0.;
+  m_vertical_thruster_value = 0.;
 }
 
 //---------------------------------------------------------
@@ -221,7 +231,10 @@ bool Saucisse::OnStartUp()
   m_pololu = new Pololu(m_device_name);
 
   if(m_reset_on_startup)
-    m_pololu->reset(m_reset_all_on);
+    m_pololu->reset(m_reset_all_on,
+                    m_left_thruster_value, 
+                    m_right_thruster_value, 
+                    m_vertical_thruster_value);
 
   registerVariables();  
   return true;
@@ -243,26 +256,24 @@ void Saucisse::registerVariables()
 
 bool Saucisse::buildReport() 
 {
-  #if 0 // Keep these around just for template
-    m_msgs << "============================================ \n";
-    m_msgs << "File:                                        \n";
-    m_msgs << "============================================ \n";
+  m_msgs << "============================================ \n";
+  m_msgs << "iSaucisse status :                           \n";
+  m_msgs << "============================================ \n";
+  m_msgs << "\n";
 
-    ACTable actab(4);
-    actab << "Alpha | Bravo | Charlie | Delta";
-    actab.addHeaderLines();
-    actab << "one" << "two" << "three" << "four";
-    m_msgs << actab.getFormattedString();
-  #endif
-    m_msgs << "============================================ \n";
-    m_msgs << "iSaucisse status :                           \n";
-    m_msgs << "============================================ \n";
-
-    /*ACTable actab(4);
-    actab << "thread Quit Request | Bravo | Charlie | Delta";
-    actab.addHeaderLines();
-    actab << m_deviceReadThread.IsQuitRequested() << "two" << "three" << "four";
-    m_msgs << actab.getFormattedString();*/
+  string error_message;
+  bool pololu_ok = m_pololu->isReady(error_message);
+  m_msgs << "Pololu status: \t" << (pololu_ok ? "ok" : error_message) << "\n";
+  m_msgs << "\n";
+  m_msgs << "Cameras: \t\t" << (m_status_cameras == -2 ? "?" : m_status_cameras + "") << "\n";
+  m_msgs << "Modem: \t\t\t" << (m_status_modem == -2 ? "?" : m_status_modem + "") << "\n";
+  m_msgs << "Sonar: \t\t\t" << (m_status_sonar == -2 ? "?" : m_status_sonar + "") << "\n";
+  m_msgs << "Sounder: \t\t" << (m_status_sounder == -2 ? "?" : m_status_sounder + "") << "\n";
+  m_msgs << "GPS: \t\t\t" << (m_status_gps == -2 ? "?" : m_status_gps + "") << "\n";
+  m_msgs << "\n";
+  m_msgs << "Left thruster: \t\t" << m_left_thruster_value << "\n";
+  m_msgs << "Right thruster: \t" << m_right_thruster_value << "\n";
+  m_msgs << "Vertical thruster: \t" << m_vertical_thruster_value << "\n";
 
   return  true;
 }
