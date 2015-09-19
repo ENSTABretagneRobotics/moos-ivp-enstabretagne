@@ -11,6 +11,11 @@ protected:
 	std::string m_data;
 
 public:
+  enum SonarType {
+    MiniKingNotDST = 0, //Miniking Sonars are not Digital Imaging Sonars
+    MicronDST = 1 //Micron Sonars are Digital Imaging Sonars
+  };
+
   enum MessageReadError {
     mrNotAMessage = -1,
     mrNotEnoughData = -2,
@@ -155,6 +160,14 @@ public:
 
   double firstObstacleDist( uint8_t threshold, const double& min_dist, const double& max_dist) const;
 
+};
+
+class SeaNetMsg_BBUserData : public SeaNetMsg
+{
+public:
+  SeaNetMsg_BBUserData() : SeaNetMsg() {};
+
+  SonarType getSonarType() const { return (read_ushort_at(19) == 15)?MicronDST:MiniKingNotDST;}
 };
 
 #endif // SEANETMSG_H

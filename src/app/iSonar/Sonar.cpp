@@ -201,6 +201,12 @@ void Sonar::ListenSonarMessages()
         m_bSonarReady = (!m_bNoParams) && m_bSentCfg;
       }
 
+      if (snmsg.messageType() == SeaNetMsg::mtBBUserData)
+      {
+        const SeaNetMsg_BBUserData * pBBUserData = reinterpret_cast<SeaNetMsg_BBUserData*> (&snmsg);
+        SeaNetMsg::SonarType snrType = pBBUserData->getSonarType();
+        reportRunWarning("Sonar Type : " + (snrType == SeaNetMsg::MicronDST)?"Micron":"Miniking");
+      }
       if (snmsg.messageType() == SeaNetMsg::mtHeadData)
       {
 	      const SeaNetMsg_HeadData * pHdta = reinterpret_cast<SeaNetMsg_HeadData*> (&snmsg);
@@ -228,7 +234,7 @@ void Sonar::ListenSonarMessages()
 	      	ss_scanline << pHdta->scanlineData()[k];
 	      	if(k!=pHdta->nBins()-1)
 	      		ss_scanline << ',';
-	      }	      
+	      }
 	      ss_scanline << '}';
 	      Notify("SONAR_SCANLINE", ss_scanline.str());
 	      // ***************************************
