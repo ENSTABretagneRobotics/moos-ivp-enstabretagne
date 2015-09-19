@@ -45,11 +45,11 @@ bool MixThrusters::OnNewMail(MOOSMSG_LIST &NewMail) {
         CMOOSMsg &msg = *p;
         string key = msg.GetKey();
 
-        if (key == "DESIRED_FX") {
+        if (key == FX_SUBSCRIPTION_NAME) {
             desiredForces[0] = msg.GetDouble();
-        } else if (key == "DESIRED_RZ") {
+        } else if (key == RZ_SUBSCRIPTION_NAME) {
             desiredForces[1] = msg.GetDouble();
-        } else if (key == "DESIRED_FZ") {
+        } else if (key == FZ_SUBSCRIPTION_NAME) {
             desiredForces[2] = msg.GetDouble();
         } else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
             reportRunWarning("Unhandled Mail: " + key);
@@ -114,14 +114,14 @@ bool MixThrusters::OnStartUp() {
                 reportUnhandledConfigWarning("Error while parsing COEFF_MATRIX: incorrect number of elements");
             }//end of else
 
-        } else if (param == "U1_SUBSCRIPTION_NAME") {
-            U1_SUBSCRIPTION_NAME = value;
+        } else if (param == "FX_SUBSCRIPTION_NAME") {
+            FX_SUBSCRIPTION_NAME = value;
             handled = true;
-        } else if (param == "U2_SUBSCRIPTION_NAME") {
-            U2_SUBSCRIPTION_NAME = value;
+        } else if (param == "RZ_SUBSCRIPTION_NAME") {
+            RZ_SUBSCRIPTION_NAME = value;
             handled = true;
-        } else if (param == "U3_SUBSCRIPTION_NAME") {
-            U3_SUBSCRIPTION_NAME = value;
+        } else if (param == "FZ_SUBSCRIPTION_NAME") {
+            FZ_SUBSCRIPTION_NAME = value;
             handled = true;
         }else if (param == "U1_PUBLICATION_NAME") {
             U1_PUBLICATION_NAME = value;

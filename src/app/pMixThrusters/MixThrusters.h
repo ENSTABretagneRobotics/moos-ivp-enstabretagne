@@ -32,9 +32,9 @@ class MixThrusters : public AppCastingMOOSApp
 
   private: // Configuration variables
       Eigen::Matrix3d COEFF_MATRIX;
-      std::string U1_SUBSCRIPTION_NAME;
-      std::string U2_SUBSCRIPTION_NAME;
-      std::string U3_SUBSCRIPTION_NAME;
+      std::string FX_SUBSCRIPTION_NAME;
+      std::string RZ_SUBSCRIPTION_NAME;
+      std::string FZ_SUBSCRIPTION_NAME;
 
       std::string U1_PUBLICATION_NAME;
       std::string U2_PUBLICATION_NAME;
