@@ -6,7 +6,7 @@ ProcessConfig = uJoystick
    AppTick   = 4
    CommsTick = 4
    
-   DEVICE_NAME = /dev/input/js1
+   DEVICE_NAME = /dev/input/js0
 
    INCREMENT = false
    SCALE = 100
