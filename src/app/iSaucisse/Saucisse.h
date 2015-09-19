@@ -36,6 +36,14 @@ class Saucisse : public AppCastingMOOSApp
     bool m_reset_on_startup;
     bool m_reset_all_on;
     double m_alert_max_temperature;
+    int m_status_cameras;
+    int m_status_modem;
+    int m_status_sonar;
+    int m_status_sounder;
+    int m_status_gps;
+    double m_left_thruster_value;
+    double m_right_thruster_value;
+    double m_vertical_thruster_value;
 
   private: // State variables
     Nuc *m_nuc;
