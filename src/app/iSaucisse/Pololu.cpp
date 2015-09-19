@@ -138,6 +138,8 @@ bool Pololu::turnOnBistableRelay(int id_on, int id_off, bool turned_on)
 bool Pololu::setThrusterValue(int id, double value)
 {
   // value in [-1.0;1.0]
+  value = min(1., value);
+  value = max(-1., value);
   double mean = (LOW_LEVEL + HIGH_LEVEL) / 2;
   double radius = (HIGH_LEVEL - LOW_LEVEL) / 2;
   return setTarget(id, mean + radius * value);
