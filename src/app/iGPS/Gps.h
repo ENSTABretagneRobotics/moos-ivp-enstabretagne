@@ -1,12 +1,12 @@
 /************************************************************/
-/*    FILE: Gps2.h
+/*    FILE: Gps.h
 /*    ORGN: Toutatis AUVs - ENSTA Bretagne
 /*    AUTH: Thomas Le Mezo
 /*    DATE: 2015
 /************************************************************/
 
-#ifndef Gps2_HEADER
-#define Gps2_HEADER
+#ifndef Gps_HEADER
+#define Gps_HEADER
 
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 
@@ -21,19 +21,19 @@
 
 #include <math.h>
 
-class Gps2 : public AppCastingMOOSApp
+class Gps : public AppCastingMOOSApp
 {
   public:
-    Gps2();
-    ~Gps2();
+    Gps();
+    ~Gps();
 
-  protected: // Standard MOOSApp functions to overload  
+  protected: // Standard MOOSApp functions to overload
     bool OnNewMail(MOOSMSG_LIST &NewMail);
     bool Iterate();
     bool OnConnectToServer();
     bool OnStartUp();
 
-  protected: // Standard AppCastingMOOSApp functions to overload 
+  protected: // Standard AppCastingMOOSApp functions to overload
     bool buildReport();
     void registerVariables();
 
@@ -63,4 +63,4 @@ class Gps2 : public AppCastingMOOSApp
     int m_sig, m_fix;
 };
 
-#endif 
+#endif

@@ -15,10 +15,10 @@ ProcessConfig = ANTLER
   MSBetweenLaunches = 200
 
   Run = MOOSDB       	@ NewConsole = true
+  Run = uMACView       @ NewConsole = false
   Run = uMS             @ NewConsole=false
-  Run = iGPS           @ NewConsole = true
-  Run = pTrustGPS       @ NewConsole = true
-  Run = pLogger         @ NewConsole = false
+  Run = iGPS           @ NewConsole = false
+  Run = pTrustGPS       @ NewConsole = false
 }
 
 //------------------------------------------
@@ -35,27 +35,7 @@ ProcessConfig = iGPS
   AppTick   = 5
   CommsTick = 5
 
-  UART_PORT = /dev/ttyUSB0
   UART_BAUD_RATE = 4800
-}
-
-
-
-//------------------------------------------
-// Logger  configuration  block
-//
-ProcessConfig = pLogger
-{
-  //over  loading  basic  params
-  AppTick     = 5.0
-  CommsTick   = 5.0
-
-  File          = test_gps2
-  PATH          = ~/log
-  FileTimeStamp = true
-
-  AsyncLog        = true
-  WildCardLogging = true
 }
 
 //------------------------------------------------
@@ -68,5 +48,10 @@ ProcessConfig = pTrustGPS
 
    ALTITUDE_AT_GPS_SUBMERGED = -0.5
    PARANOIA_LEVEL = 10
+}
+ProcessConfig = uMACView
+{
+   AppTick   = 4
+   CommsTick = 4
 }
 
