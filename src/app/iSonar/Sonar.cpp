@@ -16,7 +16,7 @@ Sonar::Sonar()
 	m_bSentCfg = false;
 
 	m_bSonarReady = false;
-	m_bPollSonar = true;
+	m_bPollSonar = false;
 	m_bIsPowered = false;
 
 	if (!m_serial_thread.Initialise(listen_sonar_messages_thread_func, (void*)this))
@@ -112,11 +112,11 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
 			else
 			{
         m_bIsPowered = true;
-        m_bNoParams = true;
-        m_bSentCfg = false;
+        // m_bNoParams = true;
+        // m_bSentCfg = false;
 
-        m_bSonarReady = false;
-        m_bPollSonar = false;
+        // m_bSonarReady = false;
+        // m_bPollSonar = false;
 				Initialization();
 			}
 		}
@@ -140,9 +140,9 @@ bool Sonar::OnConnectToServer()
 
 bool Sonar::Iterate()
 {
-  	AppCastingMOOSApp::Iterate();
+  AppCastingMOOSApp::Iterate();
 	m_iterations++;
-  	AppCastingMOOSApp::PostReport();
+  AppCastingMOOSApp::PostReport();
 	return(true);
 }
 
@@ -181,6 +181,7 @@ void Sonar::ListenSonarMessages()
       // Read more data as needed
       int nb_read = m_Port.ReadNWithTimeOut(buf, needed_len);
       sBuf.append(buf, nb_read);
+      // cout<<"ok"<<endl;
     }
     else if (needed_len == 0)
     {
@@ -209,9 +210,9 @@ void Sonar::ListenSonarMessages()
         // Update m_bSonarReady
         m_bSonarReady = (!m_bNoParams) && m_bSentCfg;
       }
-
       if (snmsg.messageType() == SeaNetMsg::mtHeadData)
       {
+        // snmsg.print_hex();
 	      const SeaNetMsg_HeadData * pHdta = reinterpret_cast<SeaNetMsg_HeadData*> (&snmsg);
 
 	      // MOOSDB raw data
@@ -285,7 +286,7 @@ bool Sonar::OnStartUp()
       if(MOOSStrCmp(param, "VOS"))
           m_msgHeadCommand.setVOS(atof(value.c_str()));
       if(MOOSStrCmp(param, "INVERT"))
-          m_msgHeadCommand.setInverted(atof(value.c_str()));
+          m_msgHeadCommand.setInverted(atoi(value.c_str()));
 			if(MOOSStrCmp(param, "NBINS"))
 			    m_msgHeadCommand.setNbins(atoi(value.c_str()));
 			if(MOOSStrCmp(param, "ANGLESTEP"))
@@ -366,9 +367,9 @@ bool Sonar::buildReport()
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
   #endif
-    m_msgs << "==============================================================\n";
-    m_msgs << "iSonarStatus :                                                \n";
-    m_msgs << "==============================================================\n";
+    // m_msgs << "==============================================================\n";
+    // m_msgs << "iSonarStatus :                                                \n";
+    // m_msgs << "==============================================================\n";
 
 
     ACTable actab(4);
@@ -388,6 +389,7 @@ bool Sonar::buildReport()
     string sonarIsReady = (m_bSonarReady)?"yes":"no";
     string sonarIsPolling = (m_bPollSonar)?"yes":"no";
     actab2 << sonarHasParams << sonarSentCfg << sonarIsReady << sonarIsPolling;
+    m_msgs << actab2.getFormattedString();
     m_msgs << "\n================== SNR PARAMETERS ===========================\n";
 
     ACTable actab3(5);
