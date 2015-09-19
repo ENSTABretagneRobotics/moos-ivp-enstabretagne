@@ -49,14 +49,27 @@ private: // Configuration variables
     {  0,   0 , 1  }
   };
   */
-    Eigen::Matrix3d COEFF_MATRIX_TRANSLATION;
-    
-    Eigen::Matrix3d COEFF_MATRIX_TRANSLATION_INV;
+    Eigen::Matrix3d COEFF_MATRIX_INV;
     
     Eigen::Matrix3d DAMPING_MATRIX;
     
     double MASS;
     
+    // Names of the topics we subscribe to
+    std::string YAW_REGISTRATION_NAME;
+    std::string U1_SUBSCRIPTION_NAME;
+    std::string U2_SUBSCRIPTION_NAME;
+    std::string U3_SUBSCRIPTION_NAME;
+    std::string MISSION_STARTED_SUBSCRIPTION_NAME;
+    std::string GPS_E_SUBSCRIPTION_NAME;
+    std::string GPS_N_SUBSCRIPTION_NAME;
+    std::string KELLER_DEPTH_SUBSCRIPTION_NAME;
+    
+    // Names of the topics we publish to
+    std::string POS_DEAD_RECKONING_PUBLICATION_NAME;
+    std::string SPEED_LOCAL_DEAD_RECKONING_PUBLICATION_NAME;
+    std::string SPEED_GLOBAL_DEAD_RECKONING_PUBLICATION_NAME;
+        
 private: // Inputs
     double imu_yaw;
     Eigen::Vector3d u; // (u1,u2,u3)
