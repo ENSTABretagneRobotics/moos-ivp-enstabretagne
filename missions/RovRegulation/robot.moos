@@ -4,11 +4,11 @@ Community  = AUV
 
 //Serial port configuration
 GPS_SERIAL_PORT = /dev/ttyUSB0
-ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB1
-SONAR_SERIAL_PORT = /dev/ttyUSB2
+ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB2
+SONAR_SERIAL_PORT = /dev/ttyUSB3
 
+XSENSINS_SERIAL_PORT = /dev/ttyUSB4
 KELLER_SERIAL_PORT = /dev/keller
-XSENSINS_SERIAL_PORT = /dev/xsens
 
 //------------------------------------------
 // Antler configuration  block
@@ -21,23 +21,67 @@ ProcessConfig = ANTLER
   Run = uMACView        @ NewConsole = false
   Run = uProcessWatch   @ NewConsole = false
 
-  Run = pLogger         @ NewConsole = false
+  //Run = pLogger         @ NewConsole = false
   Run = pShare          @ NewConsole = false 
 
   // ************** ENGINE CONTROL *********
   Run = iSaucisse       @ NewConsole = false
-  Run = pMixThrusters   @ NewConsole = false
+  //Run = pMixThrusters   @ NewConsole = true
 
   // ************** SENSORS *********
   Run = iCamera         @ NewConsole = false ~iCamera1
   Run = iCamera         @ NewConsole = false ~iCamera2
-  Run = uSensorsViewer  @ NewConsole = false
+  //Run = uSensorsViewer  @ NewConsole = false
   Run = iSounder        @ NewConsole = false
   Run = iGPS            @ NewConsole = false
   Run = iKeller         @ NewConsole = false
   Run = iSonar          @ NewConsole = false
   Run = iXSensINS       @ NewConsole = true
+
+  // ************* REGULATION ***************
+  //Run = pSimplePID      @ NewConsole = false ~pSimplePID_depth
+  //Run = pSimplePID      @ NewConsole = false ~pSimplePID_heading
 }
+
+//------------------------------------------------
+// pSimplePID config block
+
+ProcessConfig = pSimplePID_depth
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  KP =-80.0
+  KI = 0.0
+  KD = 0.0
+  KW = 0.0
+
+  MOOSVAR_STATE=KELLER_DEPTH
+  MOOSVAR_CONSIGNE=DESIRED_DEPTH
+  MOOSVAR_COMMAND=DESIRED_FZ
+  MOOSVAR_SATURATION=PID_SATURATION
+}
+
+//------------------------------------------------
+// pSimplePID config block
+
+ProcessConfig = pSimplePID_heading
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  KP = 0.0
+  //KI = 0.0
+  //KD = 0.0
+  //KW = 0.0
+
+  MOOSVAR_STATE=IMU_YAW
+  MOOSVAR_CONSIGNE =DESIRED_HEADING
+  MOOSVAR_COMMAND=DESIERED_RZ
+  MOOSVAR_STATE_DIFFERENTIAL=IMU_GYR_Z
+  MOOSVAR_SATURATION=PID_HEADING_SATURATION
+}
+
 
 //------------------------------------------------
 // pMixThrusters config block
@@ -104,8 +148,8 @@ ProcessConfig=pShare
 
 ProcessConfig = iXSensINS
 {
-  AppTick        = 25
-  CommsTick      = 25
+  AppTick        = 10
+  CommsTick      = 10
 
   UART_BAUD_RATE = 115200
 }
@@ -167,8 +211,8 @@ ProcessConfig = iKeller
 
 ProcessConfig = iCamera1
 {
-   AppTick   = 25
-   CommsTick = 25
+   AppTick   = 10
+   CommsTick = 10
 
    VARIABLE_IMAGE_NAME   = CAMERA_FRONT
    IDENTIFIANT_CV_CAMERA = 1
@@ -184,8 +228,8 @@ ProcessConfig = iCamera1
 
 ProcessConfig = iCamera2
 {
-   AppTick   = 25
-   CommsTick = 25
+   AppTick   = 10
+   CommsTick = 10
 
    VARIABLE_IMAGE_NAME   = CAMERA_SIDE
    IDENTIFIANT_CV_CAMERA = 0
@@ -206,13 +250,13 @@ ProcessConfig = uSensorsViewer
 }
 ProcessConfig = uMACView
 {
-   AppTick   = 25
-   CommsTick = 25
+   AppTick   = 4
+   CommsTick = 4
 }
 ProcessConfig = uProcessWatch
 {
-   AppTick   = 25
-   CommsTick = 25
+   AppTick   = 4
+   CommsTick = 4
 }
 
 //------------------------------------------
