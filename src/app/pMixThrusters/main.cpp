@@ -17,12 +17,14 @@
 
 using namespace std;
 
-MixThrusters objMixThrusters;
+MixThrusters *objMixThrusters;
 
 void kill_handler(int s);
 
 int main(int argc, char *argv[])
 {
+  objMixThrusters = new MixThrusters;
+
   string mission_file;
   string run_command = argv[0];
   xmldoc::MOOSAppDocumentation documentation(argv[0]);
@@ -59,13 +61,13 @@ int main(int argc, char *argv[])
   sigIntHandler.sa_flags = 0;
   sigaction(SIGTERM, &sigIntHandler, NULL);
 
-  objMixThrusters.Run(run_command.c_str(), mission_file.c_str());
+  objMixThrusters->Run(run_command.c_str(), mission_file.c_str());
 
   return(0);
 }
 
 void kill_handler(int s)
 {
-  objMixThrusters.quit();
+  delete objMixThrusters;
   exit(0);
 }

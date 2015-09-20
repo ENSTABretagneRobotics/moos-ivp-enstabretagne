@@ -28,17 +28,6 @@ NavigationScreen::NavigationScreen()
 //---------------------------------------------------------
 // Procedure: OnNewMail
 
-void NavigationScreen::quit()
-{
-  ofstream myfile;
-  myfile.open ("example2.txt");
-  myfile << "Writing this to a file.\n";
-  myfile.close();
-}
-
-//---------------------------------------------------------
-// Procedure: OnNewMail
-
 bool NavigationScreen::OnNewMail(MOOSMSG_LIST &NewMail)
 {
   AppCastingMOOSApp::OnNewMail(NewMail);

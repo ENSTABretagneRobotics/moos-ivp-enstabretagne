@@ -15,7 +15,6 @@ class EstimSpeed : public AppCastingMOOSApp {
 public:
     EstimSpeed();
     ~EstimSpeed() {};
-    void quit() {};
 
 protected: // Standard MOOSApp functions to overload  
     bool OnNewMail(MOOSMSG_LIST &NewMail);
