@@ -6,12 +6,20 @@
 /************************************************************/
 
 #include <string>
+#include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
 #include "MBUtils.h"
 #include "documentation/MOOSAppDocumentation.h"
 #include "ColorParse.h"
 #include "Joystick.h"
 
 using namespace std;
+
+Joystick objJoystick;
+
+void kill_handler(int s);
 
 int main(int argc, char *argv[])
 {
@@ -44,8 +52,20 @@ int main(int argc, char *argv[])
   cout << "uJoystick launching as " << run_command << endl;
   cout << termColor() << endl;
 
-  Joystick Joystick;
-  Joystick.Run(run_command.c_str(), mission_file.c_str());
+  // To catch the kill event
+  struct sigaction sigIntHandler;
+  sigIntHandler.sa_handler = kill_handler;
+  sigemptyset(&sigIntHandler.sa_mask);
+  sigIntHandler.sa_flags = 0;
+  sigaction(SIGTERM, &sigIntHandler, NULL);
+  
+  objJoystick.Run(run_command.c_str(), mission_file.c_str());
 
   return(0);
+}
+
+void kill_handler(int s)
+{
+  objJoystick.quit();
+  exit(0);
 }
