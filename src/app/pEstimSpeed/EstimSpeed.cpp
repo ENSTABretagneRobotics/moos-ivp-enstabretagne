@@ -77,34 +77,33 @@ bool EstimSpeed::OnNewMail(MOOSMSG_LIST &NewMail) {
     for (p = NewMail.begin(); p != NewMail.end(); p++) {
         CMOOSMsg &msg = *p;
         string key = msg.GetKey();
-
         // The mission has started, 
-        if (key == "MISSION_STARTED") {
+        if (key == MISSION_STARTED_SUBSCRIPTION_NAME) {
             mission_started = true;
         }// We receive the IMU yaw, in degrees
-        else if (key == "IMU_YAW") {
+        else if (key == YAW_REGISTRATION_NAME) {
             this->imu_yaw = msg.GetDouble();
             double cTheta = cos(MOOSDeg2Rad(imu_yaw));
             double sTheta = sin(MOOSDeg2Rad(imu_yaw));
             rot.block<2, 2>(0, 0) = (Matrix2d() << cTheta, -sTheta, sTheta, cTheta).finished();
         }// We receive LEFT thruster value, in [-1,1]]
-        else if (key == "U1_SIDE_THRUSTER_ONE") {
+        else if (key == U1_SUBSCRIPTION_NAME) {
             this->u(0) = msg.GetDouble();
         }// We receive RIGHT thruster value, in [-1,1]]
-        else if (key == "U2_SIDE_THRUSTER_TWO") {
+        else if (key == U2_SUBSCRIPTION_NAME) {
             this->u(1) = msg.GetDouble();
         }// We receive VERTICAL thruster value, in [-1,1]]
-        else if (key == "U3_VERTICAL_THRUSTER") {
+        else if (key == U3_SUBSCRIPTION_NAME) {
             this->u(2) = msg.GetDouble();
-        } else if (key == "GPS_E") {
+        } else if (key == GPS_E_SUBSCRIPTION_NAME) {
             if (!mission_started) {
                 X[0] = msg.GetDouble();
             }
-        } else if (key == "GPS_N") {
+        } else if (key == GPS_N_SUBSCRIPTION_NAME) {
             if (!mission_started) {
                 X[1] = msg.GetDouble();
             }
-        } else if (key == "KELLER_DEPTH") {
+        } else if (key == KELLER_DEPTH_SUBSCRIPTION_NAME) {
             if (!mission_started) {
                 X[2] = abs(fmin(0,msg.GetDouble()));
             }
@@ -121,10 +120,10 @@ bool EstimSpeed::OnConnectToServer() {
 
 bool EstimSpeed::Iterate() {
     AppCastingMOOSApp::Iterate();
-    if (mission_started) {
+    if (true){//mission_started) {
 
         // The Dead-reckoning is here
-        if (mission_started) {
+        if (true){//mission_started) {
             double delta_t = MOOSTime() - old_MOOSTime;
 
             X += delta_t*V;
@@ -140,13 +139,13 @@ bool EstimSpeed::Iterate() {
         stringstream ss;
         ss << X(0) << "," << X(1) << "," << X(2);
 
-        Notify("POS_DEAD_RECKONING", ss.str());
+        Notify(POS_DEAD_RECKONING_PUBLICATION_NAME, ss.str());
 
         ss.clear();
         ss.str(std::string());
 
         ss << v(0) << "," << v(1) << "," << v(2);
-        Notify("SPEED_LOCAL_DEAD_RECKONING", ss.str());
+        Notify(SPEED_LOCAL_DEAD_RECKONING_PUBLICATION_NAME, ss.str());
 
         ss.clear();
         ss.str(std::string());
@@ -154,7 +153,7 @@ bool EstimSpeed::Iterate() {
         ss << V(0) << "," << V(1) << "," << V(2);
         ss.str(std::string());
 
-        Notify("SPEED_GLOBAL_DEAD_RECKONING", ss.str());
+        Notify(SPEED_GLOBAL_DEAD_RECKONING_PUBLICATION_NAME, ss.str());
     }
 
     AppCastingMOOSApp::PostReport();
@@ -276,10 +275,10 @@ void EstimSpeed::registerVariables() {
     Register(U1_SUBSCRIPTION_NAME, 0);
     Register(U2_SUBSCRIPTION_NAME, 0);
     Register(U3_SUBSCRIPTION_NAME, 0);
-    Register("MISSION_START", 0);
-    Register("GPS_E", 0);
-    Register("GPS_N", 0);
-    Register("KELLER_DEPTH", 0);
+    Register(MISSION_STARTED_SUBSCRIPTION_NAME, 0);
+    Register(GPS_E_SUBSCRIPTION_NAME, 0);
+    Register(GPS_N_SUBSCRIPTION_NAME, 0);
+    Register(KELLER_DEPTH_SUBSCRIPTION_NAME, 0);
 }
 
 bool EstimSpeed::buildReport() {
