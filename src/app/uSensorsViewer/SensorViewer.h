@@ -22,7 +22,6 @@ class SensorViewer : public AppCastingMOOSApp
 	public:
 		SensorViewer();
 		~SensorViewer();
-		void quit() {};
 
 	protected:
 		bool OnNewMail(MOOSMSG_LIST &NewMail);

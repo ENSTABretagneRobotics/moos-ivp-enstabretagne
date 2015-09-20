@@ -18,7 +18,6 @@ class Sonar : public AppCastingMOOSApp
 	public:
 		Sonar();
 		~Sonar();
-		void quit() {};
 
 	protected:
 		bool OnNewMail(MOOSMSG_LIST &NewMail);

@@ -17,12 +17,13 @@
 
 using namespace std;
 
-TrustGPS objTrustGPS;
+TrustGPS *objTrustGPS;
 
 void kill_handler(int s);
 
 int main(int argc, char *argv[])
 {
+  objTrustGPS = new TrustGPS;
   string mission_file;
   string run_command = argv[0];
 
@@ -58,13 +59,13 @@ int main(int argc, char *argv[])
   sigIntHandler.sa_flags = 0;
   sigaction(SIGTERM, &sigIntHandler, NULL);
 
-  objTrustGPS.Run(run_command.c_str(), mission_file.c_str());
+  objTrustGPS->Run(run_command.c_str(), mission_file.c_str());
   
   return(0);
 }
 
 void kill_handler(int s)
 {
-  objTrustGPS.quit();
+  delete objTrustGPS;
   exit(0);
 }

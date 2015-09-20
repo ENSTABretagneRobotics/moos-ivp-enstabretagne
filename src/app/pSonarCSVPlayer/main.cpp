@@ -17,12 +17,14 @@
 
 using namespace std;
 
-SonarCSVPlayer objSonarCSVPlayer;
+SonarCSVPlayer *objSonarCSVPlayer;
 
 void kill_handler(int s);
 
 int main(int argc, char *argv[])
 {
+  objSonarCSVPlayer = new SonarCSVPlayer;
+  
   string mission_file;
   string run_command = argv[0];
   xmldoc::MOOSAppDocumentation documentation(argv[0]);
@@ -59,13 +61,13 @@ int main(int argc, char *argv[])
   sigIntHandler.sa_flags = 0;
   sigaction(SIGTERM, &sigIntHandler, NULL);
 
-  objSonarCSVPlayer.Run(run_command.c_str(), mission_file.c_str());
+  objSonarCSVPlayer->Run(run_command.c_str(), mission_file.c_str());
 
   return(0);
 }
 
 void kill_handler(int s)
 {
-  objSonarCSVPlayer.quit();
+  delete objSonarCSVPlayer;
   exit(0);
 }

@@ -18,12 +18,14 @@
 
 using namespace std;
 
-EstimSpeed objEstimSpeed;
+EstimSpeed *objEstimSpeed;
 
 void kill_handler(int s);
 
 int main(int argc, char *argv[])
 {
+  objEstimSpeed = new EstimSpeed;
+
   string mission_file;
   string run_command = argv[0];
   xmldoc::MOOSAppDocumentation documentation(argv[0]);
@@ -60,13 +62,13 @@ int main(int argc, char *argv[])
   sigIntHandler.sa_flags = 0;
   sigaction(SIGTERM, &sigIntHandler, NULL);
 
-  objEstimSpeed.Run(run_command.c_str(), mission_file.c_str());
+  objEstimSpeed->Run(run_command.c_str(), mission_file.c_str());
   
   return(0);
 }
 
 void kill_handler(int s)
 {
-  objEstimSpeed.quit();
+  delete objEstimSpeed;
   exit(0);
 }

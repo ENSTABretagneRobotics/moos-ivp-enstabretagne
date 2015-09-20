@@ -17,12 +17,14 @@
 
 using namespace std;
 
-Gps objGps;
+Gps *objGps;
 
 void kill_handler(int s);
 
 int main(int argc, char *argv[])
 {
+  objGps = new Gps;
+
   string mission_file;
   string run_command = argv[0];
   xmldoc::MOOSAppDocumentation documentation(argv[0]);
@@ -59,13 +61,13 @@ int main(int argc, char *argv[])
   sigIntHandler.sa_flags = 0;
   sigaction(SIGTERM, &sigIntHandler, NULL);
 
-  objGps.Run(run_command.c_str(), mission_file.c_str());
+  objGps->Run(run_command.c_str(), mission_file.c_str());
 
   return(0);
 }
 
 void kill_handler(int s)
 {
-  objGps.quit();
+  delete objGps;
   exit(0);
 }
