@@ -214,11 +214,6 @@ void XSensINS::registerVariables() {
 // Procedure: buildReport()
 
 bool XSensINS::buildReport() {
-
-  m_msgs << "============================================ \n";
-  m_msgs << "iXSensINS Status:                            \n";
-  m_msgs << "============================================ \n";
-
   ACTable actab(5);
   actab << "Serial Port | Baude rate | YAW | ROLL | PITCH";
   actab.addHeaderLines();

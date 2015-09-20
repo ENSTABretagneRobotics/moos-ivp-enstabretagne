@@ -975,26 +975,23 @@ bool Modem::buildReport()
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
   #endif
-    m_msgs << "==============================================================\n";
-    m_msgs << "iModemStatus :                                                \n";
-    m_msgs << "==============================================================\n";
 
-    ACTable actab(4);
-    actab << "SerialPort | Baudrate | In config process | Role ";
-    actab.addHeaderLines();
-    string confProcLaunched = (m_bModemConfigurationRequired)?"yes":"no";
-    string modemRoleRequired = (m_iModemRoleRequired)?"slave":"master";
-    actab << m_portName << m_Port.GetBaudRate() << confProcLaunched << modemRoleRequired;
-    m_msgs << actab.getFormattedString();
-    m_msgs << "\n==============================================================\n";
+  ACTable actab(4);
+  actab << "SerialPort | Baudrate | In config process | Role ";
+  actab.addHeaderLines();
+  string confProcLaunched = (m_bModemConfigurationRequired)?"yes":"no";
+  string modemRoleRequired = (m_iModemRoleRequired)?"slave":"master";
+  actab << m_portName << m_Port.GetBaudRate() << confProcLaunched << modemRoleRequired;
+  m_msgs << actab.getFormattedString();
+  m_msgs << "\n==============================================================\n";
 
-ACTable actab2(4);
-    actab2 << "ModemPower | MagnetPower | Last Message | Last Range";
-    actab2.addHeaderLines();
-    string modemPowered = (m_bIsModemPowered)?"yes":"no";
-    string magnetPowered = (m_bIsMagnetPowered)?"yes":"no";
-    actab2 << modemPowered << magnetPowered << messageReceived << rangingValue;
-    m_msgs << actab2.getFormattedString();
+  ACTable actab2(4);
+  actab2 << "ModemPower | MagnetPower | Last Message | Last Range";
+  actab2.addHeaderLines();
+  string modemPowered = (m_bIsModemPowered)?"yes":"no";
+  string magnetPowered = (m_bIsMagnetPowered)?"yes":"no";
+  actab2 << modemPowered << magnetPowered << messageReceived << rangingValue;
+  m_msgs << actab2.getFormattedString();
 
   return true;
 }
