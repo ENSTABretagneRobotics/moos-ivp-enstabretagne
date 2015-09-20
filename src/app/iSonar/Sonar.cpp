@@ -19,7 +19,7 @@ Sonar::Sonar()
 	m_bPollSonar = false;
 	m_bIsPowered = false;
 
-  m_snrType = SeaNetMsg::UnknownSonar;
+  m_snrType = SeaNetMsg::noBBUserData;
 
 	if (!m_serial_thread.Initialise(listen_sonar_messages_thread_func, (void*)this))
 	{
@@ -101,24 +101,18 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
 		}
 		else if ( key == "POWERED_SONAR" )
 		{
-			if (msg.GetDouble() == 0)
-			{
-				m_bIsPowered = false;
-				m_bNoParams = true;
-				m_bSentCfg = false;
+      m_bNoParams = true;
+      m_bSentCfg = false;
 
-				m_bSonarReady = false;
-				m_bPollSonar = false;
-				m_serial_thread.Stop();
-			}
+      m_bSonarReady = false;
+      m_snrType = SeaNetMsg::noBBUserData;
+      m_serial_thread.Stop();
+
+			if (msg.GetDouble() == 0)
+				m_bIsPowered = false;
 			else
 			{
         m_bIsPowered = true;
-        // m_bNoParams = true;
-        // m_bSentCfg = false;
-
-        // m_bSonarReady = false;
-        // m_bPollSonar = false;
 				Initialization();
 			}
 		}
@@ -188,12 +182,13 @@ void Sonar::ListenSonarMessages()
     else if (needed_len == 0)
     {
       // Process message
-      cout << "Found message " << SeaNetMsg::detectMessageType(sBuf) << endl;
+      // cout << "Found message " << SeaNetMsg::detectMessageType(sBuf) << endl;
       SeaNetMsg snmsg(sBuf);
-      //cout << "Created message with type " << snmsg.messageType() << endl;
-      //snmsg.print_hex();
+      // cout << "Created message with type " << snmsg.messageType() << endl;
+      // snmsg.print_hex();
 
-      if (snmsg.messageType() == SeaNetMsg::mtAlive) {
+      if (snmsg.messageType() == SeaNetMsg::mtAlive)
+      {
         headInf.c = snmsg.data().at(20);
 
         m_bNoParams = headInf.bits.NoParams;
@@ -202,13 +197,10 @@ void Sonar::ListenSonarMessages()
         // Sonar polling was enabled but Sonar was not ready...
         // ...now that sonar is ready, start to poll.
         if (!m_bSonarReady && m_bPollSonar && !m_bNoParams && m_bSentCfg) {
-          cout << "Sonar is now ready, initiating scanline polling." << endl;
           SeaNetMsg_SendData msg_SendData;
           msg_SendData.setTime(MOOSTime());
           SendSonarMessage(msg_SendData);
-          Notify("SONAR_CONNECTED", "true");
         }
-
         // Update m_bSonarReady
         m_bSonarReady = (!m_bNoParams) && m_bSentCfg;
       }
@@ -216,7 +208,7 @@ void Sonar::ListenSonarMessages()
       {
         const SeaNetMsg_BBUserData * pBBUserData = reinterpret_cast<SeaNetMsg_BBUserData*> (&snmsg);
         m_snrType = pBBUserData->getSonarType();
-        reportRunWarning("Sonar Type : " + (m_snrType == SeaNetMsg::MicronDST)?"Micron":"Miniking");
+        // reportRunWarning("Sonar Type : " + (m_snrType == SeaNetMsg::MicronDST)?"MicronSnr":"MinikingSnr");
       }
       if (snmsg.messageType() == SeaNetMsg::mtHeadData)
       {
@@ -233,11 +225,19 @@ void Sonar::ListenSonarMessages()
 	      ss << "ad_interval=" << pHdta->ADInterval_m() << ",";
 	      ss << "scanline=";
 	      Write(ss, vScanline);
-	      Notify("SONAR_RAW_DATA", ss.str());
+        if(m_snrType == SeaNetMsg::MicronDST)
+          Notify("SONAR_RAW_DATA_MICRON", ss.str());
+        else if(m_snrType == SeaNetMsg::MiniKingNotDST)
+          Notify("SONAR_RAW_DATA_MINIKING", ss.str());
+
 
 	      // ***************************************
 	      // MOSSDB data for WALL DETECTOR
-	      Notify("SONAR_BEARING", pHdta->bearing());
+        if(m_snrType == SeaNetMsg::MicronDST)
+          Notify("SONAR_BEARING_MICRON", pHdta->bearing());
+        else if(m_snrType == SeaNetMsg::MiniKingNotDST)
+          Notify("SONAR_BEARING_MINIKING", pHdta->bearing());
+
 
 	      stringstream ss_scanline;
 	      ss_scanline << '[' << (int)pHdta->nBins()<< ']';
@@ -248,7 +248,10 @@ void Sonar::ListenSonarMessages()
 	      		ss_scanline << ',';
 	      }
 	      ss_scanline << '}';
-	      Notify("SONAR_SCANLINE", ss_scanline.str());
+        if(m_snrType == SeaNetMsg::MicronDST)
+          Notify("SONAR_SCANLINE_MICRON", ss_scanline.str());
+        else if(m_snrType == SeaNetMsg::MiniKingNotDST)
+          Notify("SONAR_SCANLINE_MINIKING", ss_scanline.str());
 	      // ***************************************
 
 	      // stringstream ss2;
@@ -346,10 +349,6 @@ void Sonar::Initialization(void)
 
 	MOOSPause(50);
 	bool sonarReady = SendSonarMessage(m_msgHeadCommand);
-
-	Notify("SONAR_CONNECTED", "false");
-
-	//////
 }
 
 void Sonar::RegisterVariables()
@@ -409,12 +408,14 @@ bool Sonar::buildReport()
     ACTable actab4(5);
     actab4 << "Sonar Type | VoS | Continuous | LeftLimit | RightLimit";
     string sonarType;
-    if (m_snrType == SeaNetMsg::UnknownSonar)
-      sonarType = "No Sonar Type!";
+    if (m_snrType == SeaNetMsg::SonarTypeError)
+      sonarType = "Sonar Type!";
     else if(m_snrType == SeaNetMsg::MicronDST)
       sonarType = "Micron Sonar";
     else if(m_snrType == SeaNetMsg::MiniKingNotDST)
       sonarType = "MiniKing Sonar";
+    else if(m_snrType == SeaNetMsg::noBBUserData)
+      sonarType = "No mtBBUserData!";
     actab4 << sonarType << m_msgHeadCommand.getVOS() << m_msgHeadCommand.getContinuous() << m_msgHeadCommand.getLeftLimit() << m_msgHeadCommand.getRightLimit();
     m_msgs << actab4.getFormattedString();
 

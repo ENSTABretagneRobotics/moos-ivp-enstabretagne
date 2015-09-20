@@ -14,12 +14,13 @@ ProcessConfig = ANTLER
   MSBetweenLaunches = 200
 
   Run = MOOSDB          @ NewConsole = true
+  Run = uMS           @ NewConsole = false
 
   Run = uMACView @ NewConsole = false
 
   //Run = iSaucisse     @ NewConsole = true
 
-  Run = iSonar @ NewConsole = false
+  Run = iSonar @ NewConsole = true
 
 }
 
