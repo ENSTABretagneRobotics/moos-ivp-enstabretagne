@@ -214,7 +214,8 @@ bool Keller::ReadPressure()
         value.c[1] = (uint8)buf[4];
         value.c[0] = (uint8)buf[5];
         // printf("value read : %f\n",value.v);
-        m_lastP_value = value.v*1.0e5/(1000.0*9.81);;
+        m_lastP_value = value.v*1.0e5/(1000.0*9.81);
+        //immersionEnMetre = -(value.v-1)*1.0e5/(1000.0*9.81) = 0.3m~0.4m @ Piompino by FLB, 19Sept2015
         Notify("KELLER_DEPTH",m_lastP_value);
       }
     }

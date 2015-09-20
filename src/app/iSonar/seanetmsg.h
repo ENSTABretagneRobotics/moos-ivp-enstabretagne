@@ -132,13 +132,25 @@ public:
 
   void setParams(const SNRPARAMS& params) {this->params = params; buildMessage();}
 
-  void setRange(const double& range_in_m) {params.RangeScale = range_in_m; buildMessage();}
-  void setNbins(int nBins) {params.NBins = nBins; buildMessage();}
-  void setAngleStep(const double &angle_step) {params.StepAngleSize = angle_step; buildMessage();}
-  void setGain(const double &gain) {params.IGain = (int)(100.*gain/210.); buildMessage();}
   void setContinuous(bool continuous) {params.cont = continuous; buildMessage();}
+  void setInverted(bool invert) {params.invert = invert; buildMessage();}
   void setLeftLimit(const double& leftLimit) {params.LeftAngleLimit = leftLimit; buildMessage();}
   void setRightLimit(const double &rightLimit) {params.RightAngleLimit = rightLimit; buildMessage();}
+  void setVOS(int vos) {params.VelocityOfSound = vos; buildMessage();}
+  void setRange(const double& range_in_m) {params.RangeScale = range_in_m; buildMessage();}
+  void setAngleStep(const double &angle_step) {params.StepAngleSize = angle_step; buildMessage();}
+  void setNbins(int nBins) {params.NBins = nBins; buildMessage();}
+  void setGain(const double &gain) {params.IGain = (int)(100.*gain/210.); buildMessage();}
+
+  int getContinuous() {return params.cont;}
+  int getInverted() {return params.invert;}
+  double getLeftLimit() {return params.LeftAngleLimit;}
+  double getRightLimit() {return params.RightAngleLimit;}
+  int getVOS() {return params.VelocityOfSound;}
+  int getRange() {return params.RangeScale;}
+  double getAngleStep() {return params.StepAngleSize;}
+  int getNbins() {return params.NBins;}
+  int getGain() {return params.IGain;}
 
 protected:
   SNRPARAMS params;
