@@ -6,12 +6,20 @@
 /************************************************************/
 
 #include <string>
+#include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
 #include "MBUtils.h"
 #include "ColorParse.h"
 #include "TrustGPS.h"
 #include "TrustGPS_Info.h"
 
 using namespace std;
+
+TrustGPS objTrustGPS;
+
+void kill_handler(int s);
 
 int main(int argc, char *argv[])
 {
@@ -43,10 +51,20 @@ int main(int argc, char *argv[])
   cout << "pTrustGPS launching as " << run_command << endl;
   cout << termColor() << endl;
 
-  TrustGPS TrustGPS;
+  // To catch the kill event
+  struct sigaction sigIntHandler;
+  sigIntHandler.sa_handler = kill_handler;
+  sigemptyset(&sigIntHandler.sa_mask);
+  sigIntHandler.sa_flags = 0;
+  sigaction(SIGTERM, &sigIntHandler, NULL);
 
-  TrustGPS.Run(run_command.c_str(), mission_file.c_str());
+  objTrustGPS.Run(run_command.c_str(), mission_file.c_str());
   
   return(0);
 }
 
+void kill_handler(int s)
+{
+  objTrustGPS.quit();
+  exit(0);
+}

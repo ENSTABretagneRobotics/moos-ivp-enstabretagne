@@ -24,6 +24,7 @@ class Keller : public AppCastingMOOSApp
   public:
     Keller();
     ~Keller();
+    void quit() {};
 
   protected: // Standard MOOSApp functions to overload
     bool OnNewMail(MOOSMSG_LIST &NewMail);
