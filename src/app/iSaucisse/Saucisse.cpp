@@ -35,13 +35,14 @@ Saucisse::Saucisse()
 }
 
 //---------------------------------------------------------
-// Denstructor
+// Destructor
 
 Saucisse::~Saucisse()
 {
   m_pololu->setAllThrustersValue(0.);
   m_pololu->bipOnExit();
   delete m_pololu;
+  delete m_nuc;
 }
 
 //---------------------------------------------------------
@@ -111,11 +112,17 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
     else if(key == "POWER_ALL")
     {
       Notify("POWER_CAMERAS", msg.GetDouble());
+      MOOSPause(100);
       Notify("POWER_GPS", msg.GetDouble());
+      MOOSPause(100);
       Notify("POWER_SOUNDER", msg.GetDouble());
+      MOOSPause(100);
       Notify("POWER_SONAR", msg.GetDouble());
+      MOOSPause(100);
       Notify("POWER_MODEM", msg.GetDouble());
+      MOOSPause(100);
       Notify("POWER_MODEM_EA", msg.GetDouble());
+      MOOSPause(100);
     }
 
     else if(key == "EMIT_BIPS")
@@ -247,10 +254,12 @@ bool Saucisse::OnStartUp()
   m_pololu = new Pololu(m_device_name);
 
   if(m_reset_on_startup)
-    m_pololu->reset(m_reset_all_on,
-                    m_left_thruster_value, 
-                    m_right_thruster_value, 
-                    m_vertical_thruster_value);
+  {
+    Notify("POWER_ALL", m_reset_all_on ? "1" : "0");
+    Notify("SET_THRUSTER_LEFT", m_left_thruster_value);
+    Notify("SET_THRUSTER_RIGHT", m_right_thruster_value);
+    Notify("SET_THRUSTER_VERTICAL", m_vertical_thruster_value);
+  }
 
   registerVariables();  
   return true;
@@ -290,6 +299,8 @@ bool Saucisse::buildReport()
   m_msgs << "Left thruster: \t\t" << m_left_thruster_value << "\n";
   m_msgs << "Right thruster: \t" << m_right_thruster_value << "\n";
   m_msgs << "Vertical thruster: \t" << m_vertical_thruster_value << "\n";
+  m_msgs << "\n";
+  m_msgs << "NUC temperature: \t" << m_nuc->getTemperature() << "°C\n";
 
   return  true;
 }
