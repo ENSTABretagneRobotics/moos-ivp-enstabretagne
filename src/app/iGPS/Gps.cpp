@@ -206,7 +206,11 @@ bool Gps::buildReport() {
     ACTable actab(4);
     actab << "Fix | Sig | Lat | Lon";
     actab.addHeaderLines();
-    actab << m_fix << m_sig << m_lat << m_lon;
+    char bufferLat[10];
+    char bufferLon[10];
+    sprintf(bufferLat,"%2.6lf",m_lat);
+    sprintf(bufferLon,"%2.6lf",m_lon);
+    actab << m_fix << m_sig << bufferLat << bufferLon;
     m_msgs << actab.getFormattedString();
 
     return true;
