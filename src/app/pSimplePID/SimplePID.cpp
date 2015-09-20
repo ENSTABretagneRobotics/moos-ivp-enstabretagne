@@ -10,6 +10,7 @@
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "SimplePID.h"
+#include <math.h>
 
 using namespace std;
 
@@ -42,6 +43,8 @@ SimplePID::SimplePID()
   m_moosvar_saturation          = "SATURATION";
   m_moosvar_state_diffferential = "";
   m_differential_input          = false;
+
+  m_angle_degree                = false;
 }
 
 //---------------------------------------------------------
@@ -103,8 +106,13 @@ bool SimplePID::Iterate()
   m_dt = MOOSTime() - m_time_previous;
   m_time_previous = MOOSTime();
 
-  // Proportional  
+  // Proportional
   m_error = m_consigne - m_state;
+
+  if(m_angle_degree){
+    m_error = 2.0*atan(tan(m_error/2.0*M_PI/180.0))*180.0/M_PI;
+  }
+
   double P = m_dt * m_kp * m_error;
 
   // Integral
@@ -152,16 +160,16 @@ bool SimplePID::OnStartUp()
     bool handled = false;
 
     if(param == "KP"){
-      m_kp = atoi(value.c_str()); handled = true;
+      m_kp = atof(value.c_str()); handled = true;
     }
     else if(param == "KI"){
-      m_ki = atoi(value.c_str()); handled = true;
+      m_ki = atof(value.c_str()); handled = true;
     }
     else if(param == "KD"){
-      m_kd = atoi(value.c_str()); handled = true;
+      m_kd = atof(value.c_str()); handled = true;
     }
     else if(param == "KW"){
-      m_kw = atoi(value.c_str()); handled = true;
+      m_kw = atof(value.c_str()); handled = true;
     }
     else if(param == "MOOSVAR_STATE"){
       m_moosvar_state = value;    handled = true;
@@ -179,6 +187,11 @@ bool SimplePID::OnStartUp()
       m_moosvar_state_diffferential = value;
       m_differential_input = true;
       handled = true;
+    }
+    else if(param == "ANGLE"){
+      if(value == "DEGREE"){
+        m_angle_degree = true;
+      }
     }
 
     if(!handled)
