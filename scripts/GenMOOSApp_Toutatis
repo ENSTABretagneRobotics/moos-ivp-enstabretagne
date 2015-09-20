@@ -58,7 +58,6 @@ class ${1} : public AppCastingMOOSApp
   public:
     ${1}();
     ~${1}() {};
-    void quit() {};
 
   protected: // Standard MOOSApp functions to overload  
     bool OnNewMail(MOOSMSG_LIST &NewMail);
@@ -103,12 +102,14 @@ cat >> main.cpp <<EOF
 
 using namespace std;
 
-${1} obj${1};
+${1} *obj${1};
 
 void kill_handler(int s);
 
 int main(int argc, char *argv[])
 {
+  obj${1} = new ${1};
+
   string mission_file;
   string run_command = argv[0];
   xmldoc::MOOSAppDocumentation documentation(argv[0]);
@@ -146,14 +147,14 @@ int main(int argc, char *argv[])
   sigIntHandler.sa_flags = 0;
   sigaction(SIGTERM, &sigIntHandler, NULL);
 
-  obj${1}.Run(run_command.c_str(), mission_file.c_str());
+  obj${1}->Run(run_command.c_str(), mission_file.c_str());
 
   return(0);
 }
 
 void kill_handler(int s)
 {
-  obj${1}.quit();
+  delete obj${1};
   exit(0);
 }
 EOF

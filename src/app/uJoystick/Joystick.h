@@ -17,7 +17,6 @@ class Joystick : public AppCastingMOOSApp
   public:
     Joystick();
     ~Joystick();
-    void quit() {};
 
   protected: // Standard MOOSApp functions to overload  
     bool OnNewMail(MOOSMSG_LIST &NewMail);

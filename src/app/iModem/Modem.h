@@ -29,7 +29,6 @@ class Modem : public AppCastingMOOSApp
   public:
     Modem();
     ~Modem();
-    void quit() {};
 
   protected: // Standard MOOSApp functions to overload
     bool OnNewMail(MOOSMSG_LIST &NewMail);
