@@ -24,6 +24,7 @@ class EchoSounder : public AppCastingMOOSApp
   public:
     EchoSounder();
     ~EchoSounder();
+    void quit() {};
 
   protected: // Standard MOOSApp functions to overload
     bool OnNewMail(MOOSMSG_LIST &NewMail);

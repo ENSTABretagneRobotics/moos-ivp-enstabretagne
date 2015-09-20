@@ -23,23 +23,23 @@ ProcessConfig = pWallDetector
 {
   AppTick        = 10
   CommsTick      = 10
-  
+
   SONAR_RANGE    = 100.0
   SONAR_GAIN     = 105
   MEAN_R         = 1
   MEAN_THETA     = 1
-  
+
   WALL_THRESHOLD = 60
   SEARCH_ZONE    = 20
 
   VERTICAL_SCAN  = false
 }
 
-ProcessConfig = uTimerScript                                    
-{                                                               
-  AppTick   = 10                                                 
-  CommsTick = 10                                                
-  
+ProcessConfig = uTimerScript
+{
+  AppTick   = 10
+  CommsTick = 10
+
   event = var=SONAR_SCANLINE, val="[11]{60, 60, 60, 60, 100, 100, 100, 100, 60, 60, 60}", time=1.0
   event = var=SONAR_BEARING,  val=0.1,  time=1.0
 
@@ -60,4 +60,4 @@ ProcessConfig = uTimerScript
 
   event = var=SONAR_SCANLINE, val="[11]{60, 60, 60, 60, 100, 100, 100, 100, 60, 60, 60}", time=7.0
   event = var=SONAR_BEARING,  val=0.7,  time=7.0
-}                          
+}
