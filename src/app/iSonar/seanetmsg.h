@@ -14,7 +14,8 @@ public:
   enum SonarType {
     MiniKingNotDST = 0, //Miniking Sonars are not Digital Imaging Sonars
     MicronDST = 1, //Micron Sonars are Digital Imaging Sonars
-    UnknownSonar = -1 //Micron Sonars are Digital Imaging Sonars
+    noBBUserData = 2, //Sonar type in construction, i.e. no BBUSerData received
+    SonarTypeError = -1 //Sonar type Error
   };
 
   enum MessageReadError {
@@ -180,7 +181,7 @@ class SeaNetMsg_BBUserData : public SeaNetMsg
 public:
   SeaNetMsg_BBUserData() : SeaNetMsg() {};
 
-  SonarType getSonarType() const { return (read_ushort_at(19) == 15)?MicronDST:MiniKingNotDST;}
+  SonarType getSonarType() const { return (read_uchar_at(19) == 0x0f)?MicronDST:MiniKingNotDST;}
 };
 
 #endif // SEANETMSG_H
