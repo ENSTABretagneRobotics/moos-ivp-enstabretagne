@@ -10,6 +10,8 @@
 #include "ACTable.h"
 #include "NavigationScreen.h"
 
+#define UNSET_VALUE "-"
+
 using namespace std;
 
 //---------------------------------------------------------
@@ -17,6 +19,10 @@ using namespace std;
 
 NavigationScreen::NavigationScreen()
 {
+  m_moosvars["GPS_LAT"] = UNSET_VALUE;
+  m_moosvars["GPS_LONG"] = UNSET_VALUE;
+  m_moosvars["GPS_SIG"] = UNSET_VALUE;
+  m_moosvars["SONAR_POLL"] = UNSET_VALUE;
 }
 
 //---------------------------------------------------------
@@ -42,8 +48,9 @@ bool NavigationScreen::OnNewMail(MOOSMSG_LIST &NewMail)
       bool   mstr  = msg.IsString();
     #endif
 
-    if(key == "FOO") 
-      cout << "great!";
+    for(map<string,string>::iterator it = m_moosvars.begin() ; it != m_moosvars.end() ; ++it)
+      if(toupper(key) == toupper(it->first))
+        m_moosvars[key] = msg.GetString();
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
       reportRunWarning("Unhandled Mail: " + key);
@@ -122,6 +129,8 @@ bool NavigationScreen::OnStartUp()
 void NavigationScreen::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
+  for(map<string,string>::iterator it = m_moosvars.begin() ; it != m_moosvars.end() ; ++it)
+    Register(it->first, 0);
 }
 
 //------------------------------------------------------------
@@ -129,17 +138,19 @@ void NavigationScreen::registerVariables()
 
 bool NavigationScreen::buildReport() 
 {
-  #if 0 // Keep these around just for template
-    m_msgs << "============================================ \n";
-    m_msgs << "File:                                        \n";
-    m_msgs << "============================================ \n";
+  m_msgs << "GPS                                          \n";
+  m_msgs << "-------------------------------------------- \n";
+  ACTable actab_gps(3);
+  actab_gps << "Lat | Long | Signal";
+  actab_gps.addHeaderLines();
+  actab_gps << m_moosvars["GPS_LAT"] << m_moosvars["GPS_LONG"] << m_moosvars["GPS_SIG"];
+  m_msgs << actab_gps.getFormattedString();
 
-    ACTable actab(4);
-    actab << "Alpha | Bravo | Charlie | Delta";
-    actab.addHeaderLines();
-    actab << "one" << "two" << "three" << "four";
-    m_msgs << actab.getFormattedString();
-  #endif
+  ACTable actab_sonar(1);
+  actab_sonar << "Poll";
+  actab_sonar.addHeaderLines();
+  actab_sonar << m_moosvars["SONAR_POLL"];
+  m_msgs << actab_sonar.getFormattedString();
 
   return true;
 }
