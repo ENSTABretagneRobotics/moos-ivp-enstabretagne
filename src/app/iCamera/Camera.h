@@ -27,6 +27,7 @@ class Camera : public AppCastingMOOSApp
   public:
     Camera();
     ~Camera();
+    void quit() {};
 
   protected:
     bool OnNewMail(MOOSMSG_LIST &NewMail);

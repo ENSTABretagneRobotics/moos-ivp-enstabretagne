@@ -24,6 +24,7 @@ class Keller : public AppCastingMOOSApp
   public:
     Keller();
     ~Keller();
+    void quit() {};
 
   protected: // Standard MOOSApp functions to overload
     bool OnNewMail(MOOSMSG_LIST &NewMail);
@@ -55,6 +56,7 @@ class Keller : public AppCastingMOOSApp
     bool m_bTemperatureRequested;
     bool m_bKellerPolling;
     double m_bKellerZeroPressure;
+    double m_dReferenceDepth;
 
     KellerMsg_ReadOutPressureFloatRequest kellerPressureRequest;
     KellerMsg_ReadOutTemperatureFloatRequest kellerTemperatureRequest;
