@@ -19,6 +19,8 @@ Sonar::Sonar()
 	m_bPollSonar = false;
 	m_bIsPowered = false;
 
+  m_snrType = SeaNetMsg::UnknownSonar;
+
 	if (!m_serial_thread.Initialise(listen_sonar_messages_thread_func, (void*)this))
 	{
 	  reportRunWarning("Sonar thread initialization error...\n");
@@ -186,7 +188,7 @@ void Sonar::ListenSonarMessages()
     else if (needed_len == 0)
     {
       // Process message
-      // cout << "Found message " << SeaNetMsg::detectMessageType(sBuf) << endl;
+      cout << "Found message " << SeaNetMsg::detectMessageType(sBuf) << endl;
       SeaNetMsg snmsg(sBuf);
       //cout << "Created message with type " << snmsg.messageType() << endl;
       //snmsg.print_hex();
@@ -213,8 +215,8 @@ void Sonar::ListenSonarMessages()
       if (snmsg.messageType() == SeaNetMsg::mtBBUserData)
       {
         const SeaNetMsg_BBUserData * pBBUserData = reinterpret_cast<SeaNetMsg_BBUserData*> (&snmsg);
-        SeaNetMsg::SonarType snrType = pBBUserData->getSonarType();
-        reportRunWarning("Sonar Type : " + (snrType == SeaNetMsg::MicronDST)?"Micron":"Miniking");
+        m_snrType = pBBUserData->getSonarType();
+        reportRunWarning("Sonar Type : " + (m_snrType == SeaNetMsg::MicronDST)?"Micron":"Miniking");
       }
       if (snmsg.messageType() == SeaNetMsg::mtHeadData)
       {
@@ -404,9 +406,16 @@ bool Sonar::buildReport()
     actab3 << m_msgHeadCommand.getRange() << m_msgHeadCommand.getNbins() << m_msgHeadCommand.getAngleStep() << m_msgHeadCommand.getGain() << m_msgHeadCommand.getInverted();
     m_msgs << actab3.getFormattedString();
     m_msgs << "\n==============================================================\n";
-    ACTable actab4(4);
-    actab4 << "VoS | Continuous | LeftLimit | RightLimit";
-    actab4 << m_msgHeadCommand.getVOS() << m_msgHeadCommand.getContinuous() << m_msgHeadCommand.getLeftLimit() << m_msgHeadCommand.getRightLimit();
+    ACTable actab4(5);
+    actab4 << "Sonar Type | VoS | Continuous | LeftLimit | RightLimit";
+    string sonarType;
+    if (m_snrType == SeaNetMsg::UnknownSonar)
+      sonarType = "No Sonar Type!";
+    else if(m_snrType == SeaNetMsg::MicronDST)
+      sonarType = "Micron Sonar";
+    else if(m_snrType == SeaNetMsg::MiniKingNotDST)
+      sonarType = "MiniKing Sonar";
+    actab4 << sonarType << m_msgHeadCommand.getVOS() << m_msgHeadCommand.getContinuous() << m_msgHeadCommand.getLeftLimit() << m_msgHeadCommand.getRightLimit();
     m_msgs << actab4.getFormattedString();
 
   return true;

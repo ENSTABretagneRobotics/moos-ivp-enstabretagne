@@ -54,6 +54,8 @@ class Sonar : public AppCastingMOOSApp
 		bool m_bPollSonar;
 		bool m_bIsPowered;
 
+		SeaNetMsg::SonarType m_snrType;
+
 		CMOOSThread m_serial_thread;
 
 		static bool listen_sonar_messages_thread_func(void *pSonarObject) {
