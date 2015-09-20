@@ -60,8 +60,12 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
 		  string msg_val = msg.GetString();
 		  // Le message est de la forme "Range=25,Gain=45,Continuous=true"
 		  double dVal=0.0; int iVal; bool bVal;
+      if (MOOSValFromString(dVal, msg_val, "VoS", true))
+        m_msgHeadCommand.setVOS(dVal);
 		  if (MOOSValFromString(dVal, msg_val, "Range", true))
 		    m_msgHeadCommand.setRange(dVal);
+      if (MOOSValFromString(dVal, msg_val, "invert", true))
+        m_msgHeadCommand.setInverted(dVal);
 		  if (MOOSValFromString(iVal, msg_val, "nBins", true))
 		    m_msgHeadCommand.setNbins(iVal);
 		  if (MOOSValFromString(dVal, msg_val, "AngleStep", true))
@@ -93,7 +97,7 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
 				reportRunWarning("Sonar not initialized!");
 			}
 		}
-		else if ( key == "POWERED_SONAR")
+		else if ( key == "POWERED_SONAR" )
 		{
 			if (msg.GetDouble() == 0)
 			{
@@ -107,7 +111,12 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
 			}
 			else
 			{
-				m_bIsPowered = true;
+        m_bIsPowered = true;
+        // m_bNoParams = true;
+        // m_bSentCfg = false;
+
+        // m_bSonarReady = false;
+        // m_bPollSonar = false;
 				Initialization();
 			}
 		}
@@ -131,9 +140,9 @@ bool Sonar::OnConnectToServer()
 
 bool Sonar::Iterate()
 {
-  	AppCastingMOOSApp::Iterate();
+  AppCastingMOOSApp::Iterate();
 	m_iterations++;
-  	AppCastingMOOSApp::PostReport();
+  AppCastingMOOSApp::PostReport();
 	return(true);
 }
 
@@ -172,6 +181,7 @@ void Sonar::ListenSonarMessages()
       // Read more data as needed
       int nb_read = m_Port.ReadNWithTimeOut(buf, needed_len);
       sBuf.append(buf, nb_read);
+      // cout<<"ok"<<endl;
     }
     else if (needed_len == 0)
     {
@@ -200,9 +210,9 @@ void Sonar::ListenSonarMessages()
         // Update m_bSonarReady
         m_bSonarReady = (!m_bNoParams) && m_bSentCfg;
       }
-
       if (snmsg.messageType() == SeaNetMsg::mtHeadData)
       {
+        // snmsg.print_hex();
 	      const SeaNetMsg_HeadData * pHdta = reinterpret_cast<SeaNetMsg_HeadData*> (&snmsg);
 
 	      // MOOSDB raw data
@@ -228,7 +238,7 @@ void Sonar::ListenSonarMessages()
 	      	ss_scanline << pHdta->scanlineData()[k];
 	      	if(k!=pHdta->nBins()-1)
 	      		ss_scanline << ',';
-	      }	      
+	      }
 	      ss_scanline << '}';
 	      Notify("SONAR_SCANLINE", ss_scanline.str());
 	      // ***************************************
@@ -273,6 +283,10 @@ bool Sonar::OnStartUp()
 
 			if(MOOSStrCmp(param, "RANGE"))
 			    m_msgHeadCommand.setRange(atof(value.c_str()));
+      if(MOOSStrCmp(param, "VOS"))
+          m_msgHeadCommand.setVOS(atof(value.c_str()));
+      if(MOOSStrCmp(param, "INVERT"))
+          m_msgHeadCommand.setInverted(atoi(value.c_str()));
 			if(MOOSStrCmp(param, "NBINS"))
 			    m_msgHeadCommand.setNbins(atoi(value.c_str()));
 			if(MOOSStrCmp(param, "ANGLESTEP"))
@@ -353,9 +367,9 @@ bool Sonar::buildReport()
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
   #endif
-    m_msgs << "==============================================================\n";
-    m_msgs << "iSonarStatus :                                                \n";
-    m_msgs << "==============================================================\n";
+    // m_msgs << "==============================================================\n";
+    // m_msgs << "iSonarStatus :                                                \n";
+    // m_msgs << "==============================================================\n";
 
 
     ACTable actab(4);
@@ -366,6 +380,7 @@ bool Sonar::buildReport()
     actab << m_portName << m_Port.GetBaudRate() << sonarIsPowered << sonarThreadIsRunning;
     m_msgs << actab.getFormattedString();
     m_msgs << "\n==============================================================\n";
+
     ACTable actab2(4);
     actab2 << "Has params | Sent cfg | Is ready | Is polling";
     actab2.addHeaderLines();
@@ -375,7 +390,18 @@ bool Sonar::buildReport()
     string sonarIsPolling = (m_bPollSonar)?"yes":"no";
     actab2 << sonarHasParams << sonarSentCfg << sonarIsReady << sonarIsPolling;
     m_msgs << actab2.getFormattedString();
+    m_msgs << "\n================== SNR PARAMETERS ===========================\n";
 
+    ACTable actab3(5);
+    actab3 << "Range | NBins | AngleStep | Gain | Inverted";
+    actab3.addHeaderLines();
+    actab3 << m_msgHeadCommand.getRange() << m_msgHeadCommand.getNbins() << m_msgHeadCommand.getAngleStep() << m_msgHeadCommand.getGain() << m_msgHeadCommand.getInverted();
+    m_msgs << actab3.getFormattedString();
+    m_msgs << "\n==============================================================\n";
+    ACTable actab4(4);
+    actab4 << "VoS | Continuous | LeftLimit | RightLimit";
+    actab4 << m_msgHeadCommand.getVOS() << m_msgHeadCommand.getContinuous() << m_msgHeadCommand.getLeftLimit() << m_msgHeadCommand.getRightLimit();
+    m_msgs << actab4.getFormattedString();
 
   return true;
 }
