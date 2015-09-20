@@ -39,7 +39,7 @@ ProcessConfig = iSaucisse
   // Force relays settings at startup
   RESET_ON_STARTUP = true
   // If requested, force relays to 'on' position at startup
-  RESET_ALL_ON = false
+  RESET_ALL_ON = true
 }
 
 
