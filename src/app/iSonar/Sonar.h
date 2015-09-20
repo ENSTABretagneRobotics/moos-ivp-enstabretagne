@@ -13,7 +13,6 @@
 
 #include <fstream>
 
-
 class Sonar : public AppCastingMOOSApp
 {
 	public:
