@@ -26,6 +26,7 @@ class SonarCSVPlayer : public AppCastingMOOSApp
   public:
     SonarCSVPlayer();
     ~SonarCSVPlayer() {};
+    void quit() {};
 
   protected: // Standard MOOSApp functions to overload
     bool OnNewMail(MOOSMSG_LIST &NewMail);

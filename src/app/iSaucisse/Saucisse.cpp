@@ -43,6 +43,14 @@ Saucisse::~Saucisse()
 }
 
 //---------------------------------------------------------
+// Procedure: quit
+
+void Saucisse::quit()
+{
+  m_pololu->setAllThrustersValue(0.);
+}
+
+//---------------------------------------------------------
 // Procedure: OnNewMail
 
 bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
