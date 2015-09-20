@@ -55,6 +55,7 @@ class Keller : public AppCastingMOOSApp
     bool m_bTemperatureRequested;
     bool m_bKellerPolling;
     double m_bKellerZeroPressure;
+    double m_dReferenceDepth;
 
     KellerMsg_ReadOutPressureFloatRequest kellerPressureRequest;
     KellerMsg_ReadOutTemperatureFloatRequest kellerTemperatureRequest;
