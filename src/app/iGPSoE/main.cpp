@@ -22,12 +22,14 @@
 
 using namespace std;
 
-GPSoE objGPSoE;
+GPSoE *objGPSoE;
 
 void kill_handler(int s);
 
 int main(int argc, char *argv[])
 {
+  objGPSoE = new GPSoE;
+
   string mission_file;
   string run_command = argv[0];
   xmldoc::MOOSAppDocumentation documentation(argv[0]);
@@ -65,7 +67,7 @@ int main(int argc, char *argv[])
     sigIntHandler.sa_flags = 0;
     sigaction(SIGTERM, &sigIntHandler, NULL);
 
-    objGPSoE.Run(run_command.c_str(), mission_file.c_str());
+    objGPSoE->Run(run_command.c_str(), mission_file.c_str());
   }
 
   return(0);
@@ -73,6 +75,6 @@ int main(int argc, char *argv[])
 
 void kill_handler(int s)
 {
-  objGPSoE.quit();
+  delete objGPSoE;
   exit(0);
 }

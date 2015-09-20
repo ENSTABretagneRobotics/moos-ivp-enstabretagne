@@ -179,13 +179,24 @@ void Pololu::buzzOff()
 
 void Pololu::bipOnStartUp()
 {
-  buzzOn();
-  delay(80);
-  buzzOff();
-  delay(50);
-  buzzOn();
-  delay(80);
-  buzzOff();
+  for(int i = 0 ; i < 3 ; i++)
+  {
+    buzzOn();
+    delay(80);
+    buzzOff();
+    delay(50);
+  }
+}
+
+void Pololu::bipOnExit()
+{
+  for(int i = 0 ; i < 2 ; i++)
+  {
+    buzzOn();
+    delay(80);
+    buzzOff();
+    delay(50);
+  }
 }
 
 void Pololu::bipError()

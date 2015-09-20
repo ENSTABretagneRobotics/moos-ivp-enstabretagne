@@ -12,10 +12,74 @@
 	"buffers":
 	[
 		{
-			"file": "src/app/iXSensINS/XSensINS.cpp",
+			"file": "scripts/GenMOOSApp_Toutatis",
 			"settings":
 			{
-				"buffer_size": 5541,
+				"buffer_size": 8433,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/app/iSaucisse/Saucisse.h",
+			"settings":
+			{
+				"buffer_size": 1275,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/app/iSaucisse/Saucisse.cpp",
+			"settings":
+			{
+				"buffer_size": 8345,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/app/iSaucisse/main.cpp",
+			"settings":
+			{
+				"buffer_size": 1956,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/app/iCamera/main.cpp",
+			"settings":
+			{
+				"buffer_size": 1932,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/app/iCamera/Camera.h",
+			"settings":
+			{
+				"buffer_size": 1109,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/app/iCamera/Camera.cpp",
+			"settings":
+			{
+				"buffer_size": 4931,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/app/iSaucisse/Pololu.h",
+			"settings":
+			{
+				"buffer_size": 1341,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/app/iSaucisse/Pololu.cpp",
+			"settings":
+			{
+				"buffer_size": 5069,
 				"line_ending": "Unix"
 			}
 		}
@@ -118,13 +182,89 @@
 	},
 	"expanded_folders":
 	[
-		"/home/lemezoth/moos-ivp-toutatis",
-		"/home/lemezoth/moos-ivp-toutatis/src",
-		"/home/lemezoth/moos-ivp-toutatis/src/app",
-		"/home/lemezoth/moos-ivp-toutatis/src/app/iXSensINS"
+		"/home/nao/moos-ivp-toutatis-simon",
+		"/home/nao/moos-ivp-toutatis-simon/missions",
+		"/home/nao/moos-ivp-toutatis-simon/missions/unitaryTests",
+		"/home/nao/moos-ivp-toutatis-simon/scripts",
+		"/home/nao/moos-ivp-toutatis-simon/src",
+		"/home/nao/moos-ivp-toutatis-simon/src/app",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iCamera",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iGPS",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iGPSoE",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iKeller",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iModem",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iRazorIMU",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iSaucisse",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iSonar",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iSounder",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iXSensINS",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pController",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pEstimSpeed",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pMapLocalizerIntervals",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pMapLocalizerParticleFilter",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pMixThrusters",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pSimplePID",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pSonarCSVPlayer",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pTrustGPS",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pWallDetector",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/uJoystick",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/uNavigationScreen",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/uSensorsViewer"
 	],
 	"file_history":
 	[
+		"/home/nao/.config/sublime-text-3/Packages/User/Default (Linux).sublime-keymap",
+		"/home/nao/moos-ivp-toutatis-simon/test.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/uNavigationScreen/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/uSensorsViewer/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iCamera/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iGPS/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iGPSoE/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iKeller/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iModem/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iRazorIMU/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iSaucisse/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iSonar/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iSounder/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iXSensINS/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pController/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pEstimSpeed/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pMapLocalizerIntervals/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pMapLocalizerParticleFilter/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pMixThrusters/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pSimplePID/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pSonarCSVPlayer/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pTrustGPS/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pWallDetector/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/uJoystick/main.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/missions/unitaryTests/test_uNavigationScreen.moos",
+		"/home/nao/.bashrc",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/uNavigationScreen/NavigationScreen.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/uSensorsViewer/SensorViewer.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/uSensorsViewer/SensorViewer.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/uNavigationScreen/NavigationScreen.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/uJoystick/Joystick.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pWallDetector/WallDetector.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pTrustGPS/TrustGPS.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pSonarCSVPlayer/SonarCSVPlayer.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pSimplePID/SimplePID.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pMixThrusters/MixThrusters.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pMapLocalizerParticleFilter/MapLocalizerParticleFilter.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pMapLocalizerIntervals/MapLocalizerIntervals.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pEstimSpeed/EstimSpeed.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/pController/Controller.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iXSensINS/XSensINS.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iSounder/EchoSounder.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iSonar/Sonar.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iSaucisse/Saucisse.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iRazorIMU/RazorIMU.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iModem/Modem.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iKeller/Keller.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iGPSoE/GPSoE.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iGPS/Gps.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iCamera/Camera.h",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iSaucisse/Saucisse.cpp",
+		"/home/nao/moos-ivp-toutatis-simon/src/app/iXSensINS/XSensINS.cpp",
 		"/home/lemezoth/moos-ivp-toutatis/toutatis.sublime-project",
 		"/home/lemezoth/sandbox/test.c",
 		"/home/lemezoth/moos-ivp-toutatis/src/app/iRazorIMU/iRazorIMU.xml",
@@ -140,7 +280,7 @@
 	],
 	"find":
 	{
-		"height": 35.0
+		"height": 25.0
 	},
 	"find_in_files":
 	{
@@ -154,6 +294,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"Camera",
 			"modbus_rtu_set_echohw_mode",
 			"m_data",
 			"=0",
@@ -181,24 +322,204 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 6,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/app/iXSensINS/XSensINS.cpp",
+					"file": "scripts/GenMOOSApp_Toutatis",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5541,
+						"buffer_size": 8433,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								224,
-								224
+								2476,
+								2476
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/ShellScript/Shell-Unix-Generic.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2040.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/app/iSaucisse/Saucisse.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1275,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								473,
+								473
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/app/iSaucisse/Saucisse.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8345,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1025,
+								1025
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": -0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/app/iSaucisse/main.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1956,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1921,
+								1921
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 255.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/app/iCamera/main.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1932,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								564,
+								564
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 51.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/app/iCamera/Camera.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1109,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								555,
+								555
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/app/iCamera/Camera.cpp",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 4931,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								377,
+								377
 							]
 						],
 						"settings":
@@ -212,6 +533,66 @@
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/app/iSaucisse/Pololu.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1341,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1003,
+								1003
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "src/app/iSaucisse/Pololu.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5069,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4067,
+								4067
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2652.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
 					"type": "text"
 				}
 			]

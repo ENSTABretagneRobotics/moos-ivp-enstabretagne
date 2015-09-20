@@ -17,7 +17,6 @@ class WallDetector : public AppCastingMOOSApp
   public:
     WallDetector();
     ~WallDetector() {};
-    void quit() {};
 
   protected: // Standard MOOSApp functions to overload  
     bool OnNewMail(MOOSMSG_LIST &NewMail);

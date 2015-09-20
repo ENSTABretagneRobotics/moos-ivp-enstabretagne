@@ -24,7 +24,6 @@ class XSensINS : public AppCastingMOOSApp
   public:
     XSensINS();
     ~XSensINS();
-    void quit() {};
 
   protected: // Standard MOOSApp functions to overload  
     bool OnNewMail(MOOSMSG_LIST &NewMail);
