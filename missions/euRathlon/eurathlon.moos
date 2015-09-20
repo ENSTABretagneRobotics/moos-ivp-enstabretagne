@@ -59,7 +59,7 @@ ProcessConfig = iSaucisse
   AppTick   = 4
   CommsTick = 4
 
-  RESET_ON_STARTUP = false
+  RESET_ON_STARTUP = true
   RESET_ALL_ON = true
 
   DEVICE_NAME = /dev/ttyACM0
