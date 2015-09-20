@@ -20,6 +20,8 @@
         </synopsis>
         <interface>
            <subscriptions>
+           </subscriptions>
+           <publications>
                <moosvar>
                  <varname>GPS_RAW_NMEA</varname>
                  <vartype>string</vartype>
@@ -45,15 +47,6 @@
                  <vartype>string</vartype>
                  <varinfo>Longitude (degree)</varinfo>
               </moosvar>
-           </subscriptions>
-           <publications>
-              <!--
-              <moosvar>
-                 <varname>EXAMPLE_VAR_OUT</varname>
-                 <vartype>string</vartype>
-                 <varinfo>description of the MOOSVar</varinfo>
-              </moosvar>
-              -->
            </publications>
         </interface>
         <!-- if there is a bug or a special fact to know.. -->

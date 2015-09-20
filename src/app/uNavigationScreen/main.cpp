@@ -13,11 +13,11 @@
 #include "MBUtils.h"
 #include "documentation/MOOSAppDocumentation.h"
 #include "ColorParse.h"
-#include "Saucisse.h"
+#include "NavigationScreen.h"
 
 using namespace std;
 
-Saucisse objSaucisse;
+NavigationScreen objNavigationScreen;
 
 void kill_handler(int s);
 
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     documentation.showHelpAndExit();
 
   cout << termColor("green");
-  cout << "iSaucisse launching as " << run_command << endl;
+  cout << "uNavigationScreen launching as " << run_command << endl;
   cout << termColor() << endl;
 
   // To catch the kill event
@@ -59,13 +59,13 @@ int main(int argc, char *argv[])
   sigIntHandler.sa_flags = 0;
   sigaction(SIGTERM, &sigIntHandler, NULL);
 
-  objSaucisse.Run(run_command.c_str(), mission_file.c_str());
+  objNavigationScreen.Run(run_command.c_str(), mission_file.c_str());
 
   return(0);
 }
 
 void kill_handler(int s)
 {
-  objSaucisse.quit();
+  objNavigationScreen.quit();
   exit(0);
 }

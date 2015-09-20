@@ -14,9 +14,8 @@
 class MapLocalizerParticleFilter : public AppCastingMOOSApp {
 public:
     MapLocalizerParticleFilter();
-
-    ~MapLocalizerParticleFilter() {
-    };
+    ~MapLocalizerParticleFilter() {};
+    void quit() {};
 
 protected: // Standard MOOSApp functions to overload
     bool OnNewMail(MOOSMSG_LIST &NewMail);
