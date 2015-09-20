@@ -277,15 +277,12 @@ bool Joystick::buildReport()
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
   #endif
-    m_msgs << "============================================ \n";
-    m_msgs << "uJoystick status :                           \n";
-    m_msgs << "============================================ \n";
 
-    ACTable actab(4);
-    actab << "thread Quit Request | Bravo | Charlie | Delta";
-    actab.addHeaderLines();
-    actab << m_deviceReadThread.IsQuitRequested() << "two" << "three" << "four";
-    m_msgs << actab.getFormattedString();
+  ACTable actab(4);
+  actab << "thread Quit Request | Bravo | Charlie | Delta";
+  actab.addHeaderLines();
+  actab << m_deviceReadThread.IsQuitRequested() << "two" << "three" << "four";
+  m_msgs << actab.getFormattedString();
 
   return(true);
 }

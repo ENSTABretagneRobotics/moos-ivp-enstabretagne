@@ -281,11 +281,6 @@ void Saucisse::registerVariables()
 
 bool Saucisse::buildReport() 
 {
-  m_msgs << "============================================ \n";
-  m_msgs << "iSaucisse status :                           \n";
-  m_msgs << "============================================ \n";
-  m_msgs << "\n";
-
   string error_message;
   bool pololu_ok = m_pololu->isReady(error_message);
   m_msgs << "Pololu status: \t" << (pololu_ok ? "ok" : error_message) << "\n";
