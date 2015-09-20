@@ -104,7 +104,7 @@ bool SimplePID::Iterate()
   m_time_previous = MOOSTime();
 
   // Proportional  
-  m_error = m_consigne - m_error;
+  m_error = m_consigne - m_state;
   double P = m_dt * m_kp * m_error;
 
   // Integral
