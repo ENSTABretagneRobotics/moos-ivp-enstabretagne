@@ -13,7 +13,8 @@ protected:
 public:
   enum SonarType {
     MiniKingNotDST = 0, //Miniking Sonars are not Digital Imaging Sonars
-    MicronDST = 1 //Micron Sonars are Digital Imaging Sonars
+    MicronDST = 1, //Micron Sonars are Digital Imaging Sonars
+    UnknownSonar = -1 //Micron Sonars are Digital Imaging Sonars
   };
 
   enum MessageReadError {
