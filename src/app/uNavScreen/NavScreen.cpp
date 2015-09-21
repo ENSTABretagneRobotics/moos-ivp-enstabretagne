@@ -10,7 +10,7 @@
 #include "ACTable.h"
 #include "NavScreen.h"
 
-#define UNSET_VALUE "-"
+#define UNSET_VALUE 0
 
 using namespace std;
 
@@ -37,6 +37,7 @@ NavScreen::NavScreen()
 
 bool NavScreen::OnNewMail(MOOSMSG_LIST &NewMail)
 {
+  bool handle = false;
   AppCastingMOOSApp::OnNewMail(NewMail);
 
   MOOSMSG_LIST::iterator p;
@@ -55,11 +56,15 @@ bool NavScreen::OnNewMail(MOOSMSG_LIST &NewMail)
       bool   mstr  = msg.IsString();
     #endif
 
-    for(map<string,string>::iterator it = m_moosvars.begin() ; it != m_moosvars.end() ; ++it)
+    for(map<string,double>::iterator it = m_moosvars.begin() ; it != m_moosvars.end() ; ++it)
       if(toupper(key) == toupper(it->first))
-        m_moosvars[key] = msg.GetString();
+      {
+        m_moosvars[it->first] = msg.GetDouble();
+        handle = true;
+        break;
+      }
 
-    else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
+    if(!handle && key != "APPCAST_REQ") // handle by AppCastingMOOSApp
       reportRunWarning("Unhandled Mail: " + key);
   }
 
@@ -136,7 +141,7 @@ bool NavScreen::OnStartUp()
 void NavScreen::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
-  for(map<string,string>::iterator it = m_moosvars.begin() ; it != m_moosvars.end() ; ++it)
+  for(map<string,double>::iterator it = m_moosvars.begin() ; it != m_moosvars.end() ; ++it)
     Register(it->first, 0);
 }
 
@@ -155,7 +160,7 @@ bool NavScreen::buildReport()
   m_msgs << actab_att.getFormattedString() << "\n\n";
 
   m_msgs << "POSITIONING  ------------------------------- \n";
-  ACTable actab_pos(3);
+  ACTable actab_pos(5);
   actab_pos << "X | Y | Lat | Long | GPS signal";
   actab_pos.addHeaderLines();
   actab_pos << m_moosvars["NAV_X"]
@@ -166,7 +171,7 @@ bool NavScreen::buildReport()
   m_msgs << actab_pos.getFormattedString() << "\n\n";
 
   m_msgs << "DEPTH  ------------------------------------- \n";
-  ACTable actab_depth(1);
+  ACTable actab_depth(2);
   actab_depth << "Depth | Bathymetry";
   actab_depth.addHeaderLines();
   actab_depth << m_moosvars["DEPTH"]
