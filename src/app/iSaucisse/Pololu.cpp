@@ -89,37 +89,6 @@ bool Pololu::turnOnRelay(int id, bool turned_on)
   return setTarget(id, turned_on ? HIGH_LEVEL : LOW_LEVEL);
 }
 
-bool Pololu::reset(bool all_on, double left_thr_value, double right_thr_value, double vert_thr_value)
-{
-  bool success = true;
-
-  success &= setLeftThrusterValue(left_thr_value);
-  success &= setRightThrusterValue(right_thr_value);
-  success &= setVerticalThrusterValue(vert_thr_value);
-
-  success &= turnOnRelay(1, all_on);
-  success &= turnOnRelay(0, !all_on);
-  delay(50);
-  success &= turnOnRelay(3, all_on);
-  success &= turnOnRelay(2, !all_on);
-  delay(50);
-  success &= turnOnRelay(5, all_on);
-  success &= turnOnRelay(4, !all_on);
-  delay(50);
-  success &= turnOnRelay(7, all_on);
-  success &= turnOnRelay(6, !all_on);
-  delay(50);
-  success &= turnOnRelay(9, all_on);
-  success &= turnOnRelay(8, !all_on);
-  delay(50);
-  success &= turnOnRelay(11, all_on);
-  success &= turnOnRelay(10, !all_on);
-  delay(50);
-  success &= turnOnRelay(12, all_on);
-  delay(50);
-  return success;
-}
-
 bool Pololu::turnOnBistableRelay(int id_on, int id_off, bool turned_on)
 {
   bool success_on, success;
@@ -179,13 +148,24 @@ void Pololu::buzzOff()
 
 void Pololu::bipOnStartUp()
 {
-  buzzOn();
-  delay(80);
-  buzzOff();
-  delay(50);
-  buzzOn();
-  delay(80);
-  buzzOff();
+  for(int i = 0 ; i < 3 ; i++)
+  {
+    buzzOn();
+    delay(80);
+    buzzOff();
+    delay(50);
+  }
+}
+
+void Pololu::bipOnExit()
+{
+  for(int i = 0 ; i < 2 ; i++)
+  {
+    buzzOn();
+    delay(80);
+    buzzOff();
+    delay(50);
+  }
 }
 
 void Pololu::bipError()

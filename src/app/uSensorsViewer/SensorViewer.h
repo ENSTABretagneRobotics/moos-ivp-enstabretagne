@@ -31,25 +31,27 @@ class SensorViewer : public AppCastingMOOSApp
 		void RegisterVariables();
 		bool buildReport();
 
+	private: // Fonctions
+		void AddSector(cv::Mat &img_sonar, vector<double> scanline, double bearing, double &bearing_previous);
+
 	private: // Configuration variables
 
 	private: // State variables
-		unsigned int	m_iterations;
-		double			m_timewarp;
-		cv::Mat img1, img2;
-		cv::Mat img_son_pol;
-		cv::Mat img_sonar;
-		cv::Mat img_son_cart;
-		cv::Mat pol2cart_x;
-		cv::Mat pol2cart_y;
 
-		double heading;
-		double heading_razor;
-		double heading_ciscrea;
+		cv::Mat m_img_camera_bottom, m_img_camera_front;
+		cv::Mat m_img_sonar_micron, m_img_sonar_miniking;
 
-		double m_dSonarScaleFactor;
+		// SONAR DATAS
+	    std::vector<double> m_new_scanline_micron;
+	    std::vector<double> m_new_scanline_miniking;
+    	double m_new_bearing_micron, m_old_bearing_micron;
+    	double m_new_bearing_miniking, m_old_bearing_miniking;
 
-		double vx;
+    	bool m_new_data_micron;
+    	bool m_new_data_miniking;
+
+    	int m_size_scanline_micron;
+    	int m_size_scanline_miniking;
 };
 
 #endif

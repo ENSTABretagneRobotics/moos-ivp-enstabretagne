@@ -202,15 +202,12 @@ bool GPSoE::buildReport()
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
   #endif
-    m_msgs << "==============================================================\n";
-    m_msgs << "iGPSoE Status :                                               \n";
-    m_msgs << "==============================================================\n";
 
-    ACTable actab(7);
-    actab << "Time | Latitude | Longitude | N | E | X | Y";
-    actab.addHeaderLines();
-    actab << m_dGpsTime << m_dLatitude << m_dLongitude << m_dN << m_dE << m_dX << m_dY;
-    m_msgs << actab.getFormattedString();
+  ACTable actab(7);
+  actab << "Time | Latitude | Longitude | N | E | X | Y";
+  actab.addHeaderLines();
+  actab << m_dGpsTime << m_dLatitude << m_dLongitude << m_dN << m_dE << m_dX << m_dY;
+  m_msgs << actab.getFormattedString();
 
   return true;
 }

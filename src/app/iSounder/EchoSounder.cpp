@@ -157,16 +157,12 @@ bool EchoSounder::buildReport()
     m_msgs << actab.getFormattedString();
   #endif
 
-    m_msgs << "============================================ \n";
-    m_msgs << "iSounder status:                         \n";
-    m_msgs << "============================================ \n";
-
-    ACTable actab(4);
-    actab << "Serial Port | Baudrate | Port initialized | Depth";
-    actab.addHeaderLines();
-    string portInit = (m_port_is_initialized)?"yes":"no";
-    actab << m_port_name << m_serial_port.GetBaudRate() << portInit << m_last_value;
-    m_msgs << actab.getFormattedString();
+  ACTable actab(4);
+  actab << "Serial Port | Baudrate | Port initialized | Depth";
+  actab.addHeaderLines();
+  string portInit = (m_port_is_initialized)?"yes":"no";
+  actab << m_port_name << m_serial_port.GetBaudRate() << portInit << m_last_value;
+  m_msgs << actab.getFormattedString();
 
   return true;
 }
