@@ -9,6 +9,8 @@ ProcessConfig = iSonar
   CommsTick = 4
 
   RANGE = 15 //IN METERS
+  //VOS = 1500 //Velocity Of Sound in m/s
+  INVERT = 0 //(Default = 0 = Sonar mounted upright, transducer boot pointing up)
   NBINS = 100 //NUMBER OF SAMPLES PER SCANLINE
   ANGLESTEP = 1.8 //ANGULAR RESOLUTION (MUST BE A MULTIPLE OF 0.09)
   GAIN = 45 // MUST BE BETWEEN 0 AND 100 (PERCENTAGE)

@@ -6,15 +6,25 @@
 /************************************************************/
 
 #include <string>
+#include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
 #include "MBUtils.h"
 #include "documentation/MOOSAppDocumentation.h"
 #include "ColorParse.h"
-#include "EchoSounder.h"
+#include "Sounder.h"
 
 using namespace std;
 
+Sounder *objSounder;
+
+void kill_handler(int s);
+
 int main(int argc, char *argv[])
 {
+  objSounder = new Sounder;
+
   string mission_file;
   string run_command = argv[0];
   xmldoc::MOOSAppDocumentation documentation(argv[0]);
@@ -44,9 +54,20 @@ int main(int argc, char *argv[])
   cout << "iSounder launching as " << run_command << endl;
   cout << termColor() << endl;
 
-  EchoSounder EchoSounder;
+  // To catch the kill event
+  struct sigaction sigIntHandler;
+  sigIntHandler.sa_handler = kill_handler;
+  sigemptyset(&sigIntHandler.sa_mask);
+  sigIntHandler.sa_flags = 0;
+  sigaction(SIGTERM, &sigIntHandler, NULL);
 
-  EchoSounder.Run(run_command.c_str(), mission_file.c_str());
+  objSounder->Run(run_command.c_str(), mission_file.c_str());
 
   return(0);
+}
+
+void kill_handler(int s)
+{
+  delete objSounder;
+  exit(0);
 }
