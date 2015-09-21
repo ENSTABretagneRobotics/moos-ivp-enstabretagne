@@ -18,7 +18,11 @@
         <synopsis>
           This app can connect to Tritech Sonars Miniking and Micron. The app will publish SOME_VAR_MICRON or SOME_VAR_MINIKING regarding the sonar that is plugged.
 
-          The app subscribe to *_PARAMS, *_POLL and POWERED_* with *={MINIKING_MICRON} regarding which sonar you wish to control.
+          The app subscribe to *_PARAMS and *_POLL with *={MINIKING_MICRON} regarding which sonar you wish to control.
+
+          As the app knows which sonar is plugged when dialing with the sonar, it's difficult to separate power management for each sonar, if you have two sonars, rebooting one will reboot the other.
+
+          That also implies that if you have two sonars powered up and you want to get one off, you will have to power off both and power up the one you need.
 
           Range = [2;100] in meters
           Gain =[0;100] Initial Gain of the receiver in percent 0..100%, from doc, was in unit 0..210 = 0..+80dB = 0..100%, typically 20 percent
@@ -47,12 +51,7 @@
                  <varinfo>if 0, sonar don't send mtSendData and polling is off. When switching to 1, Sonar start polling if initialized</varinfo>
               </moosvar>
               <moosvar>
-                 <varname>POWERED_MINIKING</varname>
-                 <vartype>int</vartype>
-                 <varinfo>if 0, the sonar is not initialized and listenning thread is stopped, when switching from 0 to 1, thread is launched an sonar init process or polling started</varinfo>
-              </moosvar>
-              <moosvar>
-                 <varname>POWERED_MICRON</varname>
+                 <varname>POWERED_SONAR</varname>
                  <vartype>int</vartype>
                  <varinfo>if 0, the sonar is not initialized and listenning thread is stopped, when switching from 0 to 1, thread is launched an sonar init process or polling started</varinfo>
               </moosvar>

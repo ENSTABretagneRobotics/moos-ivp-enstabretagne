@@ -153,7 +153,7 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
         reportRunWarning("Sonar not initialized!");
       }
     }
-    else if ( key == "POWERED_MICRON" && m_snrType == SeaNetMsg::MicronDST)
+    else if ( key == "POWERED_SONAR")
     {
       m_bIsAlive = false;
       m_bReplyVersionData = false;
@@ -161,7 +161,6 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
       m_bHasParams = false;
       m_bSentCfg = false;
       m_bSonarReady = false;
-      m_snrType = SeaNetMsg::noBBUserData;
 
       if (m_serial_thread.IsThreadRunning())
         m_serial_thread.Stop();
@@ -174,27 +173,6 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
           m_serial_thread.Start();
       }
     }
-    else if ( key == "POWERED_MINIKING" && m_snrType == SeaNetMsg::MiniKingNotDST)
-		{
-      m_bIsAlive = false;
-      m_bReplyVersionData = false;
-      m_bReplyBBUserData = false;
-      m_bHasParams = false;
-      m_bSentCfg = false;
-      m_bSonarReady = false;
-      m_snrType = SeaNetMsg::noBBUserData;
-
-      if (m_serial_thread.IsThreadRunning())
-        m_serial_thread.Stop();
-			if (msg.GetDouble() == 0)
-				m_bIsPowered = false;
-			else
-			{
-        m_bIsPowered = true;
-				if (!m_serial_thread.IsThreadRunning())
-          m_serial_thread.Start();
-			}
-		}
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
       reportRunWarning("Unhandled Mail: " + key);
 	}
