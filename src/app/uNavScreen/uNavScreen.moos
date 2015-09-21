@@ -1,7 +1,7 @@
 //------------------------------------------------
-// uNavigationScreen config block
+// uNavScreen config block
 
-ProcessConfig = uNavigationScreen
+ProcessConfig = uNavScreen
 {
   AppTick   = 4
   CommsTick = 4

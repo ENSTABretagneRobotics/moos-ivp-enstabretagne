@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- This file contains uNavigationScreen documentation -->
+<!-- This file contains uNavScreen documentation -->
 <?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?> 
 <xmldoc>
   <moosapp>
 
      <info>
-        <name>uNavigationScreen</name>
+        <name>uNavScreen</name>
         <organization>Toutatis AUVs - ENSTA Bretagne</organization>
         <date>2015</date>
         <authors>
