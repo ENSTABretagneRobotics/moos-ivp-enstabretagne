@@ -134,8 +134,8 @@ bool SensorViewer::Iterate()
 		m_new_data_miniking = false;
 	}
 
-	cv::imshow("SONAR_MINIKING", m_img_sonar_miniking);
-	cv::imshow("SONAR_MICRON", m_img_sonar_micron);
+	cv::imshow("SONAR MINIKING", m_img_sonar_miniking);
+	cv::imshow("SONAR MICRON", m_img_sonar_micron);
 	cv::imshow("CAMERA FRONT", m_img_camera_front);
 	cv::imshow("CAMERA BOTTOM", m_img_camera_bottom);
 
