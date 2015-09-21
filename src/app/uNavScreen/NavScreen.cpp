@@ -1,5 +1,5 @@
 /************************************************************/
-/*    FILE: NavigationScreen.cpp
+/*    FILE: NavScreen.cpp
 /*    ORGN: Toutatis AUVs - ENSTA Bretagne
 /*    AUTH: Simon Rohou
 /*    DATE: 2015
@@ -8,7 +8,7 @@
 #include <iterator>
 #include "MBUtils.h"
 #include "ACTable.h"
-#include "NavigationScreen.h"
+#include "NavScreen.h"
 
 #define UNSET_VALUE "-"
 
@@ -17,7 +17,7 @@ using namespace std;
 //---------------------------------------------------------
 // Constructor
 
-NavigationScreen::NavigationScreen()
+NavScreen::NavScreen()
 {
   m_moosvars["GPS_LAT"] = UNSET_VALUE;
   m_moosvars["GPS_LONG"] = UNSET_VALUE;
@@ -35,7 +35,7 @@ NavigationScreen::NavigationScreen()
 //---------------------------------------------------------
 // Procedure: OnNewMail
 
-bool NavigationScreen::OnNewMail(MOOSMSG_LIST &NewMail)
+bool NavScreen::OnNewMail(MOOSMSG_LIST &NewMail)
 {
   AppCastingMOOSApp::OnNewMail(NewMail);
 
@@ -69,7 +69,7 @@ bool NavigationScreen::OnNewMail(MOOSMSG_LIST &NewMail)
 //---------------------------------------------------------
 // Procedure: OnConnectToServer
 
-bool NavigationScreen::OnConnectToServer()
+bool NavScreen::OnConnectToServer()
 {
   registerVariables();
   return true;
@@ -79,7 +79,7 @@ bool NavigationScreen::OnConnectToServer()
 // Procedure: Iterate()
 //            happens AppTick times per second
 
-bool NavigationScreen::Iterate()
+bool NavScreen::Iterate()
 {
   AppCastingMOOSApp::Iterate();
 
@@ -93,7 +93,7 @@ bool NavigationScreen::Iterate()
 // Procedure: OnStartUp()
 //            happens before connection is open
 
-bool NavigationScreen::OnStartUp()
+bool NavScreen::OnStartUp()
 {
   AppCastingMOOSApp::OnStartUp();
 
@@ -133,7 +133,7 @@ bool NavigationScreen::OnStartUp()
 //---------------------------------------------------------
 // Procedure: registerVariables
 
-void NavigationScreen::registerVariables()
+void NavScreen::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
   for(map<string,string>::iterator it = m_moosvars.begin() ; it != m_moosvars.end() ; ++it)
@@ -143,7 +143,7 @@ void NavigationScreen::registerVariables()
 //------------------------------------------------------------
 // Procedure: buildReport()
 
-bool NavigationScreen::buildReport() 
+bool NavScreen::buildReport() 
 {
   m_msgs << "ATTITUDE  ---------------------------------- \n";
   ACTable actab_att(3);
