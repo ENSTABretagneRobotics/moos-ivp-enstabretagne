@@ -493,15 +493,12 @@ bool Keller::buildReport()
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
   #endif
-    m_msgs << "============================================ \n";
-    m_msgs << "iKeller Status:                              \n";
-    m_msgs << "============================================ \n";
 
-    ACTable actab(5);
-    actab << "Serial Port | Serial Initialized | Keller Initialized | Depth | Temperature";
-    actab.addHeaderLines();
-    actab << m_port_name << m_port_is_initialized << m_bKellerInitialized << m_lastP_value << m_lastT_value;
-    m_msgs << actab.getFormattedString();
+  ACTable actab(5);
+  actab << "Serial Port | Serial Initialized | Keller Initialized | Depth | Temperature";
+  actab.addHeaderLines();
+  actab << m_port_name << m_port_is_initialized << m_bKellerInitialized << m_lastP_value << m_lastT_value;
+  m_msgs << actab.getFormattedString();
 
   return true;
 }
