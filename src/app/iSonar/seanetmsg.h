@@ -142,7 +142,8 @@ public:
   void setRange(const double& range_in_m) {params.RangeScale = range_in_m; buildMessage();}
   void setAngleStep(const double &angle_step) {params.StepAngleSize = angle_step; buildMessage();}
   void setNbins(int nBins) {params.NBins = nBins; buildMessage();}
-  void setGain(const double &gain) {params.IGain = (int)(100.*gain/210.); buildMessage();}
+  // void setGain(const double &gain) {params.IGain = (int)(100.*gain/210.); buildMessage();}
+  void setGain(const int &gain) {params.IGain = gain; buildMessage();}
 
   int getContinuous() {return params.cont;}
   int getInverted() {return params.invert;}
