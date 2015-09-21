@@ -72,6 +72,7 @@ endif(WITH_INTERVAL_FILTER)
 ADD_SUBDIRECTORY(pTrustGPS)
 ADD_SUBDIRECTORY(pEstimSpeed)
 ADD_SUBDIRECTORY(pMixThrusters)
+ADD_SUBDIRECTORY(pLatLon2LocalGrid)
 
 ##############################################################################
 #                           END of CMakeLists.txt
