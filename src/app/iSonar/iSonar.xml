@@ -21,11 +21,11 @@
           The app subscribe to *_PARAMS, *_POLL and POWERED_* with *={MINIKING_MICRON} regarding which sonar you wish to control.
 
           Range = [2;100] in meters
-          Gain =[0..210] Initial Gain of the receiver (in units 0..210 = 0..+80dB = 0..100%), typically 73 (20 percent)
+          Gain =[0;100] Initial Gain of the receiver in percent 0..100%, from doc, was in unit 0..210 = 0..+80dB = 0..100%, typically 20 percent
           Continuous = {0,false,1,true} if false, scan sector defined by RightLeftLimits, continuous otherwise.
           VoS = Velocity of sound in m/s, typically 1500m/s
           invert = 0=Upright, 1=Inverted Orientation
-          nBins = Number of bins generated after a ping
+          nBins = [200] Number of bins generated after a ping
           AngleStep = In degrees: Ultimate Resolution (0.225°), Mgr Resolution (0.45°), Medium Resolution (0.9°), Low Resolution (1.8°)
           LeftLimit = For a sector scan (Continuous = {0,false}), in degrees
           RightLimit = For a sector scan (Continuous = {0,false}), in degrees
@@ -35,8 +35,7 @@
               <moosvar>
                  <varname>MINIKING_PARAMS</varname>
                  <vartype>string</vartype>
-                 <varinfo>uPokeDB MINIKING_PARAMS="Range=25,Gain=45,Continuous=true, VoS=1500, invert=1, nBins=200, AngleStep=, LeftLimit=, RightLimit="</varinfo>
-              </moosvar>
+                 <varinfo>uPokeDB MINIKING_PARAMS="Range=25,Gain=45,Continuous=true, VoS=1500, invert=1, nBins=200, AngleStep=, LeftLimit=, RightLimit="!!!Gain in percent
               <moosvar>
                  <varname>MICRON_PARAMS</varname>
                  <vartype>string</vartype>
