@@ -162,13 +162,14 @@ bool XSensINS::OnStartUp() {
     if(!handled)
       reportUnhandledConfigWarning(orig);
   }
+  
   registerVariables();
 
   //------ OPEN INS ---------------//
   XsPortInfo mtPort("/dev/xsens", XsBaud::numericToRate(115200));
   if (!m_device.openPort(mtPort)) {
-    reportRunWarning("Could not open the COM port" + m_uart_port);
     cout << "CANNOT OPEN THE PORT" << '\n';
+    reportRunWarning("Could not open the COM port" + m_uart_port);
   }
 
   //------ CONFIGURE INS ---------------//
@@ -214,6 +215,11 @@ void XSensINS::registerVariables() {
 // Procedure: buildReport()
 
 bool XSensINS::buildReport() {
+
+  m_msgs << "============================================ \n";
+  m_msgs << "iXSensINS Status:                            \n";
+  m_msgs << "============================================ \n";
+
   ACTable actab(5);
   actab << "Serial Port | Baude rate | YAW | ROLL | PITCH";
   actab.addHeaderLines();
