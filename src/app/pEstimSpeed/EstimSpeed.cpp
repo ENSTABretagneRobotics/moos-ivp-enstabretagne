@@ -256,11 +256,6 @@ void EstimSpeed::registerVariables() {
 }
 
 bool EstimSpeed::buildReport() {
-    m_msgs << "============================================ \n";
-    m_msgs << "pEstimSpeed                                  \n";
-    m_msgs << "============================================ \n";
-    m_msgs << "\n";
-
     ACTable actab(3);
     actab << "Started | Yaw | Mass ";
     actab.addHeaderLines();
