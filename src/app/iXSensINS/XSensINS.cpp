@@ -101,9 +101,9 @@ bool XSensINS::Iterate() {
     //Gyro
     if(packet.containsCalibratedGyroscopeData()){
       m_gyro = packet.calibratedGyroscopeData();
-      Notify("IMU_GYR_X", m_gyro[0]*180.0/M_PI);
-      Notify("IMU_GYR_Y", m_gyro[1]*180.0/M_PI);
-      Notify("IMU_GYR_Z", m_gyro[2]*180.0/M_PI);
+      Notify("IMU_GYR_X", m_gyro[0]);
+      Notify("IMU_GYR_Y", m_gyro[1]);
+      Notify("IMU_GYR_Z", m_gyro[2]);
     }
 
     //Magneto
@@ -162,13 +162,13 @@ bool XSensINS::OnStartUp() {
     if(!handled)
       reportUnhandledConfigWarning(orig);
   }
+  
   registerVariables();
-
+  
   //------ OPEN INS ---------------//
   XsPortInfo mtPort("/dev/xsens", XsBaud::numericToRate(115200));
   if (!m_device.openPort(mtPort)) {
     reportRunWarning("Could not open the COM port" + m_uart_port);
-    cout << "CANNOT OPEN THE PORT" << '\n';
   }
 
   //------ CONFIGURE INS ---------------//
@@ -214,6 +214,11 @@ void XSensINS::registerVariables() {
 // Procedure: buildReport()
 
 bool XSensINS::buildReport() {
+
+  m_msgs << "============================================ \n";
+  m_msgs << "iXSensINS Status:                            \n";
+  m_msgs << "============================================ \n";
+
   ACTable actab(5);
   actab << "Serial Port | Baude rate | YAW | ROLL | PITCH";
   actab.addHeaderLines();
