@@ -13,17 +13,17 @@
 #include "MBUtils.h"
 #include "documentation/MOOSAppDocumentation.h"
 #include "ColorParse.h"
-#include "NavigationScreen.h"
+#include "NavScreen.h"
 
 using namespace std;
 
-NavigationScreen *objNavigationScreen;
+NavScreen *objNavScreen;
 
 void kill_handler(int s);
 
 int main(int argc, char *argv[])
 {
-  objNavigationScreen = new NavigationScreen;
+  objNavScreen = new NavScreen;
 
   string mission_file;
   string run_command = argv[0];
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     documentation.showHelpAndExit();
 
   cout << termColor("green");
-  cout << "uNavigationScreen launching as " << run_command << endl;
+  cout << "uNavScreen launching as " << run_command << endl;
   cout << termColor() << endl;
 
   // To catch the kill event
@@ -61,13 +61,13 @@ int main(int argc, char *argv[])
   sigIntHandler.sa_flags = 0;
   sigaction(SIGTERM, &sigIntHandler, NULL);
 
-  objNavigationScreen->Run(run_command.c_str(), mission_file.c_str());
+  objNavScreen->Run(run_command.c_str(), mission_file.c_str());
 
   return(0);
 }
 
 void kill_handler(int s)
 {
-  delete objNavigationScreen;
+  delete objNavScreen;
   exit(0);
 }
