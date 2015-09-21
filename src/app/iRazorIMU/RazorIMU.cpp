@@ -91,7 +91,7 @@ bool RazorIMU::OnStartUp()
 
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
-  if (!m_MissionReader.GetValue("RAZORIMU_SERIAL_PORT",m_serial_port))
+  if(!m_MissionReader.GetValue("RAZORIMU_SERIAL_PORT", m_serial_port))
     reportConfigWarning("No RAZORIMU_SERIAL_PORT config found for " + GetAppName());
   if(!m_MissionReader.GetConfiguration(GetAppName(), sParams))
     reportConfigWarning("No config block found for " + GetAppName());
@@ -129,10 +129,9 @@ bool RazorIMU::OnStartUp()
       reportUnhandledConfigWarning(orig);
   }
 
-  string msg;
-  if(!initRazorIMU(msg))
+  if(!initRazorIMU(m_init_razor_msg))
   {
-    reportConfigWarning("Razor initialization failed: " + msg
+    reportConfigWarning("Razor initialization failed: " + m_init_razor_msg
                         + "\nCheck serial port in .moos file."
                         + "\nYou need R/W access to that port.");
     init = false;
@@ -140,7 +139,7 @@ bool RazorIMU::OnStartUp()
 
   registerVariables();
   AppCastingMOOSApp::PostReport();
-  return init;
+  return true;
 }
 
 //---------------------------------------------------------
@@ -156,17 +155,63 @@ void RazorIMU::registerVariables()
 
 bool RazorIMU::buildReport()
 {
-  #if 0 // Keep these around just for template
-    m_msgs << "============================================ \n";
-    m_msgs << "File:                                        \n";
-    m_msgs << "============================================ \n";
+  m_msgs << "Serial port: " << m_serial_port << "\n";
+  m_msgs << "Init razor: " << m_init_razor_msg << "\n";
+  m_msgs << "Razor IMU mode: ";
 
-    ACTable actab(4);
-    actab << "Alpha | Bravo | Charlie | Delta";
-    actab.addHeaderLines();
-    actab << "one" << "two" << "three" << "four";
-    m_msgs << actab.getFormattedString();
-  #endif
+  if(m_razor_mode == RazorAHRS::YAW_PITCH_ROLL)
+    m_msgs << "YAW_PITCH_ROLL";
+
+  else if(m_razor_mode == RazorAHRS::ACC_MAG_GYR_RAW)
+    m_msgs << "ACC_MAG_GYR_RAW";
+
+  else if(m_razor_mode == RazorAHRS::ACC_MAG_GYR_CALIBRATED)
+    m_msgs << "ACC_MAG_GYR_CALIBRATED";
+  
+  m_msgs << "\n\n";
+
+  ACTable actab_euler(3);
+  actab_euler << "Yaw | Pitch | Roll";
+  actab_euler.addHeaderLines();
+  if(m_razor_mode == RazorAHRS::YAW_PITCH_ROLL)
+    actab_euler << m_yaw << m_pitch << m_roll;
+  else
+    actab_euler << "-" << "-" << "-";
+  m_msgs << actab_euler.getFormattedString();
+  m_msgs << "\n\n";
+
+  ACTable actab_acc(3);
+  actab_acc << "Acc X | Acc Y | Acc Z";
+  actab_acc.addHeaderLines();
+  if(m_razor_mode == RazorAHRS::ACC_MAG_GYR_RAW 
+    || m_razor_mode == RazorAHRS::ACC_MAG_GYR_CALIBRATED)
+    actab_acc << m_acc_x << m_acc_y << m_acc_z;
+  else
+    actab_acc << "-" << "-" << "-";
+  m_msgs << actab_acc.getFormattedString();
+  m_msgs << "\n\n";
+
+  ACTable actab_mag(3);
+  actab_mag << "Mag X | Mag Y | Mag Z";
+  actab_mag.addHeaderLines();
+  if(m_razor_mode == RazorAHRS::ACC_MAG_GYR_RAW 
+    || m_razor_mode == RazorAHRS::ACC_MAG_GYR_CALIBRATED)
+    actab_mag << m_mag_x << m_mag_y << m_mag_z;
+  else
+    actab_mag << "-" << "-" << "-";
+  m_msgs << actab_mag.getFormattedString();
+  m_msgs << "\n\n";
+
+  ACTable actab_gyr(3);
+  actab_gyr << "Gyr X | Gyr Y | Gyr Z";
+  actab_gyr.addHeaderLines();
+  if(m_razor_mode == RazorAHRS::ACC_MAG_GYR_RAW 
+    || m_razor_mode == RazorAHRS::ACC_MAG_GYR_CALIBRATED)
+    actab_gyr << m_gyr_x << m_gyr_y << m_gyr_z;
+  else
+    actab_gyr << "-" << "-" << "-";
+  m_msgs << actab_gyr.getFormattedString();
+  m_msgs << "\n\n";
 
   return(true);
 }
@@ -174,7 +219,7 @@ bool RazorIMU::buildReport()
 //------------------------------------------------------------
 // Procedure: initRazorIMU()
 
-bool RazorIMU::initRazorIMU(string &error_msg)
+bool RazorIMU::initRazorIMU(string &init_msg)
 {
   bool init = true;
 
@@ -185,11 +230,12 @@ bool RazorIMU::initRazorIMU(string &error_msg)
                     bind(&RazorIMU::onRazorData, this, _1),
                     bind(&RazorIMU::onRazorError, this, _1),
                     m_razor_mode);
+    init_msg = "ok";
   }
 
   catch(runtime_error &e)
   {
-    error_msg = string(e.what());
+    init_msg = string(e.what());
     init = false;
   }
 

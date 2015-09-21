@@ -232,22 +232,19 @@ bool SimplePID::buildReport()
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
   #endif
-    m_msgs << "============================================ \n";
-    m_msgs << "File: pSimplePID                             \n";
-    m_msgs << "============================================ \n";
 
-    ACTable actab(4);
-    actab << "State | Consigne | Error";
-    actab.addHeaderLines();
-    actab << m_state << m_consigne << m_error;
+  ACTable actab(4);
+  actab << "State | Consigne | Error";
+  actab.addHeaderLines();
+  actab << m_state << m_consigne << m_error;
 
-    m_msgs << actab.getFormattedString();
-    m_msgs << '\n';
-    
-    actab << "Kp | Ki | Kd | Kz";
-    actab.addHeaderLines();
-    actab << m_kp << m_ki << m_kd << m_kw;
-    m_msgs << actab.getFormattedString();
+  m_msgs << actab.getFormattedString();
+  m_msgs << '\n';
+  
+  actab << "Kp | Ki | Kd | Kz";
+  actab.addHeaderLines();
+  actab << m_kp << m_ki << m_kd << m_kw;
+  m_msgs << actab.getFormattedString();
 
   return true;
 }

@@ -272,18 +272,15 @@ bool WallDetector::buildReport()
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
   #endif
-    m_msgs << "============================================ \n";
-    m_msgs << "File: pWallDetector                          \n";
-    m_msgs << "============================================ \n";
 
-    ACTable actab(5);
-    actab << "Nb Data | Size Data | Max filtered | Wall Threshold | Max Range";
-    actab.addHeaderLines();
-    if(m_scanline_tab.size()==0)
-      actab << (int)m_scanline_tab.size() << "x" << m_max_filtered << m_threshold << m_sonar_range;
-    else
-      actab << (int)m_scanline_tab.size() << (int)m_scanline_tab[0].size() << m_max_filtered << m_threshold << m_sonar_range;
-    m_msgs << actab.getFormattedString();
+  ACTable actab(5);
+  actab << "Nb Data | Size Data | Max filtered | Wall Threshold | Max Range";
+  actab.addHeaderLines();
+  if(m_scanline_tab.size()==0)
+    actab << (int)m_scanline_tab.size() << "x" << m_max_filtered << m_threshold << m_sonar_range;
+  else
+    actab << (int)m_scanline_tab.size() << (int)m_scanline_tab[0].size() << m_max_filtered << m_threshold << m_sonar_range;
+  m_msgs << actab.getFormattedString();
 
   return true;
 }
