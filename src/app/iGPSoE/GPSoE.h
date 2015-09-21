@@ -22,9 +22,9 @@ using namespace std;
 
 class GPSoE : public AppCastingMOOSApp
 {
-	public:
-		GPSoE();
-		~GPSoE();
+public:
+	GPSoE();
+	~GPSoE();
 
 protected: // Standard MOOSApp functions to overload
     bool OnNewMail(MOOSMSG_LIST &NewMail);

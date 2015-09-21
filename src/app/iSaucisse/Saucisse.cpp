@@ -39,6 +39,8 @@ Saucisse::Saucisse()
 
 Saucisse::~Saucisse()
 {
+  m_pololu->setAllThrustersValue(0.);
+  m_pololu->bipOnExit();
   delete m_pololu;
 }
 
