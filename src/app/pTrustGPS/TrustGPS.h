@@ -31,14 +31,22 @@ protected:
     void registerVariables();
 
 private: // Configuration variables
-    int paranoiaLevel;
+    int bufferLevel;
     double altitude_threshold;
+    
+    // Topics we subscribe to
+    std::string GPS_FIX_SUBSCRIPTION_NAME;
+    std::string GPS_SIG_SUBSCRIPTION_NAME;
+    std::string KELLER_DEPTH_SUBSCRIPTION_NAME;
+    
+    // Topics we publish to
+    std::string GPS_TRUST_PUBLICATION_NAME;
 private: // State variables
     bool gps_quality;
-    int gps_fix;
+    double gps_fix;
     double altitude; // Current altitude
     std::deque<bool> memory;
-    int paranoiaCounter;
+    int bufferCounter;
     bool gps_trust;
 };
 
