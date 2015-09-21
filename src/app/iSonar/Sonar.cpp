@@ -21,7 +21,7 @@ Sonar::Sonar()
 	m_bSonarReady = false;
 	m_bIsPowered = false;
 
-  m_snrType = SeaNetMsg::noBBUserData;
+  m_snrType = SeaNetMsg::MiniKingNotDST;
 
   m_bPollSonar = false;
 
