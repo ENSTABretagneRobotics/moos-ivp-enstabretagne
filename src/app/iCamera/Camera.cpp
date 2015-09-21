@@ -21,6 +21,8 @@ Camera::Camera()
 {
   m_iterations = 0;
   m_timewarp   = 1;
+
+  m_affichage_image = false;
 }
 
 /**
