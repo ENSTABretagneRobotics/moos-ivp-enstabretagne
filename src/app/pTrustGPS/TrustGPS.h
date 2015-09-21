@@ -14,9 +14,7 @@
 class TrustGPS : public AppCastingMOOSApp {
 public:
     TrustGPS();
-
-    ~TrustGPS() {
-    };
+    ~TrustGPS() {};
 
 protected: // Standard MOOSApp functions to overload  
     bool OnNewMail(MOOSMSG_LIST &NewMail);

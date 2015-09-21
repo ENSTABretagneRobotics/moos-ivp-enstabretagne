@@ -35,6 +35,9 @@ MixThrusters::MixThrusters() {
     u = Vector3d::Zero();
 
     this->saturation_mod = NORMALIZATION;
+
+    m_forward_coeff = 1.0;
+    m_backward_coeff = 1.0;
 }
 
 //---------------------------------------------------------
@@ -80,7 +83,6 @@ void MixThrusters::saturationSigmoid(Eigen::Vector3d &u) {
 }
 
 void MixThrusters::saturationNormalization(Eigen::Vector3d &u) {
-
     // Saturation
     if (fmax(fabs(u[0]), fabs(u[1])) > 1) {
         u.block<2, 1>(0, 0) /= fmax(fabs(u[0]), fabs(u[1]));
@@ -96,6 +98,9 @@ bool MixThrusters::Iterate() {
     AppCastingMOOSApp::Iterate();
 
     u = COEFF_MATRIX*desiredForces;
+
+    u[0] = SensCorrection(u[0]);
+    u[1] = SensCorrection(u[1]);
 
     switch (saturation_mod) {
         case NORMALIZATION:
@@ -182,6 +187,12 @@ bool MixThrusters::OnStartUp() {
         } else if (param == "U3_PUBLICATION_NAME") {
             U3_PUBLICATION_NAME = value;
             handled = true;
+        }else if (param == "FORWARD_COEFF") {
+            m_forward_coeff = atof(value.c_str());
+            handled = true;
+        } else if (param == "BACKWARD_COEFF") {
+            m_backward_coeff = atof(value.c_str());
+            handled = true;
         }
         if (!handled)
             reportUnhandledConfigWarning(orig);
@@ -200,10 +211,6 @@ void MixThrusters::registerVariables() {
 
 bool MixThrusters::buildReport() {
 #if 0 // Keep these around just for template
-    m_msgs << "============================================ \n";
-    m_msgs << "File:                                        \n";
-    m_msgs << "============================================ \n";
-
     ACTable actab(4);
     actab << "Alpha | Bravo | Charlie | Delta";
     actab.addHeaderLines();
@@ -212,4 +219,11 @@ bool MixThrusters::buildReport() {
 #endif
 
     return true;
+}
+
+double MixThrusters::SensCorrection(double val){
+    if(val>0)
+        return val * m_forward_coeff;
+    else
+        return val * m_forward_coeff;
 }

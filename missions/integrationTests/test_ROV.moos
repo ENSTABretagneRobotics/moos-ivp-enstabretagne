@@ -1,19 +1,14 @@
-// MOOS file
-
 ServerHost = localhost
 ServerPort = 9000
-
 Community  = AUV
 
 //Serial port configuration
 GPS_SERIAL_PORT = /dev/ttyUSB0
-XSENSINS_SERIAL_PORT = /dev/ttyUSB4
+ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB1
+SONAR_SERIAL_PORT = /dev/ttyUSB2
 
-ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB2
-
-SONAR_SERIAL_PORT = /dev/ttyUSB1
-
-KELLER_SERIAL_PORT = /dev/ttyUSB5
+KELLER_SERIAL_PORT = /dev/keller
+XSENSINS_SERIAL_PORT = /dev/xsens
 
 //------------------------------------------
 // Antler configuration  block
@@ -21,28 +16,27 @@ KELLER_SERIAL_PORT = /dev/ttyUSB5
 ProcessConfig = ANTLER
 {
   MSBetweenLaunches = 200
-  Run = MOOSDB        @ NewConsole = false
-  Run = uMS           @ NewConsole = false
-  Run = uMACView      @ NewConsole = false
-  Run = uProcessWatch @ NewConsole = false
+  Run = MOOSDB          @ NewConsole = false
+  Run = uMS             @ NewConsole = false
+  Run = uMACView        @ NewConsole = false
+  Run = uProcessWatch   @ NewConsole = false
 
-  //Run = pLogger       @ NewConsole = false
-  Run = pShare        @ NewConsole = false
+  Run = pLogger         @ NewConsole = false
+  Run = pShare          @ NewConsole = false
 
   // ************** ENGINE CONTROL *********
-  Run = iSaucisse     @ NewConsole = false
-  Run = pMixThrusters     @ NewConsole = false
+  Run = iSaucisse       @ NewConsole = false
+  Run = pMixThrusters   @ NewConsole = false
 
   // ************** SENSORS *********
- 
-  Run = iCamera       @ NewConsole = false ~iCamera1
-  Run = iCamera       @ NewConsole = false ~iCamera2
-  Run = uSensorsViewer @ NewConsole = false
-  Run = iSounder  @ NewConsole = false
-  Run = iGPS          @ NewConsole = false
-  Run = iKeller       @ NewConsole = false
-  Run = iSonar        @ NewConsole = false
-  Run = iXSensINS     @ NewConsole = false
+  Run = iCamera         @ NewConsole = false ~iCamera1
+  Run = iCamera         @ NewConsole = false ~iCamera2
+  Run = uSensorsViewer  @ NewConsole = false
+  Run = iSounder        @ NewConsole = false
+  Run = iGPS            @ NewConsole = false
+  Run = iKeller         @ NewConsole = false
+  Run = iSonar          @ NewConsole = false
+  Run = iXSensINS       @ NewConsole = true
 }
 
 //------------------------------------------------
@@ -61,15 +55,16 @@ ProcessConfig = pMixThrusters
   U2_PUBLICATION_NAME=SET_THRUSTER_RIGHT
   U3_PUBLICATION_NAME=SET_THRUSTER_VERTICAL
 
-  COEFF_MATRIX=1,0,0,0,1,0,0,0,1
+  COEFF_MATRIX=1,-1,0,1,1,0,0,0,1
 }
 
+//------------------------------------------------
 ProcessConfig = iSaucisse
 {
   AppTick   = 10
   CommsTick = 10
 
-  RESET_ON_STARTUP = false
+  RESET_ON_STARTUP = true
   RESET_ALL_ON = true
 
   DEVICE_NAME = /dev/ttyACM0
@@ -82,24 +77,26 @@ ProcessConfig = iSaucisse
   # Mac OS X:
   #     /dev/cu.usbmodem00034567
 }
+
 ProcessConfig=pShare
 {
-  Input = route = multicast_6
+  Input = route = 192.168.1.100:24466
 
-  //Output = src_name = *,dest_name = *,route=multicast_8
+  //Output = src_name = *,dest_name = *,route=192.168.1.100:24468
   // Camera binary flows can't pass via pShare (data.size() < 64K)
-  //Output = src_name = CAMERA_*,dest_name = CAMERA_*,route=multicast_8
-  Output = src_name = POWER*,route=multicast_8
-  Output = src_name = IMU_*,route=multicast_8
-  Output = src_name = GPS_*,route=multicast_8
-  Output = src_name = GPSOE_*,route=multicast_8
-  Output = src_name = KELLER_*,route=multicast_8
-  Output = src_name = ECHOSOUNDER_*,route=multicast_8
-  Output = src_name = MODEM_*,route=multicast_8
-  Output = src_name = SONAR_*,route=multicast_8
-  Output = src_name = OPERATION_*,route=multicast_8
-  Output = src_name = SAUCISSE*,route=multicast_8
-  Output = src_name = DESIRED_*,route=multicast_8
+  //Output = src_name = CAMERA_*,dest_name = CAMERA_*,route=192.168.1.100:24468
+  //Output = src_name = POWER*,route=192.168.1.100:24468
+  //Output = src_name = IMU_*,route=192.168.1.100:24468
+  Output = src_name = GPS_*,route=192.168.1.100:24468
+  //Output = src_name = GPSOE_*,route=192.168.1.100:24468
+  Output = src_name = KELLER_*,route=192.168.1.100:24468
+  Output = src_name = ECHOSOUNDER_*,route=192.168.1.100:24468
+  //Output = src_name = MODEM_*,route=192.168.1.100:24468
+  Output = src_name = SONAR_*,route=192.168.1.100:24468
+  //Output = src_name = OPERATION_*,route=192.168.1.100:24468
+  //Output = src_name = SAUCISSE*,route=192.168.1.100:24468
+  //Input = src_name = DESIRED_*,route=multicast_8
+  //Output = src_name = *,route=192.168.1.100:24468
 }
 
 //------------------------------------------
@@ -163,6 +160,8 @@ ProcessConfig = iKeller
   CommsTick = 4
 
   MAX_RETRIES = 10
+  GET_TEMPERATURE = TRUE;
+  REF_DEPTH = 0.3 //Piombino, September 2015
 }
 
 //------------------------------------------

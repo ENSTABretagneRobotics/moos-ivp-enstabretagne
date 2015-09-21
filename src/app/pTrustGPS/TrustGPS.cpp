@@ -138,10 +138,6 @@ void TrustGPS::registerVariables() {
 }
 
 bool TrustGPS::buildReport() {
-    m_msgs << "============================================ \n";
-    m_msgs << "File:                                        \n";
-    m_msgs << "============================================ \n";
-
     ACTable actab(1);
     actab << "GPSTrust";
     actab.addHeaderLines();

@@ -3,8 +3,8 @@
 #include <sstream>
 #include <cstdio>
 
-#define PRINT_DEBUG_WARNING_MINIKINGCORE(x) printf x 
-#define PRINT_DEBUG_ERROR_MINIKINGCORE(x) printf x
+// #define printf(x) printf x
+// #define PRINT_DEBUG_ERROR_MINIKINGCORE(x) printf x
 #define strtime_m() 0
 #define hDev 0
 
@@ -44,43 +44,43 @@ int SeaNetMsg::readMsgLength(const std::string &data)
 {
   // Not enough data to read and validate message length
   if (data.size() < 7) return mrNotEnoughData;
-  
+
   // Read hex length
   uint16_t hex_length = 0;
   stringstream ss;
   ss << std::hex << data.substr(1, 4); // Bytes 2-5 are the message length in ASCII hex
   ss >> hex_length;
-  
+
   // Read bin length
   uint16_t bin_length = * (uint16_t*) (data.data()+5);
-  
+
   // Compare both values
   if (hex_length != bin_length) return mrNotAMessage;
-  
+
   return hex_length;
 }
 
 SeaNetMsg::MessageTypeID SeaNetMsg::detectMessageType(const std::string &data)
 {
   if (data.size() < 11) return mteNoMessageType;
-  else return (MessageTypeID) (data[10]); 
+  else return (MessageTypeID) (data[10]);
 }
 
 int SeaNetMsg::numberBytesMissing(const std::string &data, int &full_length)
 {
   // If no data, request the size of the smallest message
-  if (data.empty()) 
+  if (data.empty())
     return 14;
-      
+
   // Check presence of header '@'
   if (data[0] != '@')
     return mrNotAMessage;
-  
+
   // Try to read message length field
   int length = readMsgLength(data);
   if (length == mrNotAMessage) return mrNotAMessage;
   if (length == mrNotEnoughData) return 14 - data.size();
-  
+
   // length does not includes 5 first bytes and terminal '\n'
   full_length = length + 6;
   if (data.size() >= full_length)
@@ -115,7 +115,7 @@ SeaNetMsg_HeadCommand::SeaNetMsg_HeadCommand()
   params.StepAngleSize = 1.8;
   params.NBins = 400;
   params.IGain = 95;
-  
+
   // Create message
   buildMessage();
 }
@@ -126,7 +126,7 @@ void SeaNetMsg_HeadCommand::buildMessage()
   typedef uint16_t uint16;
 	union uShort
 	{
-		uint16 v;  
+		uint16 v;
 		uint8 c[2];
 	};
 	typedef union uShort uShort;
@@ -151,26 +151,27 @@ void SeaNetMsg_HeadCommand::buildMessage()
     unsigned int IgnoreSensor : 1;
     unsigned int padding : 16;
   };
-  
+
   union uHdCtrlUnion
   {
-          struct HdCtrlStruct bits;  
+          struct HdCtrlStruct bits;
           uint8 c[4];
   } HdCtrl;
-        
+
 //        CHRONO chrono;
   double duration = 0;
 //	uint8 readbuf[22];
-  
+
   uint8 writebuf[66];
 //	uint8 buf = 0;
   uShort word;
   double d = 0;
   int adc8on = params.adc8on; // The head will return 4-bit packed echo data (0..15) representing the amplitude
   // of received echoes in a databin if it is set to 0. Otherwise, it will be in 8 bits (0..255)
-  int cont = params.cont; // Scanning will be restricted to a sector defined by the directions LeftAngleLimit 
-  // and RightAngleLimit if it is set to 0. Otherwise, it will be a continuous rotation and 
+  int cont = params.cont; // Scanning will be restricted to a sector defined by the directions LeftAngleLimit
+  // and RightAngleLimit if it is set to 0. Otherwise, it will be a continuous rotation and
   // LeftAngleLimit and RightAngleLimit will be ignored
+  int invert = params.invert;
   double LeftAngleLimit = params.LeftAngleLimit; // For a sector scan (cont = 0), in degrees
   double RightAngleLimit = params.RightAngleLimit; // For a sector scan (cont = 0), in degrees
   int VelocityOfSound = params.VelocityOfSound; // In m/s
@@ -194,7 +195,7 @@ void SeaNetMsg_HeadCommand::buildMessage()
   writebuf[11] = (uint8)0x80; // Message Sequence, always = 0x80
   writebuf[12] = (uint8)0x02; // Node number, copy of 8
   writebuf[13] = (uint8)0x01; // If the device is Dual Channel (i.e. SeaKing SONAR) then a 16-byte V3B Gain Parameter block
-  // is appended at the end and this byte must be set to 0x1D to indicate this. Else, for Single 
+  // is appended at the end and this byte must be set to 0x1D to indicate this. Else, for Single
   // channel devices such as SeaPrince and MiniKing, the V3B block is not appended and this byte
   // is set to 0x01 to indicate this
 //	buf = 0x0F;
@@ -210,7 +211,7 @@ void SeaNetMsg_HeadCommand::buildMessage()
   HdCtrl.bits.adc8on = adc8on;
   HdCtrl.bits.cont = cont;
   HdCtrl.bits.scanright = 1;
-  HdCtrl.bits.invert = 1;
+  HdCtrl.bits.invert = invert;
   HdCtrl.bits.motoff = 0;
   HdCtrl.bits.txoff = 0;
   HdCtrl.bits.spare = 0;
@@ -265,29 +266,17 @@ void SeaNetMsg_HeadCommand::buildMessage()
   // This sonar has only 1 channel so channel 1 = channel 2
   if (RangeScale < 0)     {
     RangeScale = 30;
-    PRINT_DEBUG_WARNING_MINIKINGCORE(("SetParamMiniKing warning (%s) : %s"
-            "(hDev=%#x)\n", 
-            strtime_m(), 
-            "Negative RangeScale value. Default value of 30 m used. ", 
-            hDev));
+    printf("SetParamMiniKing warning, Negative RangeScale value. Default value of 30 m used.\n");
   }
   d = (double)((RangeScale + 10.0) * 25.0 / 10.0);
   word.v = (uint16)d;
   if (word.v > 350)       {
     word.v = 350;
-    PRINT_DEBUG_WARNING_MINIKINGCORE(("SetParamMiniKing warning (%s) : %s"
-            "(hDev=%#x)\n", 
-            strtime_m(), 
-            "Too high RangeScale value. ", 
-            hDev));
+    printf("SetParamMiniKing warning, Too high RangeScale value.\n");
   }
   if (word.v < 37)        {
     word.v = 37;
-    PRINT_DEBUG_WARNING_MINIKINGCORE(("SetParamMiniKing warning (%s) : %s"
-            "(hDev=%#x)\n", 
-            strtime_m(), 
-            "Too low RangeScale value. ", 
-            hDev));
+    printf("SetParamMiniKing warning, Too low RangeScale value.\n");
   }
   writebuf[33] = (uint8)word.c[0]; // Transmitter Pulse Length in microseconds units (LSB)
   writebuf[34] = (uint8)word.c[1]; // Transmitter Pulse Length in microseconds units (MSB)
@@ -299,38 +288,28 @@ void SeaNetMsg_HeadCommand::buildMessage()
   writebuf[36] = (uint8)word.c[1]; // Range Scale setting in decimetre units (MSB)
   // The low order 14 bits are set to a value of Rangescale * 10 units.
   // Bit 6, Bit 7 of the MSB are used as a
-  // code (0..3) for the Range Scale units : 
+  // code (0..3) for the Range Scale units :
   // 0 = Metres, 1 = Feet, 2 = Fathoms, 3 = Yards
   // For example, Rangescale = 30 m
   d = (LeftAngleLimit * 10.0 / 9.0) * 16.0;
   word.v = ((uint16)d)%6400;
-//	if (word.v > 6399)
-//	{
-//		word.v = 6399;
-//		PRINT_DEBUG_WARNING_MINIKINGCORE(("SetParamMiniKing warning (%s) : %s"
-//				"(hDev=%#x)\n", 
-//				strtime_m(), 
-//				"Too high LeftAngleLimit value. ", 
-//				hDev));
-//	}
+	if (word.v > 6399)
+	{
+    printf("SetParamMiniKing warning, Too high LeftAngleLimit value.\n");
+	}
   writebuf[37] = (uint8)word.c[0]; // Left Angle Limit in 1/16 Gradian units (LSB) (overridden if bit cont of byte HdCtrl is set)
   writebuf[38] = (uint8)word.c[1]; // Left Angle Limit in 1/16 Gradian units (MSB) (overridden if bit cont of byte HdCtrl is set)
   d = (RightAngleLimit * 10.0 / 9.0) * 16.0;
   word.v = ((uint16)d)%6400;
-//	if (word.v > 6399)
-//	{
-//		word.v = 6399;
-//			PRINT_DEBUG_WARNING_MINIKINGCORE(("SetParamMiniKing warning (%s) : %s"
-//			"(hDev=%#x)\n", 
-//			strtime_m(), 
-//			"Too high RightAngleLimit value. ", 
-//			hDev));
-//	}
+	if (word.v > 6399)
+  {
+    printf("SetParamMiniKing warning, Too high RightAngleLimit value.\n");
+  }
   writebuf[39] = (uint8)word.c[0]; // Right Angle Limit in 1/16 Gradian units (LSB) (overridden if bit cont of byte HdCtrl is set)
   writebuf[40] = (uint8)word.c[1]; // Right Angle Limit in 1/16 Gradian units (MSB) (overridden if bit cont of byte HdCtrl is set)
   writebuf[41] = (uint8)0x4D; // ADSpan
   writebuf[42] = (uint8)0x28; // ADLow
-  // The SONAR receiver has an 80dB dynamic range, and signal 
+  // The SONAR receiver has an 80dB dynamic range, and signal
   // levels are processed internally by the SONAR head such that
   // 0 .. 80dB = 0 .. 255
   // If adc8on in HdCtrl = 0, then the 80dB receiver signal is mapped to 4-bit, 16 level reply data
@@ -346,20 +325,12 @@ void SeaNetMsg_HeadCommand::buildMessage()
   if (IGain > 210)
   {
     IGain = 210;
-    PRINT_DEBUG_WARNING_MINIKINGCORE(("SetParamMiniKing warning (%s) : %s"
-            "(hDev=%#x)\n", 
-            strtime_m(), 
-            "Too high Gain value. ", 
-            hDev));
+    printf("SetParamMiniKing warning, Too high Gain value.\n");
   }
   if (IGain < 0)
   {
     IGain = 0;
-    PRINT_DEBUG_WARNING_MINIKINGCORE(("SetParamMiniKing warning (%s) : %s"
-            "(hDev=%#x)\n", 
-            strtime_m(), 
-            "Negative Gain value. ", 
-            hDev));
+    printf("SetParamMiniKing warning, Negative Gain value.\n");
   }
   writebuf[43] = (uint8)IGain; // Initial Gain of the receiver for channel 1 in units 0..210 = 0..+80dB = 0..100% (default = 0x49)
   writebuf[44] = (uint8)IGain; // Initial Gain of the receiver for channel 2 in units 0..210 = 0..+80dB = 0..100% (default = 0x49)
@@ -380,11 +351,7 @@ void SeaNetMsg_HeadCommand::buildMessage()
   word.v = (uint16)d;
   if (word.v < 5) {
     word.v = 5;
-    PRINT_DEBUG_WARNING_MINIKINGCORE(("SetParamMiniKing warning (%s) : %s"
-            "(hDev=%#x)\n", 
-            strtime_m(), 
-            "Too low ADInterval value. Invalid RangeScale, NBins or VelocityOfSound values. ", 
-            hDev));
+    printf("SetParamMiniKing warning, Too low ADInterval value. Invalid RangeScale, NBins or VelocityOfSound values.\n");
   }
   writebuf[51] = (uint8)word.c[0]; // AD Interval in units of 640 nanoseconds (LSB)
   writebuf[52] = (uint8)word.c[1]; // AD Interval in units of 640 nanoseconds (MSB)
@@ -395,19 +362,11 @@ void SeaNetMsg_HeadCommand::buildMessage()
   word.v = (uint16)NBins;
   if (word.v > 800)       {
     word.v = 800;
-    PRINT_DEBUG_WARNING_MINIKINGCORE(("SetParamMiniKing warning (%s) : %s"
-            "(hDev=%#x)\n", 
-            strtime_m(), 
-            "Too high NBins value. ", 
-            hDev));
+    printf("SetParamMiniKing warning, Too high NBins value.\n");
   }
   if (word.v < 5) {
     word.v = 5;
-    PRINT_DEBUG_WARNING_MINIKINGCORE(("SetParamMiniKing warning (%s) : %s"
-            "(hDev=%#x)\n", 
-            strtime_m(), 
-            "Too low NBins value. ", 
-            hDev));
+    printf("SetParamMiniKing warning, Too low NBins value.\n");
   }
   writebuf[53] = (uint8)word.c[0]; // Number of sample bins over scan-line (LSB)
   writebuf[54] = (uint8)word.c[1]; // Number of sample bins over scan-line (MSB)
@@ -424,61 +383,7 @@ void SeaNetMsg_HeadCommand::buildMessage()
   writebuf[63] = (uint8)0x00; // ScanZ, for Special devices and should both be left at default values of 0 (LSB)
   writebuf[64] = (uint8)0x00; // ScanZ, for Special devices and should both be left at default values of 0 (MSB)
   writebuf[65] = (uint8)0x0A; // Message Terminator = Line Feed
-/*
-  if (WriteAllRS232Port(hDev, writebuf, 66) != EXIT_SUCCESS)
-  { 
-    PRINT_DEBUG_ERROR_MINIKINGCORE(("SetParamMiniKing error (%s) : %s"
-            "(hDev=%#x)\n", 
-            strtime_m(), 
-            "Error writing data to the serial port. ", 
-            hDev));
-    return EXIT_FAILURE;
-  }
-*/
-  // On power-up of the sonar, the 'HeadInf' byte will change in value to 
-  // reflect the different states that the sonar is going through during initialisation
-  // i) Power applied to sonar
-  // 1st Alive: HeadInf = '5D' (Head is in Re-Centre operation and has No Params). Byte 14 = 80h.
-  // 2nd Alive: HeadInf = '4D' (No 'Dir' so Transducer is back at centre)
-  // 3rd Alive: HeadInf = '4A' (Transducer is now centred and Not Motoring)
-  // ii) 'mtHeadCommand' sent to Sonar
-  // 4th Alive: HeadInf = 'CA' (Has been 'Sent Cfg'. Acknowledgement of 'ParamsCmd')
-  // 5th Alive: HeadInf = '8A' (Has Params. Parameters have been validated. Ready for 'GetData').
-  // Byte 14 now set to 00h
-        
-/*
-  StartChrono(&chrono);
 
-  readbuf[20] = 0;
-
-  while (readbuf[20] != 0x8A)
-  {
-          GetTimeElapsedChrono(&chrono, &duration);
-          if (duration > 10)
-          {
-                  PRINT_DEBUG_ERROR_MINIKINGCORE(("SetParamMiniKing error (%s) : %s"
-                          "(hDev=%#x)\n", 
-                          strtime_m(), 
-                          "The operation timed out. ", 
-                          hDev));
-                  return EXIT_FAILURE;
-          }
-
-          // Wait for an mtAlive message. It should come every 1 second.
-          if (ReadMsgMiniKing(hDev, readbuf, 22, 0x04) != EXIT_SUCCESS)
-          { 
-                  PRINT_DEBUG_ERROR_MINIKINGCORE(("SetParamMiniKing error (%s) : %s"
-                          "(hDev=%#x)\n", 
-                          strtime_m(), 
-                          "The device is not responding correctly. ", 
-                          hDev));
-                  return EXIT_FAILURE;
-          }
-
-          PRINT_DEBUG_MESSAGE_MINIKINGCORE(("mtAlive message readbuf[20]=%#x\n", readbuf[20]));
-  }
-*/
-//        return EXIT_SUCCESS;
   m_data.assign((char*)writebuf, sizeof(writebuf));
 }
 
@@ -489,10 +394,10 @@ double SeaNetMsg_HeadData::firstObstacleDist(uint8_t threshold, const double& mi
   //int minBin = max(0, (int)(minDist*(double)NBins/(double)RangeScale));
   //int maxBin = min(NBins, (int)(maxDist*(double)NBins/(double)RangeScale));
   double binStep = ADInterval_m();
-  
+
   int minBin = max(0, (int)(minDist / binStep));
   int maxBin = min(nBins(), (int)(maxDist / binStep));
-  
+
   int i = minBin;
   while ((i < maxBin) && (bin(i) < threshold))
   {
@@ -500,10 +405,10 @@ double SeaNetMsg_HeadData::firstObstacleDist(uint8_t threshold, const double& mi
   }
 
   if (i >= maxBin)
-  { 
+  {
     return -1;
   }
-  else    
+  else
   {
     //return (double)i*(double)RangeScale/(double)NBins; // Convert in m.
     return (double)i * binStep; // Convert in m.

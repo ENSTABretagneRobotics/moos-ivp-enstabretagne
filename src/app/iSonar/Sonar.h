@@ -13,7 +13,6 @@
 
 #include <fstream>
 
-
 class Sonar : public AppCastingMOOSApp
 {
 	public:
@@ -27,11 +26,11 @@ class Sonar : public AppCastingMOOSApp
 		bool OnStartUp();
 		void RegisterVariables();
 		void Initialization();
-				
+
 		void ListenSonarMessages();
-			   
+
 		bool SendSonarMessage(const SeaNetMsg & msg) {return (m_Port.Write(msg.data().data(), (int)msg.data().size()) == (int)msg.data().size());}
-  
+
   	protected: // Standard AppCastingMOOSApp functions to overload
     	bool buildReport();
 
@@ -48,18 +47,24 @@ class Sonar : public AppCastingMOOSApp
 	    #endif
 		unsigned int			m_iterations;
 		double			        m_timewarp;
-		bool m_bNoParams;
+
+		bool m_bIsAlive;
+		bool m_bReplyVersionData;
+		bool m_bReplyBBUserData;
+		bool m_bHasParams;
 		bool m_bSentCfg;
-				
+
 		bool m_bSonarReady;
 		bool m_bPollSonar;
 		bool m_bIsPowered;
-						
+
+		SeaNetMsg::SonarType m_snrType;
+
 		CMOOSThread m_serial_thread;
 
 		static bool listen_sonar_messages_thread_func(void *pSonarObject) {
 			Sonar* pSonar = static_cast<Sonar*> (pSonarObject);
-			if (pSonar) 
+			if (pSonar)
 			{
 				pSonar->ListenSonarMessages();
 				return true;
@@ -68,4 +73,4 @@ class Sonar : public AppCastingMOOSApp
 		}
 };
 
-#endif 
+#endif
