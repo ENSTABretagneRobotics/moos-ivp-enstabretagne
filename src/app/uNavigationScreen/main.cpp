@@ -1,13 +1,9 @@
-/**
- * \file main.cpp
- * \brief Programme principal de iGPSoE
- * \author Team CISSAU - Veni Vidi Vici (ENSTA Bretagne)
- * \version 0.1
- * \date Jun 5th 2013
- *
- * Programme principal de lancement de l'application MOOS
- *
- */
+/************************************************************/
+/*    FILE: main.cpp
+/*    ORGN: Toutatis AUVs - ENSTA Bretagne
+/*    AUTH: Simon Rohou
+/*    DATE: 2015
+/************************************************************/
 
 #include <string>
 #include <signal.h>
@@ -17,18 +13,17 @@
 #include "MBUtils.h"
 #include "documentation/MOOSAppDocumentation.h"
 #include "ColorParse.h"
-#include "GPSoE.h"
-#include "GPSoE_Info.h"
+#include "NavigationScreen.h"
 
 using namespace std;
 
-GPSoE *objGPSoE;
+NavigationScreen *objNavigationScreen;
 
 void kill_handler(int s);
 
 int main(int argc, char *argv[])
 {
-  objGPSoE = new GPSoE;
+  objNavigationScreen = new NavigationScreen;
 
   string mission_file;
   string run_command = argv[0];
@@ -54,27 +49,25 @@ int main(int argc, char *argv[])
 
   if(mission_file == "")
     documentation.showHelpAndExit();
-  else
-  {
-  	cout << termColor("green");
-  	cout << "Lancement de " << run_command << endl;
-  	cout << termColor() << endl;
 
-    // To catch the kill event
-    struct sigaction sigIntHandler;
-    sigIntHandler.sa_handler = kill_handler;
-    sigemptyset(&sigIntHandler.sa_mask);
-    sigIntHandler.sa_flags = 0;
-    sigaction(SIGTERM, &sigIntHandler, NULL);
+  cout << termColor("green");
+  cout << "uNavigationScreen launching as " << run_command << endl;
+  cout << termColor() << endl;
 
-    objGPSoE->Run(run_command.c_str(), mission_file.c_str());
-  }
+  // To catch the kill event
+  struct sigaction sigIntHandler;
+  sigIntHandler.sa_handler = kill_handler;
+  sigemptyset(&sigIntHandler.sa_mask);
+  sigIntHandler.sa_flags = 0;
+  sigaction(SIGTERM, &sigIntHandler, NULL);
+
+  objNavigationScreen->Run(run_command.c_str(), mission_file.c_str());
 
   return(0);
 }
 
 void kill_handler(int s)
 {
-  delete objGPSoE;
+  delete objNavigationScreen;
   exit(0);
 }

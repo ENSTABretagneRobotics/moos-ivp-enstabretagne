@@ -11,6 +11,13 @@ protected:
 	std::string m_data;
 
 public:
+  enum SonarType {
+    MiniKingNotDST = 0, //Miniking Sonars are not Digital Imaging Sonars
+    MicronDST = 1, //Micron Sonars are Digital Imaging Sonars
+    noBBUserData = 2, //Sonar type in construction, i.e. no BBUSerData received
+    SonarTypeError = -1 //Sonar type Error
+  };
+
   enum MessageReadError {
     mrNotAMessage = -1,
     mrNotEnoughData = -2,
@@ -135,7 +142,8 @@ public:
   void setRange(const double& range_in_m) {params.RangeScale = range_in_m; buildMessage();}
   void setAngleStep(const double &angle_step) {params.StepAngleSize = angle_step; buildMessage();}
   void setNbins(int nBins) {params.NBins = nBins; buildMessage();}
-  void setGain(const double &gain) {params.IGain = (int)(100.*gain/210.); buildMessage();}
+  // void setGain(const double &gain) {params.IGain = (int)(100.*gain/210.); buildMessage();}
+  void setGain(const int &gain) {params.IGain = gain; buildMessage();}
 
   int getContinuous() {return params.cont;}
   int getInverted() {return params.invert;}
@@ -167,6 +175,14 @@ public:
 
   double firstObstacleDist( uint8_t threshold, const double& min_dist, const double& max_dist) const;
 
+};
+
+class SeaNetMsg_BBUserData : public SeaNetMsg
+{
+public:
+  SeaNetMsg_BBUserData() : SeaNetMsg() {};
+
+  SonarType getSonarType() const { return (read_uchar_at(19) == 0x0f)?MicronDST:MiniKingNotDST;}
 };
 
 #endif // SEANETMSG_H

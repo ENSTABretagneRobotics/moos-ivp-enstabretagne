@@ -47,13 +47,18 @@ class Sonar : public AppCastingMOOSApp
 	    #endif
 		unsigned int			m_iterations;
 		double			        m_timewarp;
-		bool m_bNoParams;
+
+		bool m_bIsAlive;
+		bool m_bReplyVersionData;
+		bool m_bReplyBBUserData;
+		bool m_bHasParams;
 		bool m_bSentCfg;
 
 		bool m_bSonarReady;
 		bool m_bPollSonar;
 		bool m_bIsPowered;
 
+		SeaNetMsg::SonarType m_snrType;
 
 		CMOOSThread m_serial_thread;
 

@@ -22,62 +22,25 @@ using namespace std;
 
 SensorViewer::SensorViewer()
 {
-	m_iterations = 0;
-	m_timewarp   = 1;
-	img1.create(HAUTEUR_IMAGE_CAMERA,LARGEUR_IMAGE_CAMERA,CV_8UC3);
-	img2.create(HAUTEUR_IMAGE_CAMERA,LARGEUR_IMAGE_CAMERA,CV_8UC3);
+	m_size_scanline_miniking = 200;
+	m_size_scanline_micron = 200;
 
-	img_son_pol.create(360,800,CV_8UC1);
-	img_son_cart.create(400,400,CV_8UC1);
-	img_sonar.create(400,400,CV_8UC3);
-	pol2cart_x.create(400,400,CV_32FC1);
-	pol2cart_y.create(400,400,CV_32FC1);
-
-	m_dSonarScaleFactor = 4.0;
-
-	int width = 400;
-	int height = 400;
-
-	float xc = (float)width / 2.0;
-	float yc = (float)height / 2.0;
+	m_img_camera_front.create(HAUTEUR_IMAGE_CAMERA,LARGEUR_IMAGE_CAMERA,CV_8UC3);
+	m_img_camera_bottom.create(HAUTEUR_IMAGE_CAMERA,LARGEUR_IMAGE_CAMERA,CV_8UC3);
+	m_img_sonar_micron.create(2*m_size_scanline_micron,2*m_size_scanline_micron,CV_8UC3);
+	m_img_sonar_miniking.create(2*m_size_scanline_miniking,2*m_size_scanline_miniking,CV_8UC3);
 
 
-	float ad_interval = 0.25056;
-	float mag_step = ad_interval / 2.0;
+	m_old_bearing_miniking = 0.0;
+	m_old_bearing_micron = 0.0;
 
-  vector<float> vMag;
-  vector<float> vAngle;
-
-  for(double angle = 0; angle < height; angle++)
-  {
-    for(int mag = 0; mag < width ; mag++)
-    {
-      vAngle.push_back(angle);
-      vMag.push_back((float)mag * mag_step);
-    }
-  }
-
-  vector<double> vX;
-  vector<double> vY;
-
-  //cartToPolar(vX, vY, mag, angle, true);
-  cv::polarToCart(vMag, vAngle, pol2cart_x, pol2cart_y, true);
+	m_new_bearing_miniking = 0.0;
+	m_new_bearing_micron = 0.0;
 }
-
-/**
- * \fn
- * \brief Destructeur de l'instance de l'application
- */
 
 SensorViewer::~SensorViewer()
 {
 }
-
-/**
- * \fn
- * \brief Méthode appelée lorsqu'une variable de la MOOSDB est mise à jour
- * N'est appelée que si l'application s'est liée à la variable en question
- */
 
 bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
 {
@@ -102,85 +65,54 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
 		//cout << msg.GetKey() << en
 		double pool_angle = MOOSDeg2Rad(0.0);
 
-		if( msg.GetKey() == "DESIRED_THRUST") {
-		  vx = msg.GetDouble();
-		}
-		// if( msg.GetKey() == "YAW") {
-		//   heading_razor = MOOSDeg2Rad(msg.GetDouble());
-		//   double a = MOOSDeg2Rad(-12.6), b = 0.45, c = MOOSDeg2Rad(-10.5);
-		//   heading = heading_razor - ( a*sin(heading_razor+b) + c);
-
-		//   heading += pool_angle;
-		// }
-		// if( msg.GetKey() == "HEADING") {
-		//   heading_ciscrea = MOOSDeg2Rad(msg.GetDouble());
-		// }
-    if( msg.GetKey() == "IMU_YAW") {
-      heading = MOOSDeg2Rad(msg.GetDouble());
-    }
+		// **************** SENSORS DATA ************************
+		// 
 		if( msg.GetKey() == "CAMERA_SIDE") {
-		  memcpy(img1.data, msg.GetBinaryData(), img1.rows*img1.step);
+		  	memcpy(m_img_camera_bottom.data, msg.GetBinaryData(), m_img_camera_bottom.rows*m_img_camera_bottom.step);
 		}
-		if( msg.GetKey() == "CAMERA_BOTTOM") {
-		  memcpy(img2.data, msg.GetBinaryData(), img2.rows*img2.step);
+		else if( msg.GetKey() == "CAMERA_BOTTOM") {
+		  	memcpy(m_img_camera_front.data, msg.GetBinaryData(), m_img_camera_front.rows*m_img_camera_front.step);
 		}
-    if( msg.GetKey() == "WALL_DETECTOR")
-    {
-      float bearing = 0;
-      float distance = 0;
-      MOOSValFromString(bearing, msg.GetString(), "bearing");
-      MOOSValFromString(distance, msg.GetString(), "distance");
+		else if(msg.GetKey() == "SONAR_SCANLINE_MICRON"){
+			int nRows, nCols;
+      		MOOSVectorFromString(msg.GetString(), m_new_scanline_micron, nRows, nCols);
+      		if(m_new_scanline_micron.size() != m_size_scanline_micron){
+      			m_img_sonar_micron.create(2*m_new_scanline_micron.size(),2*m_new_scanline_micron.size(),CV_8UC3);
+      		}
+      		m_size_scanline_micron = m_new_scanline_micron.size();
+      		m_new_data_micron = true;
+		}
+		else if(msg.GetKey() == "SONAR_SCANLINE_MINIKING"){
+			int nRows, nCols;
+      		MOOSVectorFromString(msg.GetString(), m_new_scanline_miniking, nRows, nCols);
+      		if(m_new_scanline_miniking.size() != m_size_scanline_miniking){
+      			m_img_sonar_miniking.create(2*m_new_scanline_miniking.size(),2*m_new_scanline_miniking.size(),CV_8UC3);
+      		}
+      		m_size_scanline_miniking = m_new_scanline_miniking.size();
+      		m_new_data_miniking = true;
+		}
+		else if(msg.GetKey() == "SONAR_BEARING_MICRON"){
+			m_new_bearing_micron = msg.GetDouble();
+		}
+		else if(msg.GetKey() == "SONAR_BEARING_MINIKING"){
+			m_new_bearing_miniking = msg.GetDouble();
+		}
 
-      int x = m_dSonarScaleFactor*sin(heading + bearing) + 199.5;
-      int y = m_dSonarScaleFactor*cos(heading + bearing) + 199.5;
-      img_son_cart.at<unsigned char>(x,y) = distance;
-    }
-		if( msg.GetKey() == "SONAR_VIEW_SCALE") {
-		  m_dSonarScaleFactor = msg.GetDouble();
-		}
-		if( msg.GetKey() == "SONAR_RAW_DATA") {
-		  float angle = 0;
-		  MOOSValFromString(angle, msg.GetString(), "bearing");
-		  vector<unsigned int> scanline;
-		  int nRows, nCols;
-		  MOOSValFromString(scanline, nRows, nCols, msg.GetString(), "scanline");
-		  //cout << nRows << " " << nCols << endl;
-		  uchar * line = img_son_pol.row((int)floorf(angle)).data;
-		  for(int i=0; i<scanline.size();++i)
-		    line[i]=scanline[i];
-		  line = img_son_pol.row(((int)floorf(angle)+1)%img_son_pol.size().height).data;
-		  for(int i=0; i<scanline.size();++i)
-		    line[i]=scanline[i];
-		  //memcpy(img1.data, msg.GetBinaryData(), img1.rows*img1.step);
+		// **************** ANALYSIS DATA ************************
+		// 
+	    // if( msg.GetKey() == "WALL_DETECTOR"){
+	    //   MOOSValFromString(m_bearing, msg.GetString(), "bearing");
+	    //   MOOSValFromString(m_distance, msg.GetString(), "distance");
+	    // }
 
-		  float ad_interval = 0.25056;
-		  MOOSValFromString(ad_interval, msg.GetString(), "ad_interval");
-		//double scale = 60.0;
-		  // double scale = 4.0;
-		  double mag_step = m_dSonarScaleFactor * ad_interval / 2.0;
-
-		  for (double alpha = angle-2.0; alpha <angle+2.0; alpha+=0.5){
-		  double cos_b = cos(MOOSDeg2Rad(-alpha) + heading );
-		  double sin_b = sin(MOOSDeg2Rad(-alpha) + heading );
-		  for(int i=0; i<scanline.size();++i)
-		  {
-		    double d = mag_step * i;
-		    int x = sin_b*d + 199.5;
-		    int y = cos_b*d + 199.5;
-		    if (x>=0 && x<400 && y>=0 && y<400)
-		      img_son_cart.at<unsigned char>(x,y) = scanline[i];
-		  }
-		  }
-		}
+		// **************** CONFIG DATA ************************
+		// 
+		// if( msg.GetKey() == "SONAR_VIEW_SCALE") {
+		//   m_dSonarScaleFactor = msg.GetDouble();
+		// }
 	}
-
 	return(true);
 }
-
-/**
- * \fn
- * \brief Méthode appelée dès que le contact avec la MOOSDB est effectué
- */
 
 bool SensorViewer::OnConnectToServer()
 {
@@ -188,56 +120,29 @@ bool SensorViewer::OnConnectToServer()
 	return(true);
 }
 
-/**
- * \fn
- * \brief Méthode appelée automatiquement périodiquement
- * Implémentation du comportement de l'application
- */
-
 bool SensorViewer::Iterate()
 {
-  AppCastingMOOSApp::Iterate();
-	m_iterations++;
-	cv::imshow("Camera feed - 0",img1);
-	cv::imshow("Camera feed - 1",img2);
-	cv::Point2d center(199.5,199.5);
-	cv::Point2d dir(center.x + 100.*cos(heading), center.y + 100.*sin(heading));
-	//cv::remap(img_son_pol, img_son_cart, pol2cart_x, pol2cart_y, cv::INTER_NEAREST);
-//	cv::applyColorMap(img_son_cart, img_sonar, cv::COLORMAP_JET);
+	AppCastingMOOSApp::Iterate();
 
-	cv::cvtColor(img_son_cart, img_sonar, CV_GRAY2RGB);
-	/*
-	cv::Mat sonar_flt_h, sonar_flt_v, sonar_flt;
-	cv::boxFilter(img_sonar, sonar_flt_h, CV_8UC1, cv::Size2i(40,1));
-	cv::boxFilter(img_sonar, sonar_flt_v, 8, cv::Size2i(1,40));
-	cv::boxFilter(img_sonar, sonar_flt, CV_8UC1, cv::Size2i(40,10));
+	// MICRON
+	if(m_new_data_micron){
+		AddSector(m_img_sonar_micron, m_new_scanline_micron, m_new_bearing_micron, m_old_bearing_micron);
+		m_new_data_micron = false;
+	}
+	if(m_new_data_miniking){
+		AddSector(m_img_sonar_miniking, m_new_scanline_miniking, m_new_bearing_miniking, m_old_bearing_micron);
+		m_new_data_miniking = false;
+	}
 
-	cv::threshold(sonar_flt_h - sonar_flt, sonar_flt_h, 10, 255, CV_8UC1);
-	/*
-	 * /*
-	for (int i=200; i<399; ++i) {
-	  if (sonar_flt_h.at<unsigned int>(i,200) > 180)
-	  {sonar_flt_h.at<unsigned int>(i,200) = 0;}
-	}*/
+	cv::imshow("SONAR_MINIKING", m_img_sonar_miniking);
+	cv::imshow("SONAR_MICRON", m_img_sonar_micron);
+	cv::imshow("CAMERA FRONT", m_img_camera_front);
+	cv::imshow("CAMERA BOTTOM", m_img_camera_bottom);
 
-	img_son_cart = img_son_cart * 0.999 - 2.0;
-
-	//std::stringstream ss;
-	//ss << "imgsonar/imgsonar_" << m_iterations << ".jpg";
-	//cv::imwrite(ss.str(), img_son_cart);
-
-	cv::line(img_sonar, center, dir, cv::Scalar(255,100,0), 2.0);
-	cv::imshow("Sonar Data", img_sonar /*sonar_flt_h - sonar_flt*/);
-//	cv::imshow("sonar",img_son_pol);
-	cv::waitKey(10);
-  AppCastingMOOSApp::PostReport();
+	cv::waitKey(1);
+	AppCastingMOOSApp::PostReport();
 	return(true);
 }
-
-/**
- * \fn
- * \brief Méthode appelée au lancement de l'application
- */
 
 bool SensorViewer::OnStartUp()
 {
@@ -266,56 +171,54 @@ bool SensorViewer::OnStartUp()
 		}
 	}
 
-	m_timewarp = GetMOOSTimeWarp();
-
-	cv::namedWindow("Camera feed - 0");
-	cv::namedWindow("Camera feed - 1");
-	cv::namedWindow("Sonar Data");
-
 	RegisterVariables();
+
+	cv::namedWindow("CAMERA FRONT");
+	cv::namedWindow("CAMERA BOTTOM");
+	cv::namedWindow("SONAR MINIKING");
+	cv::namedWindow("SONAR MICRON");
+
 	return(true);
 }
 
-/**
- * \fn
- * \brief Inscription de l'application à l'évolution de certaines variables de la MOOSDB
- */
-
 void SensorViewer::RegisterVariables()
 {
-  AppCastingMOOSApp::RegisterVariables();
-	// m_Comms.Register("FOOBAR", 0);
-	m_Comms.Register("CAMERA_SIDE", 0);
-	m_Comms.Register("CAMERA_BOTTOM", 0);
-	m_Comms.Register("SONAR_RAW_DATA", 0);
-	m_Comms.Register("HEADING", 0);
-	m_Comms.Register("YAW", 0);
-	m_Comms.Register("DESIRED_THRUST", 0);
-	m_Comms.Register("DESIRED_SLIDE", 0);
-	m_Comms.Register("SONAR_VIEW_SCALE", 0);
+	AppCastingMOOSApp::RegisterVariables();
+
+	// CAMERA DATA
+	Register("CAMERA_SIDE", 0);
+	Register("CAMERA_BOTTOM", 0);
+
+	// SONAR DATA
+	Register("SONAR_SCANLINE_MICRON", 0);
+	Register("SONAR_SCANLINE_MINIKING", 0);
+	Register("SONAR_BEARING_MICRON", 0);
+	Register("SONAR_BEARING_MINIKING", 0);
+
 }
 bool SensorViewer::buildReport()
 {
   #if 0 // Keep these around just for template
-    m_msgs << "============================================ \n";
-    m_msgs << "File:                                        \n";
-    m_msgs << "============================================ \n";
-
     ACTable actab(4);
     actab << "Alpha | Bravo | Charlie | Delta";
     actab.addHeaderLines();
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
   #endif
-    m_msgs << "============================================ \n";
-    m_msgs << GetAppName() << "Status: \n";
-    m_msgs << "============================================ \n";
-
-    // ACTable actab(4);
-    // actab << "Alpha | Bravo | Charlie | Delta";
-    // actab.addHeaderLines();
-    // actab << "one" << "two" << "three" << "four";
-    // m_msgs << actab.getFormattedString();
 
   return(true);
+}
+
+void SensorViewer::AddSector(cv::Mat &img_sonar, vector<double> scanline, double bearing, double &bearing_previous){
+	for(int r=1; r<scanline.size(); r++){
+		double angle_diff = bearing - bearing_previous;
+		double theta_begin = min(bearing, bearing_previous);
+
+		for(double theta=theta_begin; theta<theta_begin + angle_diff; theta+=1/r){
+			int x = round(scanline.size()/2.0 + r*cos(theta));
+			int y = round(scanline.size()/2.0 + r*sin(theta));
+			img_sonar.at<unsigned char>(x,y) = 255 - (unsigned char)scanline[r];
+		}
+		bearing_previous = bearing;
+	}
 }

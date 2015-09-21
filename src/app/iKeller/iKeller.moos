@@ -10,4 +10,6 @@ ProcessConfig = iKeller
 
   MAX_RETRIES = 10
   GET_TEMPERATURE = TRUE;
+
+  REF_DEPTH = 0.3 //Piombino, September 2015
 }
