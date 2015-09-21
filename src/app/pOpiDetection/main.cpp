@@ -1,7 +1,7 @@
 /************************************************************/
 /*    FILE: main.cpp
 /*    ORGN: Toutatis AUVs - ENSTA Bretagne
-/*    AUTH: 
+/*    AUTH: Guilherme Schvarcz Franco, Simon Rohou
 /*    DATE: 2015
 /************************************************************/
 

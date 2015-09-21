@@ -1,7 +1,7 @@
 #--------------------------------------------------------
 # The CMakeLists.txt for: pOpiDetection
 # Toutatis AUVs - ENSTA Bretagne
-# Author(s): 
+# Author(s): Guilherme Schvarcz Franco, Simon Rohou
 #--------------------------------------------------------
 
 SET(SRC
@@ -17,4 +17,9 @@ TARGET_LINK_LIBRARIES(pOpiDetection
    apputil
    mbutil
    m
+   opencv_core
+   opencv_imgproc
+   opencv_highgui
+   opencv_video
+   opencv_legacy
    pthread)
