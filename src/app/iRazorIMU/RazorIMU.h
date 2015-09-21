@@ -28,7 +28,7 @@ class RazorIMU : public AppCastingMOOSApp
     void registerVariables();
 
   protected: // RazorIMU functions
-    bool initRazorIMU(std::string &error_msg);
+    bool initRazorIMU(std::string &init_msg);
     void onRazorData(const float data[]);
     void onRazorError(const std::string &msg);
     void notifyInertialData();
@@ -43,6 +43,7 @@ class RazorIMU : public AppCastingMOOSApp
     float m_mag_x, m_mag_y, m_mag_z;
     float m_acc_x, m_acc_y, m_acc_z;
     float m_gyr_x, m_gyr_y, m_gyr_z;
+    std::string m_init_razor_msg;
 };
 
 #endif

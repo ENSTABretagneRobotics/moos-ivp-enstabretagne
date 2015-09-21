@@ -4,6 +4,7 @@
 /*    AUTH:
 /*    DATE: 2015
 /************************************************************/
+
 #include <iterator>
 #include <iostream>
 #include <iomanip>
@@ -183,19 +184,15 @@ bool Camera::buildReport()
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
   #endif
-    m_msgs << "============================================ \n";
-    m_msgs << GetAppName() << "Status: \n";
-    m_msgs << "============================================ \n";
-
-    ACTable actab(4);
-    actab << "Img Name | Display Name | Inverted | width*heignt";
-    actab.addHeaderLines();
-    string imgInverted = (m_inverser_image)?"yes":"no";
-    char imgSize[50];
-    sprintf(imgSize,"%d*%d",LARGEUR_IMAGE_CAMERA,HAUTEUR_IMAGE_CAMERA);
-    actab << m_image_name << m_display_name << imgInverted << imgSize;
-    m_msgs << actab.getFormattedString();
-
+    
+  ACTable actab(4);
+  actab << "Img Name | Display Name | Inverted | width*heignt";
+  actab.addHeaderLines();
+  string imgInverted = (m_inverser_image)?"yes":"no";
+  char imgSize[50];
+  sprintf(imgSize,"%d*%d",LARGEUR_IMAGE_CAMERA,HAUTEUR_IMAGE_CAMERA);
+  actab << m_image_name << m_display_name << imgInverted << imgSize;
+  m_msgs << actab.getFormattedString();
 
   return(true);
 }

@@ -62,7 +62,7 @@ ProcessConfig = iSaucisse
   DEVICE_NAME = /dev/ttyACM0
   # Linux:
   #     /dev/ttyACM0
-  # Windows: 
+  # Windows:
   #     \\\\.\\USBSER000
   #     or
   #     \\\\.\\COM6
@@ -138,6 +138,8 @@ ProcessConfig = iKeller
   CommsTick = 4
 
   MAX_RETRIES = 10
+  GET_TEMPERATURE = TRUE;
+  REF_DEPTH = 0.3 //Piombino, September 2015
 }
 
 //------------------------------------------

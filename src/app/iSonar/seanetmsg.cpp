@@ -293,28 +293,18 @@ void SeaNetMsg_HeadCommand::buildMessage()
   // For example, Rangescale = 30 m
   d = (LeftAngleLimit * 10.0 / 9.0) * 16.0;
   word.v = ((uint16)d)%6400;
-//	if (word.v > 6399)
-//	{
-//		word.v = 6399;
-//		printf(("SetParamMiniKing warning (%s) : %s"
-//				"(hDev=%#x)\n",
-//				strtime_m(),
-//				"Too high LeftAngleLimit value. ",
-//				hDev));
-//	}
+	if (word.v > 6399)
+	{
+    printf("SetParamMiniKing warning, Too high LeftAngleLimit value.\n");
+	}
   writebuf[37] = (uint8)word.c[0]; // Left Angle Limit in 1/16 Gradian units (LSB) (overridden if bit cont of byte HdCtrl is set)
   writebuf[38] = (uint8)word.c[1]; // Left Angle Limit in 1/16 Gradian units (MSB) (overridden if bit cont of byte HdCtrl is set)
   d = (RightAngleLimit * 10.0 / 9.0) * 16.0;
   word.v = ((uint16)d)%6400;
-//	if (word.v > 6399)
-//	{
-//		word.v = 6399;
-//			printf(("SetParamMiniKing warning (%s) : %s"
-//			"(hDev=%#x)\n",
-//			strtime_m(),
-//			"Too high RightAngleLimit value. ",
-//			hDev));
-//	}
+	if (word.v > 6399)
+  {
+    printf("SetParamMiniKing warning, Too high RightAngleLimit value.\n");
+  }
   writebuf[39] = (uint8)word.c[0]; // Right Angle Limit in 1/16 Gradian units (LSB) (overridden if bit cont of byte HdCtrl is set)
   writebuf[40] = (uint8)word.c[1]; // Right Angle Limit in 1/16 Gradian units (MSB) (overridden if bit cont of byte HdCtrl is set)
   writebuf[41] = (uint8)0x4D; // ADSpan
@@ -393,61 +383,7 @@ void SeaNetMsg_HeadCommand::buildMessage()
   writebuf[63] = (uint8)0x00; // ScanZ, for Special devices and should both be left at default values of 0 (LSB)
   writebuf[64] = (uint8)0x00; // ScanZ, for Special devices and should both be left at default values of 0 (MSB)
   writebuf[65] = (uint8)0x0A; // Message Terminator = Line Feed
-/*
-  if (WriteAllRS232Port(hDev, writebuf, 66) != EXIT_SUCCESS)
-  {
-    PRINT_DEBUG_ERROR_MINIKINGCORE(("SetParamMiniKing error (%s) : %s"
-            "(hDev=%#x)\n",
-            strtime_m(),
-            "Error writing data to the serial port. ",
-            hDev));
-    return EXIT_FAILURE;
-  }
-*/
-  // On power-up of the sonar, the 'HeadInf' byte will change in value to
-  // reflect the different states that the sonar is going through during initialisation
-  // i) Power applied to sonar
-  // 1st Alive: HeadInf = '5D' (Head is in Re-Centre operation and has No Params). Byte 14 = 80h.
-  // 2nd Alive: HeadInf = '4D' (No 'Dir' so Transducer is back at centre)
-  // 3rd Alive: HeadInf = '4A' (Transducer is now centred and Not Motoring)
-  // ii) 'mtHeadCommand' sent to Sonar
-  // 4th Alive: HeadInf = 'CA' (Has been 'Sent Cfg'. Acknowledgement of 'ParamsCmd')
-  // 5th Alive: HeadInf = '8A' (Has Params. Parameters have been validated. Ready for 'GetData').
-  // Byte 14 now set to 00h
 
-/*
-  StartChrono(&chrono);
-
-  readbuf[20] = 0;
-
-  while (readbuf[20] != 0x8A)
-  {
-          GetTimeElapsedChrono(&chrono, &duration);
-          if (duration > 10)
-          {
-                  PRINT_DEBUG_ERROR_MINIKINGCORE(("SetParamMiniKing error (%s) : %s"
-                          "(hDev=%#x)\n",
-                          strtime_m(),
-                          "The operation timed out. ",
-                          hDev));
-                  return EXIT_FAILURE;
-          }
-
-          // Wait for an mtAlive message. It should come every 1 second.
-          if (ReadMsgMiniKing(hDev, readbuf, 22, 0x04) != EXIT_SUCCESS)
-          {
-                  PRINT_DEBUG_ERROR_MINIKINGCORE(("SetParamMiniKing error (%s) : %s"
-                          "(hDev=%#x)\n",
-                          strtime_m(),
-                          "The device is not responding correctly. ",
-                          hDev));
-                  return EXIT_FAILURE;
-          }
-
-          PRINT_DEBUG_MESSAGE_MINIKINGCORE(("mtAlive message readbuf[20]=%#x\n", readbuf[20]));
-  }
-*/
-//        return EXIT_SUCCESS;
   m_data.assign((char*)writebuf, sizeof(writebuf));
 }
 
