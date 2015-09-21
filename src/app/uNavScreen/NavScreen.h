@@ -34,7 +34,7 @@ class NavScreen : public AppCastingMOOSApp
 
 
   private: // State variables
-    std::map<std::string,std::string> m_moosvars;
+    std::map<std::string,double> m_moosvars;
 };
 
 #endif 
