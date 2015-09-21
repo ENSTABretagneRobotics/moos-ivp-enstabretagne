@@ -34,6 +34,14 @@ ProcessConfig = ANTLER
   Run = iSonar          @ NewConsole = false
   Run = iXSensINS       @ NewConsole = false
   Run = uSensorsViewer  @ NewConsole = false
+  Run = uNavScreen @ NewConsole = true
+}
+
+//------------------------------------------------
+ProcessConfig = uNavScreen
+{
+  AppTick   = 4
+  CommsTick = 4
 }
 
 //------------------------------------------

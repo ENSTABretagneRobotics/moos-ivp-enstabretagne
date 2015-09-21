@@ -1,5 +1,5 @@
 /************************************************************/
-/*    FILE: EchoSounder.cpp
+/*    FILE: Sounder.cpp
 /*    ORGN: Toutatis AUVs - ENSTA Bretagne
 /*    AUTH: Simon Rohou
 /*    DATE: 2015
@@ -8,14 +8,14 @@
 #include <iterator>
 #include "MBUtils.h"
 #include "ACTable.h"
-#include "EchoSounder.h"
+#include "Sounder.h"
 
 using namespace std;
 
 //---------------------------------------------------------
 // Constructor
 
-EchoSounder::EchoSounder()
+Sounder::Sounder()
 {
   m_port_is_initialized = false;
   m_last_value = -2.;
@@ -24,7 +24,7 @@ EchoSounder::EchoSounder()
 //---------------------------------------------------------
 // Destructor
 
-EchoSounder::~EchoSounder()
+Sounder::~Sounder()
 {
   if(m_port_is_initialized)
     m_serial_port.Close();
@@ -33,7 +33,7 @@ EchoSounder::~EchoSounder()
 //---------------------------------------------------------
 // Procedure: OnNewMail
 
-bool EchoSounder::OnNewMail(MOOSMSG_LIST &NewMail)
+bool Sounder::OnNewMail(MOOSMSG_LIST &NewMail)
 {
   AppCastingMOOSApp::OnNewMail(NewMail);
 
@@ -66,7 +66,7 @@ bool EchoSounder::OnNewMail(MOOSMSG_LIST &NewMail)
 //---------------------------------------------------------
 // Procedure: OnConnectToServer
 
-bool EchoSounder::OnConnectToServer()
+bool Sounder::OnConnectToServer()
 {
   registerVariables();
   return true;
@@ -76,12 +76,12 @@ bool EchoSounder::OnConnectToServer()
 // Procedure: Iterate()
 //            happens AppTick times per second
 
-bool EchoSounder::Iterate()
+bool Sounder::Iterate()
 {
   AppCastingMOOSApp::Iterate();
 
   if(m_port_is_initialized)
-    Notify("ECHOSOUNDER_RANGE", getRange());
+    Notify("Sounder_RANGE", getRange());
 
   AppCastingMOOSApp::PostReport();
   return true;
@@ -91,14 +91,14 @@ bool EchoSounder::Iterate()
 // Procedure: OnStartUp()
 //            happens before connection is open
 
-bool EchoSounder::OnStartUp()
+bool Sounder::OnStartUp()
 {
   AppCastingMOOSApp::OnStartUp();
 
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
-  if (!m_MissionReader.GetValue("ECHOSOUNDER_SERIAL_PORT",m_port_name))
-    reportConfigWarning("No ECHOSOUNDER_SERIAL_PORT config found for " + GetAppName());
+  if (!m_MissionReader.GetValue("Sounder_SERIAL_PORT",m_port_name))
+    reportConfigWarning("No Sounder_SERIAL_PORT config found for " + GetAppName());
   if(!m_MissionReader.GetConfiguration(GetAppName(), sParams))
     reportConfigWarning("No config block found for " + GetAppName());
 
@@ -134,7 +134,7 @@ bool EchoSounder::OnStartUp()
 //---------------------------------------------------------
 // Procedure: registerVariables
 
-void EchoSounder::registerVariables()
+void Sounder::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
   // Register("FOOBAR", 0);
@@ -143,7 +143,7 @@ void EchoSounder::registerVariables()
 //------------------------------------------------------------
 // Procedure: buildReport()
 
-bool EchoSounder::buildReport()
+bool Sounder::buildReport()
 {
   #if 0 // Keep these around just for template
     m_msgs << "============================================ \n";
@@ -170,7 +170,7 @@ bool EchoSounder::buildReport()
 //------------------------------------------------------------
 // Procedure: initSerialPort
 
-bool EchoSounder::initSerialPort()
+bool Sounder::initSerialPort()
 {
   ifstream test_file(m_port_name.c_str());
   if(test_file.fail())
@@ -189,7 +189,7 @@ bool EchoSounder::initSerialPort()
 //------------------------------------------------------------
 // Procedure: getRange
 
-double EchoSounder::getRange()
+double Sounder::getRange()
 {
   int result;
   double range;
@@ -233,7 +233,7 @@ double EchoSounder::getRange()
 //------------------------------------------------------------
 // Procedure: dataIsValid
 
-bool EchoSounder::dataIsValid(string data)
+bool Sounder::dataIsValid(string data)
 {
   return data.find('.') && data.find('m');
 }
