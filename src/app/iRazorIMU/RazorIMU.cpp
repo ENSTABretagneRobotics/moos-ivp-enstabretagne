@@ -242,24 +242,24 @@ void RazorIMU::notifyInertialData()
   switch(m_razor_mode)
   {
     case RazorAHRS::YAW_PITCH_ROLL:
-      Notify("IMU_YAW", m_yaw);
-      Notify("IMU_PITCH", m_pitch);
-      Notify("IMU_ROLL", m_roll);
+      Notify("RAZOR_YAW", m_yaw);
+      Notify("RAZOR_PITCH", m_pitch);
+      Notify("RAZOR_ROLL", m_roll);
       break;
 
     case RazorAHRS::ACC_MAG_GYR_RAW:
     case RazorAHRS::ACC_MAG_GYR_CALIBRATED:
-      Notify("IMU_ACC_X", m_acc_x);
-      Notify("IMU_ACC_Y", m_acc_y);
-      Notify("IMU_ACC_Z", m_acc_z);
+      Notify("RAZOR_ACC_X", m_acc_x);
+      Notify("RAZOR_ACC_Y", m_acc_y);
+      Notify("RAZOR_ACC_Z", m_acc_z);
 
-      Notify("IMU_MAG_X", m_mag_x);
-      Notify("IMU_MAG_Y", m_mag_y);
-      Notify("IMU_MAG_Z", m_mag_z);
+      Notify("RAZOR_MAG_X", m_mag_x);
+      Notify("RAZOR_MAG_Y", m_mag_y);
+      Notify("RAZOR_MAG_Z", m_mag_z);
 
-      Notify("IMU_GYR_X", m_gyr_x);
-      Notify("IMU_GYR_Y", m_gyr_y);
-      Notify("IMU_GYR_Z", m_gyr_z);
+      Notify("RAZOR_GYR_X", m_gyr_x);
+      Notify("RAZOR_GYR_Y", m_gyr_y);
+      Notify("RAZOR_GYR_Z", m_gyr_z);
       break;
   }
 }

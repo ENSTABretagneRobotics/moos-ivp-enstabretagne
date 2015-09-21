@@ -165,9 +165,10 @@ bool XSensINS::OnStartUp() {
   registerVariables();
 
   //------ OPEN INS ---------------//
-  XsPortInfo mtPort(m_uart_port, XsBaud::numericToRate(m_uart_baud_rate));
+  XsPortInfo mtPort("/dev/xsens", XsBaud::numericToRate(115200));
   if (!m_device.openPort(mtPort)) {
     reportRunWarning("Could not open the COM port" + m_uart_port);
+    cout << "CANNOT OPEN THE PORT" << '\n';
   }
 
   //------ CONFIGURE INS ---------------//
