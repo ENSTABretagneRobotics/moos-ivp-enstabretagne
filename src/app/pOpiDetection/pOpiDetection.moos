@@ -1,0 +1,8 @@
+//------------------------------------------------
+// pOpiDetection config block
+
+ProcessConfig = pOpiDetection
+{
+  AppTick   = 4
+  CommsTick = 4
+}
