@@ -153,7 +153,27 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
         reportRunWarning("Sonar not initialized!");
       }
     }
-    else if ( key == "POWERED_SONAR")
+    else if ( key == "POWERED_MICRON" && m_snrType == SeaNetMsg::MicronDST)
+    {
+      m_bIsAlive = false;
+      m_bReplyVersionData = false;
+      m_bReplyBBUserData = false;
+      m_bHasParams = false;
+      m_bSentCfg = false;
+      m_bSonarReady = false;
+
+      if (m_serial_thread.IsThreadRunning())
+        m_serial_thread.Stop();
+      if (msg.GetDouble() == 0)
+        m_bIsPowered = false;
+      else
+      {
+        m_bIsPowered = true;
+        if (!m_serial_thread.IsThreadRunning())
+          m_serial_thread.Start();
+      }
+    }
+    else if ( key == "POWERED_MINIKING" && m_snrType == SeaNetMsg::MiniKingNotDST)
     {
       m_bIsAlive = false;
       m_bReplyVersionData = false;
@@ -417,7 +437,7 @@ void Sonar::RegisterVariables()
   AppCastingMOOSApp::RegisterVariables();
 	Register("MICRON_PARAMS", 0);
 	Register("MICRON_POLL", 0);
-	Register("POWERED_MICRON", 0);
+  Register("POWERED_MICRON", 0);
   Register("MINIKING_PARAMS", 0);
   Register("MINIKING_POLL", 0);
   Register("POWERED_MINIKING", 0);
