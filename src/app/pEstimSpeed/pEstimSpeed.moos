@@ -23,6 +23,7 @@ ProcessConfig = pEstimSpeed
 
    // Name to receive the yaw
    YAW_REGISTRATION_NAME = IMU_YAW
+
    // Mass of the robot
    MASS = 20
    
