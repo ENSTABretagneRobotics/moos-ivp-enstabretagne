@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains pLatLon2LocalGrid documentation -->
+<?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?> 
+<xmldoc>
+  <moosapp>
+
+     <info>
+        <name>pLatLon2LocalGrid</name>
+        <organization>Toutatis AUVs - ENSTA Bretagne</organization>
+        <date>2015</date>
+        <authors>
+           <author>Jeremy Nicola</author>
+        </authors>
+        <licence>MIT</licence>
+     </info>
+  NORTHING_PUBLICATION_NAME = GPS_N
+  EASTING_PUBLICATION_NAME = GPS_E
+     <documentation>
+        <synopsis>
+          LatLon2LocalGrid uses the MOOSGeodesy lib to compute a local projection of the lat,lon given by the GPS in degrees around an origin. The given projections are in meters.
+        </synopsis>
+        <interface>
+           <subscriptions>
+              <moosvar>
+                 <varname>LAT_SUBSCRIPTION_NAME</varname>
+                 <vartype>string</vartype>
+                 <varinfo>The name of the MOOSVar that gives GPS Latitude, in degrees</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>LON_SUBSCRIPTION_NAME</varname>
+                 <vartype>string</vartype>
+                 <varinfo>The name of the MOOSVar that gives GPS Longitude, in degrees</varinfo>
+              </moosvar>
+           </subscriptions>
+           <publications>
+              <moosvar>
+                 <varname>EASTING_PUBLICATION_NAME</varname>
+                 <vartype>string</vartype>
+                 <varinfo>The name of the MOOSVar that gives the Easting, in meters. POSITIVE means you go to the EAST from the origin, NEGATIVE means you go to the WEST</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>NORTHING_PUBLICATION_NAME</varname>
+                 <vartype>string</vartype>
+                 <varinfo>The name of the MOOSVar that gives the Northing, in meters. POSITIVE means you go to the NORTH from the origin, NEGATIVE means you go to the SOUTH</varinfo>
+              </moosvar>
+           </publications>
+        </interface>
+        <optional-comments>
+           No comment.
+        </optional-comments>
+        <suggested-improvements>
+           No suggested improvements.
+        </suggested-improvements>
+     </documentation>
+
+  </moosapp>
+</xmldoc>
