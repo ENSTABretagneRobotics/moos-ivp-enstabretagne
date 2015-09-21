@@ -11,6 +11,7 @@
 #include "ACTable.h"
 #include "EstimSpeed.h"
 #include "Eigen/Dense"
+#include <cmath>
 
 using namespace std;
 using namespace Eigen;
@@ -71,9 +72,7 @@ bool EstimSpeed::OnNewMail(MOOSMSG_LIST &NewMail) {
     for (p = NewMail.begin(); p != NewMail.end(); p++) {
         CMOOSMsg &msg = *p;
         string key = msg.GetKey();
-
-        // We receive the IMU yaw, in degrees
-        if (key == "IMU_YAW") {
+       if (key == YAW_REGISTRATION_NAME) {
             this->imu_yaw = msg.GetDouble();
         }// We receive LEFT thruster value, in [-1,1]]
         else if (key == U1_SUBSCRIPTION_NAME) {
@@ -273,7 +272,6 @@ bool EstimSpeed::OnStartUp() {
 void EstimSpeed::registerVariables() {
 
     AppCastingMOOSApp::RegisterVariables();
-
     Register(YAW_REGISTRATION_NAME, 0);
     Register(U1_SUBSCRIPTION_NAME, 0);
     Register(U2_SUBSCRIPTION_NAME, 0);
@@ -314,6 +312,9 @@ bool EstimSpeed::buildReport() {
 
     actab = ACTable(4);
     actab << " (local) | u1 | u2 | u3";
+    actab << "Fx" << COEFF_MATRIX_INV(0, 0) << COEFF_MATRIX_INV(0, 1) << COEFF_MATRIX_INV(0, 2);
+    actab << "Fy" << COEFF_MATRIX_INV(1, 0) << COEFF_MATRIX_INV(1, 1) << COEFF_MATRIX_INV(1, 2);
+    actab << "Fz" << COEFF_MATRIX_INV(2, 0) << COEFF_MATRIX_INV(2, 1) << COEFF_MATRIX_INV(2, 2);
     m_msgs << actab.getFormattedString();
     return (true);
 }
