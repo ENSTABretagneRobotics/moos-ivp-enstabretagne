@@ -33,6 +33,8 @@ MixThrusters::MixThrusters() {
 
     desiredForces = Vector3d::Zero();
     u = Vector3d::Zero();
+
+    this->saturation_mod = NORMALIZATION;
 }
 
 //---------------------------------------------------------
@@ -40,7 +42,7 @@ MixThrusters::MixThrusters() {
 
 bool MixThrusters::OnNewMail(MOOSMSG_LIST &NewMail) {
     AppCastingMOOSApp::OnNewMail(NewMail);
-    cout << "ONNEWMAIL" << endl;
+    
     MOOSMSG_LIST::iterator p;
     for (p = NewMail.begin(); p != NewMail.end(); p++) {
         CMOOSMsg &msg = *p;
@@ -55,12 +57,7 @@ bool MixThrusters::OnNewMail(MOOSMSG_LIST &NewMail) {
         } else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
             reportRunWarning("Unhandled Mail: " + key);
     }
-    cout << "FX_SUBSCRIPTION_NAME " << FX_SUBSCRIPTION_NAME << endl;
-    cout << "RZ_SUBSCRIPTION_NAME " << RZ_SUBSCRIPTION_NAME << endl;
-    cout << "FZ_SUBSCRIPTION_NAME " << FZ_SUBSCRIPTION_NAME << endl;
-
-    cout << "DESIRED_FORCES: " << endl << desiredForces << endl;
-
+    
     return true;
 }
 
@@ -69,20 +66,21 @@ bool MixThrusters::OnConnectToServer() {
     return true;
 }
 
-bool MixThrusters::Iterate() {
-    AppCastingMOOSApp::Iterate();
+void MixThrusters::saturationSigmoid(Eigen::Vector3d &u) {
 
-    cout << "ITERATE" << endl;
+    double maxU = fmax(u[0], u[1]);
 
-    cout << "U1_PUBLICATION_NAME: " << U1_PUBLICATION_NAME << endl;
-    cout << "U2_PUBLICATION_NAME: " << U2_PUBLICATION_NAME << endl;
-    cout << "U3_PUBLICATION_NAME: " << U3_PUBLICATION_NAME << endl;
+    u[0] = fmin(maxU, 1)*(2.0 / (1 + exp(-u[0] / 0.333)) - 1);
+    u[1] = fmin(maxU, 1)*(2.0 / (1 + exp(-u[1] / 0.333)) - 1);
 
-    u = COEFF_MATRIX*desiredForces;
 
-    
-    cout << "COEFF_MATRIX: " << endl << COEFF_MATRIX << endl;
-    cout << "u avant sat: " << endl << u << endl << endl;
+    // Normalize so that u3 is in [-1,1]
+    if (fabs(u[2]) > 1) {
+        u[2] /= fabs(u[2]);
+    }
+}
+
+void MixThrusters::saturationNormalization(Eigen::Vector3d &u) {
 
     // Saturation
     if (fmax(fabs(u[0]), fabs(u[1])) > 1) {
@@ -90,16 +88,31 @@ bool MixThrusters::Iterate() {
     }
 
     // Normalize so that u3 is in [-1,1]
-    if(fabs(u[2])>1)
-    {
-        u[2]/=fabs(u[2]);
+    if (fabs(u[2]) > 1) {
+        u[2] /= fabs(u[2]);
     }
-    
+}
+
+bool MixThrusters::Iterate() {
+    AppCastingMOOSApp::Iterate();
+
+    u = COEFF_MATRIX*desiredForces;
+
+    switch (saturation_mod) {
+        case NORMALIZATION:
+            saturationNormalization(u);
+            break;
+        case SIGMOID:
+            saturationSigmoid(u);
+            break;
+        default:
+            // Shouldn't happen, but...
+            saturationNormalization(u);
+    }
+
     Notify(U1_PUBLICATION_NAME, u[0]);
     Notify(U2_PUBLICATION_NAME, u[1]);
     Notify(U3_PUBLICATION_NAME, u[2]);
-
-    cout << "u apres sat: " << endl << u << endl << endl;
 
     AppCastingMOOSApp::PostReport();
     return true;
@@ -144,6 +157,14 @@ bool MixThrusters::OnStartUp() {
                 reportUnhandledConfigWarning("Error while parsing COEFF_MATRIX: incorrect number of elements");
             }//end of else
             handled = true;
+        } else if (param == "SATURATION_MOD") {
+            if (value == "NORMALIZATION") {
+                this->saturation_mod = NORMALIZATION;
+                handled = true;
+            } else if (value == "SIGMOID") {
+                this->saturation_mod = SIGMOID;
+                handled = true;
+            }
         } else if (param == "FX_SUBSCRIPTION_NAME") {
             FX_SUBSCRIPTION_NAME = value;
             handled = true;
