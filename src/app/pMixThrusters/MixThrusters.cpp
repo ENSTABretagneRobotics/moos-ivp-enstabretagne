@@ -40,7 +40,7 @@ MixThrusters::MixThrusters() {
 
 bool MixThrusters::OnNewMail(MOOSMSG_LIST &NewMail) {
     AppCastingMOOSApp::OnNewMail(NewMail);
-    cout << "ONNEWMAIL" << endl;
+
     MOOSMSG_LIST::iterator p;
     for (p = NewMail.begin(); p != NewMail.end(); p++) {
         CMOOSMsg &msg = *p;
@@ -55,12 +55,6 @@ bool MixThrusters::OnNewMail(MOOSMSG_LIST &NewMail) {
         } else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
             reportRunWarning("Unhandled Mail: " + key);
     }
-    cout << "FX_SUBSCRIPTION_NAME " << FX_SUBSCRIPTION_NAME << endl;
-    cout << "RZ_SUBSCRIPTION_NAME " << RZ_SUBSCRIPTION_NAME << endl;
-    cout << "FZ_SUBSCRIPTION_NAME " << FZ_SUBSCRIPTION_NAME << endl;
-
-    cout << "DESIRED_FORCES: " << endl << desiredForces << endl;
-
     return true;
 }
 
@@ -72,17 +66,7 @@ bool MixThrusters::OnConnectToServer() {
 bool MixThrusters::Iterate() {
     AppCastingMOOSApp::Iterate();
 
-    cout << "ITERATE" << endl;
-
-    cout << "U1_PUBLICATION_NAME: " << U1_PUBLICATION_NAME << endl;
-    cout << "U2_PUBLICATION_NAME: " << U2_PUBLICATION_NAME << endl;
-    cout << "U3_PUBLICATION_NAME: " << U3_PUBLICATION_NAME << endl;
-
     u = COEFF_MATRIX*desiredForces;
-
-    
-    cout << "COEFF_MATRIX: " << endl << COEFF_MATRIX << endl;
-    cout << "u avant sat: " << endl << u << endl << endl;
 
     // Saturation
     if (fmax(fabs(u[0]), fabs(u[1])) > 1) {
@@ -98,8 +82,6 @@ bool MixThrusters::Iterate() {
     Notify(U1_PUBLICATION_NAME, u[0]);
     Notify(U2_PUBLICATION_NAME, u[1]);
     Notify(U3_PUBLICATION_NAME, u[2]);
-
-    cout << "u apres sat: " << endl << u << endl << endl;
 
     AppCastingMOOSApp::PostReport();
     return true;
