@@ -1,17 +1,17 @@
 #--------------------------------------------------------
-# The CMakeLists.txt for: uNavigationScreen
+# The CMakeLists.txt for: uNavScreen
 # Toutatis AUVs - ENSTA Bretagne
 # Author(s): Simon Rohou
 #--------------------------------------------------------
 
 SET(SRC
-  NavigationScreen.cpp
+  NavScreen.cpp
   main.cpp
 )
 
-ADD_EXECUTABLE(uNavigationScreen ${SRC})
+ADD_EXECUTABLE(uNavScreen ${SRC})
 
-TARGET_LINK_LIBRARIES(uNavigationScreen
+TARGET_LINK_LIBRARIES(uNavScreen
    ${MOOS_LIBRARIES}
    xml-documentation
    apputil

@@ -1,12 +1,12 @@
 /************************************************************/
-/*    FILE: EchoSounder.h
+/*    FILE: Sounder.h
 /*    ORGN: Toutatis AUVs - ENSTA Bretagne
 /*    AUTH: Simon Rohou
 /*    DATE: 2015
 /************************************************************/
 
-#ifndef EchoSounder_HEADER
-#define EchoSounder_HEADER
+#ifndef Sounder_HEADER
+#define Sounder_HEADER
 
 #include "MOOS/libMOOS/App/MOOSApp.h"
 #ifdef _WIN32
@@ -19,11 +19,11 @@
 
 #define ECHOSOUNDER_MAX_STRING_LENGTH 80
 
-class EchoSounder : public AppCastingMOOSApp
+class Sounder : public AppCastingMOOSApp
 {
   public:
-    EchoSounder();
-    ~EchoSounder();
+    Sounder();
+    ~Sounder();
 
   protected: // Standard MOOSApp functions to overload
     bool OnNewMail(MOOSMSG_LIST &NewMail);
@@ -35,7 +35,7 @@ class EchoSounder : public AppCastingMOOSApp
     bool buildReport();
     void registerVariables();
 
-  protected: // EchoSounder functions
+  protected: // Sounder functions
     bool initSerialPort();
     double getRange();
     bool dataIsValid(std::string data);

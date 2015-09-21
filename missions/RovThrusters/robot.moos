@@ -188,7 +188,7 @@ ProcessConfig = iCamera1
 
    VARIABLE_IMAGE_NAME   = CAMERA_FRONT
    IDENTIFIANT_CV_CAMERA = 1
-   DISPLAY_IMAGE         = true
+   DISPLAY_IMAGE         = false
    INVERT_IMAGE          = false
 
    LARGEUR_IMAGE_CAMERA  = 360
@@ -205,7 +205,7 @@ ProcessConfig = iCamera2
 
    VARIABLE_IMAGE_NAME   = CAMERA_SIDE
    IDENTIFIANT_CV_CAMERA = 0
-   DISPLAY_IMAGE         = true
+   DISPLAY_IMAGE         = false
    INVERT_IMAGE          = false
 
    LARGEUR_IMAGE_CAMERA  = 360
