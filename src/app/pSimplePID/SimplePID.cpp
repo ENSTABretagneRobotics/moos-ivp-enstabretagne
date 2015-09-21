@@ -69,8 +69,10 @@ bool SimplePID::OnNewMail(MOOSMSG_LIST &NewMail)
 
     if(key == m_moosvar_state) 
       m_state = msg.GetDouble();
-    else if(key == m_moosvar_consigne)
+    else if(key == m_moosvar_consigne){
       m_consigne = msg.GetDouble();
+      m_I = 0.0;
+    }
     else if(key == m_moosvar_state_diffferential)
       m_state_differential = msg.GetDouble();
     else if(key == m_moosvar_saturation)
