@@ -23,6 +23,13 @@ NavigationScreen::NavigationScreen()
   m_moosvars["GPS_LONG"] = UNSET_VALUE;
   m_moosvars["GPS_SIG"] = UNSET_VALUE;
   m_moosvars["SONAR_POLL"] = UNSET_VALUE;
+  m_moosvars["IMU_YAW"] = UNSET_VALUE;
+  m_moosvars["IMU_PITCH"] = UNSET_VALUE;
+  m_moosvars["IMU_ROLL"] = UNSET_VALUE;
+  m_moosvars["DEPTH"] = UNSET_VALUE;
+  m_moosvars["ECHOSOUNDER_RANGE"] = UNSET_VALUE;
+  m_moosvars["NAV_X"] = UNSET_VALUE;
+  m_moosvars["NAV_Y"] = UNSET_VALUE;
 }
 
 //---------------------------------------------------------
@@ -138,19 +145,40 @@ void NavigationScreen::registerVariables()
 
 bool NavigationScreen::buildReport() 
 {
-  m_msgs << "GPS                                          \n";
-  m_msgs << "-------------------------------------------- \n";
-  ACTable actab_gps(3);
-  actab_gps << "Lat | Long | Signal";
-  actab_gps.addHeaderLines();
-  actab_gps << m_moosvars["GPS_LAT"] << m_moosvars["GPS_LONG"] << m_moosvars["GPS_SIG"];
-  m_msgs << actab_gps.getFormattedString();
+  m_msgs << "ATTITUDE  ---------------------------------- \n";
+  ACTable actab_att(3);
+  actab_att << "Yaw | Pitch | Roll";
+  actab_att.addHeaderLines();
+  actab_att << m_moosvars["IMU_YAW"]
+            << m_moosvars["IMU_PITCH"]
+            << m_moosvars["IMU_ROLL"];
+  m_msgs << actab_att.getFormattedString() << "\n\n";
 
+  m_msgs << "POSITIONING  ------------------------------- \n";
+  ACTable actab_pos(3);
+  actab_pos << "X | Y | Lat | Long | GPS signal";
+  actab_pos.addHeaderLines();
+  actab_pos << m_moosvars["NAV_X"]
+            << m_moosvars["NAV_Y"]
+            << m_moosvars["GPS_LAT"]
+            << m_moosvars["GPS_LONG"] 
+            << m_moosvars["GPS_SIG"];
+  m_msgs << actab_pos.getFormattedString() << "\n\n";
+
+  m_msgs << "DEPTH  ------------------------------------- \n";
+  ACTable actab_depth(1);
+  actab_depth << "Depth | Bathymetry";
+  actab_depth.addHeaderLines();
+  actab_depth << m_moosvars["DEPTH"]
+              << m_moosvars["ECHOSOUNDER_RANGE"];
+  m_msgs << actab_depth.getFormattedString() << "\n\n";
+
+  m_msgs << "SONAR  ------------------------------------- \n";
   ACTable actab_sonar(1);
   actab_sonar << "Poll";
   actab_sonar.addHeaderLines();
   actab_sonar << m_moosvars["SONAR_POLL"];
-  m_msgs << actab_sonar.getFormattedString();
+  m_msgs << actab_sonar.getFormattedString() << "\n\n";
 
   return true;
 }
