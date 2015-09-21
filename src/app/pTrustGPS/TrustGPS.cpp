@@ -17,53 +17,57 @@ ostringstream oss;
 // Constructor
 
 TrustGPS::TrustGPS() {
-    paranoiaLevel = 10;
+    bufferLevel = 10;
     this->altitude = 0.1;
     this->altitude_threshold = 0;
     this->gps_quality = false;
     this->gps_fix = 0;
-    this->paranoiaCounter = 0;
+    this->bufferCounter = 0;
     this->gps_trust = false;
+
+    // Topics we subscribe to
+    GPS_FIX_SUBSCRIPTION_NAME = "GPS_FIX";
+    GPS_SIG_SUBSCRIPTION_NAME = "GPS_SIG";
+    KELLER_DEPTH_SUBSCRIPTION_NAME = "KELLER_DEPTH";
+
+    // Topics we publish to
+    GPS_TRUST_PUBLICATION_NAME = "GPS_TRUST";
 }
 
 bool TrustGPS::OnNewMail(MOOSMSG_LIST &NewMail) {
     AppCastingMOOSApp::OnNewMail(NewMail);
-
     MOOSMSG_LIST::iterator p;
     for (p = NewMail.begin(); p != NewMail.end(); p++) {
         CMOOSMsg &msg = *p;
         string key = msg.GetKey();
 
-        if (key == "GPS_SIG") {
+        if (key == GPS_SIG_SUBSCRIPTION_NAME) {
             gps_quality = (int) msg.GetDouble();
 
             bool current_gps_trust = gps_quality >= 1 &&
                     (altitude > altitude_threshold) &&
-                    (gps_fix > 0);
+                    (gps_fix >= 2);
 
             memory.push_front(current_gps_trust);
 
             if (current_gps_trust) {
-                paranoiaCounter++;
+                bufferCounter++;
             }
 
-            if (memory.size() >= paranoiaLevel) {
-                gps_trust = paranoiaCounter >= paranoiaLevel;
+            if (memory.size() > bufferLevel) {
                 bool back = memory.back();
                 memory.pop_back();
                 if (back) {
-                    paranoiaCounter--;
+                    bufferCounter--;
                 }
+                gps_trust = bufferCounter >= bufferLevel;
+                //bufferCounter=max(0,bufferCounter);
             }
 
-        } else if (key == "GPS_FIX") {
-            this->gps_fix = (int) msg.GetDouble();
-        } else if (key == "KELLER_DEPTH") {
+        } else if (key == GPS_FIX_SUBSCRIPTION_NAME) {
+            this->gps_fix = msg.GetDouble();
+        } else if (key == KELLER_DEPTH_SUBSCRIPTION_NAME) {
             this->altitude = -msg.GetDouble();
-        } else if (key == "GPS_LAT") {
-            oss << msg.GetDouble() << endl;
-        } else if (key == "GPS_LON") {
-            oss << msg.GetDouble() << endl;
         } else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
             reportRunWarning("Unhandled Mail: " + key);
     }
@@ -78,8 +82,7 @@ bool TrustGPS::OnConnectToServer() {
 
 bool TrustGPS::Iterate() {
     AppCastingMOOSApp::Iterate();
-    Notify("Coucou?", 0.0);
-    Notify("GPS_TRUST", gps_trust ? "1" : "0");
+    Notify(GPS_TRUST_PUBLICATION_NAME, gps_trust ? "1" : "0");
     AppCastingMOOSApp::PostReport();
     return (true);
 }
@@ -101,10 +104,22 @@ bool TrustGPS::OnStartUp() {
 
         bool handled = false;
         if (param == "PARANOIA_LEVEL") {
-            this->paranoiaLevel = atof(value.c_str());
+            this->bufferLevel = atof(value.c_str());
             handled = true;
-        } else if (param == "ALTITUDE_AT_GPS_SUBMERGED") {
+        } else if (param == "ALTITUDE_THRESHOLD") {
             this->altitude_threshold = atof(value.c_str());
+            handled = true;
+        } else if (param == "GPS_FIX_SUBSCRIPTION_NAME") {
+            this->GPS_FIX_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "GPS_SIG_SUBSCRIPTION_NAME") {
+            this->GPS_SIG_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "KELLER_DEPTH_SUBSCRIPTION_NAME") {
+            this->KELLER_DEPTH_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "GPS_TRUST_PUBLICATION_NAME") {
+            this->GPS_TRUST_PUBLICATION_NAME = value;
             handled = true;
         }
         if (!handled)
@@ -117,11 +132,9 @@ bool TrustGPS::OnStartUp() {
 
 void TrustGPS::registerVariables() {
     AppCastingMOOSApp::RegisterVariables();
-    Register("GPS_SIG", 0);
-    Register("GPS_FIX", 0);
-    Register("KELLER_DEPTH", 0);
-    Register("GPS_LAT", 0);
-    Register("GPS_LON", 0);
+    Register(GPS_SIG_SUBSCRIPTION_NAME, 0);
+    Register(GPS_FIX_SUBSCRIPTION_NAME, 0);
+    Register(KELLER_DEPTH_SUBSCRIPTION_NAME, 0);
 }
 
 bool TrustGPS::buildReport() {
