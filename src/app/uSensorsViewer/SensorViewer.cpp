@@ -211,7 +211,7 @@ bool SensorViewer::buildReport()
 
 void SensorViewer::AddSector(cv::Mat &img_sonar, vector<double> scanline, double bearing, double &bearing_previous){
 	for(int r=1; r<scanline.size(); r++){
-		double angle_diff = bearing - bearing_previous;
+		double angle_diff = 2*atan(tan(abs(bearing - bearing_previous)/2));
 		double theta_begin = min(bearing, bearing_previous);
 
 		for(double theta=theta_begin; theta<theta_begin + angle_diff; theta+=1/r){
