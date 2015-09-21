@@ -297,25 +297,12 @@ void SensorViewer::RegisterVariables()
 bool SensorViewer::buildReport()
 {
   #if 0 // Keep these around just for template
-    m_msgs << "============================================ \n";
-    m_msgs << "File:                                        \n";
-    m_msgs << "============================================ \n";
-
     ACTable actab(4);
     actab << "Alpha | Bravo | Charlie | Delta";
     actab.addHeaderLines();
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
   #endif
-    m_msgs << "============================================ \n";
-    m_msgs << GetAppName() << "Status: \n";
-    m_msgs << "============================================ \n";
-
-    // ACTable actab(4);
-    // actab << "Alpha | Bravo | Charlie | Delta";
-    // actab.addHeaderLines();
-    // actab << "one" << "two" << "three" << "four";
-    // m_msgs << actab.getFormattedString();
 
   return(true);
 }
