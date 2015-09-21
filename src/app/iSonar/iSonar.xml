@@ -51,7 +51,12 @@
                  <varinfo>if 0, sonar don't send mtSendData and polling is off. When switching to 1, Sonar start polling if initialized</varinfo>
               </moosvar>
               <moosvar>
-                 <varname>POWERED_SONAR</varname>
+                 <varname>POWERED_MICRON</varname>
+                 <vartype>int</vartype>
+                 <varinfo>if 0, the sonar is not initialized and listenning thread is stopped, when switching from 0 to 1, thread is launched an sonar init process or polling started</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>POWERED_MINIKING</varname>
                  <vartype>int</vartype>
                  <varinfo>if 0, the sonar is not initialized and listenning thread is stopped, when switching from 0 to 1, thread is launched an sonar init process or polling started</varinfo>
               </moosvar>
