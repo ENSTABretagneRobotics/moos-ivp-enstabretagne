@@ -584,11 +584,6 @@ bool Controller::buildReport()
     m_msgs << actab.getFormattedString();
   #endif
 
-
-  m_msgs << "============================================ \n";
-  m_msgs << "pController:                                      \n";
-  m_msgs << "============================================ \n";
-  m_msgs << "\n";
   m_msgs << "OPERATION_MODE: " << OPERATION_MODE;
   m_msgs << "\n";
   m_msgs << "\n";
