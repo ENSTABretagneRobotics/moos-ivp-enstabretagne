@@ -1,21 +1,21 @@
 /************************************************************/
-/*    FILE: NavigationScreen.h
+/*    FILE: NavScreen.h
 /*    ORGN: Toutatis AUVs - ENSTA Bretagne
 /*    AUTH: Simon Rohou
 /*    DATE: 2015
 /************************************************************/
 
-#ifndef NavigationScreen_HEADER
-#define NavigationScreen_HEADER
+#ifndef NavScreen_HEADER
+#define NavScreen_HEADER
 
 #include <map>
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 
-class NavigationScreen : public AppCastingMOOSApp
+class NavScreen : public AppCastingMOOSApp
 {
   public:
-    NavigationScreen();
-    ~NavigationScreen() {};
+    NavScreen();
+    ~NavScreen() {};
 
   protected: // Standard MOOSApp functions to overload  
     bool OnNewMail(MOOSMSG_LIST &NewMail);
@@ -27,7 +27,7 @@ class NavigationScreen : public AppCastingMOOSApp
     bool buildReport();
     void registerVariables();
 
-  protected: // NavigationScreen functions
+  protected: // NavScreen functions
 
 
   private: // Configuration variables
