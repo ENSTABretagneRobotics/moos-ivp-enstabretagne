@@ -25,7 +25,8 @@ Saucisse::Saucisse()
 
   m_status_cameras = -2;  // undefined
   m_status_modem = -2;    // undefined
-  m_status_sonar = -2;    // undefined
+  m_status_micron = -2;   // undefined
+  m_status_miniking = -2; // undefined
   m_status_sounder = -2;  // undefined
   m_status_gps = -2;      // undefined
 
@@ -82,7 +83,7 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       Notify("POWERED_GPS", m_status_gps);
     }
 
-    else if(key == "POWER_SOUNDER")
+    /*else if(key == "POWER_SOUNDER")
     {
       int success = m_pololu->turnOnBistableRelay(9, 8, (int)msg.GetDouble() == 1);
       m_status_sounder = success >= 0 ? (int)msg.GetDouble() : -1;
@@ -94,7 +95,23 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       int success = m_pololu->turnOnBistableRelay(1, 0, (int)msg.GetDouble() == 1);
       m_status_sonar = success >= 0 ? (int)msg.GetDouble() : -1;
       Notify("POWERED_SONAR", m_status_sonar);
+    }*/
+
+    /* TO BE UPDATED */
+    else if(key == "POWER_MICRON")
+    {
+      int success = m_pololu->turnOnBistableRelay(1, 0, (int)msg.GetDouble() == 1);
+      m_status_micron = success >= 0 ? (int)msg.GetDouble() : -1;
+      Notify("POWERED_MICRON", m_status_micron);
     }
+
+    else if(key == "POWER_MINIKING")
+    {
+      int success = m_pololu->turnOnBistableRelay(9, 8, (int)msg.GetDouble() == 1);
+      m_status_miniking = success >= 0 ? (int)msg.GetDouble() : -1;
+      Notify("POWERED_MINIKING", m_status_miniking);
+    }
+    /* END OF TO BE UPDATED */
 
     else if(key == "POWER_MODEM")
     {
@@ -118,6 +135,10 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       Notify("POWER_SOUNDER", msg.GetDouble());
       MOOSPause(100);
       Notify("POWER_SONAR", msg.GetDouble());
+      MOOSPause(100);
+      Notify("POWER_MICRON", msg.GetDouble());
+      MOOSPause(100);
+      Notify("POWER_MINIKING", msg.GetDouble());
       MOOSPause(100);
       Notify("POWER_MODEM", msg.GetDouble());
       MOOSPause(100);
@@ -287,7 +308,8 @@ bool Saucisse::buildReport()
   m_msgs << "\n";
   m_msgs << "Cameras: \t\t" << (m_status_cameras == -2 ? "?" : m_status_cameras + "") << "\n";
   m_msgs << "Modem: \t\t\t" << (m_status_modem == -2 ? "?" : m_status_modem + "") << "\n";
-  m_msgs << "Sonar: \t\t\t" << (m_status_sonar == -2 ? "?" : m_status_sonar + "") << "\n";
+  m_msgs << "Micron: \t\t\t" << (m_status_micron == -2 ? "?" : m_status_micron + "") << "\n";
+  m_msgs << "Miniking: \t\t" << (m_status_miniking == -2 ? "?" : m_status_miniking + "") << "\n";
   m_msgs << "Sounder: \t\t" << (m_status_sounder == -2 ? "?" : m_status_sounder + "") << "\n";
   m_msgs << "GPS: \t\t\t" << (m_status_gps == -2 ? "?" : m_status_gps + "") << "\n";
   m_msgs << "\n";
