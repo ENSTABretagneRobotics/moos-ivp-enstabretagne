@@ -1,0 +1,20 @@
+ServerHost = localhost
+ServerPort = 9000
+Community  = AUV
+
+//------------------------------------------
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+  Run = MOOSDB                @ NewConsole = true
+  Run = uNavigationScreen     @ NewConsole = true
+  Run = uMS                   @ NewConsole = true
+}
+
+//------------------------------------------------
+ProcessConfig = uNavigationScreen
+{
+  AppTick   = 4
+  CommsTick = 4
+  
+}

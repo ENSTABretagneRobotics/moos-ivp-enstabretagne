@@ -1,0 +1,8 @@
+//------------------------------------------------
+// uNavigationScreen config block
+
+ProcessConfig = uNavigationScreen
+{
+  AppTick   = 4
+  CommsTick = 4
+}
