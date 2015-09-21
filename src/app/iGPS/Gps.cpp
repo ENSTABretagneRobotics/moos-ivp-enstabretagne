@@ -188,7 +188,7 @@ void Gps::registerVariables() {
 // Procedure: buildReport()
 
 bool Gps::buildReport() {
-#if 0 // Keep these around just for template
+  #if 0 // Keep these around just for template
     m_msgs << "============================================ \n";
     m_msgs << "File:                                        \n";
     m_msgs << "============================================ \n";
@@ -198,22 +198,19 @@ bool Gps::buildReport() {
     actab.addHeaderLines();
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
-#endif
-    m_msgs << "============================================ \n";
-    m_msgs << "File: iGps                                  \n";
-    m_msgs << "============================================ \n";
+  #endif
 
-    ACTable actab(4);
-    actab << "Fix | Sig | Lat | Lon";
-    actab.addHeaderLines();
-    char bufferLat[10];
-    char bufferLon[10];
-    sprintf(bufferLat,"%2.6lf",m_lat);
-    sprintf(bufferLon,"%2.6lf",m_lon);
-    actab << m_fix << m_sig << bufferLat << bufferLon;
-    m_msgs << actab.getFormattedString();
+  ACTable actab(4);
+  actab << "Fix | Sig | Lat | Lon";
+  actab.addHeaderLines();
+  char bufferLat[10];
+  char bufferLon[10];
+  sprintf(bufferLat,"%2.6lf",m_lat);
+  sprintf(bufferLon,"%2.6lf",m_lon);
+  actab << m_fix << m_sig << bufferLat << bufferLon;
+  m_msgs << actab.getFormattedString();
 
-    return true;
+  return true;
 }
 
 bool Gps::Notify_GNSS(float *lat, float *lon) {

@@ -184,10 +184,6 @@ void MapLocalizerIntervals::registerVariables() {
 // Procedure: buildReport()
 
 bool MapLocalizerIntervals::buildReport() {
-    m_msgs << "============================================ \n";
-    m_msgs << "File:                                        \n";
-    m_msgs << "============================================ \n";
-
     ACTable actab(4);
     actab << "Alpha | Bravo | Charlie | Delta";
     actab.addHeaderLines();
