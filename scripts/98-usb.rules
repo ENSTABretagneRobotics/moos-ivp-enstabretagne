@@ -1,10 +1,18 @@
-SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", SYMLINK+="keller"
+# Keller
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", SYMLINK+="keller", GROUP="dialout"
 
-SUBSYSTEM=="tty", ATTRS{idVendor}=="1ffb", ATTRS{idProduct}=="008c", ATTRS{serial}=="00103389", SYMLINK+="pololu", MODE="0666"
+# Pololu
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1ffb", ATTRS{idProduct}=="008c", ATTRS{serial}=="00103389", SYMLINK+="pololu", MODE="0666", GROUP="dialout"
 
-SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="d38b", ATTRS{serial}=="XSXR23E7", SYMLINK+="xsens"
+# XSens
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="d38b", ATTRS{serial}=="XSXR23E7", SYMLINK+="xsens", GROUP="dialout", MODE="0660"
 
-SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6011", ATTRS{bInterfaceNumber}=="00", SYMLINK+="gps"
-SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6011", ATTRS{bInterfaceNumber}=="01", SYMLINK+="sonar"
-SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6011", ATTRS{bInterfaceNumber}=="02", SYMLINK+="sounder"
-SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6011", ATTRS{bInterfaceNumber}=="03", SYMLINK+="modem"
+# FTDI HUB
+
+KERNEL=="ttyUSB*", SUBSYSTEM=="tty", DRIVER=="", ATTRS{bInterfaceNumber}=="00", ATTRS{interface}=="Quad RS232-HS", SYMLINK+="gps"
+
+KERNEL=="ttyUSB*", SUBSYSTEM=="tty", DRIVER=="", ATTRS{bInterfaceNumber}=="01", ATTRS{interface}=="Quad RS232-HS", SYMLINK+="sonar_micron"
+
+KERNEL=="ttyUSB*", SUBSYSTEM=="tty", DRIVER=="", ATTRS{bInterfaceNumber}=="02", ATTRS{interface}=="Quad RS232-HS", SYMLINK+="sonar_miniking"
+
+KERNEL=="ttyUSB*", SUBSYSTEM=="tty", DRIVER=="", ATTRS{bInterfaceNumber}=="03", ATTRS{interface}=="Quad RS232-HS", SYMLINK+="modem"

@@ -10,7 +10,7 @@ ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB2
 KELLER_SERIAL_PORT = /dev/keller
 XSENSINS_SERIAL_PORT = /dev/xsens
 
-RAZORIMU_SERIAL_PORT = /dev/ttyUSB10
+//RAZORIMU_SERIAL_PORT = /dev/ttyUSB10
 
 //------------------------------------------
 // Antler configuration  block
@@ -26,7 +26,7 @@ ProcessConfig = ANTLER
   //Run = pLogger         @ NewConsole = false
   Run = pShare          @ NewConsole = false 
 
-  Run = uSensorsViewer  @ NewConsole = false
+  //Run = uSensorsViewer  @ NewConsole = false
 
   // ************** ENGINE CONTROL *********
   Run = iSaucisse       @ NewConsole = false
@@ -44,6 +44,7 @@ ProcessConfig = ANTLER
   Run = iCamera         @ NewConsole = false ~iCamera2
 
   //Run = iRazorIMU       @ NewConsole = true
+  //Run = uNavScreen @ NewConsole = true
 }
 
 //------------------------------------------------
@@ -188,7 +189,7 @@ ProcessConfig = iCamera1
 
    VARIABLE_IMAGE_NAME   = CAMERA_FRONT
    IDENTIFIANT_CV_CAMERA = 1
-   DISPLAY_IMAGE         = false
+   DISPLAY_IMAGE         = true
    INVERT_IMAGE          = false
 
    LARGEUR_IMAGE_CAMERA  = 360
@@ -205,7 +206,7 @@ ProcessConfig = iCamera2
 
    VARIABLE_IMAGE_NAME   = CAMERA_SIDE
    IDENTIFIANT_CV_CAMERA = 0
-   DISPLAY_IMAGE         = false
+   DISPLAY_IMAGE         = true
    INVERT_IMAGE          = false
 
    LARGEUR_IMAGE_CAMERA  = 360
@@ -248,4 +249,12 @@ ProcessConfig = pLogger
 
   AsyncLog        = true
   WildCardLogging = true
+}
+
+
+//------------------------------------------------
+ProcessConfig = uNavScreen
+{
+  AppTick   = 4
+  CommsTick = 4
 }

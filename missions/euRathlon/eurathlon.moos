@@ -3,12 +3,14 @@ ServerPort = 9000
 Community  = AUV
 
 //Serial port configuration
-GPS_SERIAL_PORT = /dev/ttyUSB0
-SONAR_SERIAL_PORT = /dev/ttyUSB1
-ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB2
-KELLER_SERIAL_PORT = /dev/keller
-XSENSINS_SERIAL_PORT = /dev/xsens
-RAZORIMU_SERIAL_PORT = /dev/ttyUSB10
+KELLER_SERIAL_PORT = /dev/keller // ttyUSB6
+XSENSINS_SERIAL_PORT = /dev/xsens // ttyUSB4
+
+
+GPS_SERIAL_PORT = /dev/ttyUSB3
+SONAR_SERIAL_PORT = /dev/ttyUSB0
+ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB1
+//RAZORIMU_SERIAL_PORT = /dev/ttyUSB5
 
 ProcessConfig = ANTLER
 {
@@ -19,17 +21,17 @@ ProcessConfig = ANTLER
   Run = uProcessWatch   @ NewConsole = false
 
   //Run = pLogger         @ NewConsole = false
-  Run = pShare          @ NewConsole = false 
+  //Run = pShare          @ NewConsole = false 
 
-  Run = uSensorsViewer  @ NewConsole = false
+  //Run = uSensorsViewer  @ NewConsole = false
 
   // ************** ENGINE CONTROL *********
   Run = iSaucisse       @ NewConsole = false
-  Run = pMixThrusters   @ NewConsole = false
+  //Run = pMixThrusters   @ NewConsole = false
 
   // ************** SENSORS *********
   Run = iXSensINS       @ NewConsole = false
-  Run = iSounder        @ NewConsole = false
+  //Run = iSounder        @ NewConsole = false
   Run = iGPS            @ NewConsole = false
   Run = iKeller         @ NewConsole = false
   Run = iSonar          @ NewConsole = false
@@ -37,7 +39,8 @@ ProcessConfig = ANTLER
   Run = iCamera         @ NewConsole = false ~iCamera1
   Run = iCamera         @ NewConsole = false ~iCamera2
 
-  Run = uTimerScript    @ NewConsole = false
+  //Run = uTimerScript  @ NewConsole = false
+  Run = uNavScreen      @ NewConsole = false
 }
 
 ProcessConfig = uTimerScript
@@ -229,4 +232,10 @@ ProcessConfig = pLogger
 
   AsyncLog        = true
   WildCardLogging = true
+}
+
+ProcessConfig = uNavScreen
+{
+  AppTick   = 4
+  CommsTick = 4
 }
