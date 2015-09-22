@@ -1,0 +1,78 @@
+ServerHost = localhost
+ServerPort = 9000
+Community  = AUV
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+  Run = MOOSDB        @ NewConsole = false
+  Run = uMACView      @ NewConsole = false
+  Run = uMS           @ NewConsole = false
+  Run = uProcessWatch @ NewConsole = false
+  Run = pShare        @ NewConsole = false
+  //Run = pLogger       @ NewConsole = false
+  //Run = uSensorsViewer @ NewConsole = false
+  Run = uJoystick     @ NewConsole = false
+}
+
+ProcessConfig = pShare
+{
+  AppTick   = 20
+  CommsTick = 20
+
+  Input = route = 192.168.1.42:24468
+  Output = src_name = DESIRED_*, route = 192.168.1.42:24466
+}
+
+ProcessConfig = uJoystick
+{
+  AppTick   = 20
+  CommsTick = 20
+
+  DEVICE_NAME = /dev/input/js0
+
+  INCREMENT = false
+  SCALE = 100
+
+  //AXIS = 0
+  //SCALE_RATIO = 0.01
+  //MOOS_DEST_VAR = DESIRED_SLIDE2
+
+  AXIS = 1
+  SCALE_RATIO = -0.01
+  MOOS_DEST_VAR = DESIRED_FX
+
+  AXIS = 2
+  SCALE_RATIO = -0.01
+  MOOS_DEST_VAR = DESIRED_RZ
+
+  AXIS = 3
+  SCALE_RATIO = 0.01
+  MOOS_DEST_VAR = DESIRED_FZ
+
+  //BUTTON = 1
+  //SCALE_RATIO = 0.01
+  //MOOS_DEST_VAR = PUSHED_BUTTON_1
+
+  //BUTTON = 2
+  //SCALE_RATIO = 0.01
+  //MOOS_DEST_VAR = PUSHED_BUTTON_2
+}
+
+ProcessConfig = uSensorsViewer
+{
+   AppTick   = 25
+   CommsTick = 25
+}
+
+ProcessConfig = uMACView
+{
+   AppTick   = 25
+   CommsTick = 25
+}
+
+ProcessConfig = uProcessWatch
+{
+   AppTick   = 25
+   CommsTick = 25
+}
