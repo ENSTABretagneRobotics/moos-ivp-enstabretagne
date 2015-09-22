@@ -2,12 +2,86 @@ ServerHost = localhost
 ServerPort = 9000
 Community  = AUV
 
+LatOrigin  = 42.954260714055195
+LongOrigin = 10.601735409849422
+
 ProcessConfig = ANTLER
 {
   MSBetweenLaunches = 500
   Run = MOOSDB          @ NewConsole = false
   Run = uMS             @ NewConsole = false
   Run = pMarineViewer   @ NewConsole = false
+  Run = pNodeReporter   @ NewConsole = false
+  Run = uPlayback       @ NewConsole = false
+  //Run = pLatLon2LocalGrid       @ NewConsole = false
+  Run = pEchoVar       @ NewConsole = false
+  Run = uTimerScript    @ NewConsole = false ~euRathlonItems
+}
+
+ProcessConfig = pLatLon2LocalGrid
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  LatOrigin  = 42.954260714055195
+  LongOrigin = 10.601735409849422
+
+  // Topics we subscribe to
+  LAT_SUBSCRIPTION_NAME = GPS_LAT
+  LON_SUBSCRIPTION_NAME = GPS_LON
+
+  // Topics we publish to
+  NORTHING_PUBLICATION_NAME = NAV_Y
+  EASTING_PUBLICATION_NAME = NAV_X
+}
+
+ProcessConfig = pEchoVar
+{
+  AppTick = 25
+  CommsTick = 25
+
+  echo = IMU_YAW -> NAV_HEADING
+  echo = KELLER_DEPTH -> NAV_DEPTH
+  echo = GPS_LAT -> NAV_LAT
+  echo = GPS_LON -> NAV_LONG
+  echo = GPS_LON -> NAV_LON
+}
+
+ProcessConfig = pNodeReporter
+{
+  AppTick   = 4                                                 
+  CommsTick = 4                                                 
+                                                                
+  // Configure key aspects of the node                          
+  platform_type      = auv   // or {uuv,auv,ship,kayak}   
+  platform_length    = 5
+
+  // Configure monitor/reporting of dual nav solution           
+  alt_nav_prefix     = NAV_GT                                   
+  alt_nav_name       = _GT
+}
+
+ProcessConfig = euRathlonItems                                   
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  event = var=NAV_SPEED, val="0", time=0
+
+  // Arenas
+  event = var=VIEW_MARKER, val="type=square,x=36.2,y=-15,scale=1,color=orange,edge_color=orange,width=15,fill_transparency=0.5", time=0
+
+  // Gates
+  event = var=VIEW_MARKER, val="type=gateway,x=35.2,y=-6.1,scale=2,color=orange,width=4", time=0
+  event = var=VIEW_MARKER, val="type=gateway,x=37.2,y=-6.1,scale=2,color=orange,width=4", time=0
+
+  // Starting points
+  event = var=VIEW_MARKER, val="type=circle,x=7.7,y=-6.1,scale=2,color=green,width=4", time=0
+
+  // Other buoys
+  event = var=VIEW_MARKER, val="type=circle,x=36.2,y=-22.1,scale=2,color=blue,width=4", time=0
+  event = var=VIEW_MARKER, val="type=circle,x=4.6,y=-40,scale=2,color=blue,width=4", time=0
+  event = var=VIEW_MARKER, val="type=circle,x=0,y=0,scale=1,color=blue,width=2", time=0
 }
 
 ProcessConfig = pMarineViewer                                   
@@ -26,7 +100,7 @@ ProcessConfig = pMarineViewer
   hash_delta           = 10    // {10,50,200,500}
   hash_shade           = 0.4   // [0.0, 1.0]
   hash_viewable        = false  // {TRUE, false}
-  full_screen          = false // {true, FALSE}
+  //full_screen          = false // {true, FALSE}
 
   // GeoAttributes Pull-Down Menu ==============================
   polygon_viewable_all     = true  // {TRUE, false}
@@ -42,15 +116,15 @@ ProcessConfig = pMarineViewer
   grid_viewable_all        = false  // {TRUE, false}
   grid_viewable_labels     = false  // {TRUE, false}
   grid_opaqueness          = 0.3   // {0.1, 0.2, ..., 1.0}
-  datum_viewable_all       = true  // {TRUE, false}
-  datum_viewable_labels    = true  // {TRUE, false}
+  //datum_viewable_all       = true  // {TRUE, false}
+  //datum_viewable_labels    = true  // {TRUE, false}
   marker_viewable_all      = true  // {TRUE, false}
   marker_viewable_labels   = true  // {TRUE, false}
   oparea_viewable_all      = true  // {TRUE, false}
   oparea_viewable_labels   = true  // {TRUE, false}
   drop_point_viewable_all  = true  // {TRUE, false} 
   drop_point_coords        = as-dropped  // {lat-lon,local-grid}
-  drop_point_vertex_size   = true  // {1, 2, 3, ..., 10}
+  //drop_point_vertex_size   = true  // {1, 2, 3, ..., 10}
    comms_pulse_viewable_all = true  // {TRUE, false}
 
   // Vehicles Pull-Down Menu ===================================
@@ -64,11 +138,11 @@ ProcessConfig = pMarineViewer
   vehicles_inactive_color = yellow // {red,white,blue,green}
   trails_viewable         = true   // {TRUE, false}
   trails_color            = white  // {WHITE, yellow, green}
-  bearing_lines           = true   // {TRUE, false}
+  //bearing_lines           = true   // {TRUE, false}
 
   // Vehicles Pull-Down Menu
   appcast_viewable     = true
-  refresh_mode         = events   // {paused, streaming}
+  //refresh_mode         = events   // {paused, streaming}
   nodes_font_size      = medium   // {large, small, xsmall}
   procs_font_size      = medium   // {large, small, xsmall}
   appcast_font_size    = small    // {large, medium, xsmall}
