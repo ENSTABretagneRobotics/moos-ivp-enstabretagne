@@ -308,7 +308,7 @@ bool Saucisse::buildReport()
   m_msgs << "\n";
   m_msgs << "Cameras: \t\t" << (m_status_cameras == -2 ? "?" : m_status_cameras + "") << "\n";
   m_msgs << "Modem: \t\t\t" << (m_status_modem == -2 ? "?" : m_status_modem + "") << "\n";
-  m_msgs << "Micron: \t\t\t" << (m_status_micron == -2 ? "?" : m_status_micron + "") << "\n";
+  m_msgs << "Micron: \t\t" << (m_status_micron == -2 ? "?" : m_status_micron + "") << "\n";
   m_msgs << "Miniking: \t\t" << (m_status_miniking == -2 ? "?" : m_status_miniking + "") << "\n";
   m_msgs << "Sounder: \t\t" << (m_status_sounder == -2 ? "?" : m_status_sounder + "") << "\n";
   m_msgs << "GPS: \t\t\t" << (m_status_gps == -2 ? "?" : m_status_gps + "") << "\n";

@@ -30,6 +30,13 @@ NavScreen::NavScreen()
   m_moosvars["ECHOSOUNDER_RANGE"] = UNSET_VALUE;
   m_moosvars["NAV_X"] = UNSET_VALUE;
   m_moosvars["NAV_Y"] = UNSET_VALUE;
+  m_moosvars["DESIRED_HEADING"] = UNSET_VALUE;
+  m_moosvars["DESIRED_DEPTH"] = UNSET_VALUE;
+  m_moosvars["POWERED_CAMERAS"] = UNSET_VALUE;
+  m_moosvars["POWERED_GPS"] = UNSET_VALUE;
+  m_moosvars["POWERED_MINIKING"] = UNSET_VALUE;
+  m_moosvars["POWERED_MICRON"] = UNSET_VALUE;
+  m_moosvars["POWERED_CAMERAS"] = UNSET_VALUE;
 }
 
 //---------------------------------------------------------
@@ -151,10 +158,11 @@ void NavScreen::registerVariables()
 bool NavScreen::buildReport() 
 {
   m_msgs << "ATTITUDE  ---------------------------------- \n";
-  ACTable actab_att(3);
-  actab_att << "Yaw | Pitch | Roll";
+  ACTable actab_att(4);
+  actab_att << "Dsrd Hdg | Yaw | Pitch | Roll";
   actab_att.addHeaderLines();
-  actab_att << m_moosvars["IMU_YAW"]
+  actab_att << m_moosvars["DESIRED_HEADING"]
+            << m_moosvars["IMU_YAW"]
             << m_moosvars["IMU_PITCH"]
             << m_moosvars["IMU_ROLL"];
   m_msgs << actab_att.getFormattedString() << "\n\n";
@@ -171,10 +179,11 @@ bool NavScreen::buildReport()
   m_msgs << actab_pos.getFormattedString() << "\n\n";
 
   m_msgs << "DEPTH  ------------------------------------- \n";
-  ACTable actab_depth(2);
-  actab_depth << "Depth | Bathymetry";
+  ACTable actab_depth(3);
+  actab_depth << "Depth | Dsrd depth | Bathymetry";
   actab_depth.addHeaderLines();
-  actab_depth << m_moosvars["DEPTH"]
+  actab_depth << m_moosvars["DESIRED_DEPTH"]
+              << m_moosvars["DEPTH"]
               << m_moosvars["ECHOSOUNDER_RANGE"];
   m_msgs << actab_depth.getFormattedString() << "\n\n";
 
@@ -184,6 +193,16 @@ bool NavScreen::buildReport()
   actab_sonar.addHeaderLines();
   actab_sonar << m_moosvars["SONAR_POLL"];
   m_msgs << actab_sonar.getFormattedString() << "\n\n";
+
+  m_msgs << "SENSORS  ----------------------------------- \n";
+  ACTable actab_sensors(5);
+  actab_sensors << "GPS" << "Modem" << "Micron" << "Miniking" << "Cameras";
+  actab_sensors.addHeaderLines();
+  actab_sensors << m_moosvars["POWERED_GPS"]
+              << m_moosvars["POWERED_MODEM"]
+              << m_moosvars["POWERED_MICRON"]
+              << m_moosvars["POWERED_MINIKING"];
+  m_msgs << actab_sensors.getFormattedString() << "\n\n";
 
   return true;
 }
