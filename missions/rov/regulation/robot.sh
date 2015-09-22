@@ -1,5 +1,5 @@
 #!/bin/bash
-nsplug robot.moos targ_robot.moos --path=../common -f
+nsplug robot.moos targ_robot.moos --path=../../common -f
 pAntler targ_robot.moos >& /dev/null &
 
 printf "Mission started.\n"

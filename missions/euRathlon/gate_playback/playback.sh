@@ -1,5 +1,5 @@
 #!/bin/bash
-nsplug playback.moos targ_playback.moos --path=../common -f
+nsplug playback.moos targ_playback.moos --path=../../common -f
 pAntler targ_playback.moos >& /dev/null &
 
 printf "Mission started.\n"

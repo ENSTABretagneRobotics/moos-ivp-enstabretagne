@@ -1,5 +1,5 @@
 #!/bin/bash
-nsplug robot_regulation.moos targ_robot_regulation.moos --path=../common -f
+nsplug robot_regulation.moos targ_robot_regulation.moos --path=../../common -f
 pAntler targ_robot_regulation.moos >& /dev/null &
 
 printf "Mission started.\n"

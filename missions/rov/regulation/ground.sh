@@ -1,5 +1,5 @@
 #!/bin/bash
-nsplug ground.moos targ_ground.moos --path=../common -f
+nsplug ground.moos targ_ground.moos --path=../../common -f
 pAntler targ_ground.moos >& /dev/null &
 
 printf "Mission started.\n"
