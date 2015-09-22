@@ -14,7 +14,7 @@ ProcessConfig = ANTLER
   Run = pNodeReporter   @ NewConsole = false
   Run = uPlayback       @ NewConsole = false
   //Run = pLatLon2LocalGrid       @ NewConsole = false
-  Run = pEchoVar       @ NewConsole = false
+  Run = pEchoVar        @ NewConsole = false
   Run = uTimerScript    @ NewConsole = false ~euRathlonItems
 }
 

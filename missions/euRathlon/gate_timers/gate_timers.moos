@@ -39,7 +39,33 @@ ProcessConfig = ANTLER
   //Run = iSounder          @ NewConsole = false
   //Run = iRazorIMU         @ NewConsole = false
 
-  // ************* REGULATION ****************
-  Run = pSimplePID        @ NewConsole = false ~pSimplePID_Depth
-  Run = pSimplePID        @ NewConsole = false ~pSimplePID_Heading
+  Run = uTimerScript      @ NewConsole = false
+}
+
+ProcessConfig = uTimerScript
+{
+  AppTick   = 2
+  CommsTick = 2
+
+  //Start point 1, submerge
+  event = var=DESIRED_DEPTH,  time=000, val=1.6
+  //Go closer to the wall
+  event = var=DESIRED_HEADING,time=000, val=0
+  event = var=DESIRED_FX,     time=010, val=1
+  event = var=DESIRED_FX,     time=030, val=-1
+  event = var=DESIRED_FX,     time=033, val=0
+  //90 deg turn
+  event = var=DESIRED_HEADING,time=033, val=90
+  //Go in front of the gates
+  event = var=DESIRED_FX,     time=043, val=1
+  event = var=DESIRED_FX,     time=128, val=-1
+  event = var=DESIRED_FX,     time=131, val=0
+  //90 deg turn
+  event = var=DESIRED_HEADING,time=131, val=180
+  //Go through the gates
+  event = var=DESIRED_FX,     time=141, val=1
+  event = var=DESIRED_FX,     time=206, val=-1
+  event = var=DESIRED_FX,     time=209, val=0
+  //Surface
+  event = var=DESIRED_DEPTH,  time=220, val=0
 }

@@ -1,0 +1,7 @@
+ProcessConfig = iXSensINS
+{
+  AppTick        = 25
+  CommsTick      = 25
+
+  UART_BAUD_RATE = 115200
+}
