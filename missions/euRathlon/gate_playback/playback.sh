@@ -1,6 +1,6 @@
 #!/bin/bash
-nsplug eurathlon.moos targ_eurathlon.moos --path=../common -f
-pAntler targ_eurathlon.moos >& /dev/null &
+nsplug playback.moos targ_playback.moos --path=../common -f
+pAntler targ_playback.moos >& /dev/null &
 
 printf "Mission started.\n"
 

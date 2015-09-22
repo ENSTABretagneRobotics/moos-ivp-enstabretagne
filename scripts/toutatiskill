@@ -70,28 +70,28 @@ killall -9 pParticle uFldContactRangeSensorHP pUUVPath         \
 
 killall -9 pAntler pLogger 
 
-killall -9 iCamera
-killall -9 iGPS
-killall -9 iGPSoE
-killall -9 iKeller
-killall -9 iModem
-killall -9 iRazorIMU
-killall -9 iSaucisse
-killall -9 iSonar
-killall -9 iSounder
-killall -9 iXSensINS
-killall -9 pController
-killall -9 pEstimSpeed
-killall -9 pMapLocalizerIntervals
-killall -9 pMapLocalizerParticleFilter
-killall -9 pMixThrusters
-killall -9 pOpiDetection
-killall -9 pSimplePID
-killall -9 pSonarCSVPlayer
-killall -9 pTrustGPS
-killall -9 pWallDetector
-killall -9 uJoystick
-killall -9 uNavScreen
-killall -9 uSensorsViewer
+killall iCamera
+killall iGPS
+killall iGPSoE
+killall iKeller
+killall iModem
+killall iRazorIMU
+killall iSaucisse
+killall iSonar
+killall iSounder
+killall iXSensINS
+killall pController
+killall pEstimSpeed
+killall pMapLocalizerIntervals
+killall pMapLocalizerParticleFilter
+killall pMixThrusters
+killall pOpiDetection
+killall pSimplePID
+killall pSonarCSVPlayer
+killall pTrustGPS
+killall pWallDetector
+killall uJoystick
+killall uNavScreen
+killall uSensorsViewer
 
 echo Done - Killed all MOOS-Related Processes.....

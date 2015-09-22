@@ -5,6 +5,9 @@
 /*    DATE: 2015
 /************************************************************/
 
+#include <iostream>
+#include <fstream>
+
 #include <sstream>
 #include <iterator>
 #include "math.h"

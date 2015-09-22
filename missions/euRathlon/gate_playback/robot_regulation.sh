@@ -1,6 +1,6 @@
 #!/bin/bash
-nsplug eurathlon.moos targ_eurathlon.moos --path=../common -f
-pAntler targ_eurathlon.moos >& /dev/null &
+nsplug robot_regulation.moos targ_robot_regulation.moos --path=../common -f
+pAntler targ_robot_regulation.moos >& /dev/null &
 
 printf "Mission started.\n"
 
