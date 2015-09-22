@@ -266,13 +266,12 @@ void SensorViewer::AddSector(Mat &img_sonar, vector<double> scanline, double bea
 		double theta_begin = min(bearing, bearing_previous);
 
 		for(double theta=theta_begin; theta<theta_begin + angle_diff; theta+=1.0/r){
-			int x = floor(scanline.size() + r*cos(theta));
-			int y = floor(scanline.size() + r*sin(theta));
-			img_sonar.at<unsigned char>(y, x) = 255 - max(min(pow(10, scanline[r]/20.0)/pow(10, 150/20.0)*255*255*contrast, 255), 0);
+			int x = round(scanline.size() + r*cos(theta));
+			int y = round(scanline.size() + r*sin(theta));
+			img_sonar.at<unsigned char>(y, x) = 255 - pow(10, scanline[r]/20.0)/pow(10, 150/20.0)*255*255*contrast;
 			// cout << "SCANLINE SIZE = " << scanline.size() << " r = " << r << '\n';
 			// cout << "ADD SECTOR (" << x << " " << y << ") = " << 255 - (unsigned char)scanline[r] << '\n';
 		}
 	}
-
 	bearing_previous = bearing;
 }
