@@ -161,17 +161,22 @@ bool Gps::OnStartUp() {
     registerVariables();
     // Init GPS connection
 
-    // if(serial.is_open()){
-    //   serial.close();
-    // }
 
-    m_serial.open(m_uart_port);
-    m_serial.set_option(boost::asio::serial_port_base::baud_rate(m_uart_baud_rate));
+    m_error = m_serial.open(m_uart_port,m_error);
+    if (m_error.value() != 0.0)
+    {
+        // No error from asio read
+        reportConfigWarning("Serial open error");
+    }
+    else
+        m_serial.set_option(boost::asio::serial_port_base::baud_rate(m_uart_baud_rate));
     //serial.set_option(boost::asio::serial_port_base::character_size());
     //serial.set_option(boost::asio::serial_port_base::flow_control());
     //serial.set_option(boost::asio::serial_port_base::parity());
     //serial.set_option(boost::asio::serial_port_base::stop_bits());
-
+    if(!m_serial.is_open()){
+        reportConfigWarning("Serial port not open");
+    }
 
     return (true);
 }
@@ -200,14 +205,14 @@ bool Gps::buildReport() {
     m_msgs << actab.getFormattedString();
   #endif
 
-  ACTable actab(4);
-  actab << "Fix | Sig | Lat | Lon";
+  ACTable actab(6);
+  actab << "Serial port | Baudrate | Fix | Sig | Lat | Lon";
   actab.addHeaderLines();
   char bufferLat[10];
   char bufferLon[10];
   sprintf(bufferLat,"%2.6lf",m_lat);
   sprintf(bufferLon,"%2.6lf",m_lon);
-  actab << m_fix << m_sig << bufferLat << bufferLon;
+  actab << m_uart_port << m_uart_baud_rate << m_fix << m_sig << bufferLat << bufferLon;
   m_msgs << actab.getFormattedString();
 
   return true;

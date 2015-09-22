@@ -1,0 +1,54 @@
+// MOOS file
+//------------------------------------------
+// Global Param
+LatOrigin  = 42.954265261247329
+LongOrigin = 10.60172556417597
+
+ServerHost = localhost
+ServerPort = 9000
+
+Community  = AUV
+
+//Serial port configuration
+GPS_SERIAL_PORT = /dev/ttyUSB0
+
+//------------------------------------------
+// Antler configuration  block
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+
+  Run = MOOSDB       	  @ NewConsole = true
+  Run = uMS               @ NewConsole = false
+  Run = iGPS              @ NewConsole = true
+  Run = pLatLon2LocalGrid @ NewConsole = true
+}
+
+//------------------------------------------------
+// iGPS config block
+
+ProcessConfig = iGPS
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  UART_PORT = /dev/ttyUSB0
+  UART_BAUD_RATE = 4800
+}
+
+//------------------------------------------------
+// pLatLon2LocalGrid config block
+
+ProcessConfig = pLatLon2LocalGrid
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  // Topics we subscribe to
+  LAT_SUBSCRIPTION_NAME = GPS_LAT
+  LON_SUBSCRIPTION_NAME = GPS_LON
+
+  // Topics we publish to
+  NORTHING_PUBLICATION_NAME = GPS_N
+  EASTING_PUBLICATION_NAME  = GPS_E
+}
