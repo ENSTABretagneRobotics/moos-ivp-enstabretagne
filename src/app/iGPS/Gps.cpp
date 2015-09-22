@@ -109,15 +109,7 @@ bool Gps::Iterate() {
         m_lon = m_dpos.lon * 180.0 / M_PI;
 
         Notify("GPS_LAT", m_lat);
-        Notify("GPS_LON", m_lon);
-
-        /*if(m_sig != 0.0 and m_depth < m_depth_invalid_threshold){
-          m_lat = m_dpos.lat*180.0/M_PI;
-          m_lon = m_dpos.lon*180.0/M_PI;
-          Notify("GPS_LAT", m_lat);
-          Notify("GPS_LONG", m_lon);
-          //Notify_GNSS(&lat, &lon);
-        }*/
+        Notify("GPS_LONG", m_lon);
     } else if (m_error.value() == 2.0) {
         //Case end of line beacause the trame is not arrived completly yet
     } else {

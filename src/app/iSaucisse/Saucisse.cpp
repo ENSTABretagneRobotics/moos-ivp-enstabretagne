@@ -5,11 +5,14 @@
 /*    DATE: 2015
 /************************************************************/
 
+#include <sstream>
 #include <iterator>
 #include "math.h"
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "Saucisse.h"
+
+#define UNDEFINED_STATUS -2
 
 using namespace std;
 
@@ -23,12 +26,12 @@ Saucisse::Saucisse()
   m_reset_all_on = true;
   m_nuc = new Nuc();
 
-  m_status_cameras = -2;  // undefined
-  m_status_modem = -2;    // undefined
-  m_status_micron = -2;   // undefined
-  m_status_miniking = -2; // undefined
-  m_status_sounder = -2;  // undefined
-  m_status_gps = -2;      // undefined
+  m_status_cameras = UNDEFINED_STATUS;
+  m_status_modem = UNDEFINED_STATUS;
+  m_status_micron = UNDEFINED_STATUS;
+  m_status_miniking = UNDEFINED_STATUS;
+  m_status_sounder = UNDEFINED_STATUS;
+  m_status_gps = UNDEFINED_STATUS;
 
   m_left_thruster_value = 0.;
   m_right_thruster_value = 0.;
@@ -97,7 +100,6 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       Notify("POWERED_SONAR", m_status_sonar);
     }*/
 
-    /* TO BE UPDATED */
     else if(key == "POWER_MICRON")
     {
       int success = m_pololu->turnOnBistableRelay(1, 0, (int)msg.GetDouble() == 1);
@@ -111,7 +113,6 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       m_status_miniking = success >= 0 ? (int)msg.GetDouble() : -1;
       Notify("POWERED_MINIKING", m_status_miniking);
     }
-    /* END OF TO BE UPDATED */
 
     else if(key == "POWER_MODEM")
     {
@@ -128,21 +129,22 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
 
     else if(key == "POWER_ALL")
     {
-      Notify("POWER_CAMERAS", msg.GetDouble());
       MOOSPause(100);
-      Notify("POWER_GPS", msg.GetDouble());
+      Notify("POWER_CAMERAS", (int)msg.GetDouble());
       MOOSPause(100);
-      Notify("POWER_SOUNDER", msg.GetDouble());
+      Notify("POWER_GPS", (int)msg.GetDouble());
       MOOSPause(100);
-      Notify("POWER_SONAR", msg.GetDouble());
+      /*Notify("POWER_SOUNDER", (int)msg.GetDouble());
       MOOSPause(100);
-      Notify("POWER_MICRON", msg.GetDouble());
+      Notify("POWER_SONAR", (int)msg.GetDouble());
+      MOOSPause(100);*/
+      Notify("POWER_MICRON", (int)msg.GetDouble());
       MOOSPause(100);
-      Notify("POWER_MINIKING", msg.GetDouble());
+      Notify("POWER_MINIKING", (int)msg.GetDouble());
       MOOSPause(100);
-      Notify("POWER_MODEM", msg.GetDouble());
+      Notify("POWER_MODEM", (int)msg.GetDouble());
       MOOSPause(100);
-      Notify("POWER_MODEM_EA", msg.GetDouble());
+      Notify("POWER_MODEM_EA", (int)msg.GetDouble());
       MOOSPause(100);
     }
 
@@ -272,17 +274,17 @@ bool Saucisse::OnStartUp()
       reportUnhandledConfigWarning(orig);
   }
 
+  registerVariables();
   m_pololu = new Pololu(m_device_name);
 
   if(m_reset_on_startup)
   {
-    Notify("POWER_ALL", m_reset_all_on ? "1" : "0");
+    Notify("POWER_ALL", m_reset_all_on ? 1 : 0);
     Notify("SET_THRUSTER_LEFT", m_left_thruster_value);
     Notify("SET_THRUSTER_RIGHT", m_right_thruster_value);
     Notify("SET_THRUSTER_VERTICAL", m_vertical_thruster_value);
   }
 
-  registerVariables();  
   return true;
 }
 
@@ -306,17 +308,45 @@ bool Saucisse::buildReport()
   bool pololu_ok = m_pololu->isReady(error_message);
   m_msgs << "Pololu status: \t" << (pololu_ok ? "ok" : error_message) << "\n";
   m_msgs << "\n";
-  m_msgs << "Cameras: \t\t" << (m_status_cameras == -2 ? "?" : m_status_cameras + "") << "\n";
-  m_msgs << "Modem: \t\t\t" << (m_status_modem == -2 ? "?" : m_status_modem + "") << "\n";
-  m_msgs << "Micron: \t\t" << (m_status_micron == -2 ? "?" : m_status_micron + "") << "\n";
-  m_msgs << "Miniking: \t\t" << (m_status_miniking == -2 ? "?" : m_status_miniking + "") << "\n";
-  m_msgs << "Sounder: \t\t" << (m_status_sounder == -2 ? "?" : m_status_sounder + "") << "\n";
-  m_msgs << "GPS: \t\t\t" << (m_status_gps == -2 ? "?" : m_status_gps + "") << "\n";
-  m_msgs << "\n";
-  m_msgs << "Left thruster: \t\t" << m_left_thruster_value << "\n";
-  m_msgs << "Right thruster: \t" << m_right_thruster_value << "\n";
-  m_msgs << "Vertical thruster: \t" << m_vertical_thruster_value << "\n";
-  m_msgs << "\n";
-  m_msgs << "NUC temperature: \t" << m_nuc->getTemperature() << "°C\n";
+
+  ACTable actab_relays(2);
+  actab_relays << "Relay" << "On";
+  actab_relays.addHeaderLines();
+  actab_relays << "Cameras" << sensorStatusInText(m_status_cameras);
+  actab_relays << "Modem" << sensorStatusInText(m_status_modem);
+  actab_relays << "Micron" << sensorStatusInText(m_status_micron);
+  actab_relays << "Miniking" << sensorStatusInText(m_status_miniking);
+  actab_relays << "GPS" << sensorStatusInText(m_status_gps);
+  m_msgs << actab_relays.getFormattedString() << "\n\n";
+
+  ACTable actab_thrusters(2);
+  actab_thrusters << "Thruster" << "Value";
+  actab_thrusters.addHeaderLines();
+  actab_thrusters << "Left" << m_left_thruster_value;
+  actab_thrusters << "Right" << m_left_thruster_value;
+  actab_thrusters << "Vertical" << m_left_thruster_value;
+  m_msgs << actab_thrusters.getFormattedString() << "\n\n";
+
+  ACTable actab_temperatures(2);
+  actab_temperatures << "Unit" << "°C";
+  actab_temperatures.addHeaderLines();
+  actab_temperatures << "NUC" << m_nuc->getTemperature();
+  m_msgs << actab_temperatures.getFormattedString() << "\n\n";
+  
   return  true;
+}
+
+//------------------------------------------------------------
+// Procedure: sensorStatusInText()
+
+std::string Saucisse::sensorStatusInText(int status)
+{
+  if(status == UNDEFINED_STATUS)
+    return "?";
+  else
+  {
+    stringstream convert;
+    convert << status;
+    return convert.str();
+  }
 }
