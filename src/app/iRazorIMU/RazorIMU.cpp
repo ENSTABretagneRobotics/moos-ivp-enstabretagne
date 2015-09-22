@@ -91,8 +91,6 @@ bool RazorIMU::OnStartUp()
 
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
-  if(!m_MissionReader.GetValue("RAZORIMU_SERIAL_PORT", m_serial_port))
-    reportConfigWarning("No RAZORIMU_SERIAL_PORT config found for " + GetAppName());
   if(!m_MissionReader.GetConfiguration(GetAppName(), sParams))
     reportConfigWarning("No config block found for " + GetAppName());
 
@@ -122,6 +120,11 @@ bool RazorIMU::OnStartUp()
       else
         reportConfigWarning(orig);
 
+      handled = true;
+    }
+    else if (param == "SERIAL_PORT")
+    {
+      m_serial_port = value.c_str();
       handled = true;
     }
 
@@ -167,7 +170,7 @@ bool RazorIMU::buildReport()
 
   else if(m_razor_mode == RazorAHRS::ACC_MAG_GYR_CALIBRATED)
     m_msgs << "ACC_MAG_GYR_CALIBRATED";
-  
+
   m_msgs << "\n\n";
 
   ACTable actab_euler(3);
@@ -183,7 +186,7 @@ bool RazorIMU::buildReport()
   ACTable actab_acc(3);
   actab_acc << "Acc X | Acc Y | Acc Z";
   actab_acc.addHeaderLines();
-  if(m_razor_mode == RazorAHRS::ACC_MAG_GYR_RAW 
+  if(m_razor_mode == RazorAHRS::ACC_MAG_GYR_RAW
     || m_razor_mode == RazorAHRS::ACC_MAG_GYR_CALIBRATED)
     actab_acc << m_acc_x << m_acc_y << m_acc_z;
   else
@@ -194,7 +197,7 @@ bool RazorIMU::buildReport()
   ACTable actab_mag(3);
   actab_mag << "Mag X | Mag Y | Mag Z";
   actab_mag.addHeaderLines();
-  if(m_razor_mode == RazorAHRS::ACC_MAG_GYR_RAW 
+  if(m_razor_mode == RazorAHRS::ACC_MAG_GYR_RAW
     || m_razor_mode == RazorAHRS::ACC_MAG_GYR_CALIBRATED)
     actab_mag << m_mag_x << m_mag_y << m_mag_z;
   else
@@ -205,7 +208,7 @@ bool RazorIMU::buildReport()
   ACTable actab_gyr(3);
   actab_gyr << "Gyr X | Gyr Y | Gyr Z";
   actab_gyr.addHeaderLines();
-  if(m_razor_mode == RazorAHRS::ACC_MAG_GYR_RAW 
+  if(m_razor_mode == RazorAHRS::ACC_MAG_GYR_RAW
     || m_razor_mode == RazorAHRS::ACC_MAG_GYR_CALIBRATED)
     actab_gyr << m_gyr_x << m_gyr_y << m_gyr_z;
   else
