@@ -1,4 +1,7 @@
 ProcessConfig = iSonar_Micron
 {
+  AppTick   = 4
+  CommsTick = 4
 
+  SERIAL_PORT = /dev/micron
 }

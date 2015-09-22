@@ -7,7 +7,7 @@ ProcessConfig = iSonar
   AppTick   = 4
   CommsTick = 4
 
-  SERIAL_PORT = /dev/ttyUSB0
+  SERIAL_PORT = /dev/sonar
 
   RANGE = 15 //IN METERS
   //VOS = 1500 //Velocity Of Sound in m/s

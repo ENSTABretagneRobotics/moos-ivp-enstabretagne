@@ -2,6 +2,9 @@ ProcessConfig = iModem
 {
   AppTick   = 4
   CommsTick = 4
+
+  SERIAL_PORT = /dev/modem
+
   max_appcast_events = 8
 
   BAUD_RATE_CONF = 57600
