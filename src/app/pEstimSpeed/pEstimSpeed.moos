@@ -9,7 +9,7 @@ ProcessConfig = pEstimSpeed
    // The coeff matrix maps forces (Newton) to inputs ([-1,1], adimensional)
    // In this application, we will compute the inverse of this matrix,
    // so that from inputs we get forces, and can apply Newton's law of motion
-   COEFF_MATRIX = 1,1,0,1,-1,0,0,0,1
+   COEFF_MATRIX = 1,-1,0,1,1,0,0,0,1
 
    // The damping matrix maps square of speeds as inputs, and return a force.
    // In an underwater environment, the damping is not linear with respect
@@ -20,5 +20,24 @@ ProcessConfig = pEstimSpeed
    // Initial speed. In principle, we should aim for a null speed at
    // startup
    V0 = 0,0,0
+
+   // Name to receive the yaw
+   YAW_REGISTRATION_NAME = IMU_YAW
+
+   // Mass of the robot
+   MASS = 20
+
+   U1_SUBSCRIPTION_NAME = SET_THRUSTER_LEFT
+   U2_SUBSCRIPTION_NAME = SET_THRUSTER_RIGHT
+   U3_SUBSCRIPTION_NAME = SET_THRUSTER_VERTICAL
+   RESET_SUBSCRIPTION_NAME = RESET_ESTIM
+   GPS_E_SUBSCRIPTION_NAME = GPS_E
+   GPS_N_SUBSCRIPTION_NAME = GPS_N
+   KELLER_DEPTH_SUBSCRIPTION_NAME = DEPTH
+
+   // Names of the publications
+   POS_DEAD_RECKONING_PUBLICATION_NAME = POS_DEAD_RECKONING
+   SPEED_LOCAL_DEAD_RECKONING_PUBLICATION_NAME = SPEED_LOCAL_DEAD_RECKONING
+   SPEED_GLOBAL_DEAD_RECKONING_PUBLICATION_NAME = SPEED_GLOBAL_DEAD_RECKONING
 }
 

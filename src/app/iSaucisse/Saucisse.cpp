@@ -25,7 +25,8 @@ Saucisse::Saucisse()
 
   m_status_cameras = -2;  // undefined
   m_status_modem = -2;    // undefined
-  m_status_sonar = -2;    // undefined
+  m_status_micron = -2;   // undefined
+  m_status_miniking = -2; // undefined
   m_status_sounder = -2;  // undefined
   m_status_gps = -2;      // undefined
 
@@ -35,11 +36,14 @@ Saucisse::Saucisse()
 }
 
 //---------------------------------------------------------
-// Denstructor
+// Destructor
 
 Saucisse::~Saucisse()
 {
+  m_pololu->setAllThrustersValue(0.);
+  m_pololu->bipOnExit();
   delete m_pololu;
+  delete m_nuc;
 }
 
 //---------------------------------------------------------
@@ -68,31 +72,52 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
     if(key == "POWER_CAMERAS")
     {
       int success = m_pololu->turnOnBistableRelay(5, 4, (int)msg.GetDouble() == 1);
-      Notify("POWERED_CAMERAS", success >= 0 ? (int)msg.GetDouble() : -1);
+      m_status_cameras = success >= 0 ? (int)msg.GetDouble() : -1;
+      Notify("POWERED_CAMERAS", m_status_cameras);
     }
 
     else if(key == "POWER_GPS")
     {
       int success = m_pololu->turnOnBistableRelay(3, 2, (int)msg.GetDouble() == 1);
-      Notify("POWERED_GPS", success >= 0 ? (int)msg.GetDouble() : -1);
+      m_status_gps = success >= 0 ? (int)msg.GetDouble() : -1;
+      Notify("POWERED_GPS", m_status_gps);
     }
 
-    else if(key == "POWER_SOUNDER")
+    /*else if(key == "POWER_SOUNDER")
     {
       int success = m_pololu->turnOnBistableRelay(9, 8, (int)msg.GetDouble() == 1);
-      Notify("POWERED_SOUNDER", success >= 0 ? (int)msg.GetDouble() : -1);
+      m_status_sounder = success >= 0 ? (int)msg.GetDouble() : -1;
+      Notify("POWERED_SOUNDER", m_status_sounder);
     }
 
     else if(key == "POWER_SONAR")
     {
       int success = m_pololu->turnOnBistableRelay(1, 0, (int)msg.GetDouble() == 1);
-      Notify("POWERED_SONAR", success >= 0 ? (int)msg.GetDouble() : -1);
+      m_status_sonar = success >= 0 ? (int)msg.GetDouble() : -1;
+      Notify("POWERED_SONAR", m_status_sonar);
+    }*/
+
+    /* TO BE UPDATED */
+    else if(key == "POWER_MICRON")
+    {
+      int success = m_pololu->turnOnBistableRelay(1, 0, (int)msg.GetDouble() == 1);
+      m_status_micron = success >= 0 ? (int)msg.GetDouble() : -1;
+      Notify("POWERED_MICRON", m_status_micron);
     }
+
+    else if(key == "POWER_MINIKING")
+    {
+      int success = m_pololu->turnOnBistableRelay(9, 8, (int)msg.GetDouble() == 1);
+      m_status_miniking = success >= 0 ? (int)msg.GetDouble() : -1;
+      Notify("POWERED_MINIKING", m_status_miniking);
+    }
+    /* END OF TO BE UPDATED */
 
     else if(key == "POWER_MODEM")
     {
       int success = m_pololu->turnOnBistableRelay(7, 6, (int)msg.GetDouble() == 1);
-      Notify("POWERED_MODEM", success >= 0 ? (int)msg.GetDouble() : -1);
+      m_status_modem = success >= 0 ? (int)msg.GetDouble() : -1;
+      Notify("POWERED_MODEM", m_status_modem);
     }
 
     else if(key == "POWER_MODEM_EA")
@@ -104,11 +129,21 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
     else if(key == "POWER_ALL")
     {
       Notify("POWER_CAMERAS", msg.GetDouble());
+      MOOSPause(100);
       Notify("POWER_GPS", msg.GetDouble());
+      MOOSPause(100);
       Notify("POWER_SOUNDER", msg.GetDouble());
+      MOOSPause(100);
       Notify("POWER_SONAR", msg.GetDouble());
+      MOOSPause(100);
+      Notify("POWER_MICRON", msg.GetDouble());
+      MOOSPause(100);
+      Notify("POWER_MINIKING", msg.GetDouble());
+      MOOSPause(100);
       Notify("POWER_MODEM", msg.GetDouble());
+      MOOSPause(100);
       Notify("POWER_MODEM_EA", msg.GetDouble());
+      MOOSPause(100);
     }
 
     else if(key == "EMIT_BIPS")
@@ -118,32 +153,41 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
 
     else if(key == "SET_THRUSTERS_FORCE_MIN")
     {
-      int success = m_pololu->setAllThrustersValue(-1.);
+      Notify("SET_THRUSTER_LEFT", -1.);
+      Notify("SET_THRUSTER_RIGHT", -1.);
+      Notify("SET_THRUSTER_VERTICAL", -1.);
     }
 
     else if(key == "SET_THRUSTERS_FORCE_NEUTRAL")
     {
-      int success = m_pololu->setAllThrustersValue(0.);
+      Notify("SET_THRUSTER_LEFT", 0.);
+      Notify("SET_THRUSTER_RIGHT", 0.);
+      Notify("SET_THRUSTER_VERTICAL", 0.);
     }
 
     else if(key == "SET_THRUSTERS_FORCE_MAX")
     {
-      int success = m_pololu->setAllThrustersValue(1.);
+      Notify("SET_THRUSTER_LEFT", 1.);
+      Notify("SET_THRUSTER_RIGHT", 1.);
+      Notify("SET_THRUSTER_VERTICAL", 1.);
     }
 
     else if(key == "SET_THRUSTER_LEFT")
     {
       int success = m_pololu->setLeftThrusterValue(msg.GetDouble());
+      m_left_thruster_value = msg.GetDouble();
     }
 
     else if(key == "SET_THRUSTER_RIGHT")
     {
       int success = m_pololu->setRightThrusterValue(msg.GetDouble());
+      m_right_thruster_value = msg.GetDouble();
     }
 
     else if(key == "SET_THRUSTER_VERTICAL")
     {
       int success = m_pololu->setVerticalThrusterValue(msg.GetDouble());
+      m_vertical_thruster_value = msg.GetDouble();
     }
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
@@ -231,10 +275,12 @@ bool Saucisse::OnStartUp()
   m_pololu = new Pololu(m_device_name);
 
   if(m_reset_on_startup)
-    m_pololu->reset(m_reset_all_on,
-                    m_left_thruster_value, 
-                    m_right_thruster_value, 
-                    m_vertical_thruster_value);
+  {
+    Notify("POWER_ALL", m_reset_all_on ? "1" : "0");
+    Notify("SET_THRUSTER_LEFT", m_left_thruster_value);
+    Notify("SET_THRUSTER_RIGHT", m_right_thruster_value);
+    Notify("SET_THRUSTER_VERTICAL", m_vertical_thruster_value);
+  }
 
   registerVariables();  
   return true;
@@ -256,24 +302,22 @@ void Saucisse::registerVariables()
 
 bool Saucisse::buildReport() 
 {
-  m_msgs << "============================================ \n";
-  m_msgs << "iSaucisse status :                           \n";
-  m_msgs << "============================================ \n";
-  m_msgs << "\n";
-
   string error_message;
   bool pololu_ok = m_pololu->isReady(error_message);
   m_msgs << "Pololu status: \t" << (pololu_ok ? "ok" : error_message) << "\n";
   m_msgs << "\n";
   m_msgs << "Cameras: \t\t" << (m_status_cameras == -2 ? "?" : m_status_cameras + "") << "\n";
   m_msgs << "Modem: \t\t\t" << (m_status_modem == -2 ? "?" : m_status_modem + "") << "\n";
-  m_msgs << "Sonar: \t\t\t" << (m_status_sonar == -2 ? "?" : m_status_sonar + "") << "\n";
+  m_msgs << "Micron: \t\t\t" << (m_status_micron == -2 ? "?" : m_status_micron + "") << "\n";
+  m_msgs << "Miniking: \t\t" << (m_status_miniking == -2 ? "?" : m_status_miniking + "") << "\n";
   m_msgs << "Sounder: \t\t" << (m_status_sounder == -2 ? "?" : m_status_sounder + "") << "\n";
   m_msgs << "GPS: \t\t\t" << (m_status_gps == -2 ? "?" : m_status_gps + "") << "\n";
   m_msgs << "\n";
   m_msgs << "Left thruster: \t\t" << m_left_thruster_value << "\n";
   m_msgs << "Right thruster: \t" << m_right_thruster_value << "\n";
   m_msgs << "Vertical thruster: \t" << m_vertical_thruster_value << "\n";
+  m_msgs << "\n";
+  m_msgs << "NUC temperature: \t" << m_nuc->getTemperature() << "°C\n";
 
   return  true;
 }

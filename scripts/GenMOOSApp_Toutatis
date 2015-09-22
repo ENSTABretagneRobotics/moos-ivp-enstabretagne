@@ -76,7 +76,6 @@ class ${1} : public AppCastingMOOSApp
 
 
   private: // State variables
-    
 
 };
 
@@ -92,6 +91,10 @@ cat >> main.cpp <<EOF
 /************************************************************/
 
 #include <string>
+#include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
 #include "MBUtils.h"
 #include "documentation/MOOSAppDocumentation.h"
 #include "ColorParse.h"
@@ -99,13 +102,20 @@ cat >> main.cpp <<EOF
 
 using namespace std;
 
+${1} *obj${1};
+
+void kill_handler(int s);
+
 int main(int argc, char *argv[])
 {
+  obj${1} = new ${1};
+
   string mission_file;
   string run_command = argv[0];
   xmldoc::MOOSAppDocumentation documentation(argv[0]);
 
-  for(int i=1; i<argc; i++) {
+  for(int i=1; i<argc; i++)
+  {
     string argi = argv[i];
     if((argi=="-v") || (argi=="--version") || (argi=="-version"))
       documentation.showReleaseInfoAndExit();
@@ -130,11 +140,22 @@ int main(int argc, char *argv[])
   cout << "${2}${1} launching as " << run_command << endl;
   cout << termColor() << endl;
 
-  ${1} ${1};
+  // To catch the kill event
+  struct sigaction sigIntHandler;
+  sigIntHandler.sa_handler = kill_handler;
+  sigemptyset(&sigIntHandler.sa_mask);
+  sigIntHandler.sa_flags = 0;
+  sigaction(SIGTERM, &sigIntHandler, NULL);
 
-  ${1}.Run(run_command.c_str(), mission_file.c_str());
+  obj${1}->Run(run_command.c_str(), mission_file.c_str());
 
   return(0);
+}
+
+void kill_handler(int s)
+{
+  delete obj${1};
+  exit(0);
 }
 EOF
 
@@ -283,10 +304,6 @@ void ${1}::registerVariables()
 bool ${1}::buildReport() 
 {
   #if 0 // Keep these around just for template
-    m_msgs << "============================================ \n";
-    m_msgs << "File:                                        \n";
-    m_msgs << "============================================ \n";
-
     ACTable actab(4);
     actab << "Alpha | Bravo | Charlie | Delta";
     actab.addHeaderLines();

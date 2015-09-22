@@ -11,6 +11,7 @@
 #include "ACTable.h"
 #include "EstimSpeed.h"
 #include "Eigen/Dense"
+#include <cmath>
 
 using namespace std;
 using namespace Eigen;
@@ -40,21 +41,16 @@ EstimSpeed::EstimSpeed() {
     // Wild guesses until we receive
     // the configuration
     COEFF_MATRIX(0, 0) = 1;
-    COEFF_MATRIX(0, 1) = 1;
+    COEFF_MATRIX(0, 1) = -1;
     COEFF_MATRIX(0, 2) = 0;
     COEFF_MATRIX(1, 0) = 1;
-    COEFF_MATRIX(1, 1) = -1;
+    COEFF_MATRIX(1, 1) = 1;
     COEFF_MATRIX(1, 2) = 0;
     COEFF_MATRIX(2, 0) = 0;
     COEFF_MATRIX(2, 1) = 0;
     COEFF_MATRIX(2, 2) = 1;
 
-    COEFF_MATRIX_TRANSLATION = Matrix3d::Zero();
-
-    COEFF_MATRIX_TRANSLATION.block<3, 1>(0, 0) = COEFF_MATRIX.block<3, 1>(0, 0);
-    COEFF_MATRIX_TRANSLATION.block<3, 1>(0, 2) = COEFF_MATRIX.block<3, 1>(0, 2);
-
-    COEFF_MATRIX_TRANSLATION_INV = COEFF_MATRIX_TRANSLATION.inverse();
+    COEFF_MATRIX_INV = COEFF_MATRIX.inverse();
 
     DAMPING_MATRIX = Matrix3d::Identity()*0.4;
 
@@ -67,64 +63,36 @@ EstimSpeed::EstimSpeed() {
     X = Vector3d::Zero();
     V = Vector3d::Zero();
     v = Vector3d::Zero();
-
-    old_MOOSTime = MOOSTime();
-    mission_started=false;
 }
 
 bool EstimSpeed::OnNewMail(MOOSMSG_LIST &NewMail) {
     AppCastingMOOSApp::OnNewMail(NewMail);
 
-    old_MOOSTime = MOOSTime();
-
     MOOSMSG_LIST::iterator p;
     for (p = NewMail.begin(); p != NewMail.end(); p++) {
         CMOOSMsg &msg = *p;
         string key = msg.GetKey();
-
-        // The mission has started, 
-        if (key == "MISSION_STARTED") {
-            mission_started = true;
-        }// We receive the IMU yaw, in degrees
-        else if (key == "IMU_YAW") {
+       if (key == YAW_REGISTRATION_NAME) {
             this->imu_yaw = msg.GetDouble();
-            double cTheta = cos(MOOSDeg2Rad(imu_yaw));
-            double sTheta = sin(MOOSDeg2Rad(imu_yaw));
-            rot.block<2, 2>(0, 0) = (Matrix2d() << cTheta, -sTheta, sTheta, cTheta).finished();
         }// We receive LEFT thruster value, in [-1,1]]
-        else if (key == "U1_SIDE_THRUSTER_ONE") {
-            this->u(0) = msg.GetDouble();
-            // The Dead-reckoning is here
-            if (mission_started) {
-                double delta_t = MOOSTime() - old_MOOSTime;
-
-                X += delta_t*V;
-
-                Vector3d sumForcesLocal = (-DAMPING_MATRIX * (Vector3d(v(0) * v(0), v(1) * v(1), v(2) * v(2))) + COEFF_MATRIX_TRANSLATION_INV * u);
-                Vector3d sumForcesGlobal = rot.transpose() * sumForcesLocal;
-
-                V += delta_t * sumForcesGlobal / MASS;
-                v = rot*V;
-            }
-            old_MOOSTime = MOOSTime();
+        else if (key == U1_SUBSCRIPTION_NAME) {
+            this->u[0] = msg.GetDouble();
         }// We receive RIGHT thruster value, in [-1,1]]
-        else if (key == "U2_SIDE_THRUSTER_TWO") {
-            this->u(1) = msg.GetDouble();
+        else if (key == U2_SUBSCRIPTION_NAME) {
+            this->u[1] = msg.GetDouble();
         }// We receive VERTICAL thruster value, in [-1,1]]
-        else if (key == "U3_VERTICAL_THRUSTER") {
-            this->u(2) = msg.GetDouble();
-        } else if (key == "GPS_E") {
-            if (!mission_started) {
-                X[0] = msg.GetDouble();
-            }
-        } else if (key == "GPS_N") {
-            if (!mission_started) {
-                X[1] = msg.GetDouble();
-            }
-        } else if (key == "KELLER_DEPTH") {
-            if (!mission_started) {
-                X[2] = -msg.GetDouble();
-            }
+        else if (key == U3_SUBSCRIPTION_NAME) {
+            this->u[2] = msg.GetDouble();
+        } else if (key == GPS_E_SUBSCRIPTION_NAME) {
+            X_GPS_PRESSURE[0] = msg.GetDouble();
+        } else if (key == GPS_N_SUBSCRIPTION_NAME) {
+            X_GPS_PRESSURE[1] = msg.GetDouble();
+        } else if (key == KELLER_DEPTH_SUBSCRIPTION_NAME) {
+            X_GPS_PRESSURE[2] = msg.GetDouble();
+        } else if (key == RESET_SUBSCRIPTION_NAME) {
+            X = X_GPS_PRESSURE;
+            V = Vector3d::Zero();
+            v = Vector3d::Zero();
         } else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
             reportRunWarning("Unhandled Mail: " + key);
     }
@@ -138,27 +106,48 @@ bool EstimSpeed::OnConnectToServer() {
 
 bool EstimSpeed::Iterate() {
     AppCastingMOOSApp::Iterate();
-    if (mission_started) {
 
-        stringstream ss;
-        ss << X(0) << "," << X(1) << "," << X(2);
+    double cTheta = cos(imu_yaw);
+    double sTheta = sin(imu_yaw);
+    rot.block<2, 2>(0, 0) = (Matrix2d() << cTheta, -sTheta, sTheta, cTheta).finished();
 
-        Notify("POS_DEAD_RECKONING", ss.str());
+    // The Dead-reckoning is here
+    double delta_t = MOOSTime() - old_MOOSTime;
+    old_MOOSTime = MOOSTime();
 
-        ss.clear();
-        ss.str(std::string());
+    X += delta_t*V;
+    Vector3d vS;
 
-        ss << v(0) << "," << v(1) << "," << v(2);
-        Notify("SPEED_LOCAL_DEAD_RECKONING", ss.str());
+    vS << v[0] * abs(v[0]), v[1] * abs(v[1]), v[2] * abs(v[2]);
 
-        ss.clear();
-        ss.str(std::string());
+    Vector3d sumForcesLocal = (-10 * DAMPING_MATRIX * vS + COEFF_MATRIX_INV * u);
+    Vector3d sumForcesGlobal = rot * sumForcesLocal;
 
-        ss << V(0) << "," << V(1) << "," << V(2);
-        ss.str(std::string());
+    V += delta_t * sumForcesGlobal / MASS;
+    v = rot.transpose() * V;
 
-        Notify("SPEED_GLOBAL_DEAD_RECKONING", ss.str());
-    }
+    stringstream ss;
+
+    ss << X[0] << "," << X[1] << "," << X[2];
+    Notify(POS_DEAD_RECKONING_PUBLICATION_NAME, ss.str());
+
+    ss.clear();
+    ss.str(std::string());
+
+    ss << v[0] << "," << v[1] << "," << v[2];
+    Notify(SPEED_LOCAL_DEAD_RECKONING_PUBLICATION_NAME, ss.str());
+
+    Notify(POS_DEAD_RECKONING_E_PUBLICATION_NAME, X[0]);
+    Notify(POS_DEAD_RECKONING_N_PUBLICATION_NAME, X[1]);
+    Notify(POS_DEAD_RECKONING_U_PUBLICATION_NAME, X[2]);
+
+    ss.clear();
+    ss.str(std::string());
+
+    ss << V[0] << "," << V[1] << "," << V[2];
+    Notify(SPEED_GLOBAL_DEAD_RECKONING_PUBLICATION_NAME, ss.str());
+
+    ss.str(std::string());
 
     AppCastingMOOSApp::PostReport();
     return (true);
@@ -194,10 +183,7 @@ bool EstimSpeed::OnStartUp() {
                         i++;
                     }
                 }
-                COEFF_MATRIX_TRANSLATION.block<3, 1>(0, 0) = COEFF_MATRIX.block<3, 1>(0, 0);
-                COEFF_MATRIX_TRANSLATION.block<3, 1>(0, 2) = COEFF_MATRIX.block<3, 1>(0, 2);
-
-                COEFF_MATRIX_TRANSLATION_INV = COEFF_MATRIX_TRANSLATION.inverse();
+                COEFF_MATRIX_INV = COEFF_MATRIX.inverse();
             } else {
                 //incorrect array size
                 //send warning
@@ -224,10 +210,51 @@ bool EstimSpeed::OnStartUp() {
                 //send warning
                 reportUnhandledConfigWarning("Error while parsing DAMPING_MATRIX: incorrect number of elements");
             }//end of else
-
             handled = true;
         } else if (param == "MASS") {
             this->MASS = atof(value.c_str());
+            handled = true;
+        } else if (param == "YAW_REGISTRATION_NAME") {
+            this->YAW_REGISTRATION_NAME = value;
+            handled = true;
+        } else if (param == "U1_SUBSCRIPTION_NAME") {
+            this->U1_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "U2_SUBSCRIPTION_NAME") {
+            this->U2_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "U3_SUBSCRIPTION_NAME") {
+            this->U3_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "POS_DEAD_RECKONING_PUBLICATION_NAME") {
+            this->POS_DEAD_RECKONING_PUBLICATION_NAME = value;
+            handled = true;
+        } else if (param == "SPEED_LOCAL_DEAD_RECKONING_PUBLICATION_NAME") {
+            this->SPEED_LOCAL_DEAD_RECKONING_PUBLICATION_NAME = value;
+            handled = true;
+        } else if (param == "SPEED_GLOBAL_DEAD_RECKONING_PUBLICATION_NAME") {
+            this->SPEED_GLOBAL_DEAD_RECKONING_PUBLICATION_NAME = value;
+            handled = true;
+        } else if (param == "RESET_SUBSCRIPTION_NAME") {
+            this->RESET_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "GPS_E_SUBSCRIPTION_NAME") {
+            this->GPS_E_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "GPS_N_SUBSCRIPTION_NAME") {
+            this->GPS_N_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "KELLER_DEPTH_SUBSCRIPTION_NAME") {
+            this->KELLER_DEPTH_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "POS_DEAD_RECKONING_E_PUBLICATION_NAME") {
+            this->POS_DEAD_RECKONING_E_PUBLICATION_NAME = value;
+            handled = true;
+        } else if (param == "POS_DEAD_RECKONING_N_PUBLICATION_NAME") {
+            this->POS_DEAD_RECKONING_N_PUBLICATION_NAME = value;
+            handled = true;
+        } else if (param == "POS_DEAD_RECKONING_U_PUBLICATION_NAME") {
+            this->POS_DEAD_RECKONING_U_PUBLICATION_NAME = value;
             handled = true;
         }
         if (!handled)
@@ -245,14 +272,14 @@ bool EstimSpeed::OnStartUp() {
 void EstimSpeed::registerVariables() {
 
     AppCastingMOOSApp::RegisterVariables();
-    Register("IMU_YAW", 0);
-    Register("U1_SIDE_THRUSTER_ONE", 0);
-    Register("U2_SIDE_THRUSTER_TWO", 0);
-    Register("U3_VERTICAL_THRUSTER", 0);
-    Register("MISSION_START", 0);
-    Register("GPS_E", 0);
-    Register("GPS_N", 0);
-    Register("KELLER_DEPTH", 0);
+    Register(YAW_REGISTRATION_NAME, 0);
+    Register(U1_SUBSCRIPTION_NAME, 0);
+    Register(U2_SUBSCRIPTION_NAME, 0);
+    Register(U3_SUBSCRIPTION_NAME, 0);
+    Register(RESET_SUBSCRIPTION_NAME, 0);
+    Register(GPS_E_SUBSCRIPTION_NAME, 0);
+    Register(GPS_N_SUBSCRIPTION_NAME, 0);
+    Register(KELLER_DEPTH_SUBSCRIPTION_NAME, 0);
 }
 
 bool EstimSpeed::buildReport() {
@@ -261,18 +288,18 @@ bool EstimSpeed::buildReport() {
     m_msgs << "============================================ \n";
     m_msgs << "\n";
 
-    ACTable actab(3);
-    actab << "Started | Yaw | Mass ";
+    ACTable actab(2);
+    actab << "Yaw | Mass ";
     actab.addHeaderLines();
-    actab << mission_started << imu_yaw << MASS;
+    actab << imu_yaw << MASS;
     m_msgs << actab.getFormattedString();
 
     actab = ACTable(4);
     actab << " . | X | V | v";
     actab.addHeaderLines();
-    actab << "(0)" << X(0) << V(0) << v(0);
-    actab << "(1)" << X(1) << V(1) << v(1);
-    actab << "(2)" << X(2) << V(2) << v(2);
+    actab << "(0)" << X[0] << V[0] << v[0];
+    actab << "(1)" << X[1] << V[1] << v[1];
+    actab << "(2)" << X[2] << V[2] << v[2];
     m_msgs << actab.getFormattedString();
 
     actab = ACTable(4);
@@ -282,11 +309,12 @@ bool EstimSpeed::buildReport() {
     actab << "Fvy" << DAMPING_MATRIX(1, 0) << DAMPING_MATRIX(1, 1) << DAMPING_MATRIX(1, 2);
     actab << "Fvz" << DAMPING_MATRIX(2, 0) << DAMPING_MATRIX(2, 1) << DAMPING_MATRIX(2, 2);
     m_msgs << actab.getFormattedString();
+
     actab = ACTable(4);
     actab << " (local) | u1 | u2 | u3";
-    actab << "Fx" << COEFF_MATRIX_TRANSLATION_INV(0, 0) << COEFF_MATRIX_TRANSLATION_INV(0, 1) << COEFF_MATRIX_TRANSLATION_INV(0, 2);
-    actab << "Fy" << COEFF_MATRIX_TRANSLATION_INV(1, 0) << COEFF_MATRIX_TRANSLATION_INV(1, 1) << COEFF_MATRIX_TRANSLATION_INV(1, 2);
-    actab << "Fz" << COEFF_MATRIX_TRANSLATION_INV(2, 0) << COEFF_MATRIX_TRANSLATION_INV(2, 1) << COEFF_MATRIX_TRANSLATION_INV(2, 2);
+    actab << "Fx" << COEFF_MATRIX_INV(0, 0) << COEFF_MATRIX_INV(0, 1) << COEFF_MATRIX_INV(0, 2);
+    actab << "Fy" << COEFF_MATRIX_INV(1, 0) << COEFF_MATRIX_INV(1, 1) << COEFF_MATRIX_INV(1, 2);
+    actab << "Fz" << COEFF_MATRIX_INV(2, 0) << COEFF_MATRIX_INV(2, 1) << COEFF_MATRIX_INV(2, 2);
     m_msgs << actab.getFormattedString();
     return (true);
 }

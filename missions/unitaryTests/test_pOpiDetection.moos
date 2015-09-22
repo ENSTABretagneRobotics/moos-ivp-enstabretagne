@@ -1,0 +1,26 @@
+ServerHost = localhost
+ServerPort = 9000
+Community  = AUV
+
+//------------------------------------------
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+
+  Run = MOOSDB       	  @ NewConsole = false
+  Run = pBuoyDetection  @ NewConsole = true
+}
+
+//------------------------------------------------
+ProcessConfig = pBuoyDetection
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  VARIABLE_IMAGE_NAME = iCamera_SIDE
+  VARIABLE_WHEN_FOUND = PIPE_DETECTION
+  SHOW_PROCESS = true
+  SAVE_IN_FOLDER = /home/schvarcz/Desktop/
+  IMAGE_NAME_PATTERN = image_%H_%M_%S.jpg
+  FOLDER_NAME_PATTERN = DATASET_%F_%H-%M-%S
+}
