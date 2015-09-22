@@ -34,22 +34,17 @@
               </moosvar>
 
               <moosvar>
-                 <varname>SONAR_RAW_DATA</varname>
+                 <varname>SONAR_RAW_DATA_(MICRON, MINIKING, *)</varname>
                  <vartype>binary</vartype>
                  <varinfo></varinfo>
               </moosvar>
 
               <moosvar>
-                 <varname>HEADING</varname>
+                 <varname>SONAR_CONTRAST_(MINIKING, MICRON, *)</varname>
                  <vartype>double</vartype>
                  <varinfo></varinfo>
               </moosvar>
 
-              <moosvar>
-                 <varname>YAW</varname>
-                 <vartype>double</vartype>
-                 <varinfo></varinfo>
-              </moosvar>
            </subscriptions>
            <publications>
               <!--
