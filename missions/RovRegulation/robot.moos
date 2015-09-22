@@ -21,7 +21,7 @@ ProcessConfig = ANTLER
   Run = uMACView        @ NewConsole = false
   Run = uProcessWatch   @ NewConsole = false
 
-  //Run = pLogger         @ NewConsole = false
+  Run = pLogger         @ NewConsole = false
   Run = pShare          @ NewConsole = false 
 
   // ************** ENGINE CONTROL *********
@@ -41,6 +41,37 @@ ProcessConfig = ANTLER
   // ************* REGULATION ***************
   Run = pSimplePID      @ NewConsole = false ~pSimplePID_depth
   Run = pSimplePID      @ NewConsole = false ~pSimplePID_heading
+  
+  Run = uNavScreen @ NewConsole = true
+  //Run = uTimerScript @ NewConsole = true
+}
+
+ProcessConfig = uTimerScript
+{
+  AppTick = 2
+  CommsTick = 2
+
+  //Start point 1, submerge
+  event = var=DESIRED_DEPTH,  time=000, val=1.6
+  //Go closer to the wall
+  event = var=DESIRED_HEADING,time=000, val=-35
+  event = var=DESIRED_FX,     time=010, val=1
+  event = var=DESIRED_FX,     time=030, val=-1
+  event = var=DESIRED_FX,     time=033, val=0
+  //90 deg turn
+  event = var=DESIRED_HEADING,time=033, val=45
+  //Go in front of the gates
+  event = var=DESIRED_FX,     time=043, val=1
+  event = var=DESIRED_FX,     time=128, val=-1
+  event = var=DESIRED_FX,     time=131, val=0
+  //90 deg turn
+  event = var=DESIRED_HEADING,time=131, val=130
+  //Go through the gates
+  event = var=DESIRED_FX,     time=141, val=1
+  event = var=DESIRED_FX,     time=206, val=-1
+  event = var=DESIRED_FX,     time=209, val=0
+  //Surface
+  event = var=DESIRED_DEPTH,  time=220, val=0
 }
 
 //------------------------------------------------
@@ -71,7 +102,7 @@ ProcessConfig = pSimplePID_heading
   CommsTick = 10
 
   //KP = 0.1
-  KP = 0.05
+  KP = 0.1
   //KI = 0.0001
   //KD = -0.2
   //KW = 0.0
@@ -111,6 +142,8 @@ ProcessConfig = pMixThrusters
 
   FORWARD_COEFF = 1.0
   BACKWARD_COEFF = 1.0
+
+  //SATURATION_MOD = SIGMOID
 }
 
 //------------------------------------------------
@@ -227,7 +260,7 @@ ProcessConfig = iCamera1
 
    VARIABLE_IMAGE_NAME   = CAMERA_FRONT
    IDENTIFIANT_CV_CAMERA = 1
-   DISPLAY_IMAGE         = false
+   DISPLAY_IMAGE         = true
    INVERT_IMAGE          = false
 
    LARGEUR_IMAGE_CAMERA  = 360
@@ -244,7 +277,7 @@ ProcessConfig = iCamera2
 
    VARIABLE_IMAGE_NAME   = CAMERA_SIDE
    IDENTIFIANT_CV_CAMERA = 0
-   DISPLAY_IMAGE         = false
+   DISPLAY_IMAGE         = true
    INVERT_IMAGE          = false
 
    LARGEUR_IMAGE_CAMERA  = 360
@@ -287,4 +320,12 @@ ProcessConfig = pLogger
 
   AsyncLog        = true
   WildCardLogging = true
+}
+
+
+//------------------------------------------------
+ProcessConfig = uNavScreen
+{
+  AppTick   = 4
+  CommsTick = 4
 }
