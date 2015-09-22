@@ -39,7 +39,8 @@
               <moosvar>
                  <varname>MINIKING_PARAMS</varname>
                  <vartype>string</vartype>
-                 <varinfo>uPokeDB MINIKING_PARAMS="Range=25,Gain=45,Continuous=true, VoS=1500, invert=1, nBins=200, AngleStep=, LeftLimit=, RightLimit="!!!Gain in percent
+                 <varinfo>uPokeDB MINIKING_PARAMS="Range=25,Gain=45,Continuous=true, VoS=1500, invert=1, nBins=200, AngleStep=, LeftLimit=, RightLimit="!!!Gain in percent</varinfo>
+              </moosvar>
               <moosvar>
                  <varname>MICRON_PARAMS</varname>
                  <vartype>string</vartype>
