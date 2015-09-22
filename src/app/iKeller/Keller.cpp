@@ -79,6 +79,10 @@ bool Keller::OnNewMail(MOOSMSG_LIST &NewMail)
       m_bKellerPolling = false;
       m_bKellerZeroPressure = msg.GetDouble();
     }
+    else if(key == "REF_DEPTH")
+    {
+      m_dReferenceDepth = msg.GetDouble();
+    }
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
       reportRunWarning("Unhandled Mail: " + key);
@@ -214,8 +218,9 @@ bool Keller::ReadPressure()
         value.c[1] = (uint8)buf[4];
         value.c[0] = (uint8)buf[5];
         // printf("value read : %f\n",value.v);
-        m_lastP_value = value.v*1.0e5/(1000.0*9.81);;
-        Notify("KELLER_DEPTH",m_lastP_value);
+        m_lastP_value = (value.v*1.0e5/(1000.0*9.81)) - m_dReferenceDepth;
+        //immersionEnMetre = -(value.v-1)*1.0e5/(1000.0*9.81) = 0.3m~0.4m @ Piompino by FLB, 19Sept2015
+        Notify("DEPTH",m_lastP_value);
       }
     }
   }
@@ -299,7 +304,7 @@ bool Keller::ReadTemperature()
           value.c[0] = (uint8)buf[5];
           // printf("value read : %f\n",value.v);
           m_lastT_value = value.v;
-          Notify("KELLER_TEMPERATURE",m_lastT_value);
+          Notify("WATER_TEMPERATURE",m_lastT_value);
         }
       }
     }
@@ -436,6 +441,11 @@ bool Keller::OnStartUp()
       m_bTemperatureRequested = MOOSStrCmp(value.c_str(),"TRUE");
       handled = true;
     }
+    else if(param == "REF_DEPTH")
+    {
+      m_dReferenceDepth = atof(value.c_str());
+      handled = true;
+    }
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
@@ -483,15 +493,12 @@ bool Keller::buildReport()
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
   #endif
-    m_msgs << "============================================ \n";
-    m_msgs << "iKeller Status:                              \n";
-    m_msgs << "============================================ \n";
 
-    ACTable actab(5);
-    actab << "Serial Port | Serial Initialized | Keller Initialized | Last Pressure value | Last Temperature value";
-    actab.addHeaderLines();
-    actab << m_port_name << m_port_is_initialized << m_bKellerInitialized << m_lastP_value << m_lastT_value;
-    m_msgs << actab.getFormattedString();
+  ACTable actab(5);
+  actab << "Serial Port | Serial Initialized | Keller Initialized | Depth | Temperature";
+  actab.addHeaderLines();
+  actab << m_port_name << m_port_is_initialized << m_bKellerInitialized << m_lastP_value << m_lastT_value;
+  m_msgs << actab.getFormattedString();
 
   return true;
 }

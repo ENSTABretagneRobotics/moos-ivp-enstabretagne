@@ -10,6 +10,10 @@
  */
 
 #include <string>
+#include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
 #include "MBUtils.h"
 #include "documentation/MOOSAppDocumentation.h"
 #include "ColorParse.h"
@@ -18,10 +22,16 @@
 
 using namespace std;
 
+GPSoE *objGPSoE;
+
+void kill_handler(int s);
+
 int main(int argc, char *argv[])
 {
-	string mission_file;
-	string run_command = argv[0];
+  objGPSoE = new GPSoE;
+
+  string mission_file;
+  string run_command = argv[0];
   xmldoc::MOOSAppDocumentation documentation(argv[0]);
 
   for(int i=1; i<argc; i++) {
@@ -44,16 +54,27 @@ int main(int argc, char *argv[])
 
   if(mission_file == "")
     documentation.showHelpAndExit();
-	else
-	{
-		cout << termColor("green");
-		cout << "Lancement de " << run_command << endl;
-		cout << termColor() << endl;
+  else
+  {
+  	cout << termColor("green");
+  	cout << "Lancement de " << run_command << endl;
+  	cout << termColor() << endl;
 
-		GPSoE GPSoE;
-		GPSoE.Run(run_command.c_str(), mission_file.c_str());
-	}
+    // To catch the kill event
+    struct sigaction sigIntHandler;
+    sigIntHandler.sa_handler = kill_handler;
+    sigemptyset(&sigIntHandler.sa_mask);
+    sigIntHandler.sa_flags = 0;
+    sigaction(SIGTERM, &sigIntHandler, NULL);
 
-	return(0);
+    objGPSoE->Run(run_command.c_str(), mission_file.c_str());
+  }
+
+  return(0);
 }
 
+void kill_handler(int s)
+{
+  delete objGPSoE;
+  exit(0);
+}

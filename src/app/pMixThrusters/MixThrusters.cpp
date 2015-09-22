@@ -6,6 +6,7 @@
 /************************************************************/
 
 #include <iterator>
+#include <list>
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "MixThrusters.h"
@@ -21,10 +22,10 @@ MixThrusters::MixThrusters() {
     // Wild guesses until we receive
     // the configuration
     COEFF_MATRIX(0, 0) = 1;
-    COEFF_MATRIX(0, 1) = 1;
+    COEFF_MATRIX(0, 1) = -1;
     COEFF_MATRIX(0, 2) = 0;
     COEFF_MATRIX(1, 0) = 1;
-    COEFF_MATRIX(1, 1) = -1;
+    COEFF_MATRIX(1, 1) = 1;
     COEFF_MATRIX(1, 2) = 0;
     COEFF_MATRIX(2, 0) = 0;
     COEFF_MATRIX(2, 1) = 0;
@@ -32,6 +33,11 @@ MixThrusters::MixThrusters() {
 
     desiredForces = Vector3d::Zero();
     u = Vector3d::Zero();
+
+    this->saturation_mod = NORMALIZATION;
+
+    m_forward_coeff = 1.0;
+    m_backward_coeff = 1.0;
 }
 
 //---------------------------------------------------------
@@ -54,7 +60,6 @@ bool MixThrusters::OnNewMail(MOOSMSG_LIST &NewMail) {
         } else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
             reportRunWarning("Unhandled Mail: " + key);
     }
-
     return true;
 }
 
@@ -63,17 +68,55 @@ bool MixThrusters::OnConnectToServer() {
     return true;
 }
 
+void MixThrusters::saturationSigmoid(Eigen::Vector3d &u) {
+
+    double maxU = fmax(u[0], u[1]);
+
+    u[0] = fmin(maxU, 1)*(2.0 / (1 + exp(-u[0] / 0.333)) - 1);
+    u[1] = fmin(maxU, 1)*(2.0 / (1 + exp(-u[1] / 0.333)) - 1);
+
+
+    // Normalize so that u3 is in [-1,1]
+    if (fabs(u[2]) > 1) {
+        u[2] /= fabs(u[2]);
+    }
+}
+
+void MixThrusters::saturationNormalization(Eigen::Vector3d &u) {
+    // Saturation
+    if (fmax(fabs(u[0]), fabs(u[1])) > 1) {
+        u.block<2, 1>(0, 0) /= fmax(fabs(u[0]), fabs(u[1]));
+    }
+
+    // Normalize so that u3 is in [-1,1]
+    if (fabs(u[2]) > 1) {
+        u[2] /= fabs(u[2]);
+    }
+}
+
 bool MixThrusters::Iterate() {
     AppCastingMOOSApp::Iterate();
 
     u = COEFF_MATRIX*desiredForces;
 
-    // Saturation
-    u.block<2, 1>(0, 0) /= fmax(fabs(u[0]), fabs(u[1]));
-    
-    Notify(U1_PUBLICATION_NAME,u[0]);
-    Notify(U2_PUBLICATION_NAME,u[1]);
-    Notify(U3_PUBLICATION_NAME,u[2]);
+    u[0] = SensCorrection(u[0]);
+    u[1] = SensCorrection(u[1]);
+
+    switch (saturation_mod) {
+        case NORMALIZATION:
+            saturationNormalization(u);
+            break;
+        case SIGMOID:
+            saturationSigmoid(u);
+            break;
+        default:
+            // Shouldn't happen, but...
+            saturationNormalization(u);
+    }
+
+    Notify(U1_PUBLICATION_NAME, u[0]);
+    Notify(U2_PUBLICATION_NAME, u[1]);
+    Notify(U3_PUBLICATION_NAME, u[2]);
 
     AppCastingMOOSApp::PostReport();
     return true;
@@ -82,10 +125,14 @@ bool MixThrusters::Iterate() {
 bool MixThrusters::OnStartUp() {
     AppCastingMOOSApp::OnStartUp();
 
+    string res;
     STRING_LIST sParams;
     m_MissionReader.EnableVerbatimQuoting(false);
     if (!m_MissionReader.GetConfiguration(GetAppName(), sParams))
         reportConfigWarning("No config block found for " + GetAppName());
+    if (!m_MissionReader.GetValue("COEFF_MATRIX", res)) {
+        reportConfigWarning("No COEFF_MATRIX config found for " + GetAppName());
+    }
 
     STRING_LIST::iterator p;
     sParams.reverse();
@@ -113,7 +160,15 @@ bool MixThrusters::OnStartUp() {
                 //send warning
                 reportUnhandledConfigWarning("Error while parsing COEFF_MATRIX: incorrect number of elements");
             }//end of else
-
+            handled = true;
+        } else if (param == "SATURATION_MOD") {
+            if (value == "NORMALIZATION") {
+                this->saturation_mod = NORMALIZATION;
+                handled = true;
+            } else if (value == "SIGMOID") {
+                this->saturation_mod = SIGMOID;
+                handled = true;
+            }
         } else if (param == "FX_SUBSCRIPTION_NAME") {
             FX_SUBSCRIPTION_NAME = value;
             handled = true;
@@ -123,7 +178,7 @@ bool MixThrusters::OnStartUp() {
         } else if (param == "FZ_SUBSCRIPTION_NAME") {
             FZ_SUBSCRIPTION_NAME = value;
             handled = true;
-        }else if (param == "U1_PUBLICATION_NAME") {
+        } else if (param == "U1_PUBLICATION_NAME") {
             U1_PUBLICATION_NAME = value;
             handled = true;
         } else if (param == "U2_PUBLICATION_NAME") {
@@ -132,26 +187,30 @@ bool MixThrusters::OnStartUp() {
         } else if (param == "U3_PUBLICATION_NAME") {
             U3_PUBLICATION_NAME = value;
             handled = true;
+        }else if (param == "FORWARD_COEFF") {
+            m_forward_coeff = atof(value.c_str());
+            handled = true;
+        } else if (param == "BACKWARD_COEFF") {
+            m_backward_coeff = atof(value.c_str());
+            handled = true;
         }
         if (!handled)
             reportUnhandledConfigWarning(orig);
 
-        registerVariables();
-        return true;
     }
+    registerVariables();
+    return true;
 }
 
 void MixThrusters::registerVariables() {
     AppCastingMOOSApp::RegisterVariables();
-    // Register("FOOBAR", 0);
+    Register(FX_SUBSCRIPTION_NAME, 0);
+    Register(RZ_SUBSCRIPTION_NAME, 0);
+    Register(FZ_SUBSCRIPTION_NAME, 0);
 }
 
 bool MixThrusters::buildReport() {
 #if 0 // Keep these around just for template
-    m_msgs << "============================================ \n";
-    m_msgs << "File:                                        \n";
-    m_msgs << "============================================ \n";
-
     ACTable actab(4);
     actab << "Alpha | Bravo | Charlie | Delta";
     actab.addHeaderLines();
@@ -160,4 +219,11 @@ bool MixThrusters::buildReport() {
 #endif
 
     return true;
+}
+
+double MixThrusters::SensCorrection(double val){
+    if(val>0)
+        return val * m_forward_coeff;
+    else
+        return val * m_forward_coeff;
 }

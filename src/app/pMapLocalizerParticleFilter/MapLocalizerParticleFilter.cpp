@@ -248,10 +248,6 @@ void MapLocalizerParticleFilter::registerVariables() {
 }
 
 bool MapLocalizerParticleFilter::buildReport() {
-    m_msgs << "============================================ \n";
-    m_msgs << "File: MapLocalizerParticlerFilter.cpp        \n";
-    m_msgs << "============================================ \n";
-
     ACTable actab(4);
     actab << "Nb. Particles | SpeedVar | HeadingVar | Alt. Var ";
     actab.addHeaderLines();

@@ -5,7 +5,7 @@
 #--------------------------------------------------------
 
 SET(SRC
-  EchoSounder.cpp
+  Sounder.cpp
   main.cpp
 )
 

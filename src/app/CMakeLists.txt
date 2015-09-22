@@ -30,6 +30,7 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
   ADD_SUBDIRECTORY(pController)
   ADD_SUBDIRECTORY(pWallDetector)
   ADD_SUBDIRECTORY(pSimplePID)
+  ADD_SUBDIRECTORY(pOpiDetection)
 
 # 'u' apps
 if (WITH_JOYSTICK)
@@ -61,6 +62,7 @@ if (WITH_GPSOE)
   ADD_SUBDIRECTORY(iGPSoE)
 endif (WITH_GPSOE)
   ADD_SUBDIRECTORY(uSensorsViewer)
+  ADD_SUBDIRECTORY(uNavScreen)
 if (WITH_CAMERA)
   ADD_SUBDIRECTORY(iCamera)
 endif(WITH_CAMERA)
@@ -71,6 +73,7 @@ endif(WITH_INTERVAL_FILTER)
 ADD_SUBDIRECTORY(pTrustGPS)
 ADD_SUBDIRECTORY(pEstimSpeed)
 ADD_SUBDIRECTORY(pMixThrusters)
+ADD_SUBDIRECTORY(pLatLon2LocalGrid)
 
 ##############################################################################
 #                           END of CMakeLists.txt

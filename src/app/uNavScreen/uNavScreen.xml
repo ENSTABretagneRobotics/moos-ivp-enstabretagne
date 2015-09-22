@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- This file contains iGPS documentation -->
+<!-- This file contains uNavScreen documentation -->
 <?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?> 
 <xmldoc>
   <moosapp>
 
      <info>
-        <name>iGPS</name>
+        <name>uNavScreen</name>
         <organization>Toutatis AUVs - ENSTA Bretagne</organization>
         <date>2015</date>
         <authors>
-           <author>Thomas Le Mezo</author>
+           <author>Simon Rohou</author>
         </authors>
         <licence>MIT</licence>
      </info>
@@ -20,31 +20,13 @@
         </synopsis>
         <interface>
            <subscriptions>
-               <moosvar>
-                 <varname>GPS_RAW_NMEA</varname>
+              <!--
+              <moosvar>
+                 <varname>EXAMPLE_VAR_IN</varname>
                  <vartype>string</vartype>
-                 <varinfo>Raw NMEA sentence</varinfo>
+                 <varinfo>description of the MOOSVar</varinfo>
               </moosvar>
-              <moosvar>
-                 <varname>GPS_SIG</varname>
-                 <vartype>int</vartype>
-                 <varinfo>Signal quality</varinfo>
-              </moosvar>
-              <moosvar>
-                 <varname>GPS_FIX</varname>
-                 <vartype>int</vartype>
-                 <varinfo>Signal status (3=3D, 2=2D)</varinfo>
-              </moosvar>
-              <moosvar>
-                 <varname>GPS_LAT</varname>
-                 <vartype>string</vartype>
-                 <varinfo>Latitude (degree)</varinfo>
-              </moosvar>
-              <moosvar>
-                 <varname>GPS_LONG</varname>
-                 <vartype>string</vartype>
-                 <varinfo>Longitude (degree)</varinfo>
-              </moosvar>
+              -->
            </subscriptions>
            <publications>
               <!--

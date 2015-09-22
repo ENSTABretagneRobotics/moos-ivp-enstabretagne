@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- This file contains iSounder documentation -->
-<?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?> 
+<?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?>
 <xmldoc>
   <moosapp>
 
@@ -16,41 +16,66 @@
 
      <documentation>
         <synopsis>
+          This app can connect to Tritech Sonars Miniking and Micron. The app will publish SOME_VAR_MICRON or SOME_VAR_MINIKING regarding the sonar that is plugged.
 
+          The app subscribe to *_PARAMS and *_POLL with *={MINIKING_MICRON} regarding which sonar you wish to control.
+
+          As the app knows which sonar is plugged when dialing with the sonar, it's difficult to separate power management for each sonar, if you have two sonars, rebooting one will reboot the other.
+
+          That also implies that if you have two sonars powered up and you want to get one off, you will have to power off both and power up the one you need.
+
+          Range = [2;100] in meters
+          Gain =[0;100] Initial Gain of the receiver in percent 0..100%, from doc, was in unit 0..210 = 0..+80dB = 0..100%, typically 20 percent
+          Continuous = {0,false,1,true} if false, scan sector defined by RightLeftLimits, continuous otherwise.
+          VoS = Velocity of sound in m/s, typically 1500m/s
+          invert = 0=Upright, 1=Inverted Orientation
+          nBins = [200] Number of bins generated after a ping
+          AngleStep = In degrees: Ultimate Resolution (0.225°), Mgr Resolution (0.45°), Medium Resolution (0.9°), Low Resolution (1.8°)
+          LeftLimit = For a sector scan (Continuous = {0,false}), in degrees
+          RightLimit = For a sector scan (Continuous = {0,false}), in degrees
         </synopsis>
         <interface>
            <subscriptions>
               <moosvar>
-                 <varname>SONAR_PARAMS</varname>
+                 <varname>MINIKING_PARAMS</varname>
                  <vartype>string</vartype>
-                 <varinfo>SONAR_PARAMS = Range=,Gain=,Continuous=  </varinfo>
+                 <varinfo>uPokeDB MINIKING_PARAMS="Range=25,Gain=45,Continuous=true, VoS=1500, invert=1, nBins=200, AngleStep=, LeftLimit=, RightLimit="!!!Gain in percent
+              <moosvar>
+                 <varname>MICRON_PARAMS</varname>
+                 <vartype>string</vartype>
+                 <varinfo>uPokeDB MINIKING_PARAMS="Range=25,Gain=45,Continuous=true, VoS=1500, invert=1, nBins=200, AngleStep=, Gain=, LeftLimit=, RightLimit="</varinfo>
               </moosvar>
               <moosvar>
-                 <varname>SONAR_POLL</varname>
-                 <vartype>double</vartype>
+                 <varname>MICRON_POLL</varname>
+                 <vartype>int</vartype>
                  <varinfo>if 0, sonar don't send mtSendData and polling is off. When switching to 1, Sonar start polling if initialized</varinfo>
               </moosvar>
               <moosvar>
-                 <varname>POWERED_SONAR</varname>
-                 <vartype>double</vartype>
-                 <varinfo>if 0, the sonar is not initialized and listenning thread is stopped, when switching from 0 to 1, thread is launched an sonar init process started</varinfo>
+                 <varname>POWERED_MICRON</varname>
+                 <vartype>int</vartype>
+                 <varinfo>if 0, the sonar is not initialized and listenning thread is stopped, when switching from 0 to 1, thread is launched an sonar init process or polling started</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>POWERED_MINIKING</varname>
+                 <vartype>int</vartype>
+                 <varinfo>if 0, the sonar is not initialized and listenning thread is stopped, when switching from 0 to 1, thread is launched an sonar init process or polling started</varinfo>
               </moosvar>
            </subscriptions>
            <publications>
               <moosvar>
-                 <varname>SONAR_CONNECTED</varname>
-                 <vartype>bool</vartype>
-                 <varinfo>true/false</varinfo>
-              </moosvar>
-              <moosvar>
-                 <varname>SONAR_DISTANCE</varname>
-                 <vartype>string</vartype>
-                 <varinfo>bearing=,distance=</varinfo>
-              </moosvar>
-              <moosvar>
-                 <varname>SONAR_RAW_DATA</varname>
+                 <varname>SONAR_RAW_DATA_*</varname>
                  <vartype>string</vartype>
                  <varinfo>bearing=,ad_interval=,scanline=</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>SONAR_BEARING_*</varname>
+                 <vartype>string</vartype>
+                 <varinfo>bearing of the scanline</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>SONAR_SCANLINE_*</varname>
+                 <vartype>string</vartype>
+                 <varinfo>[nBins]{n,n,...,n,n}</varinfo>
               </moosvar>
            </publications>
         </interface>

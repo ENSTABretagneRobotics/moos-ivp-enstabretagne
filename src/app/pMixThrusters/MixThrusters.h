@@ -28,7 +28,9 @@ class MixThrusters : public AppCastingMOOSApp
     void registerVariables();
 
   protected: // MixThrusters functions
-
+    void saturationSigmoid(Eigen::Vector3d &u);
+    void saturationNormalization(Eigen::Vector3d &u);
+    double SensCorrection(double val);
 
   private: // Configuration variables
       Eigen::Matrix3d COEFF_MATRIX;
@@ -39,6 +41,11 @@ class MixThrusters : public AppCastingMOOSApp
       std::string U1_PUBLICATION_NAME;
       std::string U2_PUBLICATION_NAME;
       std::string U3_PUBLICATION_NAME;
+      
+      enum saturation_mods{NORMALIZATION,SIGMOID};
+      int saturation_mod;
+
+      double m_forward_coeff, m_backward_coeff;
   private: // State variables
       Eigen::Vector3d desiredForces;
       

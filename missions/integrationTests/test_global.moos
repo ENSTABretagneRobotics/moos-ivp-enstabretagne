@@ -34,6 +34,14 @@ ProcessConfig = ANTLER
   Run = iSonar          @ NewConsole = false
   Run = iXSensINS       @ NewConsole = false
   Run = uSensorsViewer  @ NewConsole = false
+  Run = uNavScreen @ NewConsole = true
+}
+
+//------------------------------------------------
+ProcessConfig = uNavScreen
+{
+  AppTick   = 4
+  CommsTick = 4
 }
 
 //------------------------------------------
@@ -56,13 +64,13 @@ ProcessConfig = iSaucisse
   AppTick   = 4
   CommsTick = 4
 
-  RESET_ON_STARTUP = false
+  RESET_ON_STARTUP = true
   RESET_ALL_ON = true
 
   DEVICE_NAME = /dev/ttyACM0
   # Linux:
   #     /dev/ttyACM0
-  # Windows: 
+  # Windows:
   #     \\\\.\\USBSER000
   #     or
   #     \\\\.\\COM6
@@ -101,10 +109,7 @@ ProcessConfig = iGPS
   AppTick   = 4
   CommsTick = 4
 
-  BAUDRATE = 4800
-  MAX_RETRIES = 5
-  PUBLISH_RAW = true
-  POWERED_AT_START = true
+  UART_BAUD_RATE = 4800
 }
 
 //------------------------------------------
@@ -138,6 +143,8 @@ ProcessConfig = iKeller
   CommsTick = 4
 
   MAX_RETRIES = 10
+  GET_TEMPERATURE = TRUE;
+  REF_DEPTH = 0.3 //Piombino, September 2015
 }
 
 //------------------------------------------

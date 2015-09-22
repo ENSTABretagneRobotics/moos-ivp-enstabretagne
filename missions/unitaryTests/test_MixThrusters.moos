@@ -1,0 +1,31 @@
+// MOOS file
+
+ServerHost = localhost
+ServerPort = 9000
+
+//------------------------------------------
+// Antler configuration  block
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+
+  Run = MOOSDB       	@ NewConsole = true
+  Run = uMS             @ NewConsole=false
+  Run = pMixThrusters   @ NewConsole = true
+}
+
+ProcessConfig = pMixThrusters
+{
+  AppTick   = 0.01
+  CommsTick = 0.01
+
+  FX_SUBSCRIPTION_NAME = "DESIRED_FX"
+  RZ_SUBSCRIPTION_NAME = "DESIRED_RZ"
+  FZ_SUBSCRIPTION_NAME = "DESIRED_FZ"
+
+  U1_PUBLICATION_NAME = "SET_THRUSTER_LEFT"
+  U2_PUBLICATION_NAME = SET_THRUSTER_RIGHT
+  U3_PUBLICATION_NAME = SET_THRUSTER_VERTICAL
+
+  COEFF_MATRIX=1,0,0,0,1,0,0,0,1
+}
