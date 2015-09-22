@@ -129,8 +129,6 @@ bool Gps::OnStartUp() {
 
     STRING_LIST sParams;
     m_MissionReader.EnableVerbatimQuoting(false);
-    if (!m_MissionReader.GetValue("GPS_SERIAL_PORT",m_uart_port))
-        reportConfigWarning("No GPS_SERIAL_PORT config found for " + GetAppName() + "(previously iGps)");
     if (!m_MissionReader.GetConfiguration(GetAppName(), sParams))
         reportConfigWarning("No config block found for " + GetAppName());
 
@@ -142,6 +140,10 @@ bool Gps::OnStartUp() {
         string value = line;
 
         bool handled = false;
+        if (param == "SERIAL_PORT") {
+            m_uart_port = value.c_str();
+            handled = true;
+        }
         if (param == "UART_BAUD_RATE") {
             m_uart_baud_rate = atoi(value.c_str());
             handled = true;
