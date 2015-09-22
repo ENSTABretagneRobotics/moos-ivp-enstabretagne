@@ -94,12 +94,18 @@ bool Pololu::turnOnBistableRelay(int id_on, int id_off, bool turned_on)
   bool success_on, success;
 
   if(!turnOnRelay(id_on, turned_on) || !turnOnRelay(id_off, !turned_on))
+  {
+    bipError();
     return false;
+  }
 
   delay(50);
 
   if(!turnOnRelay(id_on, false) || !turnOnRelay(id_off, false))
+  {
+    bipError();
     return false;
+  }
 
   return true;
 }
@@ -170,12 +176,12 @@ void Pololu::bipOnExit()
 
 void Pololu::bipError()
 {
-  for(int i = 0 ; i < 3 ; i++)
+  for(int i = 0 ; i < 2 ; i++)
   {
     buzzOn();
     delay(2000);
     buzzOff();
-    delay(2000);
+    delay(1000);
   }
 }
 
@@ -201,6 +207,7 @@ bool Pololu::setTarget(unsigned char channel, unsigned short target)
   {
     setErrorMessage("error (writing)");
     perror(m_error_message.c_str());
+    bipError();
     return false;
   }
 
