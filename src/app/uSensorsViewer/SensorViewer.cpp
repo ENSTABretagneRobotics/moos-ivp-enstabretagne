@@ -81,10 +81,10 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
 
 		// **************** SENSORS DATA ************************
 		// 
-		if( msg.GetKey() == "CAMERA_SIDE") {
+		if( msg.GetKey() == "CAMERA_BOTTOM") {
 		  	memcpy(m_img_camera_bottom.data, msg.GetBinaryData(), m_img_camera_bottom.rows*m_img_camera_bottom.step);
 		}
-		else if( msg.GetKey() == "CAMERA_BOTTOM") {
+		else if( msg.GetKey() == "CAMERA_SIDE") {
 		  	memcpy(m_img_camera_side.data, msg.GetBinaryData(), m_img_camera_side.rows*m_img_camera_side.step);
 		}
 		else if(msg.GetKey() == "SONAR_RAW_DATA_MICRON"){
