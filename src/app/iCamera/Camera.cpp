@@ -81,7 +81,7 @@ bool Camera::Iterate()
     if(m_affichage_image)
     {
       imshow(m_display_name, m_capture_frame);
-      waitKey(10);
+      waitKey(1);
     }
     retractRunWarning("No frame grabbed.");
   }
