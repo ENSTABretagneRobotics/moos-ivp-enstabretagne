@@ -25,6 +25,7 @@ Sonar::Sonar()
 
   m_bPollSonar = false;
 
+  m_iParamBins = 0;
 
 	if (!m_serial_thread.Initialise(listen_sonar_messages_thread_func, (void*)this))
 	{
@@ -76,7 +77,10 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
       if (MOOSValFromString(dVal, msg_val, "invert", true))
         m_msgHeadCommand.setInverted(dVal);
 		  if (MOOSValFromString(iVal, msg_val, "nBins", true))
+      {
+        m_iParamBins = iVal;
 		    m_msgHeadCommand.setNbins(iVal);
+      }
 		  if (MOOSValFromString(dVal, msg_val, "AngleStep", true))
 	      	m_msgHeadCommand.setAngleStep(dVal);
 		  if (MOOSValFromString(bVal, msg_val, "Continuous", true))
@@ -301,37 +305,18 @@ void Sonar::ListenSonarMessages()
         	vScanline.push_back( pHdta->scanlineData()[k] );
 
 	      stringstream ss;
-	      ss << "bearing=" << pHdta->bearing() << ",";
+	      ss << "bearing=" << pHdta->bearing()*M_PI/180.0 << ",";
 	      ss << "ad_interval=" << pHdta->ADInterval_m() << ",";
 	      ss << "scanline=";
 	      Write(ss, vScanline);
-        if(m_snrType == SeaNetMsg::MicronDST)
-          Notify("SONAR_RAW_DATA_MICRON", ss.str());
-        else if(m_snrType == SeaNetMsg::MiniKingNotDST)
-          Notify("SONAR_RAW_DATA_MINIKING", ss.str());
+        if (pHdta->nBins() <= (m_iParamBins*1.5))
+        {
+          if(m_snrType == SeaNetMsg::MicronDST)
+            Notify("SONAR_RAW_DATA_MICRON", ss.str());
+          else if(m_snrType == SeaNetMsg::MiniKingNotDST)
+            Notify("SONAR_RAW_DATA_MINIKING", ss.str());
+        }
 
-
-	      // ***************************************
-	      // MOSSDB data for WALL DETECTOR
-        if(m_snrType == SeaNetMsg::MicronDST)
-          Notify("SONAR_BEARING_MICRON", pHdta->bearing());
-        else if(m_snrType == SeaNetMsg::MiniKingNotDST)
-          Notify("SONAR_BEARING_MINIKING", pHdta->bearing());
-
-
-	      stringstream ss_scanline;
-	      ss_scanline << '[' << (int)pHdta->nBins()<< ']';
-	      ss_scanline << '{';
-	      for (int k=0; k<pHdta->nBins(); k++){
-	      	ss_scanline << pHdta->scanlineData()[k];
-	      	if(k!=pHdta->nBins()-1)
-	      		ss_scanline << ',';
-	      }
-	      ss_scanline << '}';
-        if(m_snrType == SeaNetMsg::MicronDST)
-          Notify("SONAR_SCANLINE_MICRON", ss_scanline.str());
-        else if(m_snrType == SeaNetMsg::MiniKingNotDST)
-          Notify("SONAR_SCANLINE_MINIKING", ss_scanline.str());
 	      // ***************************************
 
 	      // stringstream ss2;
@@ -377,8 +362,6 @@ bool Sonar::OnStartUp()
 	setlocale(LC_ALL, "C");
 	list<string> sParams;
 	m_MissionReader.EnableVerbatimQuoting(false);
-  if (!m_MissionReader.GetValue("SONAR_SERIAL_PORT",m_portName))
-    reportConfigWarning("No SONAR_SERIAL_PORT config found for " + GetAppName());
 
 	if(m_MissionReader.GetConfiguration(GetAppName(), sParams))
 	{
@@ -399,7 +382,10 @@ bool Sonar::OnStartUp()
       if(MOOSStrCmp(param, "INVERT"))
           m_msgHeadCommand.setInverted(atoi(value.c_str()));
 			if(MOOSStrCmp(param, "NBINS"))
-			    m_msgHeadCommand.setNbins(atoi(value.c_str()));
+      {
+        m_iParamBins = atoi(value.c_str());
+        m_msgHeadCommand.setNbins(m_iParamBins);
+      }
 			if(MOOSStrCmp(param, "ANGLESTEP"))
 			    m_msgHeadCommand.setAngleStep(atof(value.c_str()));
 			if(MOOSStrCmp(param, "CONTINUOUS"))
@@ -412,6 +398,8 @@ bool Sonar::OnStartUp()
 			    m_msgHeadCommand.setRightLimit(atof(value.c_str()));
       if(MOOSStrCmp(param, "POWERED_AT_START"))
           m_bIsPowered = MOOSStrCmp(value.c_str(),"TRUE");
+      if(MOOSStrCmp(param, "SERIAL_PORT"))
+          m_portName = value.c_str();
     }
 	}
 	else
