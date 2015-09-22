@@ -1,0 +1,11 @@
+ProcessConfig = iRazorIMU
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  MODE = ACC_MAG_GYR_CALIBRATED
+  // MODE values:
+  //    YAW_PITCH_ROLL
+  //    ACC_MAG_GYR_RAW
+  //    ACC_MAG_GYR_CALIBRATED
+}
