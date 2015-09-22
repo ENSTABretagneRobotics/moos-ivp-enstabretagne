@@ -88,6 +88,8 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
 		  	memcpy(m_img_camera_side.data, msg.GetBinaryData(), m_img_camera_side.rows*m_img_camera_side.step);
 		}
 		else if(msg.GetKey() == "SONAR_RAW_DATA_MICRON"){
+			MOOSValFromString(m_new_bearing_micron, msg.GetString(), "bearing", true);
+
 			int nRows, nCols;
 			std::string msg_scanline;
 			MOOSValFromString(msg_scanline, msg.GetString(), "scanline", true);
@@ -101,6 +103,8 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
       		m_new_data_micron = true;
 		}
 		else if(msg.GetKey() == "SONAR_RAW_DATA_MINIKING"){
+			MOOSValFromString(m_new_bearing_miniking, msg.GetString(), "bearing", true);
+
 			int nRows, nCols;
 			std::string msg_scanline;
 			MOOSValFromString(msg_scanline, msg.GetString(), "scanline", true);
@@ -114,9 +118,7 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
       		m_new_data_miniking = true;
 		}
 		else if(msg.GetKey() == "SONAR_RAW_DATA"){
-			double bearing_tmp;
-			MOOSValFromString(bearing_tmp, msg.GetString(), "bearing", true);
-			m_new_bearing = bearing_tmp*M_PI/180.0;
+			MOOSValFromString(m_new_bearing, msg.GetString(), "bearing", true);
 			
 			int nRows, nCols;
 			std::string msg_scanline;
@@ -266,7 +268,7 @@ void SensorViewer::AddSector(Mat &img_sonar, vector<double> scanline, double bea
 		for(double theta=theta_begin; theta<theta_begin + angle_diff; theta+=1.0/r){
 			int x = floor(scanline.size() + r*cos(theta));
 			int y = floor(scanline.size() + r*sin(theta));
-			img_sonar.at<unsigned char>(y, x) = 255 - pow(10, scanline[r]/20.0)/pow(10, 150/20.0)*255*255*contrast;
+			img_sonar.at<unsigned char>(y, x) = 255 - max(min(pow(10, scanline[r]/20.0)/pow(10, 150/20.0)*255*255*contrast, 255), 0);
 			// cout << "SCANLINE SIZE = " << scanline.size() << " r = " << r << '\n';
 			// cout << "ADD SECTOR (" << x << " " << y << ") = " << 255 - (unsigned char)scanline[r] << '\n';
 		}
