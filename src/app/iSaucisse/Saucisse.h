@@ -29,7 +29,7 @@ class Saucisse : public AppCastingMOOSApp
     void registerVariables();
 
   protected: // Saucisse functions
-
+    std::string sensorStatusInText(int status);
 
   private: // Configuration variables
     std::string m_device_name;
