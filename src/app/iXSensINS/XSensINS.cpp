@@ -138,8 +138,6 @@ bool XSensINS::OnStartUp() {
 
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
-  if (!m_MissionReader.GetValue("XSENSINS_SERIAL_PORT",m_uart_port))
-    reportConfigWarning("No XSENSINS_SERIAL_PORT config found for " + GetAppName());
   if (!m_MissionReader.GetConfiguration(GetAppName(), sParams))
     reportConfigWarning("No config block found for " + GetAppName());
 
@@ -156,6 +154,10 @@ bool XSensINS::OnStartUp() {
       m_uart_baud_rate = atoi(value.c_str());
       handled = true;
     }
+    else if (param == "SERIAL_PORT") {
+      m_uart_port = value.c_str();
+      handled = true;
+    }
     else if (param == "YAW_DECLINATION") {
       m_yaw_declination = atoi(value.c_str());
       handled = true;
@@ -163,7 +165,7 @@ bool XSensINS::OnStartUp() {
     if(!handled)
       reportUnhandledConfigWarning(orig);
   }
-  
+
   registerVariables();
 
   //------ OPEN INS ---------------//
