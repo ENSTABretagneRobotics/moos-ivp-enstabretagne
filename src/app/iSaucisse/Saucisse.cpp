@@ -318,6 +318,5 @@ bool Saucisse::buildReport()
   m_msgs << "Vertical thruster: \t" << m_vertical_thruster_value << "\n";
   m_msgs << "\n";
   m_msgs << "NUC temperature: \t" << m_nuc->getTemperature() << "°C\n";
-
   return  true;
 }
