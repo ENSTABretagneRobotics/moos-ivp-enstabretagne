@@ -3,17 +3,13 @@ ServerPort = 9000
 Community  = AUV
 
 //Serial port configuration
-GPS_SERIAL_PORT = /dev/ttyUSB0
-SONAR_SERIAL_PORT = /dev/ttyUSB1
-ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB2
-
+GPS_SERIAL_PORT = /dev/gps
+SONAR_SERIAL_PORT = /dev/sonar
+ECHOSOUNDER_SERIAL_PORT = /dev/echosounder
 KELLER_SERIAL_PORT = /dev/keller
 XSENSINS_SERIAL_PORT = /dev/xsens
 
 //RAZORIMU_SERIAL_PORT = /dev/ttyUSB10
-
-//------------------------------------------
-// Antler configuration  block
 
 ProcessConfig = ANTLER
 {
@@ -47,9 +43,6 @@ ProcessConfig = ANTLER
   //Run = uNavScreen @ NewConsole = true
 }
 
-//------------------------------------------------
-// iRazorIMU config block
-
 ProcessConfig = iRazorIMU
 {
   AppTick   = 4
@@ -61,9 +54,6 @@ ProcessConfig = iRazorIMU
   //    ACC_MAG_GYR_RAW
   //    ACC_MAG_GYR_CALIBRATED
 }
-
-//------------------------------------------------
-// pMixThrusters config block
 
 ProcessConfig = pMixThrusters
 {
@@ -81,7 +71,6 @@ ProcessConfig = pMixThrusters
   COEFF_MATRIX=0.9,-0.9,0,1,1,0,0,0,1
 }
 
-//------------------------------------------------
 ProcessConfig = iSaucisse
 {
   AppTick   = 10
@@ -101,7 +90,7 @@ ProcessConfig = iSaucisse
   #     /dev/cu.usbmodem00034567
 }
 
-ProcessConfig=pShare
+ProcessConfig = pShare
 {
   Input = route = 192.168.1.100:24466
 
@@ -122,9 +111,6 @@ ProcessConfig=pShare
   //Output = src_name = *,route=192.168.1.100:24468
 }
 
-//------------------------------------------
-// iXSensINS config block
-
 ProcessConfig = iXSensINS
 {
   AppTick        = 25
@@ -133,9 +119,6 @@ ProcessConfig = iXSensINS
   UART_BAUD_RATE = 115200
 }
 
-//------------------------------------------
-// iGPS config block
-
 ProcessConfig = iGPS
 {
   AppTick   = 4
@@ -143,9 +126,6 @@ ProcessConfig = iGPS
 
   UART_BAUD_RATE = 4800
 }
-
-//------------------------------------------
-// iSonar config block
 
 ProcessConfig = iSonar
 {
@@ -163,14 +143,12 @@ ProcessConfig = iSonar
   POWERED_AT_START = true
 }
 
-//------------------------------------------
 ProcessConfig = iSounder
 {
   AppTick   = 4
   CommsTick = 4
 }
 
-//------------------------------------------
 ProcessConfig = iKeller
 {
   AppTick   = 4
@@ -179,62 +157,52 @@ ProcessConfig = iKeller
   MAX_RETRIES = 10
 }
 
-//------------------------------------------
-// iCamera config block
-
 ProcessConfig = iCamera1
 {
-   AppTick   = 10
-   CommsTick = 10
+  AppTick   = 10
+  CommsTick = 10
 
    VARIABLE_IMAGE_NAME   = CAMERA_FRONT
    IDENTIFIANT_CV_CAMERA = 1
    DISPLAY_IMAGE         = true
    INVERT_IMAGE          = false
 
-   LARGEUR_IMAGE_CAMERA  = 360
-   HAUTEUR_IMAGE_CAMERA  = 288
+  LARGEUR_IMAGE_CAMERA  = 360
+  HAUTEUR_IMAGE_CAMERA  = 288
 }
-
-//------------------------------------------
-// iCamera config block
 
 ProcessConfig = iCamera2
 {
-   AppTick   = 10
-   CommsTick = 10
+  AppTick   = 10
+  CommsTick = 10
 
    VARIABLE_IMAGE_NAME   = CAMERA_SIDE
    IDENTIFIANT_CV_CAMERA = 0
    DISPLAY_IMAGE         = true
    INVERT_IMAGE          = false
 
-   LARGEUR_IMAGE_CAMERA  = 360
-   HAUTEUR_IMAGE_CAMERA  = 288
+  LARGEUR_IMAGE_CAMERA  = 360
+  HAUTEUR_IMAGE_CAMERA  = 288
 }
-
-//------------------------------------------
-// uSensorsViewer config block
 
 ProcessConfig = uSensorsViewer
 {
-   AppTick   = 25
-   CommsTick = 25
-}
-ProcessConfig = uMACView
-{
-   AppTick   = 25
-   CommsTick = 25
-}
-ProcessConfig = uProcessWatch
-{
-   AppTick   = 25
-   CommsTick = 25
+  AppTick   = 25
+  CommsTick = 25
 }
 
-//------------------------------------------
-// Logger  configuration  block
-//
+ProcessConfig = uMACView
+{
+  AppTick   = 25
+  CommsTick = 25
+}
+
+ProcessConfig = uProcessWatch
+{
+  AppTick   = 25
+  CommsTick = 25
+}
+
 ProcessConfig = pLogger
 {
   //over  loading  basic  params
