@@ -31,8 +31,8 @@ ProcessConfig = ANTLER
   Run = iXSensINS       @ NewConsole = false
 
   // ************* REGULATION ***************
-  Run = pSimplePID      @ NewConsole = false ~pSimplePID_depth
-  Run = pSimplePID      @ NewConsole = false ~pSimplePID_heading
+  //Run = pSimplePID      @ NewConsole = false ~pSimplePID_depth
+  //Run = pSimplePID      @ NewConsole = false ~pSimplePID_heading
 }
 
 ProcessConfig = pSimplePID_depth
@@ -168,15 +168,19 @@ ProcessConfig = uProcessWatch
 ProcessConfig = pLogger
 {
   //over  loading  basic  params
-  AppTick     = 4.0
-  CommsTick   = 4.0
+  AppTick     = 25.0
+  CommsTick   = 25.0
 
-  File          = test_global
-  PATH          = ~/log
+  File          = data_gate
+  PATH          = ./
   FileTimeStamp = true
 
   DoublePrecision = 12
 
   AsyncLog        = true
-  WildCardLogging = true
+  WildCardLogging = false
+
+  Log = DESIRED_FX     @ 0
+  Log = DESIRED_RX     @ 0
+  Log = DESIRED_RZ     @ 0
 }
