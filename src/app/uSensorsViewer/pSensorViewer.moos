@@ -1,9 +1,20 @@
+// MOOS file
+
+ServerHost = localhost
+ServerPort = 9000
+
+Community  = AUV
+
 //------------------------------------------------
 // uSensorsViewer config block
 
 ProcessConfig = uSensorsViewer
 {
-   AppTick   = 4
-   CommsTick = 4
+   AppTick   = 25
+   CommsTick = 25
+
+   SONAR_CONTRAST = 20.0
+   SONAR_CONTRAST_MINIKING = 20.0
+   SONAR_CONTRAST_MICRON = 20.0
 }
 
