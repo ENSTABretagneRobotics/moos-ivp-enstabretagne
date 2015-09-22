@@ -25,13 +25,16 @@ ProcessConfig = ANTLER
 }
 ProcessConfig=pShare
 {
+   AppTick   = 20
+   CommsTick = 20
+
   Input = route = 192.168.1.42:24468
   Output = src_name = DESIRED_*, route = 192.168.1.42:24466
 }
 ProcessConfig = uJoystick
 {
-   AppTick   = 4
-   CommsTick = 4
+   AppTick   = 20
+   CommsTick = 20
 
    DEVICE_NAME = /dev/input/js0
 
@@ -42,19 +45,36 @@ ProcessConfig = uJoystick
    //SCALE_RATIO = 0.01
    //MOOS_DEST_VAR = DESIRED_SLIDE2
 
-   AXIS = 1
+   // AXIS = 1
+   // SCALE_RATIO = -0.01
+   // MOOS_DEST_VAR = DESIRED_FX
 
+   // AXIS = 2
+   // SCALE_RATIO = -0.01
+   // MOOS_DEST_VAR = DESIRED_RZ
+
+   // AXIS = 3
+   // SCALE_RATIO = 0.01
+   // MOOS_DEST_VAR = DESIRED_FZ
+
+   //AXIS = 0
+   //SCALE_RATIO = 0.01
+   //MOOS_DEST_VAR = DESIRED_SLIDE2
+
+   AXIS = 1
    SCALE_RATIO = -0.01
    MOOS_DEST_VAR = DESIRED_FX
 
    AXIS = 2
+   INCREMENT = true
    SCALE_RATIO = -0.01
-   MOOS_DEST_VAR = DESIRED_RZ
+   MOOS_DEST_VAR = DESIRED_HEADING
+   INCREMENT = false
 
    AXIS = 3
-   SCALE_RATIO = 0.01
-   MOOS_DEST_VAR = DESIRED_FZ
-
+   SCALE_RATIO = -0.04
+   MOOS_DEST_VAR = DESIRED_DEPTH
+   
    //BUTTON = 1
    //SCALE_RATIO = 0.01
    //MOOS_DEST_VAR = PUSHED_BUTTON_1
