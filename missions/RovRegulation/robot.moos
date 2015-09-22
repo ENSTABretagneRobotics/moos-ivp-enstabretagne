@@ -3,12 +3,13 @@ ServerPort = 9000
 Community  = AUV
 
 //Serial port configuration
-GPS_SERIAL_PORT = /dev/ttyUSB0
-ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB2
-SONAR_SERIAL_PORT = /dev/ttyUSB3
-
-XSENSINS_SERIAL_PORT = /dev/xsens
+GPS_SERIAL_PORT = /dev/gps
+SONAR_SERIAL_PORT = /dev/sonar
+ECHOSOUNDER_SERIAL_PORT = /dev/echosounder
 KELLER_SERIAL_PORT = /dev/keller
+XSENSINS_SERIAL_PORT = /dev/xsens
+
+//RAZORIMU_SERIAL_PORT = /dev/ttyUSB10
 
 ProcessConfig = ANTLER
 {
@@ -278,7 +279,7 @@ ProcessConfig = pLogger
   CommsTick   = 4.0
 
   File          = test_global
-  PATH          = ~/log
+  PATH          = /home/ciscrea/log
   FileTimeStamp = true
 
   DoublePrecision = 12

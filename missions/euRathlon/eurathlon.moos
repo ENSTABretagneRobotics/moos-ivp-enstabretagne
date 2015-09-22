@@ -3,14 +3,13 @@ ServerPort = 9000
 Community  = AUV
 
 //Serial port configuration
-KELLER_SERIAL_PORT = /dev/keller // ttyUSB6
-XSENSINS_SERIAL_PORT = /dev/xsens // ttyUSB4
+GPS_SERIAL_PORT = /dev/gps
+SONAR_SERIAL_PORT = /dev/sonar
+ECHOSOUNDER_SERIAL_PORT = /dev/echosounder
+KELLER_SERIAL_PORT = /dev/keller
+XSENSINS_SERIAL_PORT = /dev/xsens
 
-
-GPS_SERIAL_PORT = /dev/ttyUSB3
-SONAR_SERIAL_PORT = /dev/ttyUSB0
-ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB1
-//RAZORIMU_SERIAL_PORT = /dev/ttyUSB5
+//RAZORIMU_SERIAL_PORT = /dev/ttyUSB10
 
 ProcessConfig = ANTLER
 {
@@ -20,7 +19,7 @@ ProcessConfig = ANTLER
   Run = uMACView        @ NewConsole = false
   Run = uProcessWatch   @ NewConsole = false
 
-  //Run = pLogger         @ NewConsole = false
+  Run = pLogger         @ NewConsole = false
   //Run = pShare          @ NewConsole = false 
 
   //Run = uSensorsViewer  @ NewConsole = false
