@@ -7,7 +7,7 @@ ProcessConfig = iModem
   CommsTick = 4
   max_appcast_events = 8
 
-  SERIAL_PORT = /dev/ttyUSB0
+  SERIAL_PORT = /dev/modem
   BAUD_RATE_CONF = 57600
   BAUD_RATE_COMM = 9600
 

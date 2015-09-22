@@ -2,7 +2,6 @@ ServerHost = localhost
 ServerPort = 9000
 Community  = AUV
 
-#include "serial_ports.moos"
 #include "interfaces.moos"
 #include "processes.moos"
 #include "utilities.moos"

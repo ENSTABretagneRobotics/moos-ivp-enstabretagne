@@ -1,7 +1,0 @@
-//Serial port configurations
-GPS_SERIAL_PORT = /dev/gps
-SONAR_SERIAL_PORT = /dev/sonar
-ECHOSOUNDER_SERIAL_PORT = /dev/echosounder
-KELLER_SERIAL_PORT = /dev/keller
-XSENSINS_SERIAL_PORT = /dev/xsens
-//RAZORIMU_SERIAL_PORT = /dev/ttyUSB10
