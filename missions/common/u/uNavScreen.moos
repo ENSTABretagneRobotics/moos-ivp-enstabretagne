@@ -1,0 +1,5 @@
+ProcessConfig = uNavScreen
+{
+  AppTick   = 4
+  CommsTick = 4
+}

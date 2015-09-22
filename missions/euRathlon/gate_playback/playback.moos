@@ -13,16 +13,16 @@ ProcessConfig = ANTLER
   Run = MOOSDB            @ NewConsole = false
 
   // ************** UTILITIES ****************
-  Run = uMS             @ NewConsole = false
+  Run = uMS               @ NewConsole = false
 
   // ************** LOGS *********************
-  Run = uPlayback       @ NewConsole = false
+  Run = uPlayback         @ NewConsole = false
 
   // ************** ENGINE CONTROL ***********
-  Run = iSaucisse       @ NewConsole = false
-  Run = pMixThrusters   @ NewConsole = true
+  Run = iSaucisse         @ NewConsole = false
+  Run = pMixThrusters     @ NewConsole = false
 
   // ************** SENSORS ******************
-  Run = iKeller         @ NewConsole = false
-  Run = iXSensINS       @ NewConsole = false
+  Run = iKeller           @ NewConsole = false
+  Run = iXSensINS         @ NewConsole = false
 }
