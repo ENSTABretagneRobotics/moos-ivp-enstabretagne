@@ -301,7 +301,7 @@ void Sonar::ListenSonarMessages()
         	vScanline.push_back( pHdta->scanlineData()[k] );
 
 	      stringstream ss;
-	      ss << "bearing=" << pHdta->bearing() << ",";
+	      ss << "bearing=" << pHdta->bearing()*M_PI/180.0 << ",";
 	      ss << "ad_interval=" << pHdta->ADInterval_m() << ",";
 	      ss << "scanline=";
 	      Write(ss, vScanline);
@@ -310,28 +310,6 @@ void Sonar::ListenSonarMessages()
         else if(m_snrType == SeaNetMsg::MiniKingNotDST)
           Notify("SONAR_RAW_DATA_MINIKING", ss.str());
 
-
-	      // ***************************************
-	      // MOSSDB data for WALL DETECTOR
-        if(m_snrType == SeaNetMsg::MicronDST)
-          Notify("SONAR_BEARING_MICRON", pHdta->bearing());
-        else if(m_snrType == SeaNetMsg::MiniKingNotDST)
-          Notify("SONAR_BEARING_MINIKING", pHdta->bearing());
-
-
-	      stringstream ss_scanline;
-	      ss_scanline << '[' << (int)pHdta->nBins()<< ']';
-	      ss_scanline << '{';
-	      for (int k=0; k<pHdta->nBins(); k++){
-	      	ss_scanline << pHdta->scanlineData()[k];
-	      	if(k!=pHdta->nBins()-1)
-	      		ss_scanline << ',';
-	      }
-	      ss_scanline << '}';
-        if(m_snrType == SeaNetMsg::MicronDST)
-          Notify("SONAR_SCANLINE_MICRON", ss_scanline.str());
-        else if(m_snrType == SeaNetMsg::MiniKingNotDST)
-          Notify("SONAR_SCANLINE_MINIKING", ss_scanline.str());
 	      // ***************************************
 
 	      // stringstream ss2;
