@@ -151,7 +151,7 @@ bool XSensINS::OnStartUp() {
     string value = line;
 
     bool handled = false;
-    if (param == "m_uart_baud_rate") {
+    if (param == "UART_BAUD_RATE") {
       m_uart_baud_rate = atoi(value.c_str());
       handled = true;
     }
@@ -166,7 +166,7 @@ bool XSensINS::OnStartUp() {
   registerVariables();
 
   //------ OPEN INS ---------------//
-  XsPortInfo mtPort("/dev/xsens", XsBaud::numericToRate(115200));
+  XsPortInfo mtPort("/dev/xsens", XsBaud::numericToRate(m_uart_baud_rate));
   if (!m_device.openPort(mtPort)) {
     cout << "CANNOT OPEN THE PORT" << '\n';
     reportRunWarning("Could not open the COM port" + m_uart_port);
