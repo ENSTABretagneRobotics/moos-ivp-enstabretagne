@@ -3,7 +3,7 @@
 #include "ACTable.h"
 #include "Sonar.h"
 #include "seanetmsg.h"
-
+#include "math.h"
 
 using namespace std;
 
