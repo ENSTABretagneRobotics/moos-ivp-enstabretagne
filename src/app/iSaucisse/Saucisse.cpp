@@ -5,6 +5,9 @@
 /*    DATE: 2015
 /************************************************************/
 
+#include <iostream>
+#include <fstream>
+
 #include <sstream>
 #include <iterator>
 #include "math.h"
@@ -332,7 +335,7 @@ bool Saucisse::buildReport()
   actab_temperatures.addHeaderLines();
   actab_temperatures << "NUC" << m_nuc->getTemperature();
   m_msgs << actab_temperatures.getFormattedString() << "\n\n";
-
+  
   return  true;
 }
 

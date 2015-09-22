@@ -1,0 +1,5 @@
+ProcessConfig = iSounder
+{
+  AppTick   = 4
+  CommsTick = 4
+}
