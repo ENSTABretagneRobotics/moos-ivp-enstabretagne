@@ -13,8 +13,6 @@
 #include <opencv/cv.h>
 #include <opencv2/highgui/highgui.hpp>
 
-//#include "Ciscrea_Images/Ciscrea_Images.h"
-
 using namespace std;
 
 class SensorViewer : public AppCastingMOOSApp
@@ -28,30 +26,41 @@ class SensorViewer : public AppCastingMOOSApp
 		bool Iterate();
 		bool OnConnectToServer();
 		bool OnStartUp();
-		void RegisterVariables();
+		void registerVariables();
 		bool buildReport();
 
 	private: // Fonctions
-		void AddSector(cv::Mat &img_sonar, vector<double> scanline, double bearing, double &bearing_previous);
+		void AddSector(cv::Mat &img_sonar, vector<double> scanline, double bearing, double &bearing_previous, double contrast);
 
 	private: // Configuration variables
 
 	private: // State variables
 
-		cv::Mat m_img_camera_bottom, m_img_camera_front;
-		cv::Mat m_img_sonar_micron, m_img_sonar_miniking;
+		cv::Mat m_img_camera_bottom;
+		cv::Mat m_img_camera_side;
+		cv::Mat m_img_sonar_micron;
+		cv::Mat m_img_sonar_miniking;
+		cv::Mat m_img_sonar;
 
 		// SONAR DATAS
 	    std::vector<double> m_new_scanline_micron;
 	    std::vector<double> m_new_scanline_miniking;
+	    std::vector<double> m_new_scanline;
     	double m_new_bearing_micron, m_old_bearing_micron;
     	double m_new_bearing_miniking, m_old_bearing_miniking;
+    	double m_new_bearing, m_old_bearing;
 
     	bool m_new_data_micron;
     	bool m_new_data_miniking;
+    	bool m_new_data;
 
     	int m_size_scanline_micron;
     	int m_size_scanline_miniking;
+    	int m_size_scanline;
+
+    	double m_sonar_contrast_micron;
+    	double m_sonar_contrast_miniking;
+    	double m_sonar_contrast;
 };
 
 #endif
