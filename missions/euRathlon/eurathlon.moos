@@ -8,65 +8,38 @@ SONAR_SERIAL_PORT = /dev/sonar
 ECHOSOUNDER_SERIAL_PORT = /dev/echosounder
 KELLER_SERIAL_PORT = /dev/keller
 XSENSINS_SERIAL_PORT = /dev/xsens
-
 //RAZORIMU_SERIAL_PORT = /dev/ttyUSB10
 
 ProcessConfig = ANTLER
 {
-  MSBetweenLaunches = 500
-  Run = MOOSDB          @ NewConsole = false
-  Run = uMS             @ NewConsole = false
-  Run = uMACView        @ NewConsole = false
-  Run = uProcessWatch   @ NewConsole = false
+  MSBetweenLaunches = 200
 
-  Run = pLogger         @ NewConsole = false
+  Run = MOOSDB          @ NewConsole = false
+
+  // ************** UTILITIES ****************
+  Run = uMS               @ NewConsole = false
+  Run = uMACView          @ NewConsole = false
+  Run = uProcessWatch     @ NewConsole = false
+  Run = uSensorsViewer    @ NewConsole = false
+  Run = uNavScreen        @ NewConsole = false
+
+  // ************** LOGS *********************
+  Run = pLogger           @ NewConsole = false
   //Run = pShare          @ NewConsole = false 
 
-  //Run = uSensorsViewer  @ NewConsole = false
-
-  // ************** ENGINE CONTROL *********
-  Run = iSaucisse       @ NewConsole = false
-  //Run = pMixThrusters   @ NewConsole = false
+  // ************** ENGINE CONTROL ***********
+  Run = iSaucisse         @ NewConsole = false
+  Run = pMixThrusters     @ NewConsole = false
 
   // ************** SENSORS *********
-  Run = iXSensINS       @ NewConsole = false
-  //Run = iSounder        @ NewConsole = false
-  Run = iGPS            @ NewConsole = false
-  Run = iKeller         @ NewConsole = false
-  Run = iSonar          @ NewConsole = false
-
-  Run = iCamera         @ NewConsole = false ~iCamera1
-  Run = iCamera         @ NewConsole = false ~iCamera2
-
-  //Run = uTimerScript  @ NewConsole = false
-  Run = uNavScreen      @ NewConsole = false
-}
-
-ProcessConfig = uTimerScript
-{
-  AppTick = 2
-  CommsTick = 2
-
-  //reset_time = end
-  delay_reset = 5
-
-  event = var=DESIRED_DEPTH,  time=000, val=1.6
-  event = var=DESIRED_HEADING,time=000, val=70
-  event = var=DESIRED_FX,     time=004, val=20
-
-  event = var=DESIRED_DEPTH,  time=300, val=0
-}
-
-ProcessConfig = iRazorIMU
-{
-  AppTick   = 4
-  CommsTick = 4
-
-  MODE = ACC_MAG_GYR_CALIBRATED
-  // MODE values:
-  //    YAW_PITCH_ROLL
-  //    ACC_MAG_GYR_RAW
-  //    ACC_MAG_GYR_CALIBRATED
+  Run = iXSensINS         @ NewConsole = false
+  Run = iGPS              @ NewConsole = false
+  Run = iKeller           @ NewConsole = false
+  Run = iSonar            @ NewConsole = false
+  Run = iCamera           @ NewConsole = false ~iCamera1
+  Run = iCamera           @ NewConsole = false ~iCamera2
+  //Run = iSounder          @ NewConsole = false
+  //Run = iRazorIMU         @ NewConsole = false
 }
 
 ProcessConfig = pMixThrusters
@@ -92,19 +65,11 @@ ProcessConfig = iSaucisse
 
   RESET_ON_STARTUP = true
   RESET_ALL_ON = true
-
+  
   DEVICE_NAME = /dev/ttyACM0
-  # Linux:
-  #     /dev/ttyACM0
-  # Windows:
-  #     \\\\.\\USBSER000
-  #     or
-  #     \\\\.\\COM6
-  # Mac OS X:
-  #     /dev/cu.usbmodem00034567
 }
 
-ProcessConfig=pShare
+ProcessConfig = pShare
 {
   Input = route = 192.168.1.100:24466
 
@@ -237,4 +202,16 @@ ProcessConfig = uNavScreen
 {
   AppTick   = 4
   CommsTick = 4
+}
+
+ProcessConfig = iRazorIMU
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  MODE = ACC_MAG_GYR_CALIBRATED
+  // MODE values:
+  //    YAW_PITCH_ROLL
+  //    ACC_MAG_GYR_RAW
+  //    ACC_MAG_GYR_CALIBRATED
 }
