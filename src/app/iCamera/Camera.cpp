@@ -141,26 +141,29 @@ bool Camera::OnStartUp()
 //  SetAppFreq(20, 400);
 //  SetIterateMode(REGULAR_ITERATE_AND_COMMS_DRIVEN_MAIL);
 
-  if(identifiant_camera == -1)
+  if(!identifiant_camera == -1)
+    reportRunWarning("No camera ID recognized.");
+  
+  else
   {
-    reportConfigWarning("Aucun identifiant de caméra reconnu");
-    // cout << "Aucun identifiant de caméra reconnu" << endl;
-    return false;
+    char buff[100];
+    sprintf(buff, "/dev/video%d", identifiant_camera);
+    string device_name = buff;
+
+    if(!m_vc_v4l2.open(device_name, LARGEUR_IMAGE_CAMERA, HAUTEUR_IMAGE_CAMERA))
+      reportRunWarning("No camera ID recognized.");
+
+    else
+    {
+      if(m_affichage_image)
+        namedWindow(m_display_name, CV_WINDOW_NORMAL);
+
+      RegisterVariables();
+      setlocale(LC_ALL, "");
+    }
   }
 
-  char buff[100];
-  sprintf(buff, "/dev/video%d", identifiant_camera);
-  string device_name = buff;
-
-  if(!m_vc_v4l2.open(device_name, LARGEUR_IMAGE_CAMERA, HAUTEUR_IMAGE_CAMERA))
-    return false;
-
-  if(m_affichage_image)
-    namedWindow(m_display_name, CV_WINDOW_NORMAL);
-
-  RegisterVariables();
-  setlocale(LC_ALL, "");
-  return(true);
+  return true;
 }
 
 /**
