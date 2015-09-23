@@ -24,6 +24,7 @@ NavScreen::NavScreen()
   m_moosvars["GPS_SIG"] = UNSET_VALUE;
   m_moosvars["SONAR_POLL"] = UNSET_VALUE;
   m_moosvars["IMU_YAW"] = UNSET_VALUE;
+  m_moosvars["IMU_YAW_DEGREE"] = UNSET_VALUE;
   m_moosvars["IMU_PITCH"] = UNSET_VALUE;
   m_moosvars["IMU_ROLL"] = UNSET_VALUE;
   m_moosvars["DEPTH"] = UNSET_VALUE;
@@ -160,10 +161,10 @@ bool NavScreen::buildReport()
   m_msgs << "ATTITUDE\n";
   m_msgs << "========\n";
   ACTable actab_att(4);
-  actab_att << "Dsrd Hdg | Yaw | Pitch | Roll";
+  actab_att << "Dsrd Hdg | Yaw (°) | Pitch | Roll";
   actab_att.addHeaderLines();
   actab_att << m_moosvars["DESIRED_HEADING"]
-            << m_moosvars["IMU_YAW"]
+            << m_moosvars["IMU_YAW"] << "(" << m_moosvars["IMU_YAW_DEGREE"] << ")"
             << m_moosvars["IMU_PITCH"]
             << m_moosvars["IMU_ROLL"];
   m_msgs << actab_att.getFormattedString() << "\n\n";
