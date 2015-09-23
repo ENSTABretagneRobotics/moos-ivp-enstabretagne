@@ -17,7 +17,7 @@ ProcessConfig = ANTLER
 
   //Run = iSaucisse     @ NewConsole = true
 
-  Run = iSonar @ NewConsole = true ~iMicron
+  //Run = iSonar @ NewConsole = true ~iMicron
   Run = iSonar @ NewConsole = true ~iMiniking
 
 }
