@@ -416,8 +416,6 @@ bool Keller::OnStartUp()
 
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
-  if (!m_MissionReader.GetValue("KELLER_SERIAL_PORT",m_port_name))
-    reportConfigWarning("No KELLER_SERIAL_PORT config found for " + GetAppName());
   if(!m_MissionReader.GetConfiguration(GetAppName(), sParams))
     reportConfigWarning("No config block found for " + GetAppName());
 
@@ -444,6 +442,11 @@ bool Keller::OnStartUp()
     else if(param == "REF_DEPTH")
     {
       m_dReferenceDepth = atof(value.c_str());
+      handled = true;
+    }
+    else if(param == "SERIAL_PORT")
+    {
+      m_port_name = value.c_str();
       handled = true;
     }
 

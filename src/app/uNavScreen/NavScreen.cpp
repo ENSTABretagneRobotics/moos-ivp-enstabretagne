@@ -157,7 +157,8 @@ void NavScreen::registerVariables()
 
 bool NavScreen::buildReport() 
 {
-  m_msgs << "ATTITUDE  ---------------------------------- \n";
+  m_msgs << "ATTITUDE\n";
+  m_msgs << "========\n";
   ACTable actab_att(4);
   actab_att << "Dsrd Hdg | Yaw | Pitch | Roll";
   actab_att.addHeaderLines();
@@ -167,7 +168,8 @@ bool NavScreen::buildReport()
             << m_moosvars["IMU_ROLL"];
   m_msgs << actab_att.getFormattedString() << "\n\n";
 
-  m_msgs << "POSITIONING  ------------------------------- \n";
+  m_msgs << "POSITIONING\n";
+  m_msgs << "===========\n";
   ACTable actab_pos(5);
   actab_pos << "X | Y | Lat | Long | GPS signal";
   actab_pos.addHeaderLines();
@@ -178,23 +180,26 @@ bool NavScreen::buildReport()
             << m_moosvars["GPS_SIG"];
   m_msgs << actab_pos.getFormattedString() << "\n\n";
 
-  m_msgs << "DEPTH  ------------------------------------- \n";
+  m_msgs << "DEPTH\n";
+  m_msgs << "=====\n";
   ACTable actab_depth(3);
   actab_depth << "Depth | Dsrd depth | Bathymetry";
   actab_depth.addHeaderLines();
-  actab_depth << m_moosvars["DESIRED_DEPTH"]
-              << m_moosvars["DEPTH"]
+  actab_depth << m_moosvars["DEPTH"]
+              << m_moosvars["DESIRED_DEPTH"]
               << m_moosvars["ECHOSOUNDER_RANGE"];
   m_msgs << actab_depth.getFormattedString() << "\n\n";
 
-  m_msgs << "SONAR  ------------------------------------- \n";
+  m_msgs << "SONAR\n";
+  m_msgs << "=====\n";
   ACTable actab_sonar(1);
   actab_sonar << "Poll";
   actab_sonar.addHeaderLines();
   actab_sonar << m_moosvars["SONAR_POLL"];
   m_msgs << actab_sonar.getFormattedString() << "\n\n";
 
-  m_msgs << "SENSORS  ----------------------------------- \n";
+  m_msgs << "SENSORS\n";
+  m_msgs << "=======\n";
   ACTable actab_sensors(5);
   actab_sensors << "GPS" << "Modem" << "Micron" << "Miniking" << "Cameras";
   actab_sensors.addHeaderLines();

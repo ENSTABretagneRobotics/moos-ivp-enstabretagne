@@ -621,6 +621,12 @@ bool Modem::OnStartUp()
       m_baudrate_comm = atoi(value.c_str());
       handled = true;
     }
+    else if(param == "SERIAL_PORT")
+    {
+      // reportEvent("iModem: serial port baud rate comm setted to "+value+"\n");
+      m_portName = value.c_str();
+      handled = true;
+    }
     else if(param == "ROBOT_NAME")
     {
       m_sRobotName = value;
