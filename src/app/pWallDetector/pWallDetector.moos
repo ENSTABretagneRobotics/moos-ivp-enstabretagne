@@ -1,3 +1,7 @@
+ServerHost = localhost
+ServerPort = 9000
+Community  = AUV
+
 //------------------------------------------------
 // pWallDetector config block
 
