@@ -166,17 +166,18 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
     else if ( key == "MINIKING_POLL" && msg.IsString() && m_snrType == SeaNetMsg::MicronDST){/* TO AVOID UNHANDELED MAIL*/}
     else if ( key == "POWERED_MICRON" && m_snrType == SeaNetMsg::MicronDST)
     {
-      m_bIsAlive = false;
-      m_bReplyVersionData = false;
-      m_bReplyBBUserData = false;
-      m_bHasParams = false;
-      m_bSentCfg = false;
       m_bSonarReady = false;
-
       if (m_serial_thread.IsThreadRunning())
         m_serial_thread.Stop();
       if (msg.GetDouble() == 0)
+      {
+        m_bIsAlive = false;
+        m_bReplyVersionData = false;
+        m_bReplyBBUserData = false;
+        m_bHasParams = false;
+        m_bSentCfg = false;
         m_bIsPowered = false;
+      }
       else
       {
         m_bIsPowered = true;
