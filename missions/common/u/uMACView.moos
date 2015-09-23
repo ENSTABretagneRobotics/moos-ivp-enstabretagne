@@ -1,5 +1,5 @@
 ProcessConfig = uMACView
 {
-  AppTick   = 4
-  CommsTick = 4
+  AppTick   = 10
+  CommsTick = 10
 }
