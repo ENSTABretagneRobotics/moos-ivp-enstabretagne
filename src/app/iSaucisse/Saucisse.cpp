@@ -326,8 +326,8 @@ bool Saucisse::buildReport()
   actab_thrusters << "Thruster" << "Value";
   actab_thrusters.addHeaderLines();
   actab_thrusters << "Left" << m_left_thruster_value;
-  actab_thrusters << "Right" << m_left_thruster_value;
-  actab_thrusters << "Vertical" << m_left_thruster_value;
+  actab_thrusters << "Right" << m_right_thruster_value;
+  actab_thrusters << "Vertical" << m_vertical_thruster_value;
   m_msgs << actab_thrusters.getFormattedString() << "\n\n";
 
   ACTable actab_temperatures(2);
