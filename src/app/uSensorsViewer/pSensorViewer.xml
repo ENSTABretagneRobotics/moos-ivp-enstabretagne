@@ -44,7 +44,11 @@
                  <vartype>double</vartype>
                  <varinfo></varinfo>
               </moosvar>
-
+              <moosvar>
+                 <varname>WALL_DETECTOR_(MINIKING, MICRON)</varname>
+                 <vartype>double</vartype>
+                 <varinfo></varinfo>
+              </moosvar>
            </subscriptions>
            <publications>
               <!--
