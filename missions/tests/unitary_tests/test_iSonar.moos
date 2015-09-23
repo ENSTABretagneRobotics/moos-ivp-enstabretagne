@@ -17,16 +17,15 @@ ProcessConfig = ANTLER
 
   //Run = iSaucisse     @ NewConsole = true
 
-  Run = iSonar @ NewConsole = true ~iMicron
+  //Run = iSonar @ NewConsole = true ~iMicron
   Run = iSonar @ NewConsole = true ~iMiniking
-
 }
 
 
 ProcessConfig = iMicron // Any Sonar, 360 scan, low resolution
 {
-  AppTick   = 4
-  CommsTick = 4
+  AppTick   = 10
+  CommsTick = 10
 
   SERIAL_PORT = /dev/micron
 
@@ -46,8 +45,8 @@ ProcessConfig = iMicron // Any Sonar, 360 scan, low resolution
 }
 ProcessConfig = iMiniking // Any Sonar, 360 scan, low resolution
 {
-  AppTick   = 4
-  CommsTick = 4
+  AppTick   = 10
+  CommsTick = 10
 
   SERIAL_PORT = /dev/miniking
 
