@@ -106,7 +106,7 @@ bool EstimSpeed::OnConnectToServer() {
 
 bool EstimSpeed::Iterate() {
     AppCastingMOOSApp::Iterate();
-
+    
     double cTheta = cos(imu_yaw);
     double sTheta = sin(imu_yaw);
     rot.block<2, 2>(0, 0) = (Matrix2d() << cTheta, -sTheta, sTheta, cTheta).finished();
@@ -131,11 +131,13 @@ bool EstimSpeed::Iterate() {
     ss << X[0] << "," << X[1] << "," << X[2];
     Notify(POS_DEAD_RECKONING_PUBLICATION_NAME, ss.str());
 
+    
+    
     ss.clear();
     ss.str(std::string());
 
     ss << v[0] << "," << v[1] << "," << v[2];
-    Notify(SPEED_LOCAL_DEAD_RECKONING_PUBLICATION_NAME, ss.str());
+    Notify(SPEED_LOCAL_DEAD_RECKONING_PUBLICATION_NAME, v[0]);//ss.str());
 
     Notify(POS_DEAD_RECKONING_E_PUBLICATION_NAME, X[0]);
     Notify(POS_DEAD_RECKONING_N_PUBLICATION_NAME, X[1]);

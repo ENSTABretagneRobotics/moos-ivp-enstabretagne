@@ -47,7 +47,8 @@ ProcessConfig = pEstimSpeed
    // to speed.
    // Once we have the damping forces and the input forces, we can apply Newton's laws of motion
    DAMPING_MATRIX = 4,0,0,0,10,0,0,0,4//0,0,0,0,0,0,0,0,0//
-
+MASS = 20
+   
    // Initial speed. In principle, we should aim for a null speed at
    // startup
    V0 = 0,0,0
@@ -131,6 +132,6 @@ ProcessConfig = pEchoVar
 
   Echo      = POS_DEAD_RECKONING_E  ->  pX
   Echo      = POS_DEAD_RECKONING_N  ->  pY
-  Echo      = POS_DEAD_RECKONING_U  ->  pZ
+  Echo      = GPS_ALTITUDE  ->  pZ
   Echo      = IMU_YAW               ->  pYaw
 }
