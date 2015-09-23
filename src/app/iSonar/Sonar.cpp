@@ -23,7 +23,7 @@ Sonar::Sonar()
 
   m_snrType = SeaNetMsg::MiniKingNotDST;
 
-  m_bPollSonar = false;
+  m_bPollSonar = true;
 
   m_iParamBins = 0;
 
