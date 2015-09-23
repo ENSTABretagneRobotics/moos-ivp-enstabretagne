@@ -431,6 +431,23 @@ bool Sonar::OnStartUp()
 
 	bool portOpened = this->m_Port.Create(m_portName.c_str(), 115200);
 
+string tt;
+STRING_LIST params;
+
+string ttt1("PORT=");
+char numstr1[30] = {0}; // enough to hold all numbers up to 64-bits
+sprintf(numstr1, "%s", m_portName.c_str());
+tt = ttt1 + numstr1;
+params.push_back(tt);
+tt = "";
+string ttt("BAUDRATE=");
+char numstr[30] = {0}; // enough to hold all numbers up to 64-bits
+sprintf(numstr, "%d", 115200);
+tt = ttt + numstr;
+params.push_back(tt);
+
+  portOpened = this->m_Port.Configure(params);
+
 	//this->m_Port.SetTermCharacter('\n');
 	m_Port.Flush();
 
