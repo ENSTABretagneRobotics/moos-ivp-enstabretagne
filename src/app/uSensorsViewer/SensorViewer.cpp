@@ -35,6 +35,9 @@ SensorViewer::SensorViewer()
 	m_img_wall_micron.create(500, 500, CV_8UC1);
 	m_img_wall_miniking.create(500, 500, CV_8UC1);
 
+	circle(m_img_wall_micron, Point(250, 250), 5, 255);
+	circle(m_img_wall_miniking, Point(250, 250), 5, 255);
+
 	m_old_bearing_miniking = 0.0;
 	m_old_bearing_micron = 0.0;
 	m_old_bearing = 0.0;

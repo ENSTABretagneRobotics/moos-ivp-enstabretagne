@@ -16,9 +16,11 @@ using namespace std;
 // Constructor
 
 LatLon2LocalGrid::LatLon2LocalGrid() {
+    
+    
     // Default to the competition site
-    latOrigin = 42.954260714055195;
-    lonOrigin = 10.601735409849422;
+    latOrigin = 42.954273;
+    lonOrigin = 10.601703;
 
     currentLat=latOrigin;
     currentLon=lonOrigin;
@@ -95,9 +97,11 @@ bool LatLon2LocalGrid::OnStartUp() {
 
         if (param == "LatOrigin") {
             latOrigin = atof(value.c_str());
+            // I Think this is never handled
             geodesy.Initialise(latOrigin, lonOrigin);
             handled = true;
         } else if (param == "LongOrigin") {
+            // I Think this is never handled
             lonOrigin = atof(value.c_str());
             geodesy.Initialise(latOrigin, lonOrigin);
             handled = true;
