@@ -70,13 +70,13 @@ killall -9 pParticle uFldContactRangeSensorHP pUUVPath         \
 
 killall -9 pAntler pLogger 
 
+killall iSaucisse
 killall iCamera
 killall iGPS
 killall iGPSoE
 killall iKeller
 killall iModem
 killall iRazorIMU
-killall iSaucisse
 killall iSonar
 killall iSounder
 killall iXSensINS

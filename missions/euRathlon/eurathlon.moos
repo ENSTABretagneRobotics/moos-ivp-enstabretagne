@@ -41,4 +41,41 @@ ProcessConfig = ANTLER
   // ************* REGULATION ****************
   Run = pSimplePID        @ NewConsole = false ~pSimplePID_Depth
   Run = pSimplePID        @ NewConsole = false ~pSimplePID_Heading
+
+  // ************* BEHAVIOR ******************
+  Run = pEchoVar          @ NewConsole = false
+  Run = pHelmIvP          @ NewConsole = false
+  Run = uTimerScript      @ NewConsole = false
+}
+
+ProcessConfig = pHelmIvP
+{
+  AppTick    = 10
+  AppTick    = 10
+
+  term_report_interval = 0
+
+  bhv_dir_not_found_ok = true
+
+  behaviors  = eurathlon.bhv
+  domain     = course:0:359:360
+  domain     = speed:0:4:21
+  domain     = depth:0:490:491
+}
+
+ProcessConfig = pEchoVar
+{
+  AppTick = 25
+  CommsTick = 25
+
+  echo = IMU_YAW -> NAV_HEADING
+  echo = DEPTH -> NAV_DEPTH
+  echo = SPEED_LOCAL_DEAD_RECKONING -> NAV_SPEED
+}
+
+ProcessConfig = uTimerScript
+{
+  AppTick = 4
+  CommsTick = 4
+  event = var=NAV_SPEED, time=000, val=1.0
 }
