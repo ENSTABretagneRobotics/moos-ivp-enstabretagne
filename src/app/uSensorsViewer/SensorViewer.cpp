@@ -91,10 +91,8 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
 			MOOSValFromString(m_new_bearing_micron, msg.GetString(), "bearing", true);
 
 			int nRows, nCols;
-			std::string msg_scanline;
-			MOOSValFromString(msg_scanline, msg.GetString(), "scanline", true);
 			m_new_scanline_micron.clear();
-      		MOOSVectorFromString(msg_scanline, m_new_scanline_micron, nRows, nCols);
+      		MOOSVectorFromString(msg.GetString(), m_new_scanline_micron, nRows, nCols);
       		if(m_new_scanline_micron.size() != m_size_scanline_micron){
       			m_img_sonar_micron.create(2*m_new_scanline_micron.size(),2*m_new_scanline_micron.size(),CV_8UC(1));
       			m_img_sonar_micron.setTo(Scalar(255));
@@ -106,8 +104,6 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
 			MOOSValFromString(m_new_bearing_miniking, msg.GetString(), "bearing", true);
 
 			int nRows, nCols;
-			std::string msg_scanline;
-			MOOSValFromString(msg_scanline, msg.GetString(), "scanline", true);
 			m_new_scanline_miniking.clear();
       		MOOSVectorFromString(msg.GetString(), m_new_scanline_miniking, nRows, nCols);
       		if(m_new_scanline_miniking.size() != m_size_scanline_miniking){
@@ -121,10 +117,9 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
 			MOOSValFromString(m_new_bearing, msg.GetString(), "bearing", true);
 			
 			int nRows, nCols;
-			std::string msg_scanline;
-			MOOSValFromString(msg_scanline, msg.GetString(), "scanline", true);
 			m_new_scanline.clear();
       		MOOSVectorFromString(msg.GetString(), m_new_scanline, nRows, nCols);
+
       		if(m_new_scanline.size() != m_size_scanline){
       			m_img_sonar.create(2*m_new_scanline.size(),2*m_new_scanline.size(),CV_8UC(1));
       			m_img_sonar.setTo(Scalar(255));
@@ -239,13 +234,13 @@ void SensorViewer::registerVariables()
 
 	// SONAR DATA
 	Register("SONAR_RAW_DATA", 0);
-	Register("SONAR_RAW_DATA_MICRON", 0);
-	Register("SONAR_RAW_DATA_MINIKING", 0);
-
-	Register("SONAR_MINIKING_CONTRAST", 0);
-	Register("SONAR_MICRON_CONTRAST", 0);
 	Register("SONAR_CONTRAST", 0);
 
+	Register("SONAR_RAW_DATA_MICRON", 0);
+	Register("SONAR_MICRON_CONTRAST", 0);
+
+	Register("SONAR_MINIKING_CONTRAST", 0);
+	Register("SONAR_RAW_DATA_MINIKING", 0);
 }
 bool SensorViewer::buildReport()
 {
@@ -268,7 +263,7 @@ void SensorViewer::AddSector(Mat &img_sonar, vector<double> scanline, double bea
 		for(double theta=theta_begin; theta<theta_begin + angle_diff; theta+=1.0/r){
 			int x = floor(scanline.size() + r*cos(theta));
 			int y = floor(scanline.size() + r*sin(theta));
-			img_sonar.at<unsigned char>(y, x) = 255 - max(min(pow(10, scanline[r]/20.0)/pow(10, 150/20.0)*255*255*contrast, 255), 0);
+			img_sonar.at<unsigned char>(y, x) = 255 - pow(10, scanline[r]/20.0)/pow(10, 150/20.0)*255*255*contrast;
 			// cout << "SCANLINE SIZE = " << scanline.size() << " r = " << r << '\n';
 			// cout << "ADD SECTOR (" << x << " " << y << ") = " << 255 - (unsigned char)scanline[r] << '\n';
 		}
