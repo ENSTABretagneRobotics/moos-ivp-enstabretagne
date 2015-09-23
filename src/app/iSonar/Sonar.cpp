@@ -228,7 +228,7 @@ bool Sonar::Iterate()
 {
   AppCastingMOOSApp::Iterate();
 	m_iterations++;
-  //AppCastingMOOSApp::PostReport();
+  AppCastingMOOSApp::PostReport();
 	return(true);
 }
 
@@ -252,6 +252,9 @@ void Sonar::ListenSonarMessages()
     } bits;
   } headInf;
 
+  if (m_bPortOpened)
+    reportRunWarning("In MtMessageListenning thread::Serial Port not oppenned!");
+
   while (!m_serial_thread.IsQuitRequested())
   {
     int msg_size = 0;
@@ -272,10 +275,10 @@ void Sonar::ListenSonarMessages()
     else if (needed_len == 0)
     {
       // Process message
-      cout << "Found message " << SeaNetMsg::detectMessageType(sBuf) << endl;
+      // cout << "Found message " << SeaNetMsg::detectMessageType(sBuf) << endl;
       SeaNetMsg snmsg(sBuf);
-      cout << "Created message with type " << snmsg.messageType() << endl;
-      snmsg.print_hex();
+      // cout << "Created message with type " << snmsg.messageType() << endl;
+      // snmsg.print_hex();
 
       if (snmsg.messageType() == SeaNetMsg::mtAlive)
       {
@@ -287,24 +290,24 @@ void Sonar::ListenSonarMessages()
         m_bSonarReady = m_bHasParams && m_bSentCfg;
         m_bIsAlive = true;
 
-        if(m_bHasParams && m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "mtAlive, has params");
-        if(m_bHasParams && m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "mtAlive, has params");
-        if(m_bSentCfg && m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "mtAlive, sent cfg");
-        if(m_bSentCfg && m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "mtAlive, sent cfg");
+        // if(m_bHasParams && m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "mtAlive, has params");
+        // if(m_bHasParams && m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "mtAlive, has params");
+        // if(m_bSentCfg && m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "mtAlive, sent cfg");
+        // if(m_bSentCfg && m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "mtAlive, sent cfg");
       }
       else if (snmsg.messageType() == SeaNetMsg::mtVersionData)
       {
         m_bReplyVersionData = true;
-        if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "REPLY mtVersionData");
-        if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "REPLY mtVersionData");
+        // if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "REPLY mtVersionData");
+        // if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "REPLY mtVersionData");
       }
       else if (snmsg.messageType() == SeaNetMsg::mtBBUserData)
       {
         const SeaNetMsg_BBUserData * pBBUserData = reinterpret_cast<SeaNetMsg_BBUserData*> (&snmsg);
         m_snrType = pBBUserData->getSonarType();
         m_bReplyBBUserData = true;
-        if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "REPLY mtBBUserData");
-        if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "REPLY mtBBUserData");
+        // if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "REPLY mtBBUserData");
+        // if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "REPLY mtBBUserData");
         // reportRunWarning("Sonar Type : " + (m_snrType == SeaNetMsg::MicronDST)?"MicronSnr":"MinikingSnr");
       }
       else if (snmsg.messageType() == SeaNetMsg::mtHeadData)
@@ -322,13 +325,13 @@ void Sonar::ListenSonarMessages()
 	      ss << "ad_interval=" << pHdta->ADInterval_m() << ",";
 	      ss << "scanline=";
 	      Write(ss, vScanline);
-        // if (pHdta->nBins() <= (m_iParamBins*2.0) 1)
-        // {
+        if (pHdta->nBins() <= (m_iParamBins*1.5))
+        {
           if(m_snrType == SeaNetMsg::MicronDST)
             Notify("SONAR_RAW_DATA_MICRON", ss.str());
           else if(m_snrType == SeaNetMsg::MiniKingNotDST)
             Notify("SONAR_RAW_DATA_MINIKING", ss.str());
-        // }
+        }
 
 	      // ***************************************
 
@@ -347,20 +350,20 @@ void Sonar::ListenSonarMessages()
         if(!m_bReplyVersionData)
         {
           SendSonarMessage(SeaNetMsg_SendVersion());
-          if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "SEND mtSendVersion");
-          if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "SEND mtSendVersion");
+          // if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "SEND mtSendVersion");
+          // if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "SEND mtSendVersion");
         }
         else if(m_bReplyVersionData && !m_bReplyBBUserData)
         {
           SendSonarMessage(SeaNetMsg_SendBBUser());
-          if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "SEND mtSendBBUser");
-          if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "SEND mtSendBBUser");
+          // if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "SEND mtSendBBUser");
+          // if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "SEND mtSendBBUser");
         }
         else if(m_bReplyVersionData && m_bReplyBBUserData && !m_bHasParams)
         {
           SendSonarMessage(m_msgHeadCommand);
-          if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "SEND mtHeadCommand");
-          if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "SEND mtHeadCommand");
+          // if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "SEND mtHeadCommand");
+          // if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "SEND mtHeadCommand");
         }
       }
       if (m_bSonarReady && m_bPollSonar && m_bHasParams && m_bSentCfg) {
@@ -429,34 +432,40 @@ bool Sonar::OnStartUp()
 	else
 		MOOSTrace("No configuration read.\n");
 
-	bool portOpened = this->m_Port.Create(m_portName.c_str(), 115200);
+	m_bPortOpened = this->m_Port.Create(m_portName.c_str(), 115200);
+  if(!m_bPortOpened)
+    reportConfigWarning("Error Openning Serial Port");
 
-string tt;
-STRING_LIST params;
+  string tt;
+  STRING_LIST params;
+  // string ttt1("PORT=");
+  // char numstr1[30] = {0}; // enough to hold all numbers up to 64-bits
+  // sprintf(numstr1, "%s", m_portName.c_str());
+  // tt = ttt1 + numstr1;
+  // params.push_back(tt);
+  // tt = "";
+  // string ttt("BAUDRATE=");
+  // char numstr[30] = {0}; // enough to hold all numbers up to 64-bits
+  // sprintf(numstr, "%d", 115200);
+  // tt = ttt + numstr;
+  // params.push_back(tt);
 
-string ttt1("PORT=");
-char numstr1[30] = {0}; // enough to hold all numbers up to 64-bits
-sprintf(numstr1, "%s", m_portName.c_str());
-tt = ttt1 + numstr1;
-params.push_back(tt);
-tt = "";
-string ttt("BAUDRATE=");
-char numstr[30] = {0}; // enough to hold all numbers up to 64-bits
-sprintf(numstr, "%d", 115200);
-tt = ttt + numstr;
-params.push_back(tt);
+  params.push_back("PORT=" + m_portName);
+  params.push_back("BAUDRATE=115200");
 
-  portOpened = this->m_Port.Configure(params);
+  if(m_bPortOpened)
+  {
+    m_bPortOpened = this->m_Port.Configure(params);
+  	//this->m_Port.SetTermCharacter('\n');
+  	m_Port.Flush();
+  }
 
-	//this->m_Port.SetTermCharacter('\n');
-	m_Port.Flush();
+  	m_timewarp = GetMOOSTimeWarp();
 
-	m_timewarp = GetMOOSTimeWarp();
+  	RegisterVariables();
 
-	RegisterVariables();
-
-	if (m_bIsPowered && !m_serial_thread.IsThreadRunning())
-    m_serial_thread.Start();
+  	if (m_bPortOpened && m_bIsPowered && !m_serial_thread.IsThreadRunning())
+      m_serial_thread.Start();
 
 	return(true);
 }
