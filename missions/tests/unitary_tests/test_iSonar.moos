@@ -25,10 +25,10 @@ ProcessConfig = ANTLER
 
 ProcessConfig = iMicron // Any Sonar, 360 scan, low resolution
 {
-  AppTick   = 4
-  CommsTick = 4
+  AppTick   = 10
+  CommsTick = 10
 
-  SERIAL_PORT = /dev/ttyUSB0
+  SERIAL_PORT = /dev/ttyUSB2
 
   SONAR_TYPE = Micron //or Miniking
 
@@ -46,8 +46,8 @@ ProcessConfig = iMicron // Any Sonar, 360 scan, low resolution
 }
 ProcessConfig = iMiniking // Any Sonar, 360 scan, low resolution
 {
-  AppTick   = 4
-  CommsTick = 4
+  AppTick   = 10
+  CommsTick = 10
 
   SERIAL_PORT = /dev/ttyUSB1
 
