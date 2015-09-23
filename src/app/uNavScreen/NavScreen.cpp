@@ -165,9 +165,8 @@ bool NavScreen::buildReport()
   actab_att << "Dsrd Hdg | Yaw (°) | Pitch | Roll";
   actab_att.addHeaderLines();
   stringstream convert;
-  convert << "(" << m_moosvars["IMU_YAW_DEGREE"] << ")";
+  convert << m_moosvars["IMU_YAW"] << " (" << m_moosvars["IMU_YAW_DEGREE"] << ")";
   actab_att << m_moosvars["DESIRED_HEADING"]
-            << m_moosvars["IMU_YAW"] 
             << convert.str()
             << m_moosvars["IMU_PITCH"]
             << m_moosvars["IMU_ROLL"];
@@ -200,7 +199,7 @@ bool NavScreen::buildReport()
   ACTable actab_sonar(2);
   actab_sonar << "Micron" << "Miniking";
   actab_sonar.addHeaderLines();
-  actab_sonar << m_moosvars["MICRON_POLL"] << m_moosvars["MINIKING_POLL"];
+  actab_sonar << (int)m_moosvars["MICRON_POLL"] << (int)m_moosvars["MINIKING_POLL"];
   m_msgs << actab_sonar.getFormattedString() << "\n\n";
 
   m_msgs << "SENSORS\n";
@@ -208,11 +207,11 @@ bool NavScreen::buildReport()
   ACTable actab_sensors(5);
   actab_sensors << "GPS" << "Modem" << "Micron" << "Miniking" << "Cameras";
   actab_sensors.addHeaderLines();
-  actab_sensors << m_moosvars["POWERED_GPS"]
-              << m_moosvars["POWERED_MODEM"]
-              << m_moosvars["POWERED_MICRON"]
-              << m_moosvars["POWERED_MINIKING"]
-              << m_moosvars["POWERED_CAMERAS"];
+  actab_sensors << (int)m_moosvars["POWERED_GPS"]
+              << (int)m_moosvars["POWERED_MODEM"]
+              << (int)m_moosvars["POWERED_MICRON"]
+              << (int)m_moosvars["POWERED_MINIKING"]
+              << (int)m_moosvars["POWERED_CAMERAS"];
   m_msgs << actab_sensors.getFormattedString() << "\n\n";
 
   return true;
