@@ -48,7 +48,7 @@ Pololu::Pololu(string device_name)
   m_pololu = open(device, O_RDWR | O_NOCTTY);
   if(m_pololu == -1)
   {
-    perror(device);
+    //perror(device);
     setErrorMessage("error (loading " + string(device) + ")");
     cout << "Pololu: " << m_error_message << endl;
     init_success = false;
@@ -78,10 +78,15 @@ Pololu::~Pololu()
   close(m_pololu);
 }
 
+bool Pololu::isReady()
+{
+  return !m_error;
+}
+
 bool Pololu::isReady(string &error_message)
 {
   error_message = m_error_message;
-  return !m_error;
+  return isReady();
 }
 
 bool Pololu::turnOnRelay(int id, bool turned_on)
@@ -198,6 +203,9 @@ bool Pololu::emitBips(int bip_number)
 
 bool Pololu::setTarget(unsigned char channel, unsigned short target)
 {
+  if(!isReady())
+    return false;
+
   // Sets the target of a Maestro channel.
   // See the "Serial Servo Commands" section of the user's guide.
   // The units of 'target' are quarter-microseconds.
@@ -206,7 +214,7 @@ bool Pololu::setTarget(unsigned char channel, unsigned short target)
   if(write(m_pololu, command, sizeof(command)) == -1)
   {
     setErrorMessage("error (writing)");
-    perror(m_error_message.c_str());
+    //perror(m_error_message.c_str());
     bipError();
     return false;
   }
