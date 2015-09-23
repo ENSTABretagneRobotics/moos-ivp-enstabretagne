@@ -78,10 +78,15 @@ Pololu::~Pololu()
   close(m_pololu);
 }
 
+bool Pololu::isReady()
+{
+  return !m_error;
+}
+
 bool Pololu::isReady(string &error_message)
 {
   error_message = m_error_message;
-  return !m_error;
+  return isReady();
 }
 
 bool Pololu::turnOnRelay(int id, bool turned_on)
@@ -198,8 +203,7 @@ bool Pololu::emitBips(int bip_number)
 
 bool Pololu::setTarget(unsigned char channel, unsigned short target)
 {
-  string error_message;
-  if(!isReady(error_message))
+  if(!isReady())
     return false;
 
   // Sets the target of a Maestro channel.
