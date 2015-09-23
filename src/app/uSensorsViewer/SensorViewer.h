@@ -40,9 +40,14 @@ class SensorViewer : public AppCastingMOOSApp
 
 		cv::Mat m_img_camera_bottom;
 		cv::Mat m_img_camera_side;
+
 		cv::Mat m_img_sonar_micron;
 		cv::Mat m_img_sonar_miniking;
 		cv::Mat m_img_sonar;
+
+		cv::Mat m_img_micron;
+		cv::Mat m_img_miniking;
+
 		cv::Mat m_img_wall_miniking;
 		cv::Mat m_img_wall_micron;
 
