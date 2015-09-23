@@ -21,7 +21,7 @@ Sonar::Sonar()
 	m_bSonarReady = false;
 	m_bIsPowered = false;
 
-  m_snrType = SeaNetMsg::MiniKingNotDST;
+  m_snrType = SeaNetMsg::SonarTypeError;
 
   m_bPollSonar = true;
 
@@ -97,6 +97,7 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
       //if we change params, sonar do not have params and had to send it again via listenMEssage Thread
       m_bHasParams = false;
 		}
+    else if ( key == "MICRON_PARAMS" && msg.IsString() && m_snrType == SeaNetMsg::MiniKingNotDST){/* TO AVOID UNHANDELED MAIL*/}
 		else if ( key == "MINIKING_PARAMS" && msg.IsString() && m_snrType == SeaNetMsg::MiniKingNotDST)
     {
       string msg_val = msg.GetString();
@@ -130,6 +131,7 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
       //if we change params, sonar do not have params and had to send it again via listenMEssage Thread
       m_bHasParams = false;
     }
+    else if ( key == "MINIKING_PARAMS" && msg.IsString() && m_snrType == SeaNetMsg::MicronDST){/* TO AVOID UNHANDELED MAIL*/}
     else if ( key == "MICRON_POLL" && m_snrType == SeaNetMsg::MicronDST)
 		{
 			m_bPollSonar = (msg.GetDouble())?true:false;
@@ -145,6 +147,7 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
 				reportRunWarning("Sonar not initialized!");
 			}
 		}
+    else if ( key == "MICRON_POLL" && msg.IsString() && m_snrType == SeaNetMsg::MiniKingNotDST){/* TO AVOID UNHANDELED MAIL*/}
 		else if ( key == "MINIKING_POLL" && m_snrType == SeaNetMsg::MiniKingNotDST)
     {
       m_bPollSonar = (msg.GetDouble())?true:false;
@@ -160,6 +163,7 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
         reportRunWarning("Sonar not initialized!");
       }
     }
+    else if ( key == "MINIKING_POLL" && msg.IsString() && m_snrType == SeaNetMsg::MicronDST){/* TO AVOID UNHANDELED MAIL*/}
     else if ( key == "POWERED_MICRON" && m_snrType == SeaNetMsg::MicronDST)
     {
       m_bIsAlive = false;
@@ -180,6 +184,7 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
           m_serial_thread.Start();
       }
     }
+    else if ( key == "POWERED_MICRON" && msg.IsString() && m_snrType == SeaNetMsg::MiniKingNotDST){/* TO AVOID UNHANDELED MAIL*/}
     else if ( key == "POWERED_MINIKING" && m_snrType == SeaNetMsg::MiniKingNotDST)
     {
       m_bIsAlive = false;
@@ -200,6 +205,7 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
           m_serial_thread.Start();
       }
     }
+    else if ( key == "POWERED_MINIKING" && msg.IsString() && m_snrType == SeaNetMsg::MicronDST){/* TO AVOID UNHANDELED MAIL*/}
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
       reportRunWarning("Unhandled Mail: " + key);
 	}
