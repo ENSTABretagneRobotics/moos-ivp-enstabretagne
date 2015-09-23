@@ -1,7 +1,7 @@
 ProcessConfig = iSonar_Miniking
 {
-  AppTick   = 15
-  CommsTick = 15
+  AppTick   = 20
+  CommsTick = 20
 
   SERIAL_PORT = /dev/miniking
 
