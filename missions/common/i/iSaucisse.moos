@@ -1,0 +1,24 @@
+ProcessConfig = iSaucisse
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  DEVICE_NAME = /dev/pololu
+  # Linux:
+  #     /dev/ttyACM0
+  # Windows: 
+  #     \\\\.\\USBSER000
+  #     or
+  #     \\\\.\\COM6
+  # Mac OS X:
+  #     /dev/cu.usbmodem00034567
+
+  // Force relays settings at startup
+  RESET_ON_STARTUP = true
+  // If requested, force relays to 'on' position at startup
+  RESET_ALL_ON = true
+
+  // Emit a signal when computer's too hot
+  ALERT_MAX_TEMPERATURE = 999 // °C
+  // WARNING: must be used when Pololu will be multithreaded!
+}

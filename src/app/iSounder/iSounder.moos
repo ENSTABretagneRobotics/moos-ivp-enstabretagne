@@ -7,5 +7,5 @@ ProcessConfig = iSounder
   AppTick   = 4
   CommsTick = 4
 
-  SERIAL_PORT = /dev/ttyUSB0
+  SERIAL_PORT = /dev/sounder
 }

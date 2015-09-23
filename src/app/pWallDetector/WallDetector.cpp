@@ -18,19 +18,7 @@ using namespace std;
 
 WallDetector::WallDetector()
 {
-  // INITIALIZE VARIABLES
-    m_mean_r       = 3;
-    m_mean_theta   = 3;
-    m_min_r        = 3;
-    
-    m_sonar_range  = 100.0;
-    m_sonar_gain   = 105;
-    
-    m_imu_yaw      = 0.0;
-    m_new_scanline = false;
-    
-    m_threshold    = 80;
-    m_search_zone  = 20;
+  m_imu_yaw = 0.0;
 }
 
 //---------------------------------------------------------
@@ -56,32 +44,86 @@ bool WallDetector::OnNewMail(MOOSMSG_LIST &NewMail)
       bool   mstr  = msg.IsString();
     #endif
 
-    if(key == "SONAR_BEARING"){
-      m_new_bearing = msg.GetDouble();
-    }
-    else if(key == "SONAR_SCANLINE"){
-      m_new_scanline = true;
-      int nRows, nCols;
-      MOOSVectorFromString(msg.GetString(), m_new_scanline_data, nRows, nCols);
-      if(m_new_scanline_data.size()==0){
-        reportRunWarning("ERROR Parsing SONAR_SCANLINE");
-      }
-    }
-    else if(key == "IMU_YAW"){
+    if(key == "IMU_YAW"){
       m_imu_yaw = msg.GetDouble();
+    }
+    else if(msg.GetKey() == "SONAR_RAW_DATA_MICRON"){
+
+      double new_bearing;
+      vector<double> new_scanline;
+
+      MOOSValFromString(new_bearing, msg.GetString(), "bearing", true);
+      int nRows, nCols;
+      MOOSVectorFromString(msg.GetString(), new_scanline, nRows, nCols);
+
+      sonar_micron.newSonarData(new_scanline, new_bearing, m_imu_yaw);
+    }
+    else if(msg.GetKey() == "SONAR_RAW_DATA_MINIKING"){
+
+      double new_bearing;
+      vector<double> new_scanline;
+
+      MOOSValFromString(new_bearing, msg.GetString(), "bearing", true);
+      int nRows, nCols;
+      MOOSVectorFromString(msg.GetString(), new_scanline, nRows, nCols);
+
+      sonar_miniking.newSonarData(new_scanline, new_bearing, m_imu_yaw);
+    }
+    else if(msg.GetKey() == "SONAR_RAW_DATA"){
+
+      double new_bearing;
+      vector<double> new_scanline;
+
+      MOOSValFromString(new_bearing, msg.GetString(), "bearing", true);
+      int nRows, nCols;
+      MOOSVectorFromString(msg.GetString(), new_scanline, nRows, nCols);
+
+      sonar.newSonarData(new_scanline, new_bearing, m_imu_yaw);
     }
 
     // PARAMETERS
+    else if(key == "WALL_THRESHOLD_MINIKING"){
+      sonar_miniking.m_threshold= msg.GetDouble();
+    }
+    else if(key == "WALL_THRESHOLD_MICRON"){
+      sonar_micron.m_threshold = msg.GetDouble();
+    }
     else if(key == "WALL_THRESHOLD"){
-      m_threshold = msg.GetDouble();
+      sonar_micron.m_threshold = msg.GetDouble();
+    }
+
+    else if ( key == "MICRON_PARAMS" && msg.IsString()){
+      // Mise à jour des paramètres du sonar
+      // Le message est de la forme "Range=25,Gain=45,Continuous=true"
+      double sonar_range, sonar_gain;
+      MOOSValFromString(sonar_range, msg.GetString(), "Range", true);
+      MOOSValFromString(sonar_gain, msg.GetString(), "Gain", true);
+      // Reset the scanline_tab to avoid size issues
+      sonar_micron.reset();
+      sonar_micron.m_sonar_range = sonar_range;
+      sonar_micron.m_sonar_gain = sonar_gain;
+    }
+    else if ( key == "MINIKING_PARAMS" && msg.IsString()){
+      // Mise à jour des paramètres du sonar
+      // Le message est de la forme "Range=25,Gain=45,Continuous=true"
+      double sonar_range, sonar_gain;
+      MOOSValFromString(sonar_range, msg.GetString(), "Range", true);
+      MOOSValFromString(sonar_gain, msg.GetString(), "Gain", true);
+      // Reset the scanline_tab to avoid size issues
+      sonar_micron.reset();
+      sonar_micron.m_sonar_range = sonar_range;
+      sonar_micron.m_sonar_gain = sonar_gain;
     }
     else if ( key == "SONAR_PARAMS" && msg.IsString()){
       // Mise à jour des paramètres du sonar
       // Le message est de la forme "Range=25,Gain=45,Continuous=true"
-      MOOSValFromString(m_sonar_range, msg.GetString(), "Range", true);
-      MOOSValFromString(m_sonar_gain, msg.GetString(), "Gain", true);
+      double sonar_range, sonar_gain;
+      MOOSValFromString(sonar_range, msg.GetString(), "Range", true);
+      MOOSValFromString(sonar_gain, msg.GetString(), "Gain", true);
       // Reset the scanline_tab to avoid size issues
-      m_scanline_tab.clear();
+      sonar.reset();
+      sonar.m_sonar_range = sonar_range;
+      sonar.m_sonar_gain = sonar_gain;
     }
 
     else if(key != "APPCAST_REQ") // handle by AppCastingMOOSApp
@@ -96,7 +138,7 @@ bool WallDetector::OnNewMail(MOOSMSG_LIST &NewMail)
 
 bool WallDetector::OnConnectToServer()
 {
-  registerVariables();
+  RegisterVariables();
   return true;
 }
 
@@ -108,60 +150,28 @@ bool WallDetector::Iterate()
 {
   AppCastingMOOSApp::Iterate();
 
-  // Do your thing here!
-  if(m_new_scanline == true){
-    m_new_scanline = false;
+  if(sonar_micron.compute()){
+    stringstream ss;
+    ss << "bearing=" << sonar_micron.m_bearing << ",";
+    ss << "distance=" << sonar_micron.m_distance << ",";
+    ss << "vertical=" << sonar_micron.m_vertical_scan;
+    Notify("WALL_DETECTOR_MICRON", ss.str());
+  }
 
-    // Push back new incoming scanline
-    m_scanline_tab.push_back(m_new_scanline_data);
-    // Convert bearing into radian + add imu_yaw
-    if(m_vertical_scan == true){
-      m_bearing_tab.push_back(MOOSGrad2Rad(m_new_bearing/16.0));
-    }
-    else{
-      m_bearing_tab.push_back(MOOS_ANGLE_WRAP(MOOSDeg2Rad(m_imu_yaw) + MOOSGrad2Rad(m_new_bearing/16.0)));  
-    }
-    
-    // Erase the first row of the buffer scanline_tab
-    if(m_scanline_tab.size()>2*m_mean_theta+1){
-      m_scanline_tab.erase (m_scanline_tab.begin());
-      m_bearing_tab.erase(m_bearing_tab.begin());
-    }
+  if(sonar_miniking.compute()){
+    stringstream ss;
+    ss << "bearing=" << sonar_miniking.m_bearing << ",";
+    ss << "distance=" << sonar_miniking.m_distance << ",";
+    ss << "vertical=" << sonar_miniking.m_vertical_scan;
+    Notify("WALL_DETECTOR_MINIKING", ss.str());
+  }
 
-    // Compute the filtered value of the scanline
-    // min value in the neighborhood
-    if(m_scanline_tab.size()==2*m_mean_theta+1){
-
-      vector<double> scanline_filtered;
-
-      for(int l=max(m_min_r, m_mean_r); l<m_scanline_tab[m_mean_theta].size()-m_mean_r; l++){
-        vector<double> tmp;
-        for(int r = l-m_mean_r; r<l+m_mean_r; r++){
-          for(int theta=0; theta<m_scanline_tab.size(); theta++){            
-            tmp.push_back(m_scanline_tab[theta][r]);
-          }
-        }
-        scanline_filtered.push_back(*min_element(tmp.begin(), tmp.end()));
-      }
-
-      // Find the max of the scanline_filtered
-      int indice_filtered;
-      findMax(scanline_filtered, m_max_filtered, indice_filtered, 0, scanline_filtered.size());
-
-      if(m_max_filtered > m_threshold){
-        // Find the max in the scanline near the maximum of the scanline_filtered
-        double max; int indice;
-        int search_zone = round(m_search_zone*m_scanline_tab[0].size());
-        findMax(m_scanline_tab[m_mean_theta], max, indice, indice_filtered-search_zone, indice_filtered+search_zone);
-
-        double dist = (indice)* m_sonar_range/m_scanline_tab[0].size();
-        stringstream ss;
-        ss << "bearing=" << m_bearing_tab[m_mean_r] << ",";
-        ss << "distance=" << dist << ",";
-        ss << "vertical=" << m_vertical_scan;
-        Notify("WALL_DETECTOR", ss.str());
-      }
-    }
+  if(sonar.compute()){
+    stringstream ss;
+    ss << "bearing=" << sonar.m_bearing << ",";
+    ss << "distance=" << sonar.m_distance << ",";
+    ss << "vertical=" << sonar.m_vertical_scan;
+    Notify("WALL_DETECTOR", ss.str());
   }
 
   AppCastingMOOSApp::PostReport();
@@ -191,42 +201,100 @@ bool WallDetector::OnStartUp()
     string value = line;
     bool handled = false;
 
+    if(param == "SONAR_RANGE_MINIKING"){
+      sonar_miniking.m_sonar_range = atof(value.c_str()); handled = true;
+    }
+    else if(param == "SONAR_GAIN_MINIKING"){
+      sonar_miniking.m_sonar_gain = atof(value.c_str()); handled = true;
+    }
+    else if(param == "MEAN_R_MINIKING"){
+      sonar_miniking.m_mean_r = atoi(value.c_str()); handled = true;
+    }
+    else if(param == "MEAN_THETA_MINIKING"){
+      sonar_miniking.m_mean_theta = atoi(value.c_str()); handled = true;
+    }
+    else if(param == "MIN_R_MINIKING"){
+      sonar_miniking.m_min_r = atoi(value.c_str()); handled = true;
+    }
+    else if(param == "WALL_THRESHOLD_MINIKING"){
+      sonar_miniking.m_threshold = atof(value.c_str()); handled = true;
+    }
+    else if(param == "SEARCH_ZONE_MINIKING"){
+      sonar_miniking.m_search_zone = atoi(value.c_str()); handled = true;
+    }
+    else if(param == "VERTICAL_SCAN_MINIKING"){
+      if(toupper(value) == "TRUE"){
+       sonar_miniking.m_vertical_scan = true; handled = true;  
+      }
+      else if(toupper(value) == "FALSE"){
+        sonar_miniking.m_vertical_scan = false; handled = true;
+      }
+      else{
+        handled = false;
+      }
+    }
+
+    if(param == "SONAR_RANGE_MICRON"){
+      sonar_micron.m_sonar_range = atof(value.c_str()); handled = true;
+    }
+    else if(param == "SONAR_GAIN_MICRON"){
+      sonar_micron.m_sonar_gain = atof(value.c_str()); handled = true;
+    }
+    else if(param == "MEAN_R_MICRON"){
+      sonar_micron.m_mean_r = atoi(value.c_str()); handled = true;
+    }
+    else if(param == "MEAN_THETA_MICRON"){
+      sonar_micron.m_mean_theta = atoi(value.c_str()); handled = true;
+    }
+    else if(param == "MIN_R_MICRON"){
+      sonar_micron.m_min_r = atoi(value.c_str()); handled = true;
+    }
+    else if(param == "WALL_THRESHOLD_MICRON"){
+      sonar_micron.m_threshold = atof(value.c_str()); handled = true;
+    }
+    else if(param == "SEARCH_ZONE_MICRON"){
+      sonar_micron.m_search_zone = atoi(value.c_str()); handled = true;
+    }
+    else if(param == "VERTICAL_SCAN_MICRON"){
+      if(toupper(value) == "TRUE"){
+        sonar_micron.m_vertical_scan = true; handled = true;  
+      }
+      else if(toupper(value) == "FALSE"){
+        sonar_micron.m_vertical_scan = false; handled = true;
+      }
+      else{
+        handled = false;
+      }
+    }
+
     if(param == "SONAR_RANGE"){
-      m_sonar_range = atof(value.c_str());
-      handled = true;
+      sonar.m_sonar_range = atof(value.c_str()); handled = true;
     }
     else if(param == "SONAR_GAIN"){
-      m_sonar_gain = atof(value.c_str());
-      handled = true;
+      sonar.m_sonar_gain = atof(value.c_str()); handled = true;
     }
     else if(param == "MEAN_R"){
-      m_mean_r = atoi(value.c_str());
-      handled = true;
+      sonar.m_mean_r = atoi(value.c_str()); handled = true;
+      cout << sonar.m_mean_r<< '\n';
     }
     else if(param == "MEAN_THETA"){
-      m_mean_theta = atoi(value.c_str());
-      handled = true;
+      sonar.m_mean_theta = atoi(value.c_str()); handled = true;
     }
     else if(param == "MIN_R"){
-      m_min_r = atoi(value.c_str());
-      handled = true;
+      sonar.m_min_r = atoi(value.c_str()); handled = true;
     }
     else if(param == "WALL_THRESHOLD"){
-      m_threshold = atof(value.c_str());
-      handled = true;
+      sonar.m_threshold = atof(value.c_str()); handled = true;
     }
     else if(param == "SEARCH_ZONE"){
-      m_search_zone = atoi(value.c_str());
-      handled = true;
+      sonar.m_search_zone = atoi(value.c_str()); handled = true;
     }
     else if(param == "VERTICAL_SCAN"){
       if(toupper(value) == "TRUE"){
-        m_vertical_scan = true;
-        handled = true;  
+        sonar.m_vertical_scan = true; handled = true;  
       }
       else if(toupper(value) == "FALSE"){
-        m_vertical_scan = false;
-        handled = true;
+        sonar.m_vertical_scan = false; handled = true;
       }
       else{
         handled = false;
@@ -236,8 +304,7 @@ bool WallDetector::OnStartUp()
     if(!handled)
       reportUnhandledConfigWarning(orig);
   }
-
-  registerVariables();  
+  registerVariables();
   return true;
 }
 
@@ -249,11 +316,18 @@ void WallDetector::registerVariables()
   AppCastingMOOSApp::RegisterVariables();
   // Register("FOOBAR", 0);
   Register("IMU_YAW", 0);
+  
+  Register("SONAR_RAW_DATA", 0);
+  Register("WALL_THRESHOLD", 0);
   Register("SONAR_PARAMS", 0);
 
-  Register("WALL_THRESHOLD", 0);
-  Register("SONAR_BEARING", 0);
-  Register("SONAR_SCANLINE", 0);
+  Register("SONAR_RAW_DATA_MINIKING", 0);
+  Register("WALL_THRESHOLD_MINIKING", 0);
+  Register("MINIKING_PARAMS", 0);
+
+  Register("SONAR_RAW_DATA_MICRON", 0);
+  Register("WALL_THRESHOLD_MICRON", 0);
+  Register("MICRON_PARAMS", 0);
 }
 
 //------------------------------------------------------------
@@ -273,64 +347,60 @@ bool WallDetector::buildReport()
     m_msgs << actab.getFormattedString();
   #endif
 
+  m_msgs << "MICRON SONAR" << '\n';
   ACTable actab(5);
   actab << "Nb Data | Size Data | Max filtered | Wall Threshold | Max Range";
   actab.addHeaderLines();
-  if(m_scanline_tab.size()==0)
-    actab << (int)m_scanline_tab.size() << "x" << m_max_filtered << m_threshold << m_sonar_range;
+  if(sonar_micron.m_scanline_tab.size()==0)
+    actab << (int)sonar_micron.m_scanline_tab.size() 
+          << "x"
+          << sonar_micron.m_max_filtered 
+          << sonar_micron.m_threshold 
+          << sonar_micron.m_sonar_range;
   else
-    actab << (int)m_scanline_tab.size() << (int)m_scanline_tab[0].size() << m_max_filtered << m_threshold << m_sonar_range;
+    actab << (int)sonar_micron.m_scanline_tab.size() 
+          << (int)sonar_micron.m_scanline_tab[0].size() 
+          << sonar_micron.m_max_filtered 
+          << sonar_micron.m_threshold 
+          << sonar_micron.m_sonar_range;
   m_msgs << actab.getFormattedString();
 
+
+  m_msgs << '\n' << "MINIKING SONAR" << '\n';
+  ACTable actab2(5);
+  actab2 << "Nb Data | Size Data | Max filtered | Wall Threshold | Max Range";
+  actab2.addHeaderLines();
+  if(sonar_micron.m_scanline_tab.size()==0)
+    actab2 << (int)sonar_micron.m_scanline_tab.size() 
+          << "x" 
+          << sonar_micron.m_max_filtered 
+          << sonar_micron.m_threshold 
+          << sonar_micron.m_sonar_range;
+  else
+    actab2 << (int)sonar_micron.m_scanline_tab.size() 
+          << (int)sonar_micron.m_scanline_tab[0].size() 
+          << sonar_micron.m_max_filtered 
+          << sonar_micron.m_threshold 
+          << sonar_micron.m_sonar_range;
+  m_msgs << actab2.getFormattedString();
+
+  m_msgs << '\n' << "SONAR" << '\n';
+  ACTable actab3(5);
+  actab3 << "Nb Data | Size Data | Max filtered | Wall Threshold | Max Range";
+  actab3.addHeaderLines();
+  if(sonar.m_scanline_tab.size()==0)
+    actab3 << (int)sonar.m_scanline_tab.size() 
+          << "x" 
+          << sonar.m_max_filtered 
+          << sonar.m_threshold 
+          << sonar.m_sonar_range;
+  else
+    actab3 << (int)sonar.m_scanline_tab.size() 
+          << (int)sonar.m_scanline_tab[0].size() 
+          << sonar.m_max_filtered 
+          << sonar.m_threshold 
+          << sonar.m_sonar_range;
+  m_msgs << actab3.getFormattedString();
+
   return true;
-}
-
-double WallDetector::MOOSGrad2Rad(double angle){
-  return angle*M_PI/200.0;
-}
-
-void WallDetector::findMax(vector<double> list, double &max, int &indice, int begin, int end){
-
-  if(begin>= list.size())
-    begin = list.size()-1;
-  if(end > list.size())
-    end = list.size();
-  if(begin < 0)
-    begin = 0;
-  if(end < 0)
-    end = 0;
-
-  max = list[begin];
-  indice = begin;
-
-  for(int i=begin+1; i<end; i++){
-    if(list[i]>max){
-      max = list[i];
-      indice = i;
-    }
-  }
-}
-
-void WallDetector::findMin(vector<double> list, double &min, int &indice, int begin, int end){
-
-  if(begin>= list.size())
-    begin = list.size()-1;
-  if(end > list.size())
-    end = list.size();
-  if(begin < 0)
-    begin = 0;
-  if(end < 0)
-    end = 0;
-
-  min = list[begin];
-  indice = begin;
-
-  for(int i=begin+1; i<end; i++){
-    if(list[i]<min){
-      min = list[i];
-      indice = i;
-    }
-  }
-
-  cout << min;
 }

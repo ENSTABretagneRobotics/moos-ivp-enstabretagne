@@ -1,0 +1,18 @@
+ProcessConfig = iModem
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  SERIAL_PORT = /dev/modem
+
+  max_appcast_events = 8
+
+  BAUD_RATE_CONF = 57600
+  BAUD_RATE_COMM = 9600
+
+  MODEM_RANGING_TIMEOUT_US = 3000
+
+  ROBOT_NAME = AUV1
+
+  POWERED_AT_START = TRUE
+}

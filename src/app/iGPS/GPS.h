@@ -1,5 +1,5 @@
 /************************************************************/
-/*    FILE: Gps.h
+/*    FILE: GPS.h
 /*    ORGN: Toutatis AUVs - ENSTA Bretagne
 /*    AUTH: Thomas Le Mezo
 /*    DATE: 2015
@@ -21,11 +21,11 @@
 
 #include <math.h>
 
-class Gps : public AppCastingMOOSApp
+class GPS : public AppCastingMOOSApp
 {
   public:
-    Gps();
-    ~Gps();
+    GPS();
+    ~GPS();
 
   protected: // Standard MOOSApp functions to overload
     bool OnNewMail(MOOSMSG_LIST &NewMail);

@@ -1,5 +1,5 @@
 /************************************************************/
-/*    FILE: Gps.cpp
+/*    FILE: GPS.cpp
 /*    ORGN: Toutatis AUVs - ENSTA Bretagne
 /*    AUTH: Thomas Le Mezo
 /*    DATE: 2015
@@ -8,14 +8,14 @@
 #include <iterator>
 #include "MBUtils.h"
 #include "ACTable.h"
-#include "Gps.h"
+#include "GPS.h"
 
 using namespace std;
 
 //---------------------------------------------------------
 // Constructor
 
-Gps::Gps()
+GPS::GPS()
 : m_io(), m_serial(m_io) {
     m_uart_port = "/dev/ttyUSB0";
 
@@ -28,14 +28,14 @@ Gps::Gps()
     m_heading = 0;
 }
 
-Gps::~Gps() {
+GPS::~GPS() {
     m_serial.close();
 }
 
 //---------------------------------------------------------
 // Procedure: OnNewMail
 
-bool Gps::OnNewMail(MOOSMSG_LIST &NewMail) {
+bool GPS::OnNewMail(MOOSMSG_LIST &NewMail) {
     AppCastingMOOSApp::OnNewMail(NewMail);
 
     MOOSMSG_LIST::iterator p;
@@ -63,7 +63,7 @@ bool Gps::OnNewMail(MOOSMSG_LIST &NewMail) {
 //---------------------------------------------------------
 // Procedure: OnConnectToServer
 
-bool Gps::OnConnectToServer() {
+bool GPS::OnConnectToServer() {
     registerVariables();
     return (true);
 }
@@ -72,7 +72,7 @@ bool Gps::OnConnectToServer() {
 // Procedure: Iterate()
 //            happens AppTick times per second
 
-bool Gps::Iterate() {
+bool GPS::Iterate() {
     AppCastingMOOSApp::Iterate();
     // Read trame from COM port
 
@@ -124,7 +124,7 @@ bool Gps::Iterate() {
 // Procedure: OnStartUp()
 //            happens before connection is open
 
-bool Gps::OnStartUp() {
+bool GPS::OnStartUp() {
     AppCastingMOOSApp::OnStartUp();
 
     STRING_LIST sParams;
@@ -178,7 +178,7 @@ bool Gps::OnStartUp() {
 //---------------------------------------------------------
 // Procedure: registerVariables
 
-void Gps::registerVariables() {
+void GPS::registerVariables() {
     AppCastingMOOSApp::RegisterVariables();
 }
 
@@ -186,7 +186,7 @@ void Gps::registerVariables() {
 //------------------------------------------------------------
 // Procedure: buildReport()
 
-bool Gps::buildReport() {
+bool GPS::buildReport() {
   #if 0 // Keep these around just for template
     m_msgs << "============================================ \n";
     m_msgs << "File:                                        \n";
@@ -212,7 +212,7 @@ bool Gps::buildReport() {
   return true;
 }
 
-bool Gps::Notify_GNSS(float *lat, float *lon) {
+bool GPS::Notify_GNSS(float *lat, float *lon) {
     string msg;
     msg += "LAT=" + doubleToString(*lat, 6) + ",";
     msg += "LON=" + doubleToString(*lon, 6);

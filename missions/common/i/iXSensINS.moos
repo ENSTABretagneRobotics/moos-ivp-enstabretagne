@@ -1,0 +1,8 @@
+ProcessConfig = iXSensINS
+{
+  AppTick        = 25
+  CommsTick      = 25
+
+  SERIAL_PORT = /dev/xsens
+  UART_BAUD_RATE = 115200
+}

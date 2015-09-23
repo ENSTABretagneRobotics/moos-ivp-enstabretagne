@@ -2,118 +2,37 @@ ServerHost = localhost
 ServerPort = 9000
 Community  = AUV
 
-//Serial port configuration
-GPS_SERIAL_PORT = /dev/ttyUSB0
-ECHOSOUNDER_SERIAL_PORT = /dev/ttyUSB2
-SONAR_SERIAL_PORT = /dev/ttyUSB3
-
-XSENSINS_SERIAL_PORT = /dev/xsens
-KELLER_SERIAL_PORT = /dev/keller
+#include "interfaces.moos"
+#include "processes.moos"
+#include "utilities.moos"
 
 ProcessConfig = ANTLER
 {
   MSBetweenLaunches = 200
-  Run = MOOSDB          @ NewConsole = false
-  Run = uMS             @ NewConsole = false
-  Run = uMACView        @ NewConsole = false
-  Run = uProcessWatch   @ NewConsole = false
+  
+  Run = MOOSDB            @ NewConsole = false
 
-  Run = pLogger         @ NewConsole = false
-  Run = pShare          @ NewConsole = false 
+  // ************** UTILITIES ****************
+  Run = uMS               @ NewConsole = false
+  Run = uMACView          @ NewConsole = false
+  Run = uProcessWatch     @ NewConsole = false
+  Run = pShare            @ NewConsole = false 
 
-  // ************** ENGINE CONTROL *********
-  Run = iSaucisse       @ NewConsole = false
-  Run = pMixThrusters   @ NewConsole = true
+  // ************** LOGS *********************
+  Run = pLogger           @ NewConsole = false
 
-  // ************** SENSORS *********
-  Run = iGPS            @ NewConsole = false
-  Run = iKeller         @ NewConsole = false
-  Run = iXSensINS       @ NewConsole = false
+  // ************** ENGINE CONTROL ***********
+  Run = iSaucisse         @ NewConsole = false
+  Run = pMixThrusters     @ NewConsole = true
 
-  // ************* REGULATION ***************
+  // ************** SENSORS ******************
+  Run = iGPS              @ NewConsole = false
+  Run = iKeller           @ NewConsole = false
+  Run = iXSensINS         @ NewConsole = false
+
+  // ************* REGULATION ****************
   //Run = pSimplePID      @ NewConsole = false ~pSimplePID_depth
   //Run = pSimplePID      @ NewConsole = false ~pSimplePID_heading
-}
-
-ProcessConfig = pSimplePID_depth
-{
-  AppTick   = 10
-  CommsTick = 10
-
-  KP =-80.0
-  KI = 0.0
-  KD = 0.0
-  KW = 0.0
-
-  MOOSVAR_STATE=DEPTH
-  MOOSVAR_CONSIGNE=DESIRED_DEPTH
-  MOOSVAR_COMMAND=DESIRED_FZ
-  MOOSVAR_SATURATION=PID_SATURATION
-}
-
-ProcessConfig = pSimplePID_heading
-{
-  AppTick   = 10
-  CommsTick = 10
-
-  //KP = 0.1
-  KP = 0.1
-  //KI = 0.0001
-  //KD = -0.2
-  //KW = 0.0
-
-  MOOSVAR_STATE=IMU_YAW
-  MOOSVAR_CONSIGNE =DESIRED_HEADING
-  MOOSVAR_COMMAND=DESIRED_RZ
-  //MOOSVAR_STATE_DIFFERENTIAL=IMU_GYR_Z
-  MOOSVAR_SATURATION=PID_HEADING_SATURATION
-
-  ANGLE=DEGREE
-}
-
-ProcessConfig = pMixThrusters
-{
-  AppTick   = 10
-  CommsTick = 10
-
-  FX_SUBSCRIPTION_NAME=DESIRED_FX
-  RZ_SUBSCRIPTION_NAME=DESIRED_RZ
-  FZ_SUBSCRIPTION_NAME=DESIRED_FZ
-
-  U1_PUBLICATION_NAME=SET_THRUSTER_LEFT
-  U2_PUBLICATION_NAME=SET_THRUSTER_RIGHT
-  U3_PUBLICATION_NAME=SET_THRUSTER_VERTICAL
-
-  COEFF_MATRIX=0.9,-0.9,0,1,1,0,0,0,1
-
-  //  FX    RZ    FZ
-  // 1     -1    0
-  // 0.8    0.8    0
-  // 0      0    0
-
-  FORWARD_COEFF = 1.0
-  BACKWARD_COEFF = 1.0
-
-  //SATURATION_MOD = SIGMOID
-}
-
-ProcessConfig = iSaucisse
-{
-  AppTick   = 10
-  CommsTick = 10
-
-  RESET_ON_STARTUP = true
-  RESET_ALL_ON = true
-
-  DEVICE_NAME = /dev/ttyACM0
-  # Linux:
-  #     /dev/ttyACM0
-  # Windows:
-  #     \\\\.\\USBSER000
-  #     or
-  #     \\\\.\\COM6
-  # Mac OS X:
-  #     /dev/cu.usbmodem00034567
 }
 
 ProcessConfig = pShare
@@ -135,34 +54,6 @@ ProcessConfig = pShare
   //Output = src_name = SAUCISSE*,route=192.168.1.100:24468
   //Input = src_name = DESIRED_*,route=multicast_8
   //Output = src_name = *,route=192.168.1.100:24468
-}
-
-ProcessConfig = iXSensINS
-{
-  AppTick        = 10
-  CommsTick      = 10
-
-  UART_BAUD_RATE = 115200
-}
-
-ProcessConfig = iKeller
-{
-  AppTick   = 4
-  CommsTick = 4
-
-  MAX_RETRIES = 10
-}
-
-ProcessConfig = uMACView
-{
-  AppTick   = 4
-  CommsTick = 4
-}
-
-ProcessConfig = uProcessWatch
-{
-  AppTick   = 4
-  CommsTick = 4
 }
 
 ProcessConfig = pLogger
