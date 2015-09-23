@@ -135,7 +135,7 @@ public:
   void setParams(const SNRPARAMS& params) {this->params = params; buildMessage();}
 
   void setContinuous(bool continuous) {params.cont = continuous; buildMessage();}
-  void setInverted(bool invert) {params.invert = invert; buildMessage();}
+  void setInverted(int invert) {params.invert = invert; buildMessage();}
   void setLeftLimit(const double& leftLimit) {params.LeftAngleLimit = leftLimit; buildMessage();}
   void setRightLimit(const double &rightLimit) {params.RightAngleLimit = rightLimit; buildMessage();}
   void setVOS(int vos) {params.VelocityOfSound = vos; buildMessage();}
