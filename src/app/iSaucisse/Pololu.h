@@ -20,6 +20,7 @@ class Pololu : public QObject
     Pololu(std::string device_name);
     ~Pololu();
     
+    bool isReady();
     bool isReady(std::string &error_message);
 
   public slots:
