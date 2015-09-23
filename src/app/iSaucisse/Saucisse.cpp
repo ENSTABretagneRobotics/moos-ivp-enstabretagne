@@ -105,14 +105,14 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
 
     else if(key == "POWER_MICRON")
     {
-      int success = m_pololu->turnOnBistableRelay(1, 0, (int)msg.GetDouble() == 1);
+      int success = m_pololu->turnOnBistableRelay(9, 8, (int)msg.GetDouble() == 1);
       m_status_micron = success >= 0 ? (int)msg.GetDouble() : -1;
       Notify("POWERED_MICRON", m_status_micron);
     }
 
     else if(key == "POWER_MINIKING")
     {
-      int success = m_pololu->turnOnBistableRelay(9, 8, (int)msg.GetDouble() == 1);
+      int success = m_pololu->turnOnBistableRelay(1, 0, (int)msg.GetDouble() == 1);
       m_status_miniking = success >= 0 ? (int)msg.GetDouble() : -1;
       Notify("POWERED_MINIKING", m_status_miniking);
     }

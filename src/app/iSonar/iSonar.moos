@@ -6,9 +6,9 @@ ProcessConfig = iSonar // Any Sonar, 360 scan, low resolution
   AppTick   = 4
   CommsTick = 4
 
-  SERIAL_PORT = /dev/ttyUSB0
+  SERIAL_PORT = /dev/ttyUSB1
 
-  SONAR_TYPR = Miniking //or Micron
+  SONAR_TYPR = Micron //or Micron
 
   RANGE = 10 //IN METERS
   //VOS = 1500 //Velocity Of Sound in m/s
