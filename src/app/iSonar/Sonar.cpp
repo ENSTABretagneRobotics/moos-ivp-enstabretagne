@@ -317,8 +317,6 @@ void Sonar::ListenSonarMessages()
 	      for (int k=0; k<pHdta->nBins(); ++k)
         	vScanline.push_back( pHdta->scanlineData()[k] );
 
-        Notify("SONAR_RAW_BEARING", pHdta->bearing());
-
 	      stringstream ss;
 	      ss << "bearing=" << pHdta->bearingDeg()*M_PI/180.0 << ",";
 	      ss << "ad_interval=" << pHdta->ADInterval_m() << ",";
