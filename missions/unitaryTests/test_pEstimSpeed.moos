@@ -131,6 +131,6 @@ ProcessConfig = pEchoVar
 
   Echo      = POS_DEAD_RECKONING_E  ->  pX
   Echo      = POS_DEAD_RECKONING_N  ->  pY
-  Echo      = POS_DEAD_RECKONING_U  ->  pZ
+  Echo      = GPS_ALTITUDE  ->  pZ
   Echo      = IMU_YAW               ->  pYaw
 }

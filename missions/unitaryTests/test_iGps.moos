@@ -18,7 +18,6 @@ ProcessConfig = ANTLER
   Run = uMACView       @ NewConsole = false
   Run = uMS             @ NewConsole=false
   Run = iGPS           @ NewConsole = false
-  Run = pTrustGPS       @ NewConsole = false
 }
 
 //------------------------------------------
@@ -38,17 +37,6 @@ ProcessConfig = iGPS
   UART_BAUD_RATE = 4800
 }
 
-//------------------------------------------------
-// pTrustGPS config block
-
-ProcessConfig = pTrustGPS
-{
-   AppTick   = 4
-   CommsTick = 4
-
-   ALTITUDE_AT_GPS_SUBMERGED = -0.5
-   PARANOIA_LEVEL = 10
-}
 ProcessConfig = uMACView
 {
    AppTick   = 4
