@@ -281,20 +281,24 @@ void Sonar::ListenSonarMessages()
         m_bSonarReady = m_bHasParams && m_bSentCfg;
         m_bIsAlive = true;
 
-        // if(m_bHasParams)Notify("MT_MESSAGE", "mtAlive, has params");
-        // if(m_bSentCfg)Notify("MT_MESSAGE", "mtAlive, sent cfg");
+        if(m_bHasParams && m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "mtAlive, has params");
+        if(m_bHasParams && m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "mtAlive, has params");
+        if(m_bSentCfg && m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "mtAlive, sent cfg");
+        if(m_bSentCfg && m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "mtAlive, sent cfg");
       }
       else if (snmsg.messageType() == SeaNetMsg::mtVersionData)
       {
         m_bReplyVersionData = true;
-        // Notify("MT_MESSAGE", "REPLY mtVersionData");
+        if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "REPLY mtVersionData");
+        if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "REPLY mtVersionData");
       }
       else if (snmsg.messageType() == SeaNetMsg::mtBBUserData)
       {
         const SeaNetMsg_BBUserData * pBBUserData = reinterpret_cast<SeaNetMsg_BBUserData*> (&snmsg);
         m_snrType = pBBUserData->getSonarType();
         m_bReplyBBUserData = true;
-        // Notify("MT_MESSAGE", "REPLY mtBBUserData");
+        if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "REPLY mtBBUserData");
+        if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "REPLY mtBBUserData");
         // reportRunWarning("Sonar Type : " + (m_snrType == SeaNetMsg::MicronDST)?"MicronSnr":"MinikingSnr");
       }
       else if (snmsg.messageType() == SeaNetMsg::mtHeadData)
@@ -337,17 +341,20 @@ void Sonar::ListenSonarMessages()
         if(!m_bReplyVersionData)
         {
           SendSonarMessage(SeaNetMsg_SendVersion());
-          // Notify("MT_MESSAGE", "SEND mtSendVersion");
+          if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "SEND mtSendVersion");
+          if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "SEND mtSendVersion");
         }
         else if(m_bReplyVersionData && !m_bReplyBBUserData)
         {
           SendSonarMessage(SeaNetMsg_SendBBUser());
-          // Notify("MT_MESSAGE", "SEND mtSendBBUser");
+          if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "SEND mtSendBBUser");
+          if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "SEND mtSendBBUser");
         }
         else if(m_bReplyVersionData && m_bReplyBBUserData && !m_bHasParams)
         {
           SendSonarMessage(m_msgHeadCommand);
-          // Notify("MT_MESSAGE", "SEND mtHeadCommand");
+          if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "SEND mtHeadCommand");
+          if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "SEND mtHeadCommand");
         }
       }
       if (m_bSonarReady && m_bPollSonar && m_bHasParams && m_bSentCfg) {
