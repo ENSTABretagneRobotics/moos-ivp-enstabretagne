@@ -16,7 +16,7 @@ ProcessConfig = ANTLER
   Run = uMS               @ NewConsole = false
   Run = uMACView          @ NewConsole = false
   Run = uProcessWatch     @ NewConsole = false
-  Run = uNavScreen        @ NewConsole = true
+  Run = uNavScreen        @ NewConsole = false
 
   // ************** LOGS *********************
   Run = pLogger           @ NewConsole = false
@@ -24,7 +24,7 @@ ProcessConfig = ANTLER
 
   // ************** ENGINE CONTROL ***********
   Run = iSaucisse         @ NewConsole = false
-  Run = pMixThrusters     @ NewConsole = true
+  Run = pMixThrusters     @ NewConsole = false
 
   // ************** SENSORS ******************
   Run = iXSensINS         @ NewConsole = false
@@ -36,6 +36,10 @@ ProcessConfig = ANTLER
   Run = iCamera           @ NewConsole = false ~iCamera_Bottom
   //Run = iSounder          @ NewConsole = false
   //Run = iRazorIMU         @ NewConsole = false
+
+  // ************** VISUALISATION *************
+  Run = uSensorsViewer     @ NewConsole = false
+
 }
 
 ProcessConfig = pShare
