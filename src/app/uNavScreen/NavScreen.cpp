@@ -22,7 +22,8 @@ NavScreen::NavScreen()
   m_moosvars["GPS_LAT"] = UNSET_VALUE;
   m_moosvars["GPS_LONG"] = UNSET_VALUE;
   m_moosvars["GPS_SIG"] = UNSET_VALUE;
-  m_moosvars["SONAR_POLL"] = UNSET_VALUE;
+  m_moosvars["MINIKING_POLL"] = UNSET_VALUE;
+  m_moosvars["MICRON_POLL"] = UNSET_VALUE;
   m_moosvars["IMU_YAW"] = UNSET_VALUE;
   m_moosvars["IMU_YAW_DEGREE"] = UNSET_VALUE;
   m_moosvars["IMU_PITCH"] = UNSET_VALUE;
@@ -163,8 +164,11 @@ bool NavScreen::buildReport()
   ACTable actab_att(4);
   actab_att << "Dsrd Hdg | Yaw (°) | Pitch | Roll";
   actab_att.addHeaderLines();
+  stringstream convert;
+  convert << "(" << m_moosvars["IMU_YAW_DEGREE"] << ")";
   actab_att << m_moosvars["DESIRED_HEADING"]
-            << m_moosvars["IMU_YAW"] << "(" << m_moosvars["IMU_YAW_DEGREE"] << ")"
+            << m_moosvars["IMU_YAW"] 
+            << convert.str()
             << m_moosvars["IMU_PITCH"]
             << m_moosvars["IMU_ROLL"];
   m_msgs << actab_att.getFormattedString() << "\n\n";
@@ -191,12 +195,12 @@ bool NavScreen::buildReport()
               << m_moosvars["ECHOSOUNDER_RANGE"];
   m_msgs << actab_depth.getFormattedString() << "\n\n";
 
-  m_msgs << "SONAR\n";
-  m_msgs << "=====\n";
-  ACTable actab_sonar(1);
-  actab_sonar << "Poll";
+  m_msgs << "SONAR POLL\n";
+  m_msgs << "==========\n";
+  ACTable actab_sonar(2);
+  actab_sonar << "Micron" << "Miniking";
   actab_sonar.addHeaderLines();
-  actab_sonar << m_moosvars["SONAR_POLL"];
+  actab_sonar << m_moosvars["MICRON_POLL"] << m_moosvars["MINIKING_POLL"];
   m_msgs << actab_sonar.getFormattedString() << "\n\n";
 
   m_msgs << "SENSORS\n";
@@ -207,7 +211,8 @@ bool NavScreen::buildReport()
   actab_sensors << m_moosvars["POWERED_GPS"]
               << m_moosvars["POWERED_MODEM"]
               << m_moosvars["POWERED_MICRON"]
-              << m_moosvars["POWERED_MINIKING"];
+              << m_moosvars["POWERED_MINIKING"]
+              << m_moosvars["POWERED_CAMERAS"];
   m_msgs << actab_sensors.getFormattedString() << "\n\n";
 
   return true;
