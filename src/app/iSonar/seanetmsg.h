@@ -165,7 +165,7 @@ class SeaNetMsg_HeadData : public SeaNetMsg
 public:
   SeaNetMsg_HeadData() : SeaNetMsg() {};
 
-  double bearing() const { uint16_t bearing_grad = read_ushort_at(40); return 360./6400.*bearing_grad;}
+  double bearingDeg() const { uint16_t bearing_grad = read_ushort_at(40); return 360./6400.*bearing_grad;}
   double ADInterval_s() const { uint16_t ad_int_640ns = read_ushort_at(33); return 640.e-9*ad_int_640ns;}
   double ADInterval_m() const { return 1500.*ADInterval_s();}
   int nBins() const { return read_ushort_at(42); }
