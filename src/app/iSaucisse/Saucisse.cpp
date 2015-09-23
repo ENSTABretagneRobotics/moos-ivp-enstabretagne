@@ -336,7 +336,7 @@ bool Saucisse::buildReport()
   actab_temperatures << "NUC" << m_nuc->getTemperature();
   m_msgs << actab_temperatures.getFormattedString() << "\n\n";
   
-  return  true;
+  return true;
 }
 
 //------------------------------------------------------------
@@ -346,6 +346,7 @@ std::string Saucisse::sensorStatusInText(int status)
 {
   if(status == UNDEFINED_STATUS)
     return "?";
+  
   else
   {
     stringstream convert;
