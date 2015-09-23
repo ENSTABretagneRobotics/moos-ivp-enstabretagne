@@ -5,6 +5,9 @@ ServerPort = 9000
 
 Community  = AUV
 
+LatOrigin  = 42.954273
+LongOrigin = 10.601703
+
 //------------------------------------------
 // Antler configuration  block
 
@@ -14,18 +17,13 @@ ProcessConfig = ANTLER
   Run = MOOSDB                      @ NewConsole = false
   Run = uMS                         @ NewConsole = false
   Run = pEstimSpeed                 @ NewConsole = true
+  Run = pLatLon2LocalGrid           @ NewConsole = true
   Run = pTrustGPS                   @ NewConsole = true 
   Run = pMapLocalizerParticleFilter @ NewConsole = true
   Run = pMixThrusters               @ NewConsole = true
   Run = uJoystick                   @ NewConsole = false
   Run = pEchoVar                    @ NewConsole = false  
   Run = uTimerScript                @ NewConsole = false ~timerScriptResetEstim
-}
-
-//------------------------------------------
-ProcessConfig = timerScriptMissionStart
-{
-  event = var = RESET, val=1, time=15
 }
 
 //------------------------------------------------
@@ -39,11 +37,36 @@ ProcessConfig = pMapLocalizerParticleFilter
    SPEED_VAR = 0.25
    HEADING_VAR = 49
    ALTITUDE_VAR = 0.0225
-   GPS_E_VAR = 25
-   GPS_N_VAR = 25
+   GPS_E_VAR = 1
+   GPS_N_VAR = 1
    BEAM_ANGLE_VAR = 49
+   BEAM_RANGE_VAR = 25
    RESAMPLE_EVERY = 10
    RESAMPLING_METHOD = RESIDUAL
+   RESET_SUBSCRIPTION_NAME = RESET
+   //WALL_DETECTOR_SUBSCRIPTION_NAME = WALL_DETECTOR_
+   WALL_DETECTOR_SUBSCRIPTION_NAME = WALL_DETECTOR
+   GPS_E_SUBSCRIPTION_NAME = GPS_E
+   GPS_N_SUBSCRIPTION_NAME = GPS_N
+   KELLER_DEPTH_SUBSCRIPTION_NAME = KELLER_DEPTH
+   SPEED_ESTIM_LOCAL_SUBSCRIPTION_NAME = SPEED_LOCAL_DEAD_RECKONING
+   IMU_YAW_SUBSCRIPTION_NAME = IMU_YAW
+   GPS_TRUST_SUBSCRIPTION_NAME = GPS_TRUST
+
+   POS_X_PUBLICATION_NAME = POS_X_PF
+   POS_Y_PUBLICATION_NAME = POS_Y_PF
+   POS_COV_XX_PUBLICATION_NAME = POS_COV_XX
+   POS_COV_XY_PUBLICATION_NAME = POS_COV_XY
+   POS_COV_YY_PUBLICATION_NAME = POS_COV_YY
+   
+   POS_X_WEIGHTED_PUBLICATION_NAME = POS_X_WEIGHTED_PF
+   POS_Y_WEIGHTED_PUBLICATION_NAME = POS_Y_WEIGHTED_PF
+   POS_COV_XX_WEIGHTED_PUBLICATION_NAME = POS_COV_XX_WEIGHTED
+   POS_COV_XY_WEIGHTED_PUBLICATION_NAME = POS_COV_XY_WEIGHTED
+   POS_COV_YY_WEIGHTED_PUBLICATION_NAME = POS_COV_YY_WEIGHTED
+   
+   MAP_PATH=/home/jeremy_nicola/moos-ivp-toutatis-jeremy/bin/map.txt
+   
 }
 
 //------------------------------------------------
@@ -51,19 +74,22 @@ ProcessConfig = pMapLocalizerParticleFilter
 
 ProcessConfig = pEstimSpeed
 {
-   AppTick   = 4
-   CommsTick = 4
+   // Mass of the robot
+   MASS = 20
+   
+   AppTick   = 10
+   CommsTick = 10
 
    // The coeff matrix maps forces (Newton) to inputs ([-1,1], adimensional)
    // In this application, we will compute the inverse of this matrix,
    // so that from inputs we get forces, and can apply Newton's law of motion
-   COEFF_MATRIX = 1,-1,0,1,1,0,0,0,1
+   COEFF_MATRIX = 0.1,-0.1,0,0.1,0.1,0,0,0,0.1
 
    // The damping matrix maps square of speeds as inputs, and return a force.
    // In an underwater environment, the damping is not linear with respect
    // to speed.
    // Once we have the damping forces and the input forces, we can apply Newton's laws of motion
-   DAMPING_MATRIX = 0.4,0,0,0,0.4,0,0,0,0.4
+   DAMPING_MATRIX = 4,0,0,0,10,0,0,0,4//0,0,0,0,0,0,0,0,0//
 
    // Initial speed. In principle, we should aim for a null speed at
    // startup
@@ -71,20 +97,21 @@ ProcessConfig = pEstimSpeed
 
    // Name to receive the yaw
    YAW_REGISTRATION_NAME = IMU_YAW
-
-   // Mass of the robot
-   MASS = 20
    
    U1_SUBSCRIPTION_NAME = DESIRED_U1
    U2_SUBSCRIPTION_NAME = DESIRED_U2
    U3_SUBSCRIPTION_NAME = DESIRED_U3
-   RESET_SUBSCRIPTION_NAME = RESET_ESTIM
+   RESET_SUBSCRIPTION_NAME = RESET
    GPS_E_SUBSCRIPTION_NAME = GPS_E
-   GPS_N_SUBSCRIPTION_NAME = GPS_E
+   GPS_N_SUBSCRIPTION_NAME = GPS_N
    KELLER_DEPTH_SUBSCRIPTION_NAME = KELLER_DEPTH
 
    // Names of the publications
    POS_DEAD_RECKONING_PUBLICATION_NAME = POS_DEAD_RECKONING
+   POS_DEAD_RECKONING_E_PUBLICATION_NAME = POS_DEAD_RECKONING_E
+   POS_DEAD_RECKONING_N_PUBLICATION_NAME = POS_DEAD_RECKONING_N
+   POS_DEAD_RECKONING_U_PUBLICATION_NAME = POS_DEAD_RECKONING_U
+   
    SPEED_LOCAL_DEAD_RECKONING_PUBLICATION_NAME = SPEED_LOCAL_DEAD_RECKONING
    SPEED_GLOBAL_DEAD_RECKONING_PUBLICATION_NAME = SPEED_GLOBAL_DEAD_RECKONING
 }
@@ -156,4 +183,33 @@ ProcessConfig = uJoystick
    BUTTON = 2
    SCALE_RATIO = 1
    MOOS_DEST_VAR = PUSHED_BUTTON_2
+}
+
+ProcessConfig = pLatLon2LocalGrid
+{
+  LatOrigin  = 42.954273
+  LongOrigin = 10.601703
+
+  AppTick   = 4
+  CommsTick = 4
+
+  // Topics we subscribe to
+  LAT_SUBSCRIPTION_NAME = GPS_LATITUDE
+  LON_SUBSCRIPTION_NAME = GPS_LONGITUDE
+
+  // Topics we publish to
+  NORTHING_PUBLICATION_NAME = GPS_N
+  EASTING_PUBLICATION_NAME = GPS_E
+}
+
+// We remap for the simulator to get the estimated postition
+ProcessConfig = pEchoVar
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  Echo      = POS_X_WEIGHTED_PF -> pX //POS_DEAD_RECKONING_E  ->  pX
+  Echo      = POS_Y_WEIGHTED_PF -> pY //POS_DEAD_RECKONING_N  ->  pY
+  Echo      = KELLER_DEPTH  ->  pZ
+  Echo      = IMU_YAW               ->  pYaw
 }
