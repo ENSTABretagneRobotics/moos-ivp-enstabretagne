@@ -306,7 +306,7 @@ void Sonar::ListenSonarMessages()
 
 	      stringstream ss;
 	      ss << "bearing=" << pHdta->bearing()*M_PI/180.0 << ",";
-	      ss << "ad_interval=" << pHdta->ADInterval_m() << ",";
+	      ss << "ad_interval=" << MOOSGrad2Rad(pHdta->ADInterval_m()/16.0) << ",";
 	      ss << "scanline=";
 	      Write(ss, vScanline);
         if (pHdta->nBins() <= (m_iParamBins*1.5))
@@ -492,4 +492,8 @@ bool Sonar::buildReport()
     m_msgs << actab4.getFormattedString();
 
   return true;
+}
+
+double Sonar::MOOSGrad2Rad(double angle){
+  return angle*M_PI/200.0;
 }
