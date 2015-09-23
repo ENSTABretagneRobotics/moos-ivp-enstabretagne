@@ -305,8 +305,8 @@ void Sonar::ListenSonarMessages()
         	vScanline.push_back( pHdta->scanlineData()[k] );
 
 	      stringstream ss;
-	      ss << "bearing=" << pHdta->bearing()*M_PI/180.0 << ",";
-	      ss << "ad_interval=" << MOOSGrad2Rad(pHdta->ADInterval_m()/16.0) << ",";
+	      ss << "bearing=" << MOOSGrad2Rad(pHdta->bearing()/16.0) << ",";
+	      ss << "ad_interval=" << pHdta->ADInterval_m() << ",";
 	      ss << "scanline=";
 	      Write(ss, vScanline);
         if (pHdta->nBins() <= (m_iParamBins*1.5))
