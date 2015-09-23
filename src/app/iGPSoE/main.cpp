@@ -66,6 +66,9 @@ int main(int argc, char *argv[])
     sigemptyset(&sigIntHandler.sa_mask);
     sigIntHandler.sa_flags = 0;
     sigaction(SIGTERM, &sigIntHandler, NULL);
+    sigaction(SIGKILL, &sigIntHandler, NULL);
+    sigaction(SIGQUIT, &sigIntHandler, NULL);
+    sigaction(SIGINT, &sigIntHandler, NULL);
 
     objGPSoE->Run(run_command.c_str(), mission_file.c_str());
   }
