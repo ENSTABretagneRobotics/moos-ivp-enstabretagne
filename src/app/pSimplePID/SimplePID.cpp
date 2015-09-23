@@ -44,7 +44,7 @@ SimplePID::SimplePID()
   m_moosvar_state_diffferential = "";
   m_differential_input          = false;
 
-  m_angle_degree                = false;
+  m_angle                = false;
 }
 
 //---------------------------------------------------------
@@ -111,8 +111,8 @@ bool SimplePID::Iterate()
   // Proportional
   m_error = m_consigne - m_state;
 
-  if(m_angle_degree){
-    m_error = 2.0*atan(tan(m_error/2.0*M_PI/180.0))*180.0/M_PI;
+  if(m_angle){
+    m_error = 2.0*atan(tan(m_error/2.0));
   }
 
   double P = m_dt * m_kp * m_error;
@@ -191,8 +191,8 @@ bool SimplePID::OnStartUp()
       handled = true;
     }
     else if(param == "ANGLE"){
-      if(value == "DEGREE"){
-        m_angle_degree = true;
+      if(value == "RAD"){
+        m_angle = true;
       }
     }
 
@@ -235,7 +235,7 @@ bool SimplePID::buildReport()
     m_msgs << actab.getFormattedString();
   #endif
 
-  ACTable actab(4);
+  ACTable actab(3);
   actab << "State | Consigne | Error";
   actab.addHeaderLines();
   actab << m_state << m_consigne << m_error;
@@ -243,10 +243,11 @@ bool SimplePID::buildReport()
   m_msgs << actab.getFormattedString();
   m_msgs << '\n';
   
-  actab << "Kp | Ki | Kd | Kz";
-  actab.addHeaderLines();
-  actab << m_kp << m_ki << m_kd << m_kw;
-  m_msgs << actab.getFormattedString();
+  ACTable actab2(4);
+  actab2 << "Kp | Ki | Kd | Kz";
+  actab2.addHeaderLines();
+  actab2 << m_kp << m_ki << m_kd << m_kw;
+  m_msgs << actab2.getFormattedString();
 
   return true;
 }
