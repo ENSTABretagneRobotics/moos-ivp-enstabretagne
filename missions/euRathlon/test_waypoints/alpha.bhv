@@ -1,58 +1,59 @@
 initialize   DEPLOY = false
 initialize   RETURN = false
-initialize   S1_WP = true
+initialize   S1_WP = false
 initialize   S1_GPS = false
-initialize   S2_WP = false
+initialize   S2_WP = true
 initialize   S2_GPS = false
 initialize   S3_WP = false
 initialize   S3_GPS = false
 initialize   S4_WP = false
 initialize   S4_GPS = false
 
-Behavior = BHV_ConstantDepth
-{
-  name = bhv_s1_depth
-  priority = 100
-  condition = DEPLOY = true
-  condition = S1_WP = true
-  duration = no-time-limit
-  depth = 1             // meters
-}
-
-Behavior = BHV_Waypoint
-{ 
-  name      = bhv_s1_wp
-  pwt       = 100
-  condition = DEPLOY = true
-  condition = S1_WP = true
-  endflag   = S1_WP = false
-  endflag   = S1_GPS = true
-
-               lead = 8
-        lead_damper = 1
-              speed = 0.5   // meters per second
-       capture_line = true
-     capture_radius = 5.0
-        slip_radius = 15.0
-  points = label,survey_points:6.5107,-138.1
-             repeat = 0
-}
-
-Behavior = BHV_ConstantDepth
-{
-  name = bhv_s1_gps
-  priority = 100
-  condition = S1_GPS = true
-  endflag = S1_GPS = false
-  endflag = S2_WP = true
-  duration = 10
-  depth = 0             // meters
-}
+//Behavior = BHV_ConstantDepth
+//{
+//  name = bhv_s1_depth
+//  priority = 100
+//  condition = DEPLOY = true
+//  condition = S1_WP = true
+//  duration = no-time-limit
+//  depth = 1             // meters
+//}
+//
+//Behavior = BHV_Waypoint
+//{ 
+//  name      = bhv_s1_wp
+//  pwt       = 100
+//  condition = DEPLOY = true
+//  condition = S1_WP = true
+//  endflag   = S1_WP = false
+//  endflag   = S1_GPS = true
+//
+//               lead = 8
+//        lead_damper = 1
+//              speed = 0.5   // meters per second
+//       capture_line = true
+//     capture_radius = 5.0
+//        slip_radius = 15.0
+//  points = label,survey_points:6.5107,-138.1
+//             repeat = 0
+//}
+//
+//Behavior = BHV_ConstantDepth
+//{
+//  name = bhv_s1_gps
+//  priority = 100
+//  condition = S1_GPS = true
+//  endflag = S1_GPS = false
+//  endflag = S2_WP = true
+//  duration = 10
+//  depth = 0             // meters
+//}
 
 Behavior = BHV_ConstantDepth
 {
   name = bhv_s2_depth
   priority = 100
+  condition = DEPLOY = true
   condition = S2_WP = true
   duration = no-time-limit
   depth = 1             // meters
@@ -62,6 +63,7 @@ Behavior = BHV_Waypoint
 { 
   name      = bhv_s2_wp
   pwt       = 100
+  condition = DEPLOY = true
   condition = S2_WP = true
   endflag   = S2_WP = false
   endflag   = S2_GPS = true
