@@ -12,4 +12,16 @@ ProcessConfig = pMixThrusters
   U3_PUBLICATION_NAME=SET_THRUSTER_VERTICAL
 
   COEFF_MATRIX=0.9,-0.9,0,1,1,0,0,0,1
+
+  //  FX    RZ    FZ
+  // 1     -1    0
+  // 0.8    0.8    0
+  // 0      0    0
+
+  FORWARD_COEFF = 1.0
+  BACKWARD_COEFF = 0.9
+
+  SATURATION_MOD = NORMALISATION
+
+  SIGMOID_COEFF = 0.333
 }
