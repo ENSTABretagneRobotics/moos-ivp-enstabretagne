@@ -4,6 +4,7 @@ ProcessConfig = iSonar_Micron
   CommsTick = 20
 
   SERIAL_PORT = /dev/micron
+  SONAR_TYPE = Micron
 
   RANGE            = 5 //IN METERS
   NBINS            = 100 //NUMBER OF SAMPLES PER SCANLINE
