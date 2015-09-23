@@ -1,0 +1,28 @@
+ServerHost = localhost
+ServerPort = 9000
+Community  = AUV
+
+#include "interfaces.moos"
+#include "processes.moos"
+#include "utilities.moos"
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+
+  Run = MOOSDB            @ NewConsole = false
+
+  // ************** UTILITIES ****************
+  Run = uMS               @ NewConsole = false
+
+  // ************** LOGS *********************
+  Run = uPlayback         @ NewConsole = false
+
+  // ************** ENGINE CONTROL ***********
+  Run = iSaucisse         @ NewConsole = false
+  Run = pMixThrusters     @ NewConsole = false
+
+  // ************** SENSORS ******************
+  Run = iKeller           @ NewConsole = false
+  Run = iXSensINS         @ NewConsole = false
+}

@@ -37,7 +37,7 @@ class Sonar : public AppCastingMOOSApp
 	private: // Configuration variables
 		std::string m_portName;
 		SeaNetMsg_HeadCommand m_msgHeadCommand;
-
+		double MOOSGrad2Rad(double angle);
 
 	private: // State variables
 	    #ifdef _WIN32
@@ -57,6 +57,8 @@ class Sonar : public AppCastingMOOSApp
 		bool m_bSonarReady;
 		bool m_bPollSonar;
 		bool m_bIsPowered;
+
+		int m_iParamBins;
 
 		SeaNetMsg::SonarType m_snrType;
 

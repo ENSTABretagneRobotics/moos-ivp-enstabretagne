@@ -1,0 +1,5 @@
+ProcessConfig = uSensorsViewer
+{
+  AppTick   = 25
+  CommsTick = 25
+}

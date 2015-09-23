@@ -7,6 +7,7 @@
 SET(SRC
   WallDetector.cpp
   main.cpp
+  SonarWall.cpp
 )
 
 ADD_EXECUTABLE(pWallDetector ${SRC})
