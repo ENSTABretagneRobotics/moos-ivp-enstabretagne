@@ -63,7 +63,7 @@ ProcessConfig = pLogger
   CommsTick   = 25.0
 
   File          = data_gate
-  PATH          = ./
+  PATH          = /home/ciscrea/log
   FileTimeStamp = true
 
   DoublePrecision = 12
