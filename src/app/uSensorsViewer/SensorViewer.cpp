@@ -199,7 +199,7 @@ bool SensorViewer::Iterate()
 
 	imshow("SONAR MINIKING", m_img_sonar_miniking);
 	imshow("SONAR MICRON", m_img_sonar_micron);
-	imshow("SONAR", m_img_sonar);
+	//imshow("SONAR", m_img_sonar);
 	
 	imshow("CAMERA SIDE", m_img_camera_side);
 	imshow("CAMERA BOTTOM", m_img_camera_bottom);
@@ -249,7 +249,6 @@ bool SensorViewer::OnStartUp() {
 	namedWindow("SONAR MINIKING", WINDOW_NORMAL);
 	namedWindow("SONAR MICRON", WINDOW_NORMAL);
 	//namedWindow("SONAR", WINDOW_NORMAL);
-	
 	namedWindow("WALL MICRON", WINDOW_NORMAL);
 	namedWindow("WALL MINIKING", WINDOW_NORMAL);
 

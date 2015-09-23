@@ -11,8 +11,8 @@ SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="d38b", ATTRS{seria
 
 KERNEL=="ttyUSB*", SUBSYSTEM=="tty", DRIVER=="", ATTRS{bInterfaceNumber}=="00", ATTRS{interface}=="Quad RS232-HS", SYMLINK+="gps"
 
-KERNEL=="ttyUSB*", SUBSYSTEM=="tty", DRIVER=="", ATTRS{bInterfaceNumber}=="01", ATTRS{interface}=="Quad RS232-HS", SYMLINK+="sonar"
+KERNEL=="ttyUSB*", SUBSYSTEM=="tty", DRIVER=="", ATTRS{bInterfaceNumber}=="01", ATTRS{interface}=="Quad RS232-HS", SYMLINK+="micron"
 
-KERNEL=="ttyUSB*", SUBSYSTEM=="tty", DRIVER=="", ATTRS{bInterfaceNumber}=="02", ATTRS{interface}=="Quad RS232-HS", SYMLINK+="echosounder"
+KERNEL=="ttyUSB*", SUBSYSTEM=="tty", DRIVER=="", ATTRS{bInterfaceNumber}=="02", ATTRS{interface}=="Quad RS232-HS", SYMLINK+="miniking"
 
 KERNEL=="ttyUSB*", SUBSYSTEM=="tty", DRIVER=="", ATTRS{bInterfaceNumber}=="03", ATTRS{interface}=="Quad RS232-HS", SYMLINK+="modem"

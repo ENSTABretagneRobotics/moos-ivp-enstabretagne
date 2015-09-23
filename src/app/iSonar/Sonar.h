@@ -59,6 +59,7 @@ class Sonar : public AppCastingMOOSApp
 		bool m_bIsPowered;
 
 		int m_iParamBins;
+		int m_sSonarType;
 
 		SeaNetMsg::SonarType m_snrType;
 

@@ -30,7 +30,8 @@ class MixThrusters : public AppCastingMOOSApp
   protected: // MixThrusters functions
     void saturationSigmoid(Eigen::Vector3d &u);
     void saturationNormalization(Eigen::Vector3d &u);
-    double SensCorrection(double val);
+    double sensCorrection(double val);
+    double fsign(double val);
 
   private: // Configuration variables
       Eigen::Matrix3d COEFF_MATRIX;
