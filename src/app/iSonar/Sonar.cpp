@@ -3,7 +3,7 @@
 #include "ACTable.h"
 #include "Sonar.h"
 #include "seanetmsg.h"
-
+#include "math.h"
 
 using namespace std;
 
@@ -25,6 +25,7 @@ Sonar::Sonar()
 
   m_bPollSonar = false;
 
+  m_iParamBins = 0;
 
 	if (!m_serial_thread.Initialise(listen_sonar_messages_thread_func, (void*)this))
 	{
@@ -76,7 +77,10 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
       if (MOOSValFromString(dVal, msg_val, "invert", true))
         m_msgHeadCommand.setInverted(dVal);
 		  if (MOOSValFromString(iVal, msg_val, "nBins", true))
+      {
+        m_iParamBins = iVal;
 		    m_msgHeadCommand.setNbins(iVal);
+      }
 		  if (MOOSValFromString(dVal, msg_val, "AngleStep", true))
 	      	m_msgHeadCommand.setAngleStep(dVal);
 		  if (MOOSValFromString(bVal, msg_val, "Continuous", true))
@@ -305,10 +309,13 @@ void Sonar::ListenSonarMessages()
 	      ss << "ad_interval=" << MOOSGrad2Rad(pHdta->ADInterval_m()/16.0) << ",";
 	      ss << "scanline=";
 	      Write(ss, vScanline);
-        if(m_snrType == SeaNetMsg::MicronDST)
-          Notify("SONAR_RAW_DATA_MICRON", ss.str());
-        else if(m_snrType == SeaNetMsg::MiniKingNotDST)
-          Notify("SONAR_RAW_DATA_MINIKING", ss.str());
+        if (pHdta->nBins() <= (m_iParamBins*1.5))
+        {
+          if(m_snrType == SeaNetMsg::MicronDST)
+            Notify("SONAR_RAW_DATA_MICRON", ss.str());
+          else if(m_snrType == SeaNetMsg::MiniKingNotDST)
+            Notify("SONAR_RAW_DATA_MINIKING", ss.str());
+        }
 
 	      // ***************************************
 
@@ -355,8 +362,6 @@ bool Sonar::OnStartUp()
 	setlocale(LC_ALL, "C");
 	list<string> sParams;
 	m_MissionReader.EnableVerbatimQuoting(false);
-  if (!m_MissionReader.GetValue("SONAR_SERIAL_PORT",m_portName))
-    reportConfigWarning("No SONAR_SERIAL_PORT config found for " + GetAppName());
 
 	if(m_MissionReader.GetConfiguration(GetAppName(), sParams))
 	{
@@ -377,7 +382,10 @@ bool Sonar::OnStartUp()
       if(MOOSStrCmp(param, "INVERT"))
           m_msgHeadCommand.setInverted(atoi(value.c_str()));
 			if(MOOSStrCmp(param, "NBINS"))
-			    m_msgHeadCommand.setNbins(atoi(value.c_str()));
+      {
+        m_iParamBins = atoi(value.c_str());
+        m_msgHeadCommand.setNbins(m_iParamBins);
+      }
 			if(MOOSStrCmp(param, "ANGLESTEP"))
 			    m_msgHeadCommand.setAngleStep(atof(value.c_str()));
 			if(MOOSStrCmp(param, "CONTINUOUS"))
@@ -390,6 +398,8 @@ bool Sonar::OnStartUp()
 			    m_msgHeadCommand.setRightLimit(atof(value.c_str()));
       if(MOOSStrCmp(param, "POWERED_AT_START"))
           m_bIsPowered = MOOSStrCmp(value.c_str(),"TRUE");
+      if(MOOSStrCmp(param, "SERIAL_PORT"))
+          m_portName = value.c_str();
     }
 	}
 	else

@@ -58,6 +58,8 @@ class Sonar : public AppCastingMOOSApp
 		bool m_bPollSonar;
 		bool m_bIsPowered;
 
+		int m_iParamBins;
+
 		SeaNetMsg::SonarType m_snrType;
 
 		CMOOSThread m_serial_thread;

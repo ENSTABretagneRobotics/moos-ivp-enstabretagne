@@ -1,5 +1,5 @@
 /************************************************************/
-/*    FILE: Gps.cpp
+/*    FILE: GPS.cpp
 /*    ORGN: Toutatis AUVs - ENSTA Bretagne
 /*    AUTH: Thomas Le Mezo
 /*    DATE: 2015
@@ -8,14 +8,14 @@
 #include <iterator>
 #include "MBUtils.h"
 #include "ACTable.h"
-#include "Gps.h"
+#include "GPS.h"
 
 using namespace std;
 
 //---------------------------------------------------------
 // Constructor
 
-Gps::Gps()
+GPS::GPS()
 : m_io(), m_serial(m_io) {
     m_uart_port = "/dev/ttyUSB0";
 
@@ -28,14 +28,14 @@ Gps::Gps()
     m_heading = 0;
 }
 
-Gps::~Gps() {
+GPS::~GPS() {
     m_serial.close();
 }
 
 //---------------------------------------------------------
 // Procedure: OnNewMail
 
-bool Gps::OnNewMail(MOOSMSG_LIST &NewMail) {
+bool GPS::OnNewMail(MOOSMSG_LIST &NewMail) {
     AppCastingMOOSApp::OnNewMail(NewMail);
 
     MOOSMSG_LIST::iterator p;
@@ -63,7 +63,7 @@ bool Gps::OnNewMail(MOOSMSG_LIST &NewMail) {
 //---------------------------------------------------------
 // Procedure: OnConnectToServer
 
-bool Gps::OnConnectToServer() {
+bool GPS::OnConnectToServer() {
     registerVariables();
     return (true);
 }
@@ -72,7 +72,7 @@ bool Gps::OnConnectToServer() {
 // Procedure: Iterate()
 //            happens AppTick times per second
 
-bool Gps::Iterate() {
+bool GPS::Iterate() {
     AppCastingMOOSApp::Iterate();
     // Read trame from COM port
 
@@ -109,15 +109,7 @@ bool Gps::Iterate() {
         m_lon = m_dpos.lon * 180.0 / M_PI;
 
         Notify("GPS_LAT", m_lat);
-        Notify("GPS_LON", m_lon);
-
-        /*if(m_sig != 0.0 and m_depth < m_depth_invalid_threshold){
-          m_lat = m_dpos.lat*180.0/M_PI;
-          m_lon = m_dpos.lon*180.0/M_PI;
-          Notify("GPS_LAT", m_lat);
-          Notify("GPS_LONG", m_lon);
-          //Notify_GNSS(&lat, &lon);
-        }*/
+        Notify("GPS_LONG", m_lon);
     } else if (m_error.value() == 2.0) {
         //Case end of line beacause the trame is not arrived completly yet
     } else {
@@ -132,13 +124,11 @@ bool Gps::Iterate() {
 // Procedure: OnStartUp()
 //            happens before connection is open
 
-bool Gps::OnStartUp() {
+bool GPS::OnStartUp() {
     AppCastingMOOSApp::OnStartUp();
 
     STRING_LIST sParams;
     m_MissionReader.EnableVerbatimQuoting(false);
-    if (!m_MissionReader.GetValue("GPS_SERIAL_PORT",m_uart_port))
-        reportConfigWarning("No GPS_SERIAL_PORT config found for " + GetAppName() + "(previously iGps)");
     if (!m_MissionReader.GetConfiguration(GetAppName(), sParams))
         reportConfigWarning("No config block found for " + GetAppName());
 
@@ -150,6 +140,10 @@ bool Gps::OnStartUp() {
         string value = line;
 
         bool handled = false;
+        if (param == "SERIAL_PORT") {
+            m_uart_port = value.c_str();
+            handled = true;
+        }
         if (param == "UART_BAUD_RATE") {
             m_uart_baud_rate = atoi(value.c_str());
             handled = true;
@@ -184,7 +178,7 @@ bool Gps::OnStartUp() {
 //---------------------------------------------------------
 // Procedure: registerVariables
 
-void Gps::registerVariables() {
+void GPS::registerVariables() {
     AppCastingMOOSApp::RegisterVariables();
 }
 
@@ -192,7 +186,7 @@ void Gps::registerVariables() {
 //------------------------------------------------------------
 // Procedure: buildReport()
 
-bool Gps::buildReport() {
+bool GPS::buildReport() {
   #if 0 // Keep these around just for template
     m_msgs << "============================================ \n";
     m_msgs << "File:                                        \n";
@@ -218,7 +212,7 @@ bool Gps::buildReport() {
   return true;
 }
 
-bool Gps::Notify_GNSS(float *lat, float *lon) {
+bool GPS::Notify_GNSS(float *lat, float *lon) {
     string msg;
     msg += "LAT=" + doubleToString(*lat, 6) + ",";
     msg += "LON=" + doubleToString(*lon, 6);

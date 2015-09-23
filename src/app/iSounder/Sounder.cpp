@@ -97,8 +97,6 @@ bool Sounder::OnStartUp()
 
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
-  if (!m_MissionReader.GetValue("Sounder_SERIAL_PORT",m_port_name))
-    reportConfigWarning("No Sounder_SERIAL_PORT config found for " + GetAppName());
   if(!m_MissionReader.GetConfiguration(GetAppName(), sParams))
     reportConfigWarning("No config block found for " + GetAppName());
 
@@ -113,12 +111,11 @@ bool Sounder::OnStartUp()
     string value = line;
     bool handled = false;
 
-    // if(param == "SERIAL_PORT_NAME")
-    // {
-    //   handled = true;
-    //   if(!initSerialPort(value))
-    //     reportConfigWarning("Initialization failed on " + value);
-    // }
+    if(param == "SERIAL_PORT")
+    {
+      m_port_name = value.c_str();
+      handled = true;
+    }
 
     if(!handled)
       reportUnhandledConfigWarning(orig);
