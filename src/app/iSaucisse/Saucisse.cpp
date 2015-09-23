@@ -5,6 +5,9 @@
 /*    DATE: 2015
 /************************************************************/
 
+#include <iostream>
+#include <fstream>
+
 #include <sstream>
 #include <iterator>
 #include "math.h"
@@ -323,8 +326,8 @@ bool Saucisse::buildReport()
   actab_thrusters << "Thruster" << "Value";
   actab_thrusters.addHeaderLines();
   actab_thrusters << "Left" << m_left_thruster_value;
-  actab_thrusters << "Right" << m_left_thruster_value;
-  actab_thrusters << "Vertical" << m_left_thruster_value;
+  actab_thrusters << "Right" << m_right_thruster_value;
+  actab_thrusters << "Vertical" << m_vertical_thruster_value;
   m_msgs << actab_thrusters.getFormattedString() << "\n\n";
 
   ACTable actab_temperatures(2);
@@ -332,7 +335,7 @@ bool Saucisse::buildReport()
   actab_temperatures.addHeaderLines();
   actab_temperatures << "NUC" << m_nuc->getTemperature();
   m_msgs << actab_temperatures.getFormattedString() << "\n\n";
-
+  
   return  true;
 }
 

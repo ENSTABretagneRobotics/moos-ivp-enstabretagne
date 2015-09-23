@@ -2,20 +2,29 @@ ServerHost = localhost
 ServerPort = 9000
 Community  = AUV
 
+#include "interfaces.moos"
+#include "processes.moos"
+#include "utilities.moos"
+
 LatOrigin  = 42.954260714055195
 LongOrigin = 10.601735409849422
 
 ProcessConfig = ANTLER
 {
-  MSBetweenLaunches = 500
+  MSBetweenLaunches = 200
+
   Run = MOOSDB          @ NewConsole = false
+
+  // ************** UTILITIES ****************
   Run = uMS             @ NewConsole = false
   Run = pMarineViewer   @ NewConsole = false
-  Run = pNodeReporter   @ NewConsole = false
-  Run = uPlayback       @ NewConsole = false
-  //Run = pLatLon2LocalGrid       @ NewConsole = false
-  Run = pEchoVar       @ NewConsole = false
   Run = uTimerScript    @ NewConsole = false ~euRathlonItems
+
+  // ************** LOGS *********************
+  Run = uPlayback       @ NewConsole = false
+  Run = pNodeReporter   @ NewConsole = false
+  Run = pEchoVar        @ NewConsole = false
+  //Run = pLatLon2LocalGrid       @ NewConsole = false
 }
 
 ProcessConfig = pLatLon2LocalGrid

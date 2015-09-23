@@ -25,7 +25,7 @@ ProcessConfig = iSonar // Any Sonar, 360 scan, med resolution
   AppTick   = 4
   CommsTick = 4
 
-  SERIAL_PORT = /dev/ttyUSB0
+  SERIAL_PORT = /dev/sonar
 
   RANGE = 10 //IN METERS
   //VOS = 1500 //Velocity Of Sound in m/s

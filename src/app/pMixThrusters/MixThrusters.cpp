@@ -70,16 +70,31 @@ bool MixThrusters::OnConnectToServer() {
 
 void MixThrusters::saturationSigmoid(Eigen::Vector3d &u) {
 
-    double maxU = fmax(u[0], u[1]);
+    double S0 = 2.0 / (1 + exp(-u[0] / m_sigmoid_coeff)) - 1;
+    double S1 = 2.0 / (1 + exp(-u[1] / m_sigmoid_coeff)) - 1;
 
-    u[0] = fmin(maxU, 1)*(2.0 / (1 + exp(-u[0] / 0.333)) - 1);
-    u[1] = fmin(maxU, 1)*(2.0 / (1 + exp(-u[1] / 0.333)) - 1);
+    double maxU = fmax(fabs(S0), fabs(S1));
 
+    if(maxU!=0){
+        u[0] = fsign(u[0]) * S0/maxU;
+        u[1] = fsign(u[1]) * S1/maxU;
+    }
+    else{
+        u[0]=0.0;
+        u[1]=0.0;
+    }
 
     // Normalize so that u3 is in [-1,1]
     if (fabs(u[2]) > 1) {
         u[2] /= fabs(u[2]);
     }
+}
+
+double MixThrusters::fsign(double val){
+    if(val>=0)
+        return 1.0;
+    else
+        return -1.0;
 }
 
 void MixThrusters::saturationNormalization(Eigen::Vector3d &u) {
@@ -99,8 +114,8 @@ bool MixThrusters::Iterate() {
 
     u = COEFF_MATRIX*desiredForces;
 
-    u[0] = SensCorrection(u[0]);
-    u[1] = SensCorrection(u[1]);
+    u[0] = sensCorrection(u[0]);
+    u[1] = sensCorrection(u[1]);
 
     switch (saturation_mod) {
         case NORMALIZATION:
@@ -193,7 +208,11 @@ bool MixThrusters::OnStartUp() {
         } else if (param == "BACKWARD_COEFF") {
             m_backward_coeff = atof(value.c_str());
             handled = true;
+        } else if (param == "SIGMOID_COEFF") {
+            m_sigmoid_coeff = atof(value.c_str());
+            handled = true;
         }
+
         if (!handled)
             reportUnhandledConfigWarning(orig);
 
@@ -218,10 +237,16 @@ bool MixThrusters::buildReport() {
     m_msgs << actab.getFormattedString();
 #endif
 
+    ACTable actab(3);
+    actab << "Left | Right | Up";
+    actab.addHeaderLines();
+    actab << u[0] << u[1] << u[2];
+    m_msgs << actab.getFormattedString();
+
     return true;
 }
 
-double MixThrusters::SensCorrection(double val){
+double MixThrusters::sensCorrection(double val){
     if(val>0)
         return val * m_forward_coeff;
     else

@@ -2,16 +2,25 @@ ServerHost = localhost
 ServerPort = 9000
 Community  = AUV
 
+#include "interfaces.moos"
+#include "processes.moos"
+#include "utilities.moos"
+
 ProcessConfig = ANTLER
 {
   MSBetweenLaunches = 200
+  
   Run = MOOSDB         @ NewConsole = false
+
+  // ************** UTILITIES ****************
   Run = uMACView       @ NewConsole = false
   Run = uMS            @ NewConsole = false
   Run = uProcessWatch  @ NewConsole = false
-  Run = pShare         @ NewConsole = false
   Run = uJoystick      @ NewConsole = false
   Run = uSensorsViewer @ NewConsole = false
+
+  // ************** LOGS *********************
+  Run = pShare         @ NewConsole = false
 }
 
 ProcessConfig = pShare
@@ -56,22 +65,4 @@ ProcessConfig = uJoystick
   AXIS = 3
   SCALE_RATIO = 0.01
   MOOS_DEST_VAR = DESIRED_FZ
-}
-
-ProcessConfig = uSensorsViewer
-{
-  AppTick   = 25
-  CommsTick = 25
-}
-
-ProcessConfig = uMACView
-{
-  AppTick   = 25
-  CommsTick = 25
-}
-
-ProcessConfig = uProcessWatch
-{
-  AppTick   = 25
-  CommsTick = 25
 }

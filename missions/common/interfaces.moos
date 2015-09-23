@@ -1,0 +1,13 @@
+// INTERFACES
+
+#include "i/iCamera_Bottom.moos"
+#include "i/iCamera_Side.moos"
+#include "i/iGPS.moos"
+#include "i/iKeller.moos"
+#include "i/iModem.moos"
+#include "i/iRazorIMU.moos"
+#include "i/iSaucisse.moos"
+#include "i/iSonar_Micron.moos"
+#include "i/iSonar_Miniking.moos"
+#include "i/iSounder.moos"
+#include "i/iXSensINS.moos"

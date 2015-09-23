@@ -3,7 +3,7 @@
 #include "ACTable.h"
 #include "Sonar.h"
 #include "seanetmsg.h"
-
+#include "math.h"
 
 using namespace std;
 
@@ -305,7 +305,7 @@ void Sonar::ListenSonarMessages()
         	vScanline.push_back( pHdta->scanlineData()[k] );
 
 	      stringstream ss;
-	      ss << "bearing=" << pHdta->bearing()*M_PI/180.0 << ",";
+	      ss << "bearing=" << MOOSGrad2Rad(pHdta->bearing()/16.0) << ",";
 	      ss << "ad_interval=" << pHdta->ADInterval_m() << ",";
 	      ss << "scanline=";
 	      Write(ss, vScanline);
@@ -492,4 +492,8 @@ bool Sonar::buildReport()
     m_msgs << actab4.getFormattedString();
 
   return true;
+}
+
+double Sonar::MOOSGrad2Rad(double angle){
+  return angle*M_PI/200.0;
 }

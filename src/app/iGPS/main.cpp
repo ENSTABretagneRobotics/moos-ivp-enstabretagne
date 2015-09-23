@@ -13,17 +13,17 @@
 #include "MBUtils.h"
 #include "documentation/MOOSAppDocumentation.h"
 #include "ColorParse.h"
-#include "Gps.h"
+#include "GPS.h"
 
 using namespace std;
 
-Gps *objGps;
+GPS *objGPS;
 
 void kill_handler(int s);
 
 int main(int argc, char *argv[])
 {
-  objGps = new Gps;
+  objGPS = new GPS;
 
   string mission_file;
   string run_command = argv[0];
@@ -61,13 +61,13 @@ int main(int argc, char *argv[])
   sigIntHandler.sa_flags = 0;
   sigaction(SIGTERM, &sigIntHandler, NULL);
 
-  objGps->Run(run_command.c_str(), mission_file.c_str());
+  objGPS->Run(run_command.c_str(), mission_file.c_str());
 
   return(0);
 }
 
 void kill_handler(int s)
 {
-  delete objGps;
+  delete objGPS;
   exit(0);
 }
