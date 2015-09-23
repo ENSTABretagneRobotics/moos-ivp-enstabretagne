@@ -29,9 +29,13 @@ SensorViewer::SensorViewer()
 
 	m_img_camera_side.create(HAUTEUR_IMAGE_CAMERA,LARGEUR_IMAGE_CAMERA,CV_8UC(3));
 	m_img_camera_bottom.create(HAUTEUR_IMAGE_CAMERA,LARGEUR_IMAGE_CAMERA,CV_8UC(3));
+
 	m_img_sonar_micron.create(2*m_size_scanline_micron,2*m_size_scanline_micron,CV_8UC1);
 	m_img_sonar_miniking.create(2*m_size_scanline_miniking,2*m_size_scanline_miniking,CV_8UC1);
 	m_img_sonar.create(2*m_size_scanline, 2*m_size_scanline, CV_8UC1);
+
+	m_img_micron.create(2*m_size_scanline_micron,2*m_size_scanline_micron,CV_8UC(3));
+
 	m_img_wall_micron.create(500, 500, CV_8UC1);
 	m_img_wall_miniking.create(500, 500, CV_8UC1);
 
@@ -190,6 +194,13 @@ bool SensorViewer::Iterate()
 	if(m_new_data_micron){
 		AddSector(m_img_sonar_micron, m_new_scanline_micron, m_new_bearing_micron, m_old_bearing_micron, m_sonar_contrast_micron);
 		m_new_data_micron = false;
+		Point pt1(m_size_scanline_micron, m_size_scanline_micron);
+		Point pt2(m_size_scanline_micron + m_size_scanline_micron*cos(m_new_bearing_micron), m_size_scanline_micron+ m_size_scanline_micron*sin(m_new_bearing_micron));
+		
+		m_img_micron = Scalar(0,0,0);
+		cvtColor(m_img_sonar_micron, m_img_micron, CV_GRAY2RGB);
+		line(m_img_micron, pt1, pt2, Scalar(255, 0, 0));
+
 	}
 	if(m_new_data_miniking){
 		AddSector(m_img_sonar_miniking, m_new_scanline_miniking, m_new_bearing_miniking, m_old_bearing_micron, m_sonar_contrast_miniking);
@@ -201,7 +212,7 @@ bool SensorViewer::Iterate()
 	}
 
 	// imshow("SONAR MINIKING", m_img_sonar_miniking);
-	imshow("SONAR MICRON", m_img_sonar_micron);
+	imshow("SONAR MICRON", m_img_micron);
 	//imshow("SONAR", m_img_sonar);
 	
 	imshow("CAMERA SIDE", m_img_camera_side);
