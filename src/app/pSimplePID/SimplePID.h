@@ -39,7 +39,7 @@ class SimplePID : public AppCastingMOOSApp
     std::string m_moosvar_saturation;
     
     bool m_differential_input;
-    bool m_angle_degree;
+    bool m_angle;
 
   private: // State variables
     double m_consigne, m_state, m_state_previous, m_state_differential, m_error, m_command;
