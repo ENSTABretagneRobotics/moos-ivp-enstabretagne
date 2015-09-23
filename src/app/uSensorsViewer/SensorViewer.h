@@ -12,6 +12,7 @@
 
 #include <opencv/cv.h>
 #include <opencv2/highgui/highgui.hpp>
+#include <vector>
 
 using namespace std;
 
@@ -31,6 +32,7 @@ class SensorViewer : public AppCastingMOOSApp
 
 	private: // Fonctions
 		void AddSector(cv::Mat &img_sonar, vector<double> scanline, double bearing, double &bearing_previous, double contrast);
+		void UpdateDistance(cv::Mat &img_wall, vector<double> distance_tab, vector<double> bearing_tab);
 
 	private: // Configuration variables
 
@@ -41,6 +43,8 @@ class SensorViewer : public AppCastingMOOSApp
 		cv::Mat m_img_sonar_micron;
 		cv::Mat m_img_sonar_miniking;
 		cv::Mat m_img_sonar;
+		cv::Mat m_img_wall_miniking;
+		cv::Mat m_img_wall_micron;
 
 		// SONAR DATAS
 	    std::vector<double> m_new_scanline_micron;
@@ -61,6 +65,13 @@ class SensorViewer : public AppCastingMOOSApp
     	double m_sonar_contrast_micron;
     	double m_sonar_contrast_miniking;
     	double m_sonar_contrast;
+
+    	// WALL DETECTOR DATA
+    	std::vector<double> m_wall_detector_distance_micron;
+    	std::vector<double> m_wall_detector_bearing_micron;
+
+    	std::vector<double> m_wall_detector_distance_miniking;
+    	std::vector<double> m_wall_detector_bearing_miniking;
 };
 
 #endif
