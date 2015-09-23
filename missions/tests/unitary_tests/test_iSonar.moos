@@ -28,7 +28,7 @@ ProcessConfig = iMicron // Any Sonar, 360 scan, low resolution
   AppTick   = 4
   CommsTick = 4
 
-  SERIAL_PORT = /dev/ttyUSB0
+  SERIAL_PORT = /dev/micron
 
   SONAR_TYPE = Micron //or Miniking
 
@@ -49,7 +49,7 @@ ProcessConfig = iMiniking // Any Sonar, 360 scan, low resolution
   AppTick   = 4
   CommsTick = 4
 
-  SERIAL_PORT = /dev/ttyUSB1
+  SERIAL_PORT = /dev/miniking
 
   SONAR_TYPE = Miniking //or Micron
 
