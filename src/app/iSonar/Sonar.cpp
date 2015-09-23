@@ -110,7 +110,10 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
       if (MOOSValFromString(dVal, msg_val, "invert", true))
         m_msgHeadCommand.setInverted(dVal);
       if (MOOSValFromString(iVal, msg_val, "nBins", true))
+      {
+        m_iParamBins = iVal;
         m_msgHeadCommand.setNbins(iVal);
+      }
       if (MOOSValFromString(dVal, msg_val, "AngleStep", true))
           m_msgHeadCommand.setAngleStep(dVal);
       if (MOOSValFromString(bVal, msg_val, "Continuous", true))
@@ -400,6 +403,14 @@ bool Sonar::OnStartUp()
           m_bIsPowered = MOOSStrCmp(value.c_str(),"TRUE");
       if(MOOSStrCmp(param, "SERIAL_PORT"))
           m_portName = value.c_str();
+      if(MOOSStrCmp(param, "SONAR_TYPE"))
+      {
+          m_snrType = (MOOSStrCmp(value.c_str(),"Miniking"))?SeaNetMsg::MiniKingNotDST:SeaNetMsg::SonarTypeError;
+          if (m_snrType == SeaNetMsg::SonarTypeError)
+            m_snrType = (MOOSStrCmp(value.c_str(),"Micron"))?SeaNetMsg::MicronDST:SeaNetMsg::SonarTypeError;
+          if (m_snrType == SeaNetMsg::SonarTypeError)
+            reportConfigWarning("Sonar type initialization error...\n");
+      }
     }
 	}
 	else
