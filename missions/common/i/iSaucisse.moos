@@ -3,7 +3,7 @@ ProcessConfig = iSaucisse
   AppTick   = 10
   CommsTick = 10
 
-  DEVICE_NAME = /dev/pololu
+  DEVICE_NAME = /dev/ttyACM0
   # Linux:
   #     /dev/ttyACM0
   # Windows: 
