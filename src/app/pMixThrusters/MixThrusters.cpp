@@ -70,11 +70,13 @@ bool MixThrusters::OnConnectToServer() {
 
 void MixThrusters::saturationSigmoid(Eigen::Vector3d &u) {
 
-    double maxU = fmax(u[0], u[1]);
+    double S0 = 2.0 / (1 + exp(-u[0] / m_sigmoid_coeff)) - 1;
+    double S1 = 2.0 / (1 + exp(-u[1] / m_sigmoid_coeff)) - 1;
 
-    u[0] = fmin(maxU, 1)*(2.0 / (1 + exp(-u[0] / 0.333)) - 1);
-    u[1] = fmin(maxU, 1)*(2.0 / (1 + exp(-u[1] / 0.333)) - 1);
+    double maxU = fmax(fabs(S0), fabs(S1));
 
+    u[0] = S0/maxU;
+    u[1] = S1/maxU;
 
     // Normalize so that u3 is in [-1,1]
     if (fabs(u[2]) > 1) {
@@ -193,7 +195,11 @@ bool MixThrusters::OnStartUp() {
         } else if (param == "BACKWARD_COEFF") {
             m_backward_coeff = atof(value.c_str());
             handled = true;
+        } else if (param == "SIGMOID_COEFF") {
+            m_sigmoid_coeff = atof(value.c_str());
+            handled = true;
         }
+
         if (!handled)
             reportUnhandledConfigWarning(orig);
 

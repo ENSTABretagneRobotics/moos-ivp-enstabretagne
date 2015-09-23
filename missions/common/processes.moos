@@ -1,0 +1,7 @@
+// PROCESSES
+
+#include "p/pEstimSpeed.moos"
+#include "p/pMixThrusters.moos"
+#include "p/pSimplePID_Depth.moos"
+#include "p/pSimplePID_Heading.moos"
+#include "p/pTrustGPS.moos"

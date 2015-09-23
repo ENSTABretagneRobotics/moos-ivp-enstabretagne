@@ -85,9 +85,10 @@ bool XSensINS::Iterate() {
     // Convert packet to Euler
     if(packet.containsOrientation()){
       m_euler = packet.orientationEuler();
-      Notify("IMU_PITCH", -m_euler.pitch());
+      Notify("IMU_PITCH", m_euler.pitch());
       Notify("IMU_ROLL", m_euler.roll());
-      Notify("IMU_YAW", -m_euler.yaw() + m_yaw_declination);
+      Notify("IMU_YAW", m_euler.yaw()*M_PI/180.0);// + m_yaw_declination);
+      Notify("IMU_YAW_DEGREE", -m_euler.yaw());
     }
 
     // Acceleration
@@ -137,8 +138,6 @@ bool XSensINS::OnStartUp() {
 
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
-  if (!m_MissionReader.GetValue("XSENSINS_SERIAL_PORT",m_uart_port))
-    reportConfigWarning("No XSENSINS_SERIAL_PORT config found for " + GetAppName());
   if (!m_MissionReader.GetConfiguration(GetAppName(), sParams))
     reportConfigWarning("No config block found for " + GetAppName());
 
@@ -151,8 +150,12 @@ bool XSensINS::OnStartUp() {
     string value = line;
 
     bool handled = false;
-    if (param == "m_uart_baud_rate") {
+    if (param == "UART_BAUD_RATE") {
       m_uart_baud_rate = atoi(value.c_str());
+      handled = true;
+    }
+    else if (param == "SERIAL_PORT") {
+      m_uart_port = value.c_str();
       handled = true;
     }
     else if (param == "YAW_DECLINATION") {
@@ -162,11 +165,11 @@ bool XSensINS::OnStartUp() {
     if(!handled)
       reportUnhandledConfigWarning(orig);
   }
-  
+
   registerVariables();
 
   //------ OPEN INS ---------------//
-  XsPortInfo mtPort("/dev/xsens", XsBaud::numericToRate(115200));
+  XsPortInfo mtPort("/dev/xsens", XsBaud::numericToRate(m_uart_baud_rate));
   if (!m_device.openPort(mtPort)) {
     cout << "CANNOT OPEN THE PORT" << '\n';
     reportRunWarning("Could not open the COM port" + m_uart_port);

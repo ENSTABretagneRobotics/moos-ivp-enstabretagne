@@ -1,13 +1,12 @@
 //------------------------------------------------
 // iXSensINS config block
 
-XSENSINS_SERIAL_PORT = /dev/ttyUSB2
-
 ProcessConfig = iXSensINS
 {
   AppTick   = 4
   CommsTick = 4
 
+  SERIAL_PORT = /dev/xsens
   UART_BAUD_RATE = 115200
 
   // magnetic declination for Piombino (2°E)

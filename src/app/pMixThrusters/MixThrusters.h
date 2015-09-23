@@ -46,6 +46,7 @@ class MixThrusters : public AppCastingMOOSApp
       int saturation_mod;
 
       double m_forward_coeff, m_backward_coeff;
+      double m_sigmoid_coeff;
   private: // State variables
       Eigen::Vector3d desiredForces;
       
