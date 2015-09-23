@@ -20,8 +20,4 @@ ProcessConfig = iSaucisse
   RESET_ON_STARTUP = true
   // If requested, force relays to 'on' position at startup
   RESET_ALL_ON = false
-
-  // Emit a signal when computer's too hot
-  ALERT_MAX_TEMPERATURE = 999 // °C
-  // WARNING: must be used when Pololu will be multithreaded!
 }
