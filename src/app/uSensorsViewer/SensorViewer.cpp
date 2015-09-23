@@ -200,7 +200,7 @@ bool SensorViewer::Iterate()
 		m_new_data = false;
 	}
 
-	imshow("SONAR MINIKING", m_img_sonar_miniking);
+	// imshow("SONAR MINIKING", m_img_sonar_miniking);
 	imshow("SONAR MICRON", m_img_sonar_micron);
 	//imshow("SONAR", m_img_sonar);
 	
@@ -208,7 +208,7 @@ bool SensorViewer::Iterate()
 	imshow("CAMERA BOTTOM", m_img_camera_bottom);
 
 	imshow("WALL MICRON", m_img_wall_micron);
-	imshow("WALL MICRON", m_img_wall_miniking);
+	// imshow("WALL MINIKING", m_img_wall_miniking);
 
 	waitKey(1);
 	AppCastingMOOSApp::PostReport();
@@ -249,11 +249,11 @@ bool SensorViewer::OnStartUp() {
 
 	namedWindow("CAMERA SIDE", WINDOW_NORMAL);
 	namedWindow("CAMERA BOTTOM", WINDOW_NORMAL);
-	namedWindow("SONAR MINIKING", WINDOW_NORMAL);
+	// namedWindow("SONAR MINIKING", WINDOW_NORMAL);
 	namedWindow("SONAR MICRON", WINDOW_NORMAL);
 	//namedWindow("SONAR", WINDOW_NORMAL);
 	namedWindow("WALL MICRON", WINDOW_NORMAL);
-	namedWindow("WALL MINIKING", WINDOW_NORMAL);
+	// namedWindow("WALL MINIKING", WINDOW_NORMAL);
 
 	return(true);
 }

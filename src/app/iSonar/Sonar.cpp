@@ -317,18 +317,20 @@ void Sonar::ListenSonarMessages()
 	      for (int k=0; k<pHdta->nBins(); ++k)
         	vScanline.push_back( pHdta->scanlineData()[k] );
 
+        Notify("SONAR_RAW_BEARING", pHdta->bearing());
+
 	      stringstream ss;
-	      ss << "bearing=" << MOOSGrad2Rad(pHdta->bearing()/16.0) << ",";
+	      ss << "bearing=" << pHdta->bearing()*M_PI/180.0 << ",";
 	      ss << "ad_interval=" << pHdta->ADInterval_m() << ",";
 	      ss << "scanline=";
 	      Write(ss, vScanline);
-        if (pHdta->nBins() <= (m_iParamBins*1.5))
-        {
+        // if (pHdta->nBins() <= (m_iParamBins*2.0) 1)
+        // {
           if(m_snrType == SeaNetMsg::MicronDST)
             Notify("SONAR_RAW_DATA_MICRON", ss.str());
           else if(m_snrType == SeaNetMsg::MiniKingNotDST)
             Notify("SONAR_RAW_DATA_MINIKING", ss.str());
-        }
+        // }
 
 	      // ***************************************
 
