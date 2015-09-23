@@ -23,7 +23,7 @@ Sonar::Sonar()
 
   m_snrType = SeaNetMsg::MiniKingNotDST;
 
-  m_bPollSonar = false;
+  m_bPollSonar = true;
 
   m_iParamBins = 0;
 
@@ -110,7 +110,10 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
       if (MOOSValFromString(dVal, msg_val, "invert", true))
         m_msgHeadCommand.setInverted(dVal);
       if (MOOSValFromString(iVal, msg_val, "nBins", true))
+      {
+        m_iParamBins = iVal;
         m_msgHeadCommand.setNbins(iVal);
+      }
       if (MOOSValFromString(dVal, msg_val, "AngleStep", true))
           m_msgHeadCommand.setAngleStep(dVal);
       if (MOOSValFromString(bVal, msg_val, "Continuous", true))
@@ -278,20 +281,24 @@ void Sonar::ListenSonarMessages()
         m_bSonarReady = m_bHasParams && m_bSentCfg;
         m_bIsAlive = true;
 
-        // if(m_bHasParams)Notify("MT_MESSAGE", "mtAlive, has params");
-        // if(m_bSentCfg)Notify("MT_MESSAGE", "mtAlive, sent cfg");
+        if(m_bHasParams && m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "mtAlive, has params");
+        if(m_bHasParams && m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "mtAlive, has params");
+        if(m_bSentCfg && m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "mtAlive, sent cfg");
+        if(m_bSentCfg && m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "mtAlive, sent cfg");
       }
       else if (snmsg.messageType() == SeaNetMsg::mtVersionData)
       {
         m_bReplyVersionData = true;
-        // Notify("MT_MESSAGE", "REPLY mtVersionData");
+        if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "REPLY mtVersionData");
+        if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "REPLY mtVersionData");
       }
       else if (snmsg.messageType() == SeaNetMsg::mtBBUserData)
       {
         const SeaNetMsg_BBUserData * pBBUserData = reinterpret_cast<SeaNetMsg_BBUserData*> (&snmsg);
         m_snrType = pBBUserData->getSonarType();
         m_bReplyBBUserData = true;
-        // Notify("MT_MESSAGE", "REPLY mtBBUserData");
+        if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "REPLY mtBBUserData");
+        if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "REPLY mtBBUserData");
         // reportRunWarning("Sonar Type : " + (m_snrType == SeaNetMsg::MicronDST)?"MicronSnr":"MinikingSnr");
       }
       else if (snmsg.messageType() == SeaNetMsg::mtHeadData)
@@ -305,8 +312,8 @@ void Sonar::ListenSonarMessages()
         	vScanline.push_back( pHdta->scanlineData()[k] );
 
 	      stringstream ss;
-	      ss << "bearing=" << pHdta->bearing()*M_PI/180.0 << ",";
-	      ss << "ad_interval=" << MOOSGrad2Rad(pHdta->ADInterval_m()/16.0) << ",";
+	      ss << "bearing=" << MOOSGrad2Rad(pHdta->bearing()/16.0) << ",";
+	      ss << "ad_interval=" << pHdta->ADInterval_m() << ",";
 	      ss << "scanline=";
 	      Write(ss, vScanline);
         if (pHdta->nBins() <= (m_iParamBins*1.5))
@@ -334,17 +341,20 @@ void Sonar::ListenSonarMessages()
         if(!m_bReplyVersionData)
         {
           SendSonarMessage(SeaNetMsg_SendVersion());
-          // Notify("MT_MESSAGE", "SEND mtSendVersion");
+          if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "SEND mtSendVersion");
+          if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "SEND mtSendVersion");
         }
         else if(m_bReplyVersionData && !m_bReplyBBUserData)
         {
           SendSonarMessage(SeaNetMsg_SendBBUser());
-          // Notify("MT_MESSAGE", "SEND mtSendBBUser");
+          if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "SEND mtSendBBUser");
+          if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "SEND mtSendBBUser");
         }
         else if(m_bReplyVersionData && m_bReplyBBUserData && !m_bHasParams)
         {
           SendSonarMessage(m_msgHeadCommand);
-          // Notify("MT_MESSAGE", "SEND mtHeadCommand");
+          if(m_snrType == SeaNetMsg::MicronDST)Notify("MT_MESSAGE_MICRON", "SEND mtHeadCommand");
+          if(m_snrType == SeaNetMsg::MiniKingNotDST)Notify("MT_MESSAGE_MINIKING", "SEND mtHeadCommand");
         }
       }
       if (m_bSonarReady && m_bPollSonar && m_bHasParams && m_bSentCfg) {
@@ -400,6 +410,14 @@ bool Sonar::OnStartUp()
           m_bIsPowered = MOOSStrCmp(value.c_str(),"TRUE");
       if(MOOSStrCmp(param, "SERIAL_PORT"))
           m_portName = value.c_str();
+      if(MOOSStrCmp(param, "SONAR_TYPE"))
+      {
+          m_snrType = (MOOSStrCmp(value.c_str(),"Miniking"))?SeaNetMsg::MiniKingNotDST:SeaNetMsg::SonarTypeError;
+          if (m_snrType == SeaNetMsg::SonarTypeError)
+            m_snrType = (MOOSStrCmp(value.c_str(),"Micron"))?SeaNetMsg::MicronDST:SeaNetMsg::SonarTypeError;
+          if (m_snrType == SeaNetMsg::SonarTypeError)
+            reportConfigWarning("Sonar type initialization error...\n");
+      }
     }
 	}
 	else

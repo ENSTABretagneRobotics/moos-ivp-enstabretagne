@@ -1,9 +1,10 @@
 ProcessConfig = iSonar_Miniking
 {
-  AppTick   = 15
-  CommsTick = 15
+  AppTick   = 20
+  CommsTick = 20
 
   SERIAL_PORT = /dev/miniking
+  SONAR_TYPE = Miniking
 
   RANGE            = 5 //IN METERS
   NBINS            = 100 //NUMBER OF SAMPLES PER SCANLINE
