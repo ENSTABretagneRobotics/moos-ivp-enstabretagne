@@ -72,7 +72,6 @@ bool SonarWall::compute(){
 	      // Find the max of the scanline_filtered
 	      int indice_filtered;
 	      findMax(scanline_filtered, m_max_filtered, indice_filtered, 0, scanline_filtered.size());
-	      cout << "COUT4" << '\n';
 	      if(m_max_filtered > m_threshold){
 	        // Find the max in the scanline near the maximum of the scanline_filtered
 	        double max; int indice;

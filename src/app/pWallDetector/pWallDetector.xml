@@ -21,13 +21,8 @@
         <interface>
            <subscriptions>
               <moosvar>
-                 <varname>SONAR_BEARING</varname>
+                 <varname>SONAR_RAW_DATA_*</varname>
                  <vartype>double</vartype>
-                 <varinfo>description of the MOOSVar</varinfo>
-              </moosvar>
-               <moosvar>
-                 <varname>SONAR_SCANLINE</varname>
-                 <vartype>vector of int</vartype>
                  <varinfo>description of the MOOSVar</varinfo>
               </moosvar>
                <moosvar>
@@ -36,21 +31,21 @@
                  <varinfo>description of the MOOSVar</varinfo>
               </moosvar>
                <moosvar>
-                 <varname>WALL_THRESHOLD</varname>
+                 <varname>WALL_THRESHOLD_*</varname>
                  <vartype>double</vartype>
                  <varinfo>description of the MOOSVar</varinfo>
               </moosvar>
                <moosvar>
-                 <varname>SONAR_PARAMS</varname>
+                 <varname>*_PARAMS</varname>
                  <vartype>list of doubles</vartype>
                  <varinfo>description of the MOOSVar</varinfo>
               </moosvar>
            </subscriptions>
            <publications>
               <moosvar>
-                 <varname>WALL_DETECTOR</varname>
+                 <varname>WALL_DETECTOR_*</varname>
                  <vartype>(string, string)</vartype>
-                 <varinfo>(bearing=rad, distance=m)</varinfo>
+                 <varinfo>(bearing=rad, distance=m, vertical=bool)</varinfo>
               </moosvar>
            </publications>
         </interface>
