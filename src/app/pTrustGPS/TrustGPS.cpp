@@ -9,6 +9,7 @@
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "TrustGPS.h"
+#include "math.h"
 
 using namespace std;
 ostringstream oss;
