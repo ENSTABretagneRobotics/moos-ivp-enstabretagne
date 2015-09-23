@@ -280,6 +280,9 @@ bool Saucisse::OnStartUp()
   registerVariables();
   m_pololu = new Pololu(m_device_name);
 
+  if(!m_pololu->isReady())
+    reportRunWarning("Error on Pololu connection.");
+
   if(m_reset_on_startup)
   {
     Notify("POWER_ALL", m_reset_all_on ? 1 : 0);
@@ -336,7 +339,7 @@ bool Saucisse::buildReport()
   actab_temperatures << "NUC" << m_nuc->getTemperature();
   m_msgs << actab_temperatures.getFormattedString() << "\n\n";
   
-  return  true;
+  return true;
 }
 
 //------------------------------------------------------------
@@ -346,6 +349,7 @@ std::string Saucisse::sensorStatusInText(int status)
 {
   if(status == UNDEFINED_STATUS)
     return "?";
+
   else
   {
     stringstream convert;
