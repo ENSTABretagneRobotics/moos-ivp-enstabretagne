@@ -32,7 +32,8 @@ SensorViewer::SensorViewer()
 	m_img_sonar_micron.create(2*m_size_scanline_micron,2*m_size_scanline_micron,CV_8UC1);
 	m_img_sonar_miniking.create(2*m_size_scanline_miniking,2*m_size_scanline_miniking,CV_8UC1);
 	m_img_sonar.create(2*m_size_scanline, 2*m_size_scanline, CV_8UC1);
-
+	m_img_wall_micron.create(500, 500, CV_8UC1);
+	m_img_wall_miniking.create(500, 500, CV_8UC1);
 
 	m_old_bearing_miniking = 0.0;
 	m_old_bearing_micron = 0.0;
@@ -143,6 +144,31 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
 			m_sonar_contrast_micron = msg.GetDouble();
 		else if(msg.GetKey() == "SONAR_CONTRAST")
 			m_sonar_contrast = msg.GetDouble();
+		else if(msg.GetKey() == "WALL_DETECTOR_MICRON"){
+
+		}
+		else if(msg.GetKey() == "WALL_DETECTOR_MINIKING"){
+			double dist, bearing;
+			MOOSValFromString(bearing, msg.GetString(), "bearing", true);
+			MOOSValFromString(dist, msg.GetString(), "distance", true);
+			m_wall_detector_distance_miniking.push_back(dist);
+			m_wall_detector_bearing_miniking.push_back(bearing);
+
+			if(m_wall_detector_distance_miniking.size()>100){
+				m_wall_detector_distance_miniking.erase(m_wall_detector_distance_miniking.begin());
+			}
+		}
+		else if(msg.GetKey() == "WALL_DETECTOR_MICRON"){
+			double dist, bearing;
+			MOOSValFromString(bearing, msg.GetString(), "bearing", true);
+			MOOSValFromString(dist, msg.GetString(), "distance", true);
+			m_wall_detector_distance_micron.push_back(dist);
+			m_wall_detector_bearing_micron.push_back(bearing);
+
+			if(m_wall_detector_distance_micron.size()>100){
+				m_wall_detector_distance_micron.erase(m_wall_detector_distance_micron.begin());
+			}
+		}
 	}
 	return(true);
 }
@@ -177,6 +203,9 @@ bool SensorViewer::Iterate()
 	
 	imshow("CAMERA SIDE", m_img_camera_side);
 	imshow("CAMERA BOTTOM", m_img_camera_bottom);
+
+	imshow("WALL MICRON", m_img_wall_micron);
+	imshow("WALL MICRON", m_img_wall_miniking);
 
 	waitKey(1);
 	AppCastingMOOSApp::PostReport();
@@ -220,6 +249,8 @@ bool SensorViewer::OnStartUp() {
 	namedWindow("SONAR MINIKING", WINDOW_NORMAL);
 	namedWindow("SONAR MICRON", WINDOW_NORMAL);
 	//namedWindow("SONAR", WINDOW_NORMAL);
+	namedWindow("WALL MICRON", WINDOW_NORMAL);
+	namedWindow("WALL MINIKING", WINDOW_NORMAL);
 
 	return(true);
 }
@@ -241,6 +272,10 @@ void SensorViewer::registerVariables()
 
 	Register("SONAR_MINIKING_CONTRAST", 0);
 	Register("SONAR_RAW_DATA_MINIKING", 0);
+
+	// WALL DETECTOR
+	Register("WALL_DETECTOR_MICRON", 0);
+	Register("WALL_DETECTOR_MINIKING", 0);
 }
 bool SensorViewer::buildReport()
 {
@@ -270,4 +305,14 @@ void SensorViewer::AddSector(Mat &img_sonar, vector<double> scanline, double bea
 		}
 	}
 	bearing_previous = bearing;
+}
+
+void SensorViewer::UpdateDistance(Mat &img_wall, vector<double> distance_tab, vector<double> bearing_tab){
+	img_wall = Scalar(0);
+
+	for(int i =0; i<distance_tab.size(); i++){
+		int x = round(250+distance_tab[i]*cos(bearing_tab[i]));
+		int y = round(250+distance_tab[i]*sin(bearing_tab[i]));
+		circle(img_wall, Point(x, y), 5, 255);
+	}
 }
