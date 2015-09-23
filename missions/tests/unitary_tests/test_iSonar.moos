@@ -17,9 +17,8 @@ ProcessConfig = ANTLER
 
   //Run = iSaucisse     @ NewConsole = true
 
-  Run = iSonar @ NewConsole = true ~iMicron
+  //Run = iSonar @ NewConsole = true ~iMicron
   Run = iSonar @ NewConsole = true ~iMiniking
-
 }
 
 
@@ -28,7 +27,7 @@ ProcessConfig = iMicron // Any Sonar, 360 scan, low resolution
   AppTick   = 10
   CommsTick = 10
 
-  SERIAL_PORT = /dev/ttyUSB2
+  SERIAL_PORT = /dev/micron
 
   SONAR_TYPE = Micron //or Miniking
 
@@ -49,7 +48,7 @@ ProcessConfig = iMiniking // Any Sonar, 360 scan, low resolution
   AppTick   = 10
   CommsTick = 10
 
-  SERIAL_PORT = /dev/ttyUSB1
+  SERIAL_PORT = /dev/miniking
 
   SONAR_TYPE = Miniking //or Micron
 

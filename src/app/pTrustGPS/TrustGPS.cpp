@@ -9,6 +9,7 @@
 #include "MBUtils.h"
 #include "ACTable.h"
 #include "TrustGPS.h"
+#include "math.h"
 
 using namespace std;
 ostringstream oss;
@@ -67,7 +68,7 @@ bool TrustGPS::OnNewMail(MOOSMSG_LIST &NewMail) {
         } else if (key == GPS_FIX_SUBSCRIPTION_NAME) {
             this->gps_fix = msg.GetDouble();
         } else if (key == KELLER_DEPTH_SUBSCRIPTION_NAME) {
-            this->altitude = -msg.GetDouble();
+            this->altitude = -fabs(msg.GetDouble());
         } else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
             reportRunWarning("Unhandled Mail: " + key);
     }
@@ -82,7 +83,7 @@ bool TrustGPS::OnConnectToServer() {
 
 bool TrustGPS::Iterate() {
     AppCastingMOOSApp::Iterate();
-    Notify(GPS_TRUST_PUBLICATION_NAME, gps_trust ? "1" : "0");
+    Notify(GPS_TRUST_PUBLICATION_NAME, gps_trust ? 1: 0);
     AppCastingMOOSApp::PostReport();
     return (true);
 }
@@ -103,7 +104,7 @@ bool TrustGPS::OnStartUp() {
         string value = line;
 
         bool handled = false;
-        if (param == "PARANOIA_LEVEL") {
+        if (param == "BUFFER_SIZE") {
             this->bufferLevel = atof(value.c_str());
             handled = true;
         } else if (param == "ALTITUDE_THRESHOLD") {

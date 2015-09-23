@@ -20,20 +20,21 @@ using namespace Eigen;
 // Constructor
 
 MapLocalizerParticleFilter::MapLocalizerParticleFilter() {
-    this->speedVar = 0.5 * 0.5;
-    this->headingVar = 7 * 7;
-    this->altitudeVar = 0.15 * 0.15;
+    this->speedVar = 0.5 * 0.5; // 0.5 m of std. Dev
+    this->headingVar = 7 * 7; // 7 Degrees of std. Dev
+    this->altitudeVar = 0.15 * 0.15; // 15cm of std. Dev
 
-    this->gpsEVar = 5 * 5;
-    this->gpsNVar = 5 * 5;
+    this->gpsEVar = 5 * 5; // 5 meters of std. Dev
+    this->gpsNVar = 5 * 5; // 5 meters of std. Dev
 
-    this->beamAngleVar = 7 * 7;
-    this->beamRangeVar = 5 * 5;
+    this->beamAngleVar = 7 * 7; // 7 degrees of std. Dev for the beam angle
+    this->beamRangeVar = 5 * 5; // 5 meters of std. Dev for the beam range
+    this->receivedBeam = false;
 
+    this->gps_trust = false;
     this->filter_easting_initialized = false;
     this->filter_northing_initialized = false;
-    this->mission_started = false;
-    
+
     lastGPSE = 0;
     lastGPSN = 0;
 
@@ -48,6 +49,21 @@ MapLocalizerParticleFilter::MapLocalizerParticleFilter() {
     resampleEvery = 20;
 
     resamplingMethod = RESIDUAL;
+
+    RESET_SUBSCRIPTION_NAME = "RESET";
+
+    POS_X_PUBLICATION_NAME = "POS_X_ESTIM_PF";
+    POS_X_WEIGHTED_PUBLICATION_NAME = "POS_Y_ESTIM_PF";
+    POS_X_PUBLICATION_NAME = "POS_X_ESTIM_PF_WEIGHTED";
+    POS_Y_WEIGHTED_PUBLICATION_NAME = "POS_Y_ESTIM_PF_WEIGHTED";
+
+    POS_COV_XX_PUBLICATION_NAME = "POS_COV_XX_PF";
+    POS_COV_XY_PUBLICATION_NAME = "POS_COV_XY_PF";
+    POS_COV_YY_PUBLICATION_NAME = "POS_COV_YY_PF";
+
+    POS_COV_XX_WEIGHTED_PUBLICATION_NAME = "POS_COV_XX_WEIGHTED_PF";
+    POS_COV_XY_WEIGHTED_PUBLICATION_NAME = "POS_COV_XY_WEIGHTED_PF";
+    POS_COV_YY_WEIGHTED_PUBLICATION_NAME = "POS_COV_YY_WEIGHTED_PF";
 }
 
 //---------------------------------------------------------
@@ -61,41 +77,22 @@ bool MapLocalizerParticleFilter::OnNewMail(MOOSMSG_LIST &NewMail) {
         CMOOSMsg &msg = *p;
         string key = msg.GetKey();
 
-        if (key == "WALL_DETECTOR") {
+        if (key == WALL_DETECTOR_SUBSCRIPTION_NAME) {
             vector<string> beam = parseString(msg.GetString(), ',');
-            beamAngle = atof(parseString(beam[0].c_str(), '=')[1].c_str());
+            beamAngle = atof(parseString(beam[0].c_str(), '=')[1].c_str()); // Radians, sens horaire, 0 au nord, reference geographiquement
             beamRange = atof(parseString(beam[1].c_str(), '=')[1].c_str());
-            // Make sure we are not in
-            // the first few frames of the simulation
-            if (pf.isInitialized()) {
-                pf.update_walls(beamAngle, beamAngleVar, this->lastYaw + beamAngle, headingVar + beamAngleVar);
-            }
+
+            receivedBeam = true;
         }// Receive GPS Easting
-        else if (key == "GPS_E") {
+        else if (key == GPS_E_SUBSCRIPTION_NAME) {
             // If we can trust the GPS signal
             if (gps_trust) {
                 this->filter_easting_initialized = true;
-
                 // Parse
                 this->lastGPSE = msg.GetDouble();
-
-                // If the filter has already been initialized
-                // then we update the filter with this position
-                if (pf.isInitialized()) {
-                    pf.update_GPS(lastGPSE, gpsEVar, lastGPSN, gpsNVar);
-                }// If filter not initialized
-                    // AND we already have received the northing
-                    // then we initialize the filter on this position
-                else if (mission_started && filter_northing_initialized) {
-                    Vector2d x;
-                    x << lastGPSE, lastGPSN;
-                    Matrix2d xCov;
-                    xCov << gpsEVar, 0, 0, gpsNVar;
-                    pf.init(x, xCov);
-                }
             }
         }// Receive GPS Northing
-        else if (key == "GPS_N") {
+        else if (key == GPS_N_SUBSCRIPTION_NAME) {
             // If we can trust the GPS signal
             if (gps_trust) {
                 this->filter_northing_initialized = true;
@@ -104,29 +101,27 @@ bool MapLocalizerParticleFilter::OnNewMail(MOOSMSG_LIST &NewMail) {
                 this->lastGPSN = msg.GetDouble();
             }
         }// Receive Keller altitude
-        else if (key == "KELLER_DEPTH") {
-            lastAltitude = -msg.GetDouble();
+        else if (key == KELLER_DEPTH_SUBSCRIPTION_NAME) {
+            lastAltitude = -fabs(msg.GetDouble());
         }// Receive speed estimate
-        else if (key == "SPEED_ESTIM_LOCAL") {
+        else if (key == SPEED_ESTIM_LOCAL_SUBSCRIPTION_NAME) {
+
+            cout << "RECEIVED SPEED_ESTIM_LOCAL_SUBSCRIPTION_NAME STRING: " << msg.GetString() << endl;
+            cout << "RECEIVED SPEED_ESTIM_LOCAL_SUBSCRIPTION_NAME DOUBLE: " << msg.GetDouble() << endl;
             this->lastVelocity = msg.GetDouble();
-            // If the filter has already been initialized
-            // then we predict its next state
-            if (pf.isInitialized()) {
-                Vector2d u(lastVelocity, lastYaw);
-                Matrix2d uCov;
-                uCov << speedVar, 0, 0, headingVar;
-                pf.predict(msg.GetTime(), u, uCov);
-            }
         }// Receive IMU YAW
-        else if (key == "IMU_YAW") {
+        else if (key == IMU_YAW_SUBSCRIPTION_NAME) {
             lastYaw = msg.GetDouble();
-        } else if (key == "GPS_TRUST") {
+        } else if (key == GPS_TRUST_SUBSCRIPTION_NAME) {
             gps_trust = (int) msg.GetDouble();
-        } else if(key=="MISSION_STARTED")
-        {
-            mission_started=true;
-        }
-        else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
+        } else if (key == RESET_SUBSCRIPTION_NAME) {
+            Vector2d x;
+            x << lastGPSE, lastGPSN;
+            Matrix2d xCov;
+            xCov << gpsEVar, 0, 0, gpsNVar;
+            pf.init(x, xCov);
+
+        } else if (key != "APPCAST_REQ") // handle by AppCastingMOOSApp
             reportRunWarning("Unhandled Mail: " + key);
     }
 
@@ -141,32 +136,68 @@ bool MapLocalizerParticleFilter::OnConnectToServer() {
 bool MapLocalizerParticleFilter::Iterate() {
     AppCastingMOOSApp::Iterate();
     if (pf.isInitialized()) {
+
+        Vector2d mean = pf.computeMean();
+
+        // If the filter has already been initialized
+        // then we update the filter with this position
+        if (gps_trust) {
+            //cout << "WE UPDATE GPS"<<endl;
+            //cout << "LastGPSE: "<<lastGPSE<<endl;
+            //cout << "LastGPSN: "<<lastGPSN<<endl;
+            //cout << "meanX: "<<mean[0]<<endl;
+            //cout << "meanY: "<<mean[1]<<endl;
+            pf.update_GPS(lastGPSE, gpsEVar, lastGPSN, gpsNVar);
+        }
+
+        if (receivedBeam) {
+            //cout << "We update range: " << beamRange << endl;
+            //cout << "lastYaw: " << lastYaw << endl;
+            //cout << "beamAngle: " << beamAngle << endl;
+            pf.update_walls(beamRange, beamRangeVar, this->lastYaw + beamAngle, headingVar + beamAngleVar);
+            receivedBeam = false;
+        }
+
+        // If the filter has already been initialized
+        // then we predict its next state
+        //lastYaw *= M_PI / 180.0;
+        Vector2d u(lastVelocity, lastYaw);
+        Matrix2d uCov;
+
+        cout << "lastYaw: " << endl << lastYaw << endl;
+        cout << "lastVelocity: " << endl << lastVelocity << endl;
+
+        uCov << speedVar, 0, 0, headingVar;
+        pf.predict(MOOSTime(), u, uCov);
+
         Vector2d pos = pf.computeMean();
+
+        Notify(POS_X_PUBLICATION_NAME, pos[0]);
+        Notify(POS_Y_PUBLICATION_NAME, pos[1]);
+
         Matrix2d posCov = pf.computeCovariance();
+
+        Notify(POS_COV_XX_PUBLICATION_NAME, posCov(0, 0));
+        Notify(POS_COV_XY_PUBLICATION_NAME, posCov(0, 1));
+        Notify(POS_COV_YY_PUBLICATION_NAME, posCov(1, 1));
+
         Vector2d posWeighted = pf.computeWeightedMean();
+
+        Notify(POS_X_WEIGHTED_PUBLICATION_NAME, posWeighted[0]);
+        Notify(POS_Y_WEIGHTED_PUBLICATION_NAME, posWeighted[1]);
+
         Matrix2d posCovWeighted = pf.computeWeightedCovariance();
 
-        stringstream ss;
-        ss << pos(0) << "," << pos(1);
-        Notify("POS_ESTIM_PARTICLE_FILTER", ss.str().c_str());
+        Notify(POS_COV_XX_WEIGHTED_PUBLICATION_NAME, posCovWeighted(0, 0));
+        Notify(POS_COV_XY_WEIGHTED_PUBLICATION_NAME, posCovWeighted(0, 1));
+        Notify(POS_COV_YY_WEIGHTED_PUBLICATION_NAME, posCovWeighted(1, 1));
+    } else if (gps_trust && filter_easting_initialized && filter_northing_initialized) {
+        Vector2d x;
+        x << lastGPSE, lastGPSN;
+        Matrix2d xCov;
+        xCov << gpsEVar, 0, 0, gpsNVar;
 
-        ss.clear();
-        ss.str(std::string());
-
-        ss << posCov(0, 0) << "," << posCov(0, 1) << posCov(1, 0) << "," << posCov(1, 1);
-        Notify("POS_COV_ESTIM_PARTICLE_FILTER", ss.str().c_str());
-
-        ss.clear();
-        ss.str(std::string());
-
-        ss << posWeighted(0) << "," << posWeighted(1);
-        Notify("POS_ESTIM_PARTICLE_FILTER_WEIGHTED", ss.str().c_str());
-
-        ss.clear();
-        ss.str(std::string());
-
-        ss << posCovWeighted(0, 0) << "," << posCovWeighted(0, 1) << posCovWeighted(1, 0) << "," << posCovWeighted(1, 1);
-        Notify("POS_COV_ESTIM_PARTICLE_FILTER_WEIGHTED", ss.str().c_str());
+        pf.init(x, xCov);
     }
     AppCastingMOOSApp::PostReport();
     return (true);
@@ -218,11 +249,70 @@ bool MapLocalizerParticleFilter::OnStartUp() {
         } else if (param == "RESAMPLING_METHOD") {
             if (value == "MULTINOMIAL") {
                 resamplingMethod = MULTINOMIAL;
+                pf.setResampleMethod(resamplingMethod);
             } else if (value == "LOW_VARIANCE") {
                 resamplingMethod = LOW_VARIANCE;
+                pf.setResampleMethod(resamplingMethod);
             } else if (value == "RESIDUAL") {
                 resamplingMethod = RESIDUAL;
+                pf.setResampleMethod(resamplingMethod);
             }
+            handled = true;
+        }// Topics we subscribe to
+        else if (param == "RESET_SUBSCRIPTION_NAME") {
+            RESET_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "WALL_DETECTOR_SUBSCRIPTION_NAME") {
+            WALL_DETECTOR_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "GPS_E_SUBSCRIPTION_NAME") {
+            GPS_E_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "GPS_N_SUBSCRIPTION_NAME") {
+            GPS_N_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "KELLER_DEPTH_SUBSCRIPTION_NAME") {
+            KELLER_DEPTH_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "SPEED_ESTIM_LOCAL_SUBSCRIPTION_NAME") {
+            SPEED_ESTIM_LOCAL_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "IMU_YAW_SUBSCRIPTION_NAME") {
+            IMU_YAW_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "GPS_TRUST_SUBSCRIPTION_NAME") {
+            GPS_TRUST_SUBSCRIPTION_NAME = value;
+            handled = true;
+        }// Topice we publish to
+        else if (param == "POS_X_PUBLICATION_NAME") {
+            POS_X_PUBLICATION_NAME = value;
+            handled = true;
+        } else if (param == "POS_Y_PUBLICATION_NAME") {
+            POS_Y_PUBLICATION_NAME = value;
+            handled = true;
+        } else if (param == "POS_COV_XX_PUBLICATION_NAME") {
+            POS_COV_XX_PUBLICATION_NAME = value;
+            handled = true;
+        } else if (param == "POS_COV_XY_PUBLICATION_NAME") {
+            POS_COV_XY_PUBLICATION_NAME = value;
+            handled = true;
+        } else if (param == "POS_COV_YY_PUBLICATION_NAME") {
+            POS_COV_YY_PUBLICATION_NAME = value;
+            handled = true;
+        } else if (param == "POS_X_WEIGHTED_PUBLICATION_NAME") {
+            POS_X_WEIGHTED_PUBLICATION_NAME = value;
+            handled = true;
+        } else if (param == "POS_Y_WEIGHTED_PUBLICATION_NAME") {
+            POS_Y_WEIGHTED_PUBLICATION_NAME = value;
+            handled = true;
+        } else if (param == "POS_COV_XX_WEIGHTED_PUBLICATION_NAME") {
+            POS_COV_XX_WEIGHTED_PUBLICATION_NAME = value;
+            handled = true;
+        } else if (param == "POS_COV_XY_WEIGHTED_PUBLICATION_NAME") {
+            POS_COV_XY_WEIGHTED_PUBLICATION_NAME = value;
+            handled = true;
+        } else if (param == "POS_COV_YY_WEIGHTED_PUBLICATION_NAME") {
+            POS_COV_YY_WEIGHTED_PUBLICATION_NAME = value;
             handled = true;
         }
 
@@ -237,14 +327,14 @@ bool MapLocalizerParticleFilter::OnStartUp() {
 
 void MapLocalizerParticleFilter::registerVariables() {
     AppCastingMOOSApp::RegisterVariables();
-    Register("WALL_DETECTOR", 0);
-    Register("GPS_E", 0);
-    Register("GPS_N", 0);
-    Register("TRUST_GPS", 0);
-    Register("KELLER_DEPTH", 0); // iKeller
-    Register("SPEED_ESTIM_LOCAL", 0);
-    Register("IMU_YAW", 0);
-    Register("MISSION_STARTED",0);
+    Register(WALL_DETECTOR_SUBSCRIPTION_NAME, 0);
+    Register(GPS_E_SUBSCRIPTION_NAME, 0);
+    Register(GPS_N_SUBSCRIPTION_NAME, 0);
+    Register(GPS_TRUST_SUBSCRIPTION_NAME, 0);
+    Register(KELLER_DEPTH_SUBSCRIPTION_NAME, 0); // iKeller
+    Register(SPEED_ESTIM_LOCAL_SUBSCRIPTION_NAME, 0);
+    Register(IMU_YAW_SUBSCRIPTION_NAME, 0);
+    Register(RESET_SUBSCRIPTION_NAME, 0);
 }
 
 bool MapLocalizerParticleFilter::buildReport() {
@@ -273,6 +363,6 @@ bool MapLocalizerParticleFilter::buildReport() {
     }
     actab << resampleEvery << s_method;
     m_msgs << actab.getFormattedString();
-    
+
     return (true);
 }

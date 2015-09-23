@@ -317,18 +317,20 @@ void Sonar::ListenSonarMessages()
 	      for (int k=0; k<pHdta->nBins(); ++k)
         	vScanline.push_back( pHdta->scanlineData()[k] );
 
+        Notify("SONAR_RAW_BEARING", pHdta->bearing());
+
 	      stringstream ss;
 	      ss << "bearing=" << pHdta->bearingDeg()*M_PI/180.0 << ",";
 	      ss << "ad_interval=" << pHdta->ADInterval_m() << ",";
 	      ss << "scanline=";
 	      Write(ss, vScanline);
-        if (pHdta->nBins() <= (m_iParamBins*1.5))
-        {
+        // if (pHdta->nBins() <= (m_iParamBins*2.0) 1)
+        // {
           if(m_snrType == SeaNetMsg::MicronDST)
             Notify("SONAR_RAW_DATA_MICRON", ss.str());
           else if(m_snrType == SeaNetMsg::MiniKingNotDST)
             Notify("SONAR_RAW_DATA_MINIKING", ss.str());
-        }
+        // }
 
 	      // ***************************************
 
@@ -430,6 +432,23 @@ bool Sonar::OnStartUp()
 		MOOSTrace("No configuration read.\n");
 
 	bool portOpened = this->m_Port.Create(m_portName.c_str(), 115200);
+
+string tt;
+STRING_LIST params;
+
+string ttt1("PORT=");
+char numstr1[30] = {0}; // enough to hold all numbers up to 64-bits
+sprintf(numstr1, "%s", m_portName.c_str());
+tt = ttt1 + numstr1;
+params.push_back(tt);
+tt = "";
+string ttt("BAUDRATE=");
+char numstr[30] = {0}; // enough to hold all numbers up to 64-bits
+sprintf(numstr, "%d", 115200);
+tt = ttt + numstr;
+params.push_back(tt);
+
+  portOpened = this->m_Port.Configure(params);
 
 	//this->m_Port.SetTermCharacter('\n');
 	m_Port.Flush();
