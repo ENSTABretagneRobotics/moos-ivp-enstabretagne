@@ -1,7 +1,7 @@
 /************************************************************/
 /*    FILE: Keller.h
 /*    ORGN: Toutatis AUVs - ENSTA Bretagne
-/*    AUTH: Simon Rohou
+/*    AUTH: Thomas Le Mezo, Clement Aubry
 /*    DATE: 2015
 /************************************************************/
 

@@ -281,7 +281,7 @@ bool Saucisse::OnStartUp()
   m_pololu = new Pololu(m_device_name);
 
   if(!m_pololu->isReady())
-    reportConfigWarning("Error on Pololu connection.");
+    reportRunWarning("Error on Pololu connection.");
 
   if(m_reset_on_startup)
   {

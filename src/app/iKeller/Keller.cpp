@@ -1,7 +1,7 @@
 /************************************************************/
 /*    FILE: Keller.cpp
 /*    ORGN: Toutatis AUVs - ENSTA Bretagne
-/*    AUTH: Simon Rohou
+/*    AUTH: Thomas Le Mezo, Clement Aubry
 /*    DATE: 2015
 /************************************************************/
 
@@ -456,13 +456,13 @@ bool Keller::OnStartUp()
 
   m_port_is_initialized = initSerialPort();
   if(!m_port_is_initialized){
-    reportConfigWarning("Initialization failed on " + m_port_name);
+    reportRunWarning("Initialization failed on " + m_port_name);
   }
   else
   {
     m_bKellerInitialized = initKeller(m_iMmaxRetries);
     if(!m_bKellerInitialized)
-      reportConfigWarning("Init keller failed");
+      reportRunWarning("Init keller failed");
   }
   m_bKellerPolling = true;
   registerVariables();
@@ -511,11 +511,16 @@ bool Keller::buildReport()
 
 bool Keller::initSerialPort()
 {
-  bool portOpened = m_serial_port.Create(m_port_name.c_str(), 9600);
-  // reportEvent("iModem: Serial port openned\n");
-  //m_Port.SetTermCharacter('\n');
-  m_serial_port.Flush();
-  return portOpened;
+  if(m_serial_port.Create(m_port_name.c_str(), 9600))
+  {
+    // reportEvent("iModem: Serial port openned\n");
+    //m_Port.SetTermCharacter('\n');
+    if(m_serial_port.Flush())
+      return true;
+    return false;
+  }
+
+  return false;
 }
 
 bool Keller::initKeller(int maxRetries)
