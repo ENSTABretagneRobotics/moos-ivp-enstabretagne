@@ -13,22 +13,22 @@ ProcessConfig = ANTLER
   Run = MOOSDB            @ NewConsole = false
 
   // ************** UTILITIES ****************
-  Run = uMS             @ NewConsole = false
-  Run = uMACView        @ NewConsole = false
-  Run = uProcessWatch   @ NewConsole = false
-  Run = pShare          @ NewConsole = false 
+  Run = uMS               @ NewConsole = false
+  Run = uMACView          @ NewConsole = false
+  Run = uProcessWatch     @ NewConsole = false
+  Run = pShare            @ NewConsole = false 
 
   // ************** LOGS *********************
-  Run = pLogger         @ NewConsole = false
+  Run = pLogger           @ NewConsole = false
 
   // ************** ENGINE CONTROL ***********
-  Run = iSaucisse       @ NewConsole = false
-  Run = pMixThrusters   @ NewConsole = true
+  Run = iSaucisse         @ NewConsole = false
+  Run = pMixThrusters     @ NewConsole = true
 
   // ************** SENSORS ******************
-  Run = iGPS            @ NewConsole = false
-  Run = iKeller         @ NewConsole = false
-  Run = iXSensINS       @ NewConsole = false
+  Run = iGPS              @ NewConsole = false
+  Run = iKeller           @ NewConsole = false
+  Run = iXSensINS         @ NewConsole = false
 
   // ************* REGULATION ****************
   //Run = pSimplePID      @ NewConsole = false ~pSimplePID_depth

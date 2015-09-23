@@ -1,11 +1,11 @@
 #!/bin/bash
-nsplug playback.moos targ_playback.moos --path=../common -f
+nsplug playback.moos targ_playback.moos --path=../../common -f
 pAntler targ_playback.moos >& /dev/null &
 
 printf "Mission started.\n"
 
 ANSWER="0"
-while [ "${ANSWER}" != "2" -a "${ANSWER}" != "q" ]; do
+while [ "${ANSWER}" != "q" ]; do
   printf "Hit (q) to Exit and Kill:\n"
   printf "> "
   read ANSWER
