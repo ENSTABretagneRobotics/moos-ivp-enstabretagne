@@ -21,7 +21,7 @@ Sonar::Sonar()
 	m_bSonarReady = false;
 	m_bIsPowered = false;
 
-  m_snrType = SeaNetMsg::SonarTypeError;
+  m_snrType = SeaNetMsg::MicronDST;
 
   m_bPollSonar = true;
 
@@ -344,7 +344,7 @@ void Sonar::ListenSonarMessages()
       sBuf.erase(0,msg_size);
 
       //Take a breath before talking
-      MOOSPause(100);
+      MOOSPause(500);
 
       if (m_bIsAlive && !m_bSonarReady)
       {

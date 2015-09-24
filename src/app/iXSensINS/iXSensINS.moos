@@ -10,5 +10,5 @@ ProcessConfig = iXSensINS
   UART_BAUD_RATE = 115200
 
   // magnetic declination for Piombino (2°E)
-  YAW_DECLINATION = -2
+  YAW_DECLINATION = 50.0
 }
