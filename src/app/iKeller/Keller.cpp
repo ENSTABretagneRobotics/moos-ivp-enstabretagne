@@ -515,9 +515,10 @@ bool Keller::initSerialPort()
   {
     // reportEvent("iModem: Serial port openned\n");
     //m_Port.SetTermCharacter('\n');
-    if(m_serial_port.Flush())
-      return true;
-    return false;
+    // if(!m_serial_port.Flush())
+    //   return false;
+    m_serial_port.Flush();
+    return true;
   }
 
   return false;
