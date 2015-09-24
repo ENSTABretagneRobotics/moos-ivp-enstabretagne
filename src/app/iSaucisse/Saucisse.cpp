@@ -33,8 +33,10 @@ Saucisse::Saucisse()
 
   m_status_cameras = UNDEFINED_STATUS;
   m_status_modem = UNDEFINED_STATUS;
-  m_status_micron = UNDEFINED_STATUS;
-  m_status_miniking = UNDEFINED_STATUS;
+  m_status_sonar = UNDEFINED_STATUS;
+  m_status_sounder = UNDEFINED_STATUS;
+  //m_status_micron = UNDEFINED_STATUS;
+  //m_status_miniking = UNDEFINED_STATUS;
   m_status_sounder = UNDEFINED_STATUS;
   m_status_gps = UNDEFINED_STATUS;
 
@@ -110,7 +112,7 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       Notify("POWERED_GPS", m_status_gps);
     }
 
-    /*else if(key == "POWER_SOUNDER")
+    else if(key == "POWER_SOUNDER")
     {
       int success = m_pololu->turnOnBistableRelay(9, 8, (int)msg.GetDouble() == 1);
       m_status_sounder = success >= 0 ? (int)msg.GetDouble() : -1;
@@ -122,9 +124,9 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       int success = m_pololu->turnOnBistableRelay(1, 0, (int)msg.GetDouble() == 1);
       m_status_sonar = success >= 0 ? (int)msg.GetDouble() : -1;
       Notify("POWERED_SONAR", m_status_sonar);
-    }*/
+    }
 
-    else if(key == "POWER_MICRON")
+    /*else if(key == "POWER_MICRON")
     {
       int success = m_pololu->turnOnBistableRelay(9, 8, (int)msg.GetDouble() == 1);
       m_status_micron = success >= 0 ? (int)msg.GetDouble() : -1;
@@ -136,7 +138,7 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       int success = m_pololu->turnOnBistableRelay(1, 0, (int)msg.GetDouble() == 1);
       m_status_miniking = success >= 0 ? (int)msg.GetDouble() : -1;
       Notify("POWERED_MINIKING", m_status_miniking);
-    }
+    }*/
 
     else if(key == "POWER_MODEM")
     {
@@ -158,14 +160,14 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       MOOSPause(100);
       Notify("POWER_GPS", (int)msg.GetDouble());
       MOOSPause(100);
-      /*Notify("POWER_SOUNDER", (int)msg.GetDouble());
+      Notify("POWER_SOUNDER", (int)msg.GetDouble());
       MOOSPause(100);
       Notify("POWER_SONAR", (int)msg.GetDouble());
-      MOOSPause(100);*/
-      Notify("POWER_MICRON", (int)msg.GetDouble());
+      MOOSPause(100);
+      /*Notify("POWER_MICRON", (int)msg.GetDouble());
       MOOSPause(100);
       Notify("POWER_MINIKING", (int)msg.GetDouble());
-      MOOSPause(100);
+      MOOSPause(100);*/
       Notify("POWER_MODEM", (int)msg.GetDouble());
       MOOSPause(100);
       Notify("POWER_MODEM_EA", (int)msg.GetDouble());
@@ -348,8 +350,10 @@ bool Saucisse::buildReport()
   actab_relays.addHeaderLines();
   actab_relays << "Cameras" << sensorStatusInText(m_status_cameras);
   actab_relays << "Modem" << sensorStatusInText(m_status_modem);
-  actab_relays << "Micron" << sensorStatusInText(m_status_micron);
-  actab_relays << "Miniking" << sensorStatusInText(m_status_miniking);
+  actab_relays << "Sonar" << sensorStatusInText(m_status_sonar);
+  actab_relays << "Sounder" << sensorStatusInText(m_status_sounder);
+  /*actab_relays << "Micron" << sensorStatusInText(m_status_micron);
+  actab_relays << "Miniking" << sensorStatusInText(m_status_miniking);*/
   actab_relays << "GPS" << sensorStatusInText(m_status_gps);
   m_msgs << actab_relays.getFormattedString() << "\n\n";
 

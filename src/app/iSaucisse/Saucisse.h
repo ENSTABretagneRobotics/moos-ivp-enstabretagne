@@ -41,9 +41,10 @@ class Saucisse : public AppCastingMOOSApp
     Pololu *m_pololu;
     int m_status_cameras;
     int m_status_sounder;
+    int m_status_sonar;
     int m_status_modem;
-    int m_status_micron;
-    int m_status_miniking;
+    //int m_status_micron;
+    //int m_status_miniking;
     int m_status_gps;
     double m_left_thruster_value;
     double m_right_thruster_value;
