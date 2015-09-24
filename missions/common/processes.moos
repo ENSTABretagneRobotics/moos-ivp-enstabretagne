@@ -5,3 +5,5 @@
 #include "p/pSimplePID_Depth.moos"
 #include "p/pSimplePID_Heading.moos"
 #include "p/pTrustGPS.moos"
+#include "p/pOpiDetection_Side.moos"
+#include "p/pOpiDetection_Bottom.moos"
