@@ -16,8 +16,8 @@ ProcessConfig = iSaucisse
   # Mac OS X:
   #     /dev/cu.usbmodem00034567
 
-  // Force relays settings at startup
-  RESET_ON_STARTUP = true
-  // If requested, force relays to 'on' position at startup
-  RESET_ALL_ON = false
+  // Force relays settings on startup
+  AUTOSET_ON_STARTUP = autoset=true, all_on=true
+  // Force relays settings on quit
+  AUTOSET_ON_QUIT = autoset=true, all_on=false
 }

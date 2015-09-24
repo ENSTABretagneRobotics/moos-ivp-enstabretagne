@@ -33,9 +33,12 @@ class Saucisse : public AppCastingMOOSApp
 
   private: // Configuration variables
     std::string m_device_name;
-    bool m_reset_on_startup;
-    bool m_reset_all_on;
-    double m_alert_max_temperature;
+    bool m_autoset_on_startup, m_default_value_on_startup;
+    bool m_autoset_on_quit, m_default_value_on_quit;
+
+  private: // State variables
+    Nuc *m_nuc;
+    Pololu *m_pololu;
     int m_status_cameras;
     int m_status_sounder;
     int m_status_modem;
@@ -45,10 +48,6 @@ class Saucisse : public AppCastingMOOSApp
     double m_left_thruster_value;
     double m_right_thruster_value;
     double m_vertical_thruster_value;
-
-  private: // State variables
-    Nuc *m_nuc;
-    Pololu *m_pololu;
 };
 
 #endif 
