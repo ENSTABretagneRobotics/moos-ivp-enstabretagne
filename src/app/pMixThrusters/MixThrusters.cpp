@@ -21,15 +21,15 @@ using namespace Eigen;
 MixThrusters::MixThrusters() {
     // Wild guesses until we receive
     // the configuration
-    COEFF_MATRIX(0, 0) = 1;
-    COEFF_MATRIX(0, 1) = -1;
-    COEFF_MATRIX(0, 2) = 0;
-    COEFF_MATRIX(1, 0) = 1;
-    COEFF_MATRIX(1, 1) = 1;
-    COEFF_MATRIX(1, 2) = 0;
-    COEFF_MATRIX(2, 0) = 0;
-    COEFF_MATRIX(2, 1) = 0;
-    COEFF_MATRIX(2, 2) = 1;
+    COEFF_MATRIX(0, 0) = -0.9;
+    COEFF_MATRIX(0, 1) = -0.9;
+    COEFF_MATRIX(0, 2) = 0.0;
+    COEFF_MATRIX(1, 0) = -1.0;
+    COEFF_MATRIX(1, 1) = 1.0;
+    COEFF_MATRIX(1, 2) = 0.0;
+    COEFF_MATRIX(2, 0) = 0.0;
+    COEFF_MATRIX(2, 1) = 0.0;
+    COEFF_MATRIX(2, 2) = 1.0;
 
     desiredForces = Vector3d::Zero();
     u = Vector3d::Zero();
