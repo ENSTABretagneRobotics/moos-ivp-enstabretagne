@@ -208,4 +208,11 @@ ProcessConfig = euRathlonItems
   event = var=VIEW_MARKER, val="type=circle,x=36.2,y=-22.1,scale=2,color=blue,width=4", time=0
   event = var=VIEW_MARKER, val="type=circle,x=4.6,y=-40,scale=2,color=blue,width=4", time=0
   event = var=VIEW_MARKER, val="type=circle,x=0,y=0,scale=1,color=blue,width=2", time=0
+
+  // Other buoys
+  event = var=VIEW_MARKER, val="type=circle,x=154.38,y=-173.02,scale=2,color=yellow,width=4", time=0
+  event = var=VIEW_MARKER, val="type=circle,x=6.5107,y=-138.1,scale=2,color=yellow,width=4", time=0
+  event = var=VIEW_MARKER, val="type=circle,x=1.1394,y=-102.97,scale=2,color=yellow,width=4", time=0
+  event = var=VIEW_MARKER, val="type=circle,x=3.9878,y=-67.607,scale=2,color=yellow,width=4", time=0
+  event = var=VIEW_MARKER, val="type=circle,x=37.68,y=-30.579,scale=2,color=yellow,width=4", time=0
 }
