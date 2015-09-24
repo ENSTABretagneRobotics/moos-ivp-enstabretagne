@@ -19,7 +19,7 @@ ProcessConfig = pMixThrusters
   //  0.0   0.0    1.0
 
   FORWARD_COEFF = 1.0
-  BACKWARD_COEFF = 0.9
+  BACKWARD_COEFF = 1.0
 
   // SIGMOID or NORMALIZATION
   SATURATION_MOD = NORMALIZATION
