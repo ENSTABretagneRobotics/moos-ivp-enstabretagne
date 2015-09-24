@@ -30,7 +30,7 @@ Saucisse::Saucisse()
   m_default_value_on_quit = false;
 
   m_nuc = new Nuc();
-
+  
   m_status_cameras = UNDEFINED_STATUS;
   m_status_modem = UNDEFINED_STATUS;
   m_status_sonar = UNDEFINED_STATUS;
