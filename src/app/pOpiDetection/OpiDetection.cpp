@@ -23,6 +23,9 @@ OpiDetection::OpiDetection() :
      folder_name_pattern("/DATASET_%F_%H-%M-%S"),
      image_name_pattern("/image_%H_%M_%S.jpg")
 {
+
+  img = imread("/home/simon/moos-ivp-toutatis/TEST.jpg");
+  detect(img);
 }
 
 //---------------------------------------------------------
@@ -75,6 +78,7 @@ bool OpiDetection::Iterate()
 {
   AppCastingMOOSApp::Iterate();
 
+  img = imread("/home/simon/moos-ivp-toutatis/TEST.jpg");
   detect(img);
 
   AppCastingMOOSApp::PostReport();
