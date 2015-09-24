@@ -103,7 +103,9 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
       		MOOSVectorFromString(msg.GetString(), m_new_scanline_micron, nRows, nCols);
       		if(m_new_scanline_micron.size() != m_size_scanline_micron){
       			m_img_sonar_micron.create(2*m_new_scanline_micron.size(),2*m_new_scanline_micron.size(),CV_8UC(1));
+      			m_img_micron.create(2*m_new_scanline_micron.size(),2*m_new_scanline_micron.size(),CV_8UC(3));
       			m_img_sonar_micron.setTo(Scalar(255));
+      			m_img_micron.setTo(Scalar(255, 255, 255));
       		}
       		m_size_scanline_micron = m_new_scanline_micron.size();
       		m_new_data_micron = true;

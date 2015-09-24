@@ -13,16 +13,16 @@ ProcessConfig = pMixThrusters
 
   COEFF_MATRIX=-0.9,-0.9,0.0,-1.0,1.0,0.0,0.0,0.0,1.0
 
-  //  FX    RZ    FZ
-  // 1     -1    0
-  // 0.8    0.8    0
-  // 0      0    0
+  //  FX    RZ      FZ
+  // -0.9  -0.9    0.0
+  // -1.0   1.0    0.0
+  //  0.0   0.0    1.0
 
   FORWARD_COEFF = 1.0
   BACKWARD_COEFF = 1.0
 
   // SIGMOID or NORMALIZATION
-  SATURATION_MOD = SIGMOID
+  SATURATION_MOD = NORMALIZATION
 
   SIGMOID_COEFF = 0.333
 }
