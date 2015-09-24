@@ -3,7 +3,7 @@ ProcessConfig = pSimplePID_Heading
   AppTick   = 10
   CommsTick = 10
 
-  KP = -10.0
+  KP = -50.0
   //KI = 0.0001
   //KD = -0.2
   //KW = 0.0

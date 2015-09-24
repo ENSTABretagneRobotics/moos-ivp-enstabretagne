@@ -193,6 +193,7 @@ bool SimplePID::OnStartUp()
     else if(param == "ANGLE"){
       if(value == "RAD"){
         m_angle = true;
+        handled = true;
       }
     }
 
@@ -238,7 +239,13 @@ bool SimplePID::buildReport()
   ACTable actab(3);
   actab << "State | Consigne | Error";
   actab.addHeaderLines();
+  if(m_angle == false){
   actab << m_state << m_consigne << m_error;
+}
+else{
+ actab << m_state*180.0/M_PI << m_consigne*180.0/M_PI << m_error*180.0/M_PI; 
+}
+
 
   m_msgs << actab.getFormattedString();
   m_msgs << '\n';

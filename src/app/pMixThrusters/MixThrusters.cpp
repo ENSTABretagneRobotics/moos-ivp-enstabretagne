@@ -70,8 +70,8 @@ bool MixThrusters::OnConnectToServer() {
 
 void MixThrusters::saturationSigmoid(Eigen::Vector3d &u) {
 
-    double S0 = 2.0 / (1 + exp(-u[0] / m_sigmoid_coeff)) - 1;
-    double S1 = 2.0 / (1 + exp(-u[1] / m_sigmoid_coeff)) - 1;
+    double S0 = 2.0 / (1.0 + exp(-u[0] / m_sigmoid_coeff)) - 1.0;
+    double S1 = 2.0 / (1.0 + exp(-u[1] / m_sigmoid_coeff)) - 1.0;
 
     double maxU = fmax(fabs(S0), fabs(S1));
 
