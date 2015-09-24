@@ -75,13 +75,17 @@ void MixThrusters::saturationSigmoid(Eigen::Vector3d &u) {
 
     double maxU = fmax(fabs(S0), fabs(S1));
 
-    if(maxU!=0){
-        u[0] = fsign(u[0]) * S0/maxU;
-        u[1] = fsign(u[1]) * S1/maxU;
-    }
-    else{
+    if(maxU==0){
         u[0]=0.0;
         u[1]=0.0;
+    }
+    else if(maxU>1.0){
+        u[0]=S0/maxU;
+        u[1]=S1/maxU;
+    }
+    else{
+        u[0]=S0;
+        u[1]=S1;
     }
 
     // Normalize so that u3 is in [-1,1]
