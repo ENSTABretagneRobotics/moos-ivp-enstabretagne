@@ -56,23 +56,3 @@ ProcessConfig = pShare
   //Input = src_name = DESIRED_*,route=multicast_8
   //Output = src_name = *,route=192.168.1.100:24468
 }
-
-ProcessConfig = pLogger
-{
-  //over  loading  basic  params
-  AppTick     = 25.0
-  CommsTick   = 25.0
-
-  File          = data_gate
-  PATH          = /home/ciscrea/log
-  FileTimeStamp = true
-
-  DoublePrecision = 12
-
-  AsyncLog        = true
-  WildCardLogging = false
-
-  Log = DESIRED_FX     @ 0
-  Log = DESIRED_RX     @ 0
-  Log = DESIRED_RZ     @ 0
-}

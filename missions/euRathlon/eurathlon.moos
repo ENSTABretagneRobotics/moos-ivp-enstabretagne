@@ -45,14 +45,69 @@ ProcessConfig = ANTLER
 
   // ************* BEHAVIOR ******************
   Run = pEchoVar          @ NewConsole = false
-  Run = pHelmIvP          @ NewConsole = false
-  Run = uTimerScript      @ NewConsole = false
+  //Run = pHelmIvP          @ NewConsole = false ~pHelmLongRange
+  Run = pMarineViewer      @ NewConsole = false
+  //Run = uTimerScript      @ NewConsole = false ~uTimerLongRange
+  Run = uTimerScript      @ NewConsole = false ~uTimerInspection
+
+  // ************* DETECTION ******************
+  //Run = pOpiDetection          @ NewConsole = false ~pOpiDetection_Side
+  //Run = pOpiDetection          @ NewConsole = false ~pOpiDetection_Bottom
 }
 
-ProcessConfig = pHelmIvP
+ProcessConfig = uTimerLongRange
+{
+  AppTick = 4
+  CommsTick = 4
+
+  // Start from WP 2
+
+  // To WP 3
+  event = var=DESIRED_HEADING,    time=0000, val=8.13 // !
+  event = var=DESIRED_DEPTH,      time=0000, val=1.6
+  event = var=DESIRED_SPEED,      time=0020, val=1
+  event = var=DESIRED_SPEED,      time=0210, val=-1
+  event = var=DESIRED_SPEED,      time=0212, val=0
+  event = var=DESIRED_DEPTH,      time=0212, val=0
+  
+  // To WP 4
+  event = var=DESIRED_HEADING,    time=0240, val=-4.67 // !
+  event = var=DESIRED_DEPTH,      time=0240, val=1.6
+  event = var=DESIRED_SPEED,      time=0260, val=1
+  event = var=DESIRED_SPEED,      time=0450, val=-1
+  event = var=DESIRED_SPEED,      time=0452, val=0
+  event = var=DESIRED_DEPTH,      time=0452, val=0
+  
+  // To WP 5
+  event = var=DESIRED_HEADING,   time=0480, val=-42.58 // !
+  event = var=DESIRED_DEPTH,    time=0480, val=1.6
+  event = var=DESIRED_SPEED,    time=0500, val=1
+  event = var=DESIRED_SPEED,    time=0750, val=-1
+  event = var=DESIRED_SPEED,    time=0752, val=0
+  event = var=DESIRED_DEPTH,    time=0752, val=0
+}
+
+ProcessConfig = uTimerInspection
+{
+  AppTick = 4
+  CommsTick = 4
+
+  event = var=DESIRED_DEPTH,      time=0000, val=3.5
+  event = var=DESIRED_SPEED,      time=0010, val=1
+  event = var=DESIRED_HEADING,    time=0010, val=10 // to the left (halfway)
+  event = var=DESIRED_HEADING,    time=0035, val=-10 // to the right
+  event = var=DESIRED_HEADING,    time=0085, val=10 // to the left
+  event = var=DESIRED_HEADING,    time=0135, val=-10 // to the right
+  event = var=DESIRED_HEADING,    time=0185, val=10 // to the left
+  event = var=DESIRED_HEADING,    time=0235, val=-10 // to the right
+  event = var=DESIRED_DEPTH,      time=0285, val=0
+  event = var=DESIRED_SPEED,      time=0285, val=0
+}
+
+ProcessConfig = pHelmLongRange
 {
   AppTick    = 10
-  AppTick    = 10
+  CommsTick  = 10
 
   term_report_interval = 0
 
@@ -69,14 +124,89 @@ ProcessConfig = pEchoVar
   AppTick = 25
   CommsTick = 25
 
-  echo = IMU_YAW -> NAV_HEADING
+  echo = IMU_YAW_DEGREE -> NAV_HEADING
   echo = DEPTH -> NAV_DEPTH
   echo = SPEED_LOCAL_DEAD_RECKONING -> NAV_SPEED
 }
 
-ProcessConfig = uTimerScript
+ProcessConfig = pMarineViewer
 {
-  AppTick = 4
-  CommsTick = 4
-  event = var=NAV_SPEED, time=000, val=1.0
+  AppTick    = 4
+  CommsTick  = 4
+
+  tiff_file            = img/piombino.tif
+
+  set_pan_x            = -90
+  set_pan_y            = -280
+  zoom                 = 0.65
+  vehicle_shape_scale  = 1.5
+  hash_delta           = 50
+  hash_shade           = 0.4
+  hash_viewable        = true
+
+  trails_point_size   = 1
+
+  // Appcast configuration
+  appcast_height       = 75
+  appcast_width        = 30
+  appcast_viewable     = true
+  appcast_color_scheme = indigo
+  nodes_font_size      = medium
+  procs_font_size      = medium
+  appcast_font_size    = small
+  
+  //datum_viewable = true
+  //datum_size     = 18
+  //gui_size = small
+
+  left_context[survey-point] = DEPLOY=true
+  left_context[survey-point] = MOOS_MANUAL_OVERIDE=false
+  left_context[survey-point] = RETURN=false
+
+  right_context[return] = DEPLOY=true
+  right_context[return] = MOOS_MANUAL_OVERIDE=false
+  right_context[return] = RETURN=false
+
+  //left_context[polyvert] = POLY_VERT=x=$(XPOS),y=$(YPOS)
+
+  scope  = WPT_EFFICIENCY_LEG
+  scope  = WPT_EFFICIENCY_SUM
+  scope  = WPT_EFFICIENCY_VAL
+  scope  = RETURN
+  scope  = WPT_STAT
+  scope  = VIEW_SEGLIST
+  scope  = VIEW_POINT
+  scope  = VIEW_POLYGON
+  scope  = MVIEWER_LCLICK
+  scope  = MVIEWER_RCLICK
+
+  button_one = DEPLOY # DEPLOY=true
+  button_one = MOOS_MANUAL_OVERIDE=false # RETURN=false
+  button_two = RETURN # RETURN=true
+  button_three = CONTINUE # CONTINUE=true
+
+  action  = MENU_KEY=deploy # DEPLOY = true # RETURN = false
+  action+ = MENU_KEY=deploy # MOOS_MANUAL_OVERIDE=false
+  action  = RETURN=true
+  action  = UPDATES_RETURN=speed=1.4
+}
+
+ProcessConfig = pLogger
+{
+  //over  loading  basic  params
+  AppTick     = 25.0
+  CommsTick   = 25.0
+
+  File          = data_gate
+  PATH          = /home/ciscrea/log
+  FileTimeStamp = true
+
+  DoublePrecision = 12
+
+  AsyncLog        = true
+  WildCardLogging = true
+
+  //Log = DESIRED_FX     @ 0
+  //Log = DESIRED_RX     @ 0
+  //Log = DESIRED_RZ     @ 0
 }
