@@ -5,4 +5,6 @@ ProcessConfig = iXSensINS
 
   SERIAL_PORT = /dev/xsens
   UART_BAUD_RATE = 115200
+
+  YAW_DECLINATION = -85.0
 }
