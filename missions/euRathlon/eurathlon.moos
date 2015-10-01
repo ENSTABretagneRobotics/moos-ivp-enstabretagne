@@ -92,16 +92,16 @@ ProcessConfig = uTimerInspection
   AppTick = 4
   CommsTick = 4
 
-  event = var=DESIRED_DEPTH,      time=0000, val=3.5
-  event = var=DESIRED_SPEED,      time=0010, val=1
+  event = var=DESIRED_DEPTH,      time=0000, val=1.5
+  event = var=DESIRED_FX,      time=0010, val=1
   event = var=DESIRED_HEADING,    time=0010, val=10 // to the left (halfway)
   event = var=DESIRED_HEADING,    time=0035, val=-10 // to the right
   event = var=DESIRED_HEADING,    time=0085, val=10 // to the left
   event = var=DESIRED_HEADING,    time=0135, val=-10 // to the right
   event = var=DESIRED_HEADING,    time=0185, val=10 // to the left
   event = var=DESIRED_HEADING,    time=0235, val=-10 // to the right
-  event = var=DESIRED_DEPTH,      time=0285, val=0
-  event = var=DESIRED_SPEED,      time=0285, val=0
+  event = var=DESIRED_DEPTH,      time=0285, val=9999
+  event = var=DESIRED_FX,      time=0285, val=0
 }
 
 ProcessConfig = pHelmLongRange

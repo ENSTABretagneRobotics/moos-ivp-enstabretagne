@@ -23,6 +23,9 @@ using namespace cv;
 
 SensorViewer::SensorViewer()
 {
+	m_nb_camera_bottom = 0;
+	m_nb_camera_side = 0;
+
 	m_size_scanline_miniking = 200;
 	m_size_scanline_micron = 200;
 	m_size_scanline = 200;
@@ -90,9 +93,11 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
 		// **************** SENSORS DATA ************************
 		// 
 		if( msg.GetKey() == "CAMERA_BOTTOM") {
+			m_nb_camera_bottom ++;
 		  	memcpy(m_img_camera_bottom.data, msg.GetBinaryData(), m_img_camera_bottom.rows*m_img_camera_bottom.step);
 		}
 		else if( msg.GetKey() == "CAMERA_SIDE") {
+		  	m_nb_camera_side ++;
 		  	memcpy(m_img_camera_side.data, msg.GetBinaryData(), m_img_camera_side.rows*m_img_camera_side.step);
 		}
 		else if(msg.GetKey() == "SONAR_RAW_DATA_MICRON"){
@@ -300,6 +305,8 @@ bool SensorViewer::buildReport()
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
   #endif
+
+    m_msgs << m_nb_camera_bottom << " " << m_nb_camera_side;
 
   return(true);
 }
