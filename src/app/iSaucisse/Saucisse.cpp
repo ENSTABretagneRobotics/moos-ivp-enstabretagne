@@ -24,15 +24,19 @@ using namespace std;
 
 Saucisse::Saucisse()
 {
-  m_alert_max_temperature = 999.;
-  m_reset_on_startup = false;
-  m_reset_all_on = true;
-  m_nuc = new Nuc();
+  m_autoset_on_startup = true;
+  m_default_value_on_startup = true;
+  m_autoset_on_quit = true;
+  m_default_value_on_quit = false;
 
+  m_nuc = new Nuc();
+  
   m_status_cameras = UNDEFINED_STATUS;
   m_status_modem = UNDEFINED_STATUS;
-  m_status_micron = UNDEFINED_STATUS;
-  m_status_miniking = UNDEFINED_STATUS;
+  m_status_sonar = UNDEFINED_STATUS;
+  m_status_sounder = UNDEFINED_STATUS;
+  //m_status_micron = UNDEFINED_STATUS;
+  //m_status_miniking = UNDEFINED_STATUS;
   m_status_sounder = UNDEFINED_STATUS;
   m_status_gps = UNDEFINED_STATUS;
 
@@ -46,8 +50,27 @@ Saucisse::Saucisse()
 
 Saucisse::~Saucisse()
 {
-  m_pololu->setAllThrustersValue(0.);
-  m_pololu->bipOnExit();
+  if(m_pololu->isReady())
+  {
+    m_pololu->setAllThrustersValue(0.);
+
+    if(m_autoset_on_quit)
+    {
+      MOOSPause(100);
+      m_pololu->turnOnBistableRelay(1, 0, m_default_value_on_quit);
+      MOOSPause(100);
+      m_pololu->turnOnBistableRelay(3, 2, m_default_value_on_quit);
+      MOOSPause(100);
+      m_pololu->turnOnBistableRelay(5, 4, m_default_value_on_quit);
+      MOOSPause(100);
+      m_pololu->turnOnBistableRelay(7, 6, m_default_value_on_quit);
+      MOOSPause(100);
+      m_pololu->turnOnBistableRelay(9, 8, m_default_value_on_quit);
+    }
+
+    m_pololu->bipOnExit();
+  }
+
   delete m_pololu;
   delete m_nuc;
 }
@@ -89,7 +112,7 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       Notify("POWERED_GPS", m_status_gps);
     }
 
-    /*else if(key == "POWER_SOUNDER")
+    else if(key == "POWER_SOUNDER")
     {
       int success = m_pololu->turnOnBistableRelay(9, 8, (int)msg.GetDouble() == 1);
       m_status_sounder = success >= 0 ? (int)msg.GetDouble() : -1;
@@ -101,9 +124,9 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       int success = m_pololu->turnOnBistableRelay(1, 0, (int)msg.GetDouble() == 1);
       m_status_sonar = success >= 0 ? (int)msg.GetDouble() : -1;
       Notify("POWERED_SONAR", m_status_sonar);
-    }*/
+    }
 
-    else if(key == "POWER_MICRON")
+    /*else if(key == "POWER_MICRON")
     {
       int success = m_pololu->turnOnBistableRelay(9, 8, (int)msg.GetDouble() == 1);
       m_status_micron = success >= 0 ? (int)msg.GetDouble() : -1;
@@ -115,7 +138,7 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       int success = m_pololu->turnOnBistableRelay(1, 0, (int)msg.GetDouble() == 1);
       m_status_miniking = success >= 0 ? (int)msg.GetDouble() : -1;
       Notify("POWERED_MINIKING", m_status_miniking);
-    }
+    }*/
 
     else if(key == "POWER_MODEM")
     {
@@ -137,14 +160,14 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
       MOOSPause(100);
       Notify("POWER_GPS", (int)msg.GetDouble());
       MOOSPause(100);
-      /*Notify("POWER_SOUNDER", (int)msg.GetDouble());
+      Notify("POWER_SOUNDER", (int)msg.GetDouble());
       MOOSPause(100);
       Notify("POWER_SONAR", (int)msg.GetDouble());
-      MOOSPause(100);*/
-      Notify("POWER_MICRON", (int)msg.GetDouble());
+      MOOSPause(100);
+      /*Notify("POWER_MICRON", (int)msg.GetDouble());
       MOOSPause(100);
       Notify("POWER_MINIKING", (int)msg.GetDouble());
-      MOOSPause(100);
+      MOOSPause(100);*/
       Notify("POWER_MODEM", (int)msg.GetDouble());
       MOOSPause(100);
       Notify("POWER_MODEM_EA", (int)msg.GetDouble());
@@ -225,8 +248,6 @@ bool Saucisse::Iterate()
 
   double current_temperature = m_nuc->getTemperature();
   Notify("NUC_TEMPERATURE", current_temperature);
-  if(current_temperature > m_alert_max_temperature)
-    m_pololu->bipError();
 
   AppCastingMOOSApp::PostReport();
   return true;
@@ -255,15 +276,25 @@ bool Saucisse::OnStartUp()
     string value = line;
     bool handled = false;
 
-    if(param == "RESET_ALL_ON")
+    if(param == "AUTOSET_ON_STARTUP")
     {
-      m_reset_all_on = tolower(value) == "true";
+      string str_autoset_on_startup = "true", str_default_value_on_startup = "true";
+      value = tolower(value);
+      MOOSValFromString(str_autoset_on_startup, value, "autoset");
+      MOOSValFromString(str_default_value_on_startup, value, "all_on");
+      m_autoset_on_startup = str_autoset_on_startup == "true";
+      m_default_value_on_startup = str_default_value_on_startup == "true";
       handled = true;
     }
 
-    else if(param == "RESET_ON_STARTUP")
+    else if(param == "AUTOSET_ON_QUIT")
     {
-      m_reset_on_startup = tolower(value) == "true";
+      string str_autoset_on_quit = "true", str_default_value_on_quit = "false";
+      value = tolower(value);
+      MOOSValFromString(str_autoset_on_quit, value, "autoset");
+      MOOSValFromString(str_default_value_on_quit, value, "all_on");
+      m_autoset_on_quit = str_autoset_on_quit == "true";
+      m_default_value_on_quit = str_default_value_on_quit == "true";
       handled = true;
     }
 
@@ -283,13 +314,12 @@ bool Saucisse::OnStartUp()
   if(!m_pololu->isReady())
     reportRunWarning("Error on Pololu connection.");
 
-  if(m_reset_on_startup)
-  {
-    Notify("POWER_ALL", m_reset_all_on ? 1 : 0);
-    Notify("SET_THRUSTER_LEFT", m_left_thruster_value);
-    Notify("SET_THRUSTER_RIGHT", m_right_thruster_value);
-    Notify("SET_THRUSTER_VERTICAL", m_vertical_thruster_value);
-  }
+  Notify("SET_THRUSTER_LEFT", m_left_thruster_value);
+  Notify("SET_THRUSTER_RIGHT", m_right_thruster_value);
+  Notify("SET_THRUSTER_VERTICAL", m_vertical_thruster_value);
+
+  if(m_autoset_on_startup)
+    Notify("POWER_ALL", m_default_value_on_startup ? 1 : 0);
 
   return true;
 }
@@ -320,8 +350,10 @@ bool Saucisse::buildReport()
   actab_relays.addHeaderLines();
   actab_relays << "Cameras" << sensorStatusInText(m_status_cameras);
   actab_relays << "Modem" << sensorStatusInText(m_status_modem);
-  actab_relays << "Micron" << sensorStatusInText(m_status_micron);
-  actab_relays << "Miniking" << sensorStatusInText(m_status_miniking);
+  actab_relays << "Sonar" << sensorStatusInText(m_status_sonar);
+  actab_relays << "Sounder" << sensorStatusInText(m_status_sounder);
+  /*actab_relays << "Micron" << sensorStatusInText(m_status_micron);
+  actab_relays << "Miniking" << sensorStatusInText(m_status_miniking);*/
   actab_relays << "GPS" << sensorStatusInText(m_status_gps);
   m_msgs << actab_relays.getFormattedString() << "\n\n";
 

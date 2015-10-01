@@ -1,0 +1,8 @@
+//------------------------------------------------
+// pDegree2Rad config block
+
+ProcessConfig = pDegree2Rad
+{
+  AppTick   = 4
+  CommsTick = 4
+}

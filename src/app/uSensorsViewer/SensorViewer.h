@@ -37,7 +37,8 @@ class SensorViewer : public AppCastingMOOSApp
 	private: // Configuration variables
 
 	private: // State variables
-
+int m_nb_camera_bottom;
+int m_nb_camera_side;
 		cv::Mat m_img_camera_bottom;
 		cv::Mat m_img_camera_side;
 
