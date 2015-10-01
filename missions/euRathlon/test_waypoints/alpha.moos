@@ -20,7 +20,8 @@ ProcessConfig = ANTLER
   Run = pHelmIvP        @ NewConsole = false
   Run = pMarineViewer	  @ NewConsole = false
   Run = uProcessWatch	  @ NewConsole = false
-  Run = pNodeReporter	  @ NewConsole = false
+  Run = pNodeReporter   @ NewConsole = false
+  Run = uTimerScript    @ NewConsole = false ~euRathlonItems
 }
 
 ProcessConfig = pHelmIvP
@@ -58,8 +59,8 @@ ProcessConfig = uSimMarine
   AppTick	= 4
   CommsTick	= 4
 
-  start_x       = 154.38
-  start_y       = -173
+  start_x       = 1
+  start_y       = -120
   start_heading = 180
   start_speed   = 0
 
@@ -184,4 +185,34 @@ ProcessConfig = uTermCommandFoo
   cmd  = deploy_false   -->  DEPLOY --> false
   cmd  = return_true    -->  RETURN --> true
   cmd  = return_false   -->  RETURN --> false
+}
+
+ProcessConfig = euRathlonItems                                   
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  event = var=NAV_SPEED, val="0", time=0
+
+  // Arenas
+  event = var=VIEW_MARKER, val="type=square,x=36.2,y=-15,scale=1,color=orange,edge_color=orange,width=15,fill_transparency=0.5", time=0
+
+  // Gates
+  event = var=VIEW_MARKER, val="type=gateway,x=35.2,y=-6.1,scale=2,color=orange,width=4", time=0
+  event = var=VIEW_MARKER, val="type=gateway,x=37.2,y=-6.1,scale=2,color=orange,width=4", time=0
+
+  // Starting points
+  event = var=VIEW_MARKER, val="type=circle,x=7.7,y=-6.1,scale=2,color=green,width=4", time=0
+
+  // Other buoys
+  event = var=VIEW_MARKER, val="type=circle,x=36.2,y=-22.1,scale=2,color=blue,width=4", time=0
+  event = var=VIEW_MARKER, val="type=circle,x=4.6,y=-40,scale=2,color=blue,width=4", time=0
+  event = var=VIEW_MARKER, val="type=circle,x=0,y=0,scale=1,color=blue,width=2", time=0
+
+  // Other buoys
+  event = var=VIEW_MARKER, val="type=circle,x=154.38,y=-173.02,scale=2,color=yellow,width=4", time=0
+  event = var=VIEW_MARKER, val="type=circle,x=6.5107,y=-138.1,scale=2,color=yellow,width=4", time=0
+  event = var=VIEW_MARKER, val="type=circle,x=1.1394,y=-102.97,scale=2,color=yellow,width=4", time=0
+  event = var=VIEW_MARKER, val="type=circle,x=3.9878,y=-67.607,scale=2,color=yellow,width=4", time=0
+  event = var=VIEW_MARKER, val="type=circle,x=37.68,y=-30.579,scale=2,color=yellow,width=4", time=0
 }
