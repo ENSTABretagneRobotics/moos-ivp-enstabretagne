@@ -13,15 +13,17 @@ ProcessConfig = ANTLER
 
   Run = MOOSDB          @ NewConsole = false
 
+  Run = uMACView          @ NewConsole = false
   // ************** UTILITIES ****************
   Run = uMS             @ NewConsole = false
-  Run = pMarineViewer   @ NewConsole = false
-  Run = uTimerScript    @ NewConsole = false ~euRathlonItems
+  //Run = pMarineViewer   @ NewConsole = false
+  //Run = uTimerScript    @ NewConsole = false ~euRathlonItems
+  Run = uSensorsViewer    @ NewConsole = false
 
   // ************** LOGS *********************
-  Run = uPlayback       @ NewConsole = false
-  Run = pNodeReporter   @ NewConsole = false
-  Run = pEchoVar        @ NewConsole = false
+  //Run = uPlayback       @ NewConsole = false
+  //Run = pNodeReporter   @ NewConsole = false
+  //Run = pEchoVar        @ NewConsole = false
   //Run = pLatLon2LocalGrid       @ NewConsole = false
 }
 
