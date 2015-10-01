@@ -21,15 +21,15 @@ using namespace Eigen;
 MixThrusters::MixThrusters() {
     // Wild guesses until we receive
     // the configuration
-    COEFF_MATRIX(0, 0) = 1;
-    COEFF_MATRIX(0, 1) = -1;
-    COEFF_MATRIX(0, 2) = 0;
-    COEFF_MATRIX(1, 0) = 1;
-    COEFF_MATRIX(1, 1) = 1;
-    COEFF_MATRIX(1, 2) = 0;
-    COEFF_MATRIX(2, 0) = 0;
-    COEFF_MATRIX(2, 1) = 0;
-    COEFF_MATRIX(2, 2) = 1;
+    COEFF_MATRIX(0, 0) = -0.9;
+    COEFF_MATRIX(0, 1) = -0.9;
+    COEFF_MATRIX(0, 2) = 0.0;
+    COEFF_MATRIX(1, 0) = -1.0;
+    COEFF_MATRIX(1, 1) = 1.0;
+    COEFF_MATRIX(1, 2) = 0.0;
+    COEFF_MATRIX(2, 0) = 0.0;
+    COEFF_MATRIX(2, 1) = 0.0;
+    COEFF_MATRIX(2, 2) = 1.0;
 
     desiredForces = Vector3d::Zero();
     u = Vector3d::Zero();
@@ -70,18 +70,22 @@ bool MixThrusters::OnConnectToServer() {
 
 void MixThrusters::saturationSigmoid(Eigen::Vector3d &u) {
 
-    double S0 = 2.0 / (1 + exp(-u[0] / m_sigmoid_coeff)) - 1;
-    double S1 = 2.0 / (1 + exp(-u[1] / m_sigmoid_coeff)) - 1;
+    double S0 = 2.0 / (1.0 + exp(-u[0] / m_sigmoid_coeff)) - 1.0;
+    double S1 = 2.0 / (1.0 + exp(-u[1] / m_sigmoid_coeff)) - 1.0;
 
     double maxU = fmax(fabs(S0), fabs(S1));
 
-    if(maxU!=0){
-        u[0] = fsign(u[0]) * S0/maxU;
-        u[1] = fsign(u[1]) * S1/maxU;
-    }
-    else{
+    if(maxU==0){
         u[0]=0.0;
         u[1]=0.0;
+    }
+    else if(maxU>1.0){
+        u[0]=S0/maxU;
+        u[1]=S1/maxU;
+    }
+    else{
+        u[0]=S0;
+        u[1]=S1;
     }
 
     // Normalize so that u3 is in [-1,1]

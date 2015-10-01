@@ -21,7 +21,7 @@ Sonar::Sonar()
 	m_bSonarReady = false;
 	m_bIsPowered = false;
 
-  m_snrType = SeaNetMsg::SonarTypeError;
+  m_snrType = SeaNetMsg::MicronDST;
 
   m_bPollSonar = true;
 
@@ -164,7 +164,7 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
       }
     }
     else if ( key == "MINIKING_POLL" && msg.IsString() && m_snrType == SeaNetMsg::MicronDST){/* TO AVOID UNHANDELED MAIL*/}
-    else if ( key == "POWERED_MICRON" && m_snrType == SeaNetMsg::MicronDST)
+    else if ( key == "POWERED_SONAR" && m_snrType == SeaNetMsg::MicronDST)
     {
       m_bSonarReady = false;
       if (m_serial_thread.IsThreadRunning())
@@ -185,7 +185,7 @@ bool Sonar::OnNewMail(MOOSMSG_LIST &NewMail)
           m_serial_thread.Start();
       }
     }
-    else if ( key == "POWERED_MICRON" && msg.IsString() && m_snrType == SeaNetMsg::MiniKingNotDST){/* TO AVOID UNHANDELED MAIL*/}
+    else if ( key == "POWERED_SONAR" && msg.IsString() && m_snrType == SeaNetMsg::MiniKingNotDST){/* TO AVOID UNHANDELED MAIL*/}
     else if ( key == "POWERED_MINIKING" && m_snrType == SeaNetMsg::MiniKingNotDST)
     {
       m_bIsAlive = false;
@@ -344,7 +344,7 @@ void Sonar::ListenSonarMessages()
       sBuf.erase(0,msg_size);
 
       //Take a breath before talking
-      MOOSPause(100);
+      MOOSPause(500);
 
       if (m_bIsAlive && !m_bSonarReady)
       {
@@ -476,7 +476,7 @@ void Sonar::RegisterVariables()
   AppCastingMOOSApp::RegisterVariables();
 	Register("MICRON_PARAMS", 0);
 	Register("MICRON_POLL", 0);
-  Register("POWERED_MICRON", 0);
+  Register("POWERED_SONAR", 0);
   Register("MINIKING_PARAMS", 0);
   Register("MINIKING_POLL", 0);
   Register("POWERED_MINIKING", 0);
