@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains iLidarMove documentation -->
+<?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?>
+<xmldoc>
+  <moosapp>
+
+     <info>
+        <name>iLidarMove</name>
+        <organization>Demopol - ENSTA Bretagne</organization>
+        <date>2015</date>
+        <authors>
+           <author>Elouan Autret student Ensta Bretagne</author>
+        </authors>
+        <licence>MIT</licence>
+     </info>
+
+     <documentation>
+        <synopsis>
+          This app can connect to RX-28 Dynamixel Servo Motor and a LidarLiteV2 (PulseLight) via 
+an Arduino board with a serial port.
+
+          The app use the  API furnish by Dynamixel and PulseLigth to scan the aera in front of the Lidar mounted on the servo.An Iteration give us a bearing and a distance for an obstacle.
+
+          Angle_min = [0,1023] minimum angle  of rotation for the servo
+          Angle_max = [0,1023] maximum angle of rotation for the servo
+          If the lidar look front the angle is 0° and correspond to 512. 0 is -150 and 1023 is 150. Max should be higher than min. The servo will rotationate between those two values. 
+          
+          Index_servo number for the url of the serial port of servo as in /dev/ttyUSBX
+          URL_LIDAR  URl of the serial port with the arduino connected to the lidar
+          Servo_Id = [1-255] as you can put more than one RX-28 servo motor linked you need an id to give order to the servo can be change by managing the servo via the Windows program from Dynamixel
+          Servo_speed = [0-1023] set the speed of the rotation of the servo from 0 rpm to around 117 rpm (depend also of the load on the servo);  
+        </synopsis>
+        <interface>
+           <publications>
+              <moosvar>
+                 <varname>LIDAR_DISTANCE</varname>
+                 <vartype>int</vartype>
+                 <varinfo>distance of the detected object</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>LIDAR_ANGLE</varname>
+                 <vartype>double</vartype>
+                 <varinfo>bearing (relative to servo) of the object</varinfo>
+              </moosvar>
+           </publications>
+        </interface>
+        <!-- if there is a bug or a special fact to know.. -->
+        <optional-comments>
+           Other parameters are available but not fully implemented.
+        </optional-comments>
+        <!-- if something can be improved -->
+        <suggested-improvements>
+           Joint the ANGLE and DISTANCE to assure synchronization upon reading of those DATA.
+           Change Dynamixel library to put URL instead of number in order to indicate serial port of the servo motor. 
+        </suggested-improvements>
+     </documentation>
+
+  </moosapp>
+</xmldoc>
