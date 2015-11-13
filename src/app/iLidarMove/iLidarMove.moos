@@ -1,0 +1,16 @@
+//------------------------------------------------
+// iLidarMove config block
+
+ProcessConfig = iLidarMove
+{
+  CommsTick 	= 200
+  AppTick	= 200
+
+  INDEX_SERVO   = 0 //index for usb connexion /dev/ttyUSBX (from dynamixel library) 
+ //TODO change url
+  SERVO_ID      = 1 //index of the servo can be 1 to 255 but souhld be 1 or 2
+  URL_LIDAR     = /dev/ttyACM0 
+  SERVO_SPEED   = 500 //speed of servo rotation 0-1023 0-117rpm
+  DEBUG         = 1 //print info
+}
+
