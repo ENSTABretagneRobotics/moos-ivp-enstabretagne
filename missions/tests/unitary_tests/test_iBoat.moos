@@ -11,24 +11,26 @@ ProcessConfig = ANTLER
 {
   MSBetweenLaunches = 200
 
-  Run = MOOSDB       	  @ NewConsole = true
+  Run = MOOSDB          @ NewConsole = true
   Run = uMS             @ NewConsole=false
-  Run = iXSensINS @ NewConsole = true
-
+  Run = iBoat @ NewConsole = true
 }
 
 //------------------------------------------------
-// iXSensINS config block
+// iBoat config block
 
-ProcessConfig = iXSensINS
+ProcessConfig = iBoat
 {
   AppTick   = 25
   CommsTick = 25
 
-  //SERIAL_PORT = /dev/ttyUSB0
-  SERIAL_PORT = /dev/xsens
-  UART_BAUD_RATE = 115200
-
-  // magnetic declination for Piombino (2°E)
-  YAW_DECLINATION = 50.0
+  DEVICE_NAME = /dev/ttyACM0
+  # Linux:
+  #     /dev/ttyACM0
+  # Windows: 
+  #     \\\\.\\USBSER000
+  #     or
+  #     \\\\.\\COM6
+  # Mac OS X:
+  #     /dev/cu.usbmodem00034567
 }

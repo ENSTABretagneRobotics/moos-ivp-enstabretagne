@@ -1,0 +1,105 @@
+Community  = enstaground
+ServerHost = localhost
+ServerPort = 9000
+
+MOOSTimeWarp = 1
+
+#include "latlong.moos"
+#include "viability_simu.moos"
+#include "interfaces.moos"
+#include "processes.moos"
+#include "utilities.moos"
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+
+  Run = MOOSDB          @ NewConsole = false
+  Run = uProcessWatch   @ NewConsole = false
+  Run = pMarineViewer   @ NewConsole = false
+  Run = uJoystick       @ NewConsole = false
+
+  Run = pShare          @ NewConsole = false
+  Run = pHostInfo        @ NewConsole = false
+  Run = uFldShoreBroker  @ NewConsole = false
+}
+
+ProcessConfig = uJoystick
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  DEVICE_NAME = /dev/input/js0
+
+  INCREMENT = false
+  SCALE = 100
+
+  AXIS = 1
+  SCALE_RATIO =-0.7
+  MOOS_DEST_VAR = JOYSTICK_THRUST
+
+  AXIS = 0
+  SCALE_RATIO = -1.0
+  MOOS_DEST_VAR = JOYSTICK_RUDDER
+}
+
+ProcessConfig = pMarineViewer
+{
+  AppTick    = 4
+  CommsTick  = 4
+
+  tiff_file            = ../../data/maps/penfeld.tif
+  set_pan_x            = -400
+  set_pan_y            = 300
+  zoom                 = 1.2
+  vehicle_shape_scale  = 1.5
+  hash_delta           = 50
+  hash_shade           = 0.4
+  hash_viewable        = true
+
+  // Appcast configuration
+  appcast_height       = 75
+  appcast_width        = 30
+  appcast_viewable     = true
+  appcast_color_scheme = indigo
+  nodes_font_size      = medium
+  procs_font_size      = medium
+  appcast_font_size    = small
+
+  button_one = DEPLOY # DEPLOY = true
+  button_one = MOOS_MANUAL_OVERIDE = false # RETURN = false
+  button_two = RETURN # RETURN = true
+}
+
+ProcessConfig = pShare
+{
+  AppTick    = 2
+  CommsTick  = 2
+
+  input = route = localhost:9300
+  input = route = multicast_9
+}
+
+ProcessConfig = uFldShoreBroker
+{
+  AppTick       = 1
+  CommsTick     = 1
+
+  qbridge  = NODE_REPORT, NODE_MESSAGE
+  
+  bridge   = src=APPCAST_REQ
+  bridge   = src=DEPLOY
+  bridge   = src=RETURN
+  bridge   = src=JOYSTICK_THRUST
+  bridge   = src=JOYSTICK_RUDDER
+  bridge   = src=MOOS_MANUAL_OVERIDE
+  //bridge   = src=MOOS_MANUAL_OVERRIDE
+}
+
+ProcessConfig = pHostInfo
+{
+  AppTick   = 1
+  CommsTick   = 1
+
+  default_hostip = localhost
+}
