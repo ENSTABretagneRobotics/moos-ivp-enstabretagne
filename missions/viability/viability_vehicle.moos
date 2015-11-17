@@ -1,0 +1,164 @@
+Community  = enstaboat
+ServerHost = localhost
+ServerPort = 9001
+
+MOOSTimeWarp = 1
+
+#include "latlong.moos"
+#include "viability_simu.moos"
+#include "interfaces.moos"
+#include "processes.moos"
+#include "utilities.moos"
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+
+  Run = MOOSDB          @ NewConsole = false
+
+  Run = pShare          @ NewConsole = false
+  Run = pHostInfo       @ NewConsole = false
+  Run = uFldNodeBroker  @ NewConsole = false
+  Run = uProcessWatch   @ NewConsole = false
+  Run = pEchoVar        @ NewConsole = false ~pEchoVar_Joystick
+  //Run = pEchoVar        @ NewConsole = false ~pEchoVar_Helm
+  Run = pNodeReporter   @ NewConsole = false
+  //Run = pHelmIvP        @ NewConsole = false
+  Run = pMarinePID      @ NewConsole = false
+
+  // Simu:
+//  Run = uSimMarine      @ NewConsole = false
+
+  // Demo:
+  Run = iPololu       @ NewConsole = false
+  Run = iXSensINS     @ NewConsole = false
+//  Run = iGPS          @ NewConsole = false
+  Run = pLatLon2LocalGrid      @ NewConsole = false
+}
+
+ProcessConfig = pEchoVar_Joystick
+{                                                  
+  AppTick   = 10
+  CommsTick = 10
+
+  Echo      = JOYSTICK_THRUST -> FINAL_DESIRED_THRUST
+  Echo      = JOYSTICK_RUDDER -> FINAL_DESIRED_RUDDER
+
+  //condition = CONFINES_stayIN != VIOLATION
+  //condition = CONFINES_stayOUT != VIOLATION
+}
+
+ProcessConfig = pEchoVar_Helm
+{                                                  
+  AppTick   = 10
+  CommsTick = 10
+
+  Echo      = DESIRED_THRUST -> FINAL_DESIRED_THRUST
+  Echo      = DESIRED_RUDDER -> FINAL_DESIRED_RUDDER
+
+  condition = (CONFINES_stayIN = VIOLATION) or (CONFINES_stayOUT = VIOLATION)
+}
+
+ProcessConfig = pHelmIvP
+{
+  AppTick    = 10
+  CommsTick  = 10
+
+  Behaviors  = penfeld_confines.bhv
+  Verbose    = quiet
+  Domain     = course:0:359:360
+  Domain     = speed:0:4:21
+
+  bhv_dir_not_found_ok = true
+
+  ok_skew = any
+  active_start = false
+}
+
+ProcessConfig = pNodeReporter
+{
+  AppTick    = 10
+  CommsTick  = 10
+
+  vessel_type = KAYAK
+  platform_length = 1.5
+}
+
+ProcessConfig = uFldNodeBroker
+{
+  AppTick   = 1
+  CommsTick = 1
+
+  TRY_SHORE_HOST = pshare_route=multicast_9
+
+  BRIDGE = src=VIEW_POLYGON
+  BRIDGE = src=VIEW_POINT
+  BRIDGE = src=VIEW_SEGLIST
+  BRIDGE = src=APPCAST
+  BRIDGE = src=NODE_REPORT_LOCAL,  alias=NODE_REPORT
+  BRIDGE = src=NODE_MESSAGE_LOCAL, alias=NODE_MESSAGE
+}
+
+ProcessConfig = pShare
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  input = route = localhost:9301
+}
+
+ProcessConfig = pHostInfo
+{
+  AppTick   = 1
+  CommsTick = 1
+
+  default_hostip = localhost
+}
+
+ProcessConfig = pLatLon2LocalGrid
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  LatOrigin  = 48.401617
+  LongOrigin = -4.518991
+
+  // Topics we subscribe to
+  LAT_SUBSCRIPTION_NAME = INS_LAT
+  LON_SUBSCRIPTION_NAME = INS_LONG
+
+  // Topics we publish to
+  NORTHING_PUBLICATION_NAME = NAV_Y
+  EASTING_PUBLICATION_NAME = NAV_X
+}
+
+ProcessConfig = iPololu
+{
+  AppTick   = 25
+  CommsTick = 25
+
+  DEVICE_NAME = /dev/ttyACM0
+  # Linux:
+  #     /dev/ttyACM0
+  # Windows: 
+  #     \\\\.\\USBSER000
+  #     or
+  #     \\\\.\\COM6
+  # Mac OS X:
+  #     /dev/cu.usbmodem00034567
+
+  PIN_NUMBER = 1
+  PWM_MINI = 1101
+  PWM_ZERO = 1500
+  PWM_MAXI = 2012
+  BILATERAL_RANGE = true
+  REVERSE = true
+  MOOSVAR_SUBSCRIPTION = FINAL_DESIRED_RUDDER
+
+  PIN_NUMBER = 2
+  PWM_MINI = 1500
+  PWM_MAXI = 1700
+  BILATERAL_RANGE = false
+  REVERSE = false
+  MOOSVAR_SUBSCRIPTION = DESIRED_THRUST
+}

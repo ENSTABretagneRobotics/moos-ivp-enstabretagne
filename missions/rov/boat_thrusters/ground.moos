@@ -1,0 +1,56 @@
+ServerHost = localhost
+ServerPort = 9000
+Community  = AUV
+
+#include "latlong.moos"
+#include "interfaces.moos"
+#include "processes.moos"
+#include "utilities.moos"
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+
+  Run = MOOSDB            @ NewConsole = false
+
+  // ************** UTILITIES ****************
+  Run = uMACView          @ NewConsole = false
+  Run = uMS               @ NewConsole = false
+  Run = uProcessWatch     @ NewConsole = false
+  Run = uJoystick         @ NewConsole = false
+
+  // ************** LOGS *********************
+  Run = pShare            @ NewConsole = false
+}
+
+ProcessConfig = pShare
+{
+  AppTick   = 20
+  CommsTick = 20
+
+  Input = route = 192.168.1.42:24468
+  Output = src_name = DESIRED_*, route = 192.168.1.42:24466
+}
+
+ProcessConfig = uJoystick
+{
+  AppTick   = 20
+  CommsTick = 20
+
+  DEVICE_NAME = /dev/input/js0
+
+  INCREMENT = false
+  SCALE = 100
+
+  AXIS = 1
+  SCALE_RATIO = -0.01
+  MOOS_DEST_VAR = DESIRED_THRUST
+
+  AXIS = 2
+  SCALE_RATIO = -0.01
+  MOOS_DEST_VAR = DESIRED_RUDDER
+
+  //AXIS = 3
+  //SCALE_RATIO = 0.01
+  //MOOS_DEST_VAR = DESIRED_FZ
+}
