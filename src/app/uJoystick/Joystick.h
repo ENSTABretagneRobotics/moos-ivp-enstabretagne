@@ -36,12 +36,12 @@ class Joystick : public AppCastingMOOSApp
 
   private: // Configuration variables
     std::string m_device_name;
-    std::map<int, std::string> m_axis_variables;
-    std::map<int, std::string> m_button_variables;
+    std::map<int/*axis_id*/, std::string> m_axis_variables;
+    std::map<int/*button_id*/, std::string> m_button_variables;
     std::map<std::string, double> m_variables;
     std::map<std::string, double> m_increment_variable;
-    std::map<std::pair<int,int>, double> m_axis_offset;
-    std::map<std::pair<int,int>, double> m_axis_gain;
+    std::map<std::pair<int/*type*/,int/*number*/>, double> m_axis_offset;
+    std::map<std::pair<int/*type*/,int/*number*/>, double> m_axis_gain;
 
   private: // State variables
     int m_file_device;
