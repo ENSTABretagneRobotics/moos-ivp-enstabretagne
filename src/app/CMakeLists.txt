@@ -28,59 +28,59 @@
 
 # 'p' apps
 
-  ADD_SUBDIRECTORY(pController)
-  ADD_SUBDIRECTORY(pWallDetector)
-  ADD_SUBDIRECTORY(pSimplePID)
-  ADD_SUBDIRECTORY(pOpiDetection)
-  ADD_SUBDIRECTORY(pRad2Degree)
-  ADD_SUBDIRECTORY(pDegree2Rad)
-  ADD_SUBDIRECTORY(pTrustGPS)
-  ADD_SUBDIRECTORY(pEstimSpeed)
-  ADD_SUBDIRECTORY(pMixThrusters)
-  ADD_SUBDIRECTORY(pLatLon2LocalGrid)
+  ADD_SUBDIRECTORY(processes/pController)
+  ADD_SUBDIRECTORY(processes/pWallDetector)
+  ADD_SUBDIRECTORY(processes/pSimplePID)
+  ADD_SUBDIRECTORY(processes/pOpiDetection)
+  ADD_SUBDIRECTORY(processes/pRad2Degree)
+  ADD_SUBDIRECTORY(processes/pDegree2Rad)
+  ADD_SUBDIRECTORY(processes/pTrustGPS)
+  ADD_SUBDIRECTORY(processes/pEstimSpeed)
+  ADD_SUBDIRECTORY(processes/pMixThrusters)
+  ADD_SUBDIRECTORY(processes/pLatLon2LocalGrid)
+  ADD_SUBDIRECTORY(processes/pSonarCSVPlayer)
 
   if (WITH_INTERVAL_FILTER)
     MESSAGE("Building with pMapLocalizer*")
-    ADD_SUBDIRECTORY(pMapLocalizerIntervals)
-    ADD_SUBDIRECTORY(pMapLocalizerParticleFilter)
+    ADD_SUBDIRECTORY(processes/pMapLocalizerIntervals)
+    ADD_SUBDIRECTORY(processes/pMapLocalizerParticleFilter)
   endif(WITH_INTERVAL_FILTER)
 
 # 'u' apps
 
-  ADD_SUBDIRECTORY(uSensorsViewer)
-  ADD_SUBDIRECTORY(uNavScreen)
+  ADD_SUBDIRECTORY(utilities/uSensorsViewer)
+  ADD_SUBDIRECTORY(utilities/uNavScreen)
 
   if (WITH_JOYSTICK)
     MESSAGE("Building with uJoystick")
-    ADD_SUBDIRECTORY(uJoystick)
+    ADD_SUBDIRECTORY(utilities/uJoystick)
   endif (WITH_JOYSTICK)
 
 # 'i' apps
 
-  ADD_SUBDIRECTORY(pSonarCSVPlayer)
-  ADD_SUBDIRECTORY(iSounder)
-  ADD_SUBDIRECTORY(iGPS)
-  ADD_SUBDIRECTORY(iModem)
-  ADD_SUBDIRECTORY(iLidarMove)
-  ADD_SUBDIRECTORY(iPololu)
-  ADD_SUBDIRECTORY(iSonar)
-  ADD_SUBDIRECTORY(iKeller)
-  ADD_SUBDIRECTORY(iSaucisse)
-  ADD_SUBDIRECTORY(iCamera)
+  ADD_SUBDIRECTORY(interfaces/iSounder)
+  ADD_SUBDIRECTORY(interfaces/iGPS)
+  ADD_SUBDIRECTORY(interfaces/iModem)
+  ADD_SUBDIRECTORY(interfaces/iLidarMove)
+  ADD_SUBDIRECTORY(interfaces/iPololu)
+  ADD_SUBDIRECTORY(interfaces/iSonar)
+  ADD_SUBDIRECTORY(interfaces/iKeller)
+  ADD_SUBDIRECTORY(interfaces/iSaucisse)
+  ADD_SUBDIRECTORY(interfaces/iCamera)
 
   if (WITH_RAZOR)
     MESSAGE("Building with iRazorIMU")
-    ADD_SUBDIRECTORY(iRazorIMU)
+    ADD_SUBDIRECTORY(interfaces/iRazorIMU)
   endif (WITH_RAZOR)
 
   if (WITH_XSENS)
     MESSAGE("Building with iXSensINS")
-    ADD_SUBDIRECTORY(iXSensINS)
+    ADD_SUBDIRECTORY(interfaces/iXSensINS)
   endif (WITH_XSENS)
 
   if (WITH_GPSOE)
     MESSAGE("Building with iGPSoE")
-    ADD_SUBDIRECTORY(iGPSoE)
+    ADD_SUBDIRECTORY(interfaces/iGPSoE)
   endif (WITH_GPSOE)
 
 ##############################################################################
