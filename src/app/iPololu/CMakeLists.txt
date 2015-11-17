@@ -7,6 +7,7 @@
 SET(SRC
   Pololu.cpp
   PololuPin.cpp
+  PololuPinIn.cpp
   PololuPinOut.cpp
   PololuApp.cpp
   main.cpp

@@ -41,6 +41,7 @@ if (WITH_JOYSTICK)
 endif (WITH_JOYSTICK)
 
 # 'i' apps
+  ADD_SUBDIRECTORY(iPololu)
   #ADD_SUBDIRECTORY(iSounder)
 if (WITH_RAZOR)
   MESSAGE("Building with iRazor IMU")
