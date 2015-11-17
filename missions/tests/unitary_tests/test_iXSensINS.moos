@@ -4,8 +4,6 @@ ServerHost = localhost
 ServerPort = 9000
 
 Community  = AUV
-//Serial port configuration
-XSENSINS_SERIAL_PORT = /dev/ttyUSB0
 
 //------------------------------------------
 // Antler configuration  block
@@ -16,9 +14,7 @@ ProcessConfig = ANTLER
   Run = MOOSDB       	  @ NewConsole = true
   Run = uMS             @ NewConsole=false
   Run = iXSensINS @ NewConsole = true
-
 }
-
 
 //------------------------------------------------
 // iXSensINS config block
@@ -28,5 +24,14 @@ ProcessConfig = iXSensINS
   AppTick   = 25
   CommsTick = 25
 
+  SERIAL_PORT = /dev/xsens
   UART_BAUD_RATE = 115200
+
+  XDI_EulerAngles   = 25
+  XDI_Acceleration  = 25
+  XDI_RateOfTurn    = 25
+  XDI_MagneticField = 25
+  XDI_LatLon        = 25
+  XDI_VelocityXYZ   = 25
+  
 }
