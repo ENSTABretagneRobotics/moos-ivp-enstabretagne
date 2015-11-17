@@ -33,5 +33,4 @@ ProcessConfig = iXSensINS
   XDI_MagneticField = 25
   XDI_LatLon        = 25
   XDI_VelocityXYZ   = 25
-  
 }

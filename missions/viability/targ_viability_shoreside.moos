@@ -1,0 +1,510 @@
+Community  = enstaground
+ServerHost = localhost
+ServerPort = 9000
+
+MOOSTimeWarp = 1
+
+// Penfeld
+LatOrigin  = 48.401617
+LongOrigin = -4.518991
+ProcessConfig = pMarinePID
+{
+  AppTick    = 20
+  CommsTick  = 20
+
+  VERBOSE       = false
+  DEPTH_CONTROL = false
+
+  // Yaw PID controller
+  YAW_PID_KP     = 0.5
+  YAW_PID_KD     = 0.0
+  YAW_PID_KI     = 0.0
+  YAW_PID_INTEGRAL_LIMIT = 0.07
+
+  // Speed PID controller
+  SPEED_PID_KP     = 1.0
+  SPEED_PID_KD     = 0.0
+  SPEED_PID_KI     = 0.0
+  SPEED_PID_INTEGRAL_LIMIT = 0.07
+
+  //MAXIMUMS
+  MAXRUDDER    = 100
+  MAXTHRUST    = 100
+
+  // A non-zero SPEED_FACTOR overrides use of SPEED_PID
+  // Will set DESIRED_THRUST = DESIRED_SPEED * SPEED_FACTOR
+  SPEED_FACTOR = 20
+}
+
+ProcessConfig = uSimMarine
+{
+  AppTick	      = 10
+  CommsTick	    = 10
+
+  START_X       = 0
+  START_Y       = 0
+  START_SPEED   = 0
+  START_HEADING = 0
+  //max_deceleration = 0
+  PREFIX        = NAV
+}
+// INTERFACES
+
+ProcessConfig = iCamera_Bottom
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  VARIABLE_IMAGE_NAME   = CAMERA_BOTTOM
+  IDENTIFIANT_CV_CAMERA = 1
+  DISPLAY_IMAGE         = false
+  INVERT_IMAGE          = false
+
+  LARGEUR_IMAGE_CAMERA  = 360
+  HAUTEUR_IMAGE_CAMERA  = 288
+}
+
+ProcessConfig = iCamera_Side
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  VARIABLE_IMAGE_NAME   = CAMERA_SIDE
+  IDENTIFIANT_CV_CAMERA = 0
+  DISPLAY_IMAGE         = false
+  INVERT_IMAGE          = false
+
+  LARGEUR_IMAGE_CAMERA  = 360
+  HAUTEUR_IMAGE_CAMERA  = 288
+}
+
+ProcessConfig = iGPS
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  SERIAL_PORT = /dev/gps
+  UART_BAUD_RATE = 4800
+}
+
+ProcessConfig = iKeller
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  SERIAL_PORT = /dev/keller
+  MAX_RETRIES = 10
+}
+
+ProcessConfig = iModem
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  SERIAL_PORT = /dev/modem
+
+  max_appcast_events = 8
+
+  BAUD_RATE_CONF = 57600
+  BAUD_RATE_COMM = 9600
+
+  MODEM_RANGING_TIMEOUT_US = 3000
+
+  ROBOT_NAME = AUV1
+
+  POWERED_AT_START = TRUE
+}
+
+ProcessConfig = iRazorIMU
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  SERIAL_PORT = /dev/razor
+
+  MODE = ACC_MAG_GYR_CALIBRATED
+  // MODE values:
+  //    YAW_PITCH_ROLL
+  //    ACC_MAG_GYR_RAW
+  //    ACC_MAG_GYR_CALIBRATED
+}
+
+ProcessConfig = iSaucisse
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  DEVICE_NAME = /dev/ttyACM0
+  # Linux:
+  #     /dev/ttyACM0
+  # Windows: 
+  #     \\\\.\\USBSER000
+  #     or
+  #     \\\\.\\COM6
+  # Mac OS X:
+  #     /dev/cu.usbmodem00034567
+
+  // Force relays settings on startup
+  AUTOSET_ON_STARTUP = autoset=true, all_on=true
+  // Force relays settings on quit
+  AUTOSET_ON_QUIT = autoset=true, all_on=false
+}
+
+ProcessConfig = iSonar_Micron
+{
+  AppTick   = 40
+  CommsTick = 20
+
+  SERIAL_PORT = /dev/micron
+
+  SONAR_TYPR = Micron
+
+  RANGE = 100 //IN METERS (max 100)
+  //VOS = 1500 //Velocity Of Sound in m/s
+  INVERT = 0 //(Default = 0 = Sonar mounted upright, transducer boot pointing up)
+  NBINS = 400 //NUMBER OF SAMPLES PER SCANLINE High Resolution (20*Range), Medium Resolution (15*Range), Low Resolution (10*Range)
+  ANGLESTEP = 1.8 // In degrees: Ultimate Resolution (0.225°), Mgr Resolution (0.45°), Medium Resolution (0.9°), Low Resolution (1.8°)
+  GAIN = 45 // MUST BE BETWEEN 0 AND 100 (PERCENTAGE)
+  CONTINUOUS = true //TRUE FOR 360  ROTATION. SET RIGHT AND LEFT LIMIT IF FALSE
+  //LEFTLIMIT = 300.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
+  //RIGHTLIMIT = 60.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
+
+  POWERED_AT_START = true
+}
+
+ProcessConfig = iSonar_Miniking
+{
+  AppTick   = 20
+  CommsTick = 20
+
+  SERIAL_PORT = /dev/miniking
+  SONAR_TYPE = Miniking
+
+  RANGE            = 5 //IN METERS
+  NBINS            = 100 //NUMBER OF SAMPLES PER SCANLINE
+  ANGLESTEP        = 1.8 //ANGULAR RESOLUTION (MUST BE A MULTIPLE OF 0.09)
+  GAIN             = 45 // MUST BE BETWEEN 0 AND 100 (PERCENTAGE)
+  CONTINUOUS       = true //TRUE FOR 360  ROTATION. SET RIGHT AND LEFT LIMIT IF FALSE
+  //LEFTLIMIT      = 70.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
+  //RIGHTLIMIT     = 110.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
+
+  POWERED_AT_START = true
+}
+
+ProcessConfig = iSounder
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  SERIAL_PORT = /dev/sounder
+}
+
+ProcessConfig = iXSensINS
+{
+  AppTick        = 25
+  CommsTick      = 25
+
+  SERIAL_PORT = /dev/xsens
+  UART_BAUD_RATE = 115200
+
+  YAW_DECLINATION = -85.0
+}
+// PROCESSES
+
+ProcessConfig = pEstimSpeed
+{
+  AppTick   = 25
+  CommsTick = 25
+
+  // The coeff matrix maps forces (Newton) to inputs ([-1,1], adimensional)
+  // In this application, we will compute the inverse of this matrix,
+  // so that from inputs we get forces, and can apply Newton's law of motion
+  COEFF_MATRIX = 1,-1,0,1,1,0,0,0,1
+
+  // The damping matrix maps square of speeds as inputs, and return a force.
+  // In an underwater environment, the damping is not linear with respect
+  // to speed.
+  // Once we have the damping forces and the input forces, we can apply Newton's laws of motion
+  DAMPING_MATRIX = 0.2,0,0,0,0.2,0,0,0,0.2
+
+  // Initial speed. In principle, we should aim for a null speed at
+  // startup
+  V0 = 0,0,0
+
+  // Name to receive the yaw
+  YAW_REGISTRATION_NAME = IMU_YAW
+
+  // Mass of the robot
+  MASS = 20
+
+  U1_SUBSCRIPTION_NAME = SET_THRUSTER_LEFT
+  U2_SUBSCRIPTION_NAME = SET_THRUSTER_RIGHT
+  U3_SUBSCRIPTION_NAME = SET_THRUSTER_VERTICAL
+  RESET_SUBSCRIPTION_NAME = RESET_ESTIM
+  GPS_E_SUBSCRIPTION_NAME = GPS_E
+  GPS_N_SUBSCRIPTION_NAME = GPS_N
+  KELLER_DEPTH_SUBSCRIPTION_NAME = DEPTH
+
+  // Names of the publications
+  POS_DEAD_RECKONING_PUBLICATION_NAME = POS_DEAD_RECKONING
+  SPEED_LOCAL_DEAD_RECKONING_PUBLICATION_NAME = SPEED_LOCAL_DEAD_RECKONING
+  SPEED_GLOBAL_DEAD_RECKONING_PUBLICATION_NAME = SPEED_GLOBAL_DEAD_RECKONING
+}
+
+ProcessConfig = pMixThrusters
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  FX_SUBSCRIPTION_NAME=DESIRED_FX
+  RZ_SUBSCRIPTION_NAME=DESIRED_RZ
+  FZ_SUBSCRIPTION_NAME=DESIRED_FZ
+
+  U1_PUBLICATION_NAME=SET_THRUSTER_LEFT
+  U2_PUBLICATION_NAME=SET_THRUSTER_RIGHT
+  U3_PUBLICATION_NAME=SET_THRUSTER_VERTICAL
+
+  COEFF_MATRIX=-0.9,-0.9,0.0,-1.0,1.0,0.0,0.0,0.0,1.0
+
+  //  FX    RZ      FZ
+  // -0.9  -0.9    0.0
+  // -1.0   1.0    0.0
+  //  0.0   0.0    1.0
+
+  FORWARD_COEFF = 1.0
+  BACKWARD_COEFF = 1.0
+
+  // SIGMOID or NORMALIZATION
+  SATURATION_MOD = SIGMOID
+
+  SIGMOID_COEFF = 0.333
+}
+
+ProcessConfig = pSimplePID_Depth
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  KP =-80.0
+  KI = 0.0
+  KD = 0.0
+  KW = 0.0
+
+  MOOSVAR_STATE=DEPTH
+  MOOSVAR_CONSIGNE=DESIRED_DEPTH
+  MOOSVAR_COMMAND=DESIRED_FZ
+  MOOSVAR_SATURATION=PID_SATURATION
+}
+
+ProcessConfig = pSimplePID_Heading
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  KP = -20.0
+  //KI = 0.0001
+  //KD = -0.2
+  //KW = 0.0
+
+  MOOSVAR_STATE=IMU_YAW
+  MOOSVAR_CONSIGNE =DESIRED_HEADING_RAD
+  MOOSVAR_COMMAND=DESIRED_RZ
+  //MOOSVAR_STATE_DIFFERENTIAL=IMU_GYR_Z
+  MOOSVAR_SATURATION=PID_HEADING_SATURATION
+
+  ANGLE=RAD
+}
+
+ProcessConfig = pTrustGPS
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  ALTITUDE_THRESHOLD = -0.5
+  BUFFER_SIZE = 10
+
+  GPS_SIG_SUBSCRIPTION_NAME = GPS_SIG
+  GPS_FIX_SUBSCRIPTION_NAME = GPS_FIX
+  KELLER_DEPTH_SUBSCRIPTION_NAME = KELLER_DEPTH
+
+  GPS_TRUST_PUBLICATION_NAME = GPS_TRUST
+}
+
+ProcessConfig = pOpiDetection_Side
+{
+  AppTick   = 4
+  CommsTick = 4
+  
+  VARIABLE_IMAGE_NAME = CAMERA_SIDE
+  VARIABLE_WHEN_FOUND = PIPE_DETECTION_SIDE
+  SHOW_PROCESS = true
+  SAVE_IN_FOLDER = /home/ciscrea/Desktop/
+  IMAGE_NAME_PATTERN = image_%H_%M_%S.jpg
+  FOLDER_NAME_PATTERN = DATASET_%F_%H-%M-%S
+}
+
+ProcessConfig = pOpiDetection_Bottom
+{
+  AppTick   = 4
+  CommsTick = 4
+  
+  VARIABLE_IMAGE_NAME = CAMERA_BOTTOM
+  VARIABLE_WHEN_FOUND = PIPE_DETECTION_BOTTOM
+  SHOW_PROCESS = true
+  SAVE_IN_FOLDER = /home/ciscrea/Desktop/
+  IMAGE_NAME_PATTERN = image_%H_%M_%S.jpg
+  FOLDER_NAME_PATTERN = DATASET_%F_%H-%M-%S
+}
+
+ProcessConfig = pMarinePID
+{
+  AppTick    = 20
+  CommsTick  = 20
+
+  VERBOSE       = false
+  DEPTH_CONTROL = false
+
+  // Yaw PID controller
+  YAW_PID_KP     = 0.5
+  YAW_PID_KD     = 0.0
+  YAW_PID_KI     = 0.0
+  YAW_PID_INTEGRAL_LIMIT = 0.07
+
+  // Speed PID controller
+  SPEED_PID_KP     = 1.0
+  SPEED_PID_KD     = 0.0
+  SPEED_PID_KI     = 0.0
+  SPEED_PID_INTEGRAL_LIMIT = 0.07
+
+  //MAXIMUMS
+  MAXRUDDER    = 100
+  MAXTHRUST    = 100
+
+  // A non-zero SPEED_FACTOR overrides use of SPEED_PID
+  // Will set DESIRED_THRUST = DESIRED_SPEED * SPEED_FACTOR
+  SPEED_FACTOR = 20
+}
+// UTILITIES
+
+ProcessConfig = uMACView
+{
+  AppTick   = 10
+  CommsTick = 10
+}
+
+ProcessConfig = uNavScreen
+{
+  AppTick   = 4
+  CommsTick = 4
+}
+
+ProcessConfig = uProcessWatch
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  watch_all = true
+  summary_wait = 5
+}
+
+ProcessConfig = uSensorsViewer
+{
+  AppTick   = 25
+  CommsTick = 25
+}
+
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+
+  Run = MOOSDB          @ NewConsole = false
+  Run = uProcessWatch   @ NewConsole = false
+  Run = pMarineViewer   @ NewConsole = false
+  Run = uJoystick       @ NewConsole = false
+
+  Run = pShare          @ NewConsole = false
+  Run = pHostInfo        @ NewConsole = false
+  Run = uFldShoreBroker  @ NewConsole = false
+}
+
+ProcessConfig = uJoystick
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  DEVICE_NAME = /dev/input/js0
+
+  INCREMENT = false
+  SCALE = 100
+
+  AXIS = 1
+  SCALE_RATIO = 1
+  MOOS_DEST_VAR = JOYSTICK_THRUST
+
+  AXIS = 0
+  SCALE_RATIO = -0.5
+  MOOS_DEST_VAR = JOYSTICK_RUDDER
+}
+
+ProcessConfig = pMarineViewer
+{
+  AppTick    = 4
+  CommsTick  = 4
+
+  tiff_file            = ../../data/maps/penfeld.tif
+  set_pan_x            = -400
+  set_pan_y            = 300
+  zoom                 = 1.2
+  vehicle_shape_scale  = 1.5
+  hash_delta           = 50
+  hash_shade           = 0.4
+  hash_viewable        = true
+
+  // Appcast configuration
+  appcast_height       = 75
+  appcast_width        = 30
+  appcast_viewable     = true
+  appcast_color_scheme = indigo
+  nodes_font_size      = medium
+  procs_font_size      = medium
+  appcast_font_size    = small
+
+  button_one = DEPLOY # DEPLOY = true
+  button_one = MOOS_MANUAL_OVERIDE = false # RETURN = false
+  button_two = RETURN # RETURN = true
+}
+
+ProcessConfig = pShare
+{
+  AppTick    = 2
+  CommsTick  = 2
+
+  input = route = localhost:9300
+  input = route = multicast_9
+}
+
+ProcessConfig = uFldShoreBroker
+{
+  AppTick       = 1
+  CommsTick     = 1
+
+  qbridge  = NODE_REPORT, NODE_MESSAGE
+  
+  bridge   = src=APPCAST_REQ
+  bridge   = src=DEPLOY
+  bridge   = src=RETURN
+  bridge   = src=JOYSTICK_THRUST
+  bridge   = src=JOYSTICK_RUDDER
+  bridge   = src=MOOS_MANUAL_OVERIDE
+  //bridge   = src=MOOS_MANUAL_OVERRIDE
+}
+
+ProcessConfig = pHostInfo
+{
+  AppTick   = 1
+  CommsTick   = 1
+
+  default_hostip = localhost
+}
+
