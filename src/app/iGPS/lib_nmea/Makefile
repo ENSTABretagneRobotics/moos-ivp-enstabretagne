@@ -63,7 +63,7 @@ all-before:
 clean:
 	$(MAKECMDPREFIX)$(MAKE) -C doc clean
 	$(MAKECMDPREFIX)$(MAKE) -C samples clean
-	$(MAKECMDPREFIX)rm -frv build/* lib/*
+	$(MAKECMDPREFIX)rm -frv build/*.o lib/*.a
 
 doc:
 	$(MAKECMDPREFIX)$(MAKE) -C doc all
