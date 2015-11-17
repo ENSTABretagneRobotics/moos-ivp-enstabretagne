@@ -19,6 +19,8 @@ using namespace std;
 
 XSensINS::XSensINS() {
   m_yaw_declination = 0.0;
+  m_uart_port = "/dev/xsens";
+  m_uart_baud_rate = 115200;
 }
 
 XSensINS::~XSensINS() {
@@ -87,8 +89,8 @@ bool XSensINS::Iterate() {
       m_euler = packet.orientationEuler();
       Notify("IMU_PITCH", m_euler.pitch());
       Notify("IMU_ROLL", m_euler.roll());
-      Notify("IMU_YAW", (m_euler.yaw()+m_yaw_declination)*M_PI/180.0);// + m_yaw_declination);
-      Notify("IMU_YAW_DEGREE", -(m_euler.yaw()+m_yaw_declination));
+      //Notify("IMU_YAW", (m_euler.yaw()+m_yaw_declination)*M_PI/180.0);// + m_yaw_declination);
+      Notify("NAV_HEADING", 90.0-m_euler.yaw());
     }
 
     // Acceleration
@@ -121,6 +123,12 @@ bool XSensINS::Iterate() {
       m_latlon = packet.latitudeLongitude();
       Notify("INS_LAT", m_latlon[0]);
       Notify("INS_LONG", m_latlon[1]);
+    }
+
+    //Velocity
+    if(packet.containsVelocity()){
+      m_velocity = packet.velocity();
+      Notify("NAV_SPEED", sqrt(pow(m_velocity[0], 2) + pow(m_velocity[1], 2) + pow(m_velocity[2], 2)));
     }
   }
   msgs.clear();
@@ -155,7 +163,7 @@ bool XSensINS::OnStartUp() {
       handled = true;
     }
     else if (param == "SERIAL_PORT") {
-      m_uart_port = value.c_str();
+      m_uart_port = value;
       handled = true;
     }
     else if (param == "YAW_DECLINATION") {
@@ -169,9 +177,9 @@ bool XSensINS::OnStartUp() {
   registerVariables();
 
   //------ OPEN INS ---------------//
-  XsPortInfo mtPort("/dev/xsens", XsBaud::numericToRate(m_uart_baud_rate));
+  XsPortInfo mtPort(m_uart_port, XsBaud::numericToRate(m_uart_baud_rate));
   if (!m_device.openPort(mtPort)) {
-    cout << "CANNOT OPEN THE PORT" << '\n';
+    cout << "CANNOT OPEN THE PORT : " << m_uart_port << '\n';
     reportRunWarning("Could not open the COM port" + m_uart_port);
   }
 
@@ -186,6 +194,7 @@ bool XSensINS::OnStartUp() {
   XsOutputConfiguration rateOfTurn(XDI_RateOfTurn, 25);
   XsOutputConfiguration magnetic(XDI_MagneticField, 25);
   XsOutputConfiguration latlon(XDI_LatLon, 25);
+  XsOutputConfiguration velocity(XDI_VelocityXYZ, 25);
 
   XsOutputConfigurationArray configArray;
   configArray.push_back(euler);
@@ -193,6 +202,7 @@ bool XSensINS::OnStartUp() {
   configArray.push_back(rateOfTurn);
   configArray.push_back(magnetic);
   configArray.push_back(latlon);
+  configArray.push_back(velocity);
   // Save INS Config
   if (!m_device.setOutputConfiguration(configArray)) {
     reportRunWarning("Could not save config");
@@ -224,10 +234,22 @@ bool XSensINS::buildReport() {
   m_msgs << "============================================ \n";
 
   ACTable actab(5);
-  actab << "Serial Port | Baude rate | YAW | ROLL | PITCH";
+  actab << "Serial Port | Baude rate | YAW (degree) | ROLL | PITCH";
   actab.addHeaderLines();
-  actab << m_uart_port << m_uart_baud_rate << m_euler.yaw() + m_yaw_declination << m_euler.roll() << m_euler.pitch();
+  actab << m_uart_port << m_uart_baud_rate << 90.0-m_euler.yaw() << m_euler.roll() << m_euler.pitch();
   m_msgs << actab.getFormattedString();
+
+  m_msgs << '\n';
+  
+  ACTable actab2(2);
+  actab2 << "LAT | LONG";
+  actab2.addHeaderLines();
+  if(m_latlon.size()>1){
+    actab2 << m_latlon[0] << m_latlon[1];
+  }else{
+    actab2 << "No" << "No";
+  }
+  m_msgs << actab2.getFormattedString();
 
   return true;
 }
