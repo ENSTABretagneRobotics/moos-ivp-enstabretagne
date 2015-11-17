@@ -18,9 +18,10 @@ using namespace std;
 // Constructor
 
 XSensINS::XSensINS() {
-  m_yaw_declination = 0.0;
-  m_uart_port = "/dev/xsens";
-  m_uart_baud_rate = 115200;
+  m_uart_port       = "/dev/xsens";
+  m_uart_baud_rate  = 115200;
+  m_nav_heading     = 0.0;
+  m_velocity_norm   = -1;
 }
 
 XSensINS::~XSensINS() {
@@ -87,10 +88,11 @@ bool XSensINS::Iterate() {
     // Convert packet to Euler
     if(packet.containsOrientation()){
       m_euler = packet.orientationEuler();
+      m_nav_heading = 90.0 - m_euler.yaw();
+
       Notify("IMU_PITCH", m_euler.pitch());
-      Notify("IMU_ROLL", m_euler.roll());
-      //Notify("IMU_YAW", (m_euler.yaw()+m_yaw_declination)*M_PI/180.0);// + m_yaw_declination);
-      Notify("NAV_HEADING", 90.0-m_euler.yaw());
+      Notify("IMU_ROLL", m_euler.roll());      
+      Notify("NAV_HEADING", m_nav_heading);
     }
 
     // Acceleration
@@ -128,7 +130,8 @@ bool XSensINS::Iterate() {
     //Velocity
     if(packet.containsVelocity()){
       m_velocity = packet.velocity();
-      Notify("NAV_SPEED", sqrt(pow(m_velocity[0], 2) + pow(m_velocity[1], 2) + pow(m_velocity[2], 2)));
+      m_velocity_norm = sqrt(pow(m_velocity[0], 2) + pow(m_velocity[1], 2) + pow(m_velocity[2], 2));
+      Notify("NAV_SPEED", m_velocity_norm);
     }
   }
   msgs.clear();
@@ -144,6 +147,10 @@ bool XSensINS::Iterate() {
 bool XSensINS::OnStartUp() {
   AppCastingMOOSApp::OnStartUp();
 
+  // XSens Configuration Array
+  XsOutputConfigurationArray configArray;
+
+  // MOOS parser
   STRING_LIST sParams;
   m_MissionReader.EnableVerbatimQuoting(false);
   if (!m_MissionReader.GetConfiguration(GetAppName(), sParams))
@@ -166,10 +173,37 @@ bool XSensINS::OnStartUp() {
       m_uart_port = value;
       handled = true;
     }
-    else if (param == "YAW_DECLINATION") {
-      m_yaw_declination = atoi(value.c_str());
+    else if (param == "XDI_EulerAngles"){
+      XsOutputConfiguration config(XDI_EulerAngles, atoi(value.c_str()));
+      configArray.push_back(config);
       handled = true;
     }
+    else if (param == "XDI_Acceleration"){
+      XsOutputConfiguration config(XDI_Acceleration, atoi(value.c_str()));
+      configArray.push_back(config);
+      handled = true;
+    }
+    else if (param == "XDI_RateOfTurn"){
+      XsOutputConfiguration config(XDI_RateOfTurn, atoi(value.c_str()));
+      configArray.push_back(config);
+      handled = true;
+    }
+    else if (param == "XDI_MagneticField"){
+      XsOutputConfiguration config(XDI_MagneticField, atoi(value.c_str()));
+      configArray.push_back(config);
+      handled = true;
+    }
+    else if (param == "XDI_LatLon"){
+      XsOutputConfiguration config(XDI_LatLon, atoi(value.c_str()));
+      configArray.push_back(config);
+      handled = true;
+    }
+    else if (param == "XDI_VelocityXYZ"){
+      XsOutputConfiguration config(XDI_VelocityXYZ, atoi(value.c_str()));
+      configArray.push_back(config);
+      handled = true;
+    }
+    
     if(!handled)
       reportUnhandledConfigWarning(orig);
   }
@@ -189,20 +223,6 @@ bool XSensINS::OnStartUp() {
     reportRunWarning("Could not begin the config mode");
   }
 
-  XsOutputConfiguration euler(XDI_EulerAngles, 25);
-  XsOutputConfiguration acceleration(XDI_Acceleration, 25);
-  XsOutputConfiguration rateOfTurn(XDI_RateOfTurn, 25);
-  XsOutputConfiguration magnetic(XDI_MagneticField, 25);
-  XsOutputConfiguration latlon(XDI_LatLon, 25);
-  XsOutputConfiguration velocity(XDI_VelocityXYZ, 25);
-
-  XsOutputConfigurationArray configArray;
-  configArray.push_back(euler);
-  configArray.push_back(acceleration);
-  configArray.push_back(rateOfTurn);
-  configArray.push_back(magnetic);
-  configArray.push_back(latlon);
-  configArray.push_back(velocity);
   // Save INS Config
   if (!m_device.setOutputConfiguration(configArray)) {
     reportRunWarning("Could not save config");
@@ -236,19 +256,20 @@ bool XSensINS::buildReport() {
   ACTable actab(5);
   actab << "Serial Port | Baude rate | YAW (degree) | ROLL | PITCH";
   actab.addHeaderLines();
-  actab << m_uart_port << m_uart_baud_rate << 90.0-m_euler.yaw() << m_euler.roll() << m_euler.pitch();
+  actab << m_uart_port << m_uart_baud_rate << m_nav_heading << m_euler.roll() << m_euler.pitch();
   m_msgs << actab.getFormattedString();
 
   m_msgs << '\n';
   
-  ACTable actab2(2);
-  actab2 << "LAT | LONG";
+  ACTable actab2(3);
+  actab2 << "LAT | LONG | Velocity";
   actab2.addHeaderLines();
   if(m_latlon.size()>1){
     actab2 << m_latlon[0] << m_latlon[1];
   }else{
     actab2 << "No" << "No";
   }
+  actab2 << m_velocity_norm;
   m_msgs << actab2.getFormattedString();
 
   return true;

@@ -43,7 +43,8 @@ class XSensINS : public AppCastingMOOSApp
     int m_uart_baud_rate;
 
   private: // State variables
-    double m_yaw_declination; // magnetic declination
+    double m_nav_heading;
+    double m_velocity_norm;
 
     XsEuler m_euler;
     XsVector m_acceleration;
@@ -51,7 +52,6 @@ class XSensINS : public AppCastingMOOSApp
     XsVector m_mag;
     XsVector m_latlon;
     XsVector m_velocity;
-
 };
 
 #endif 

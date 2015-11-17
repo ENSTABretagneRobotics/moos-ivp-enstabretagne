@@ -1,10 +1,15 @@
 ProcessConfig = iXSensINS
 {
-  AppTick        = 25
-  CommsTick      = 25
+  AppTick   = 25
+  CommsTick = 25
 
   SERIAL_PORT = /dev/xsens
   UART_BAUD_RATE = 115200
 
-  YAW_DECLINATION = -85.0
+  XDI_EulerAngles   = 25
+  XDI_Acceleration  = 25
+  XDI_RateOfTurn    = 25
+  XDI_MagneticField = 25
+  XDI_LatLon        = 25
+  XDI_VelocityXYZ   = 25
 }
