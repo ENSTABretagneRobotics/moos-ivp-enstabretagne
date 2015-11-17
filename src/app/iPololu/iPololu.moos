@@ -1,0 +1,43 @@
+ServerHost = localhost
+ServerPort = 9000
+Community  = test
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+
+  Run = MOOSDB          @ NewConsole = true
+  Run = uMS             @ NewConsole = false
+  Run = iPololu         @ NewConsole = true
+}
+
+ProcessConfig = iPololu
+{
+  AppTick   = 25
+  CommsTick = 25
+
+  DEVICE_NAME = /dev/ttyACM0
+  # Linux:
+  #     /dev/ttyACM0
+  # Windows: 
+  #     \\\\.\\USBSER000
+  #     or
+  #     \\\\.\\COM6
+  # Mac OS X:
+  #     /dev/cu.usbmodem00034567
+
+  PIN_NUMBER = 2
+  PWM_MINI = 1101
+  PWM_ZERO = 1500
+  PWM_MAXI = 2012
+  BILATERAL_RANGE = true
+  REVERSE = false
+  MOOSVAR_SUBSCRIPTION = DESIRED_RUDDER
+
+  PIN_NUMBER = 1
+  PWM_MINI = 1500
+  PWM_MAXI = 1602
+  BILATERAL_RANGE = false
+  REVERSE = false
+  MOOSVAR_SUBSCRIPTION = DESIRED_THRUST
+}
