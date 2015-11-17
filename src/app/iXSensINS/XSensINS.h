@@ -50,6 +50,7 @@ class XSensINS : public AppCastingMOOSApp
     XsVector m_gyro;
     XsVector m_mag;
     XsVector m_latlon;
+    XsVector m_velocity;
 
 };
 

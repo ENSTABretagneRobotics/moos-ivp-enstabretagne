@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains iRosen documentation -->
+<?xml-stylesheet href="../../../doc/xmldocumentation.css" type="text/css"?> 
+<xmldoc>
+  <moosapp>
+
+     <info>
+        <name>iPololu</name>
+        <organization>Toutatis AUVs - ENSTA Bretagne</organization>
+        <date>2015</date>
+        <authors>
+           <author>Simon Rohou</author>
+        </authors>
+        <licence>MIT</licence>
+     </info>
+
+     <documentation>
+        <synopsis>
+          The iPololu application is used as an interface between the Pololu Maestro Board and the MOOS software.
+          A link can be done between PWM pins and MOOS variables. See iPololu.moos for more information.
+        </synopsis>
+        <interface>
+           <subscriptions>
+              <moosvar>
+                 <varname>VARNAME_TO_BE_DEFINED</varname>
+                 <vartype>double</vartype>
+                 <varinfo>set PWM value based on a ratio belonging to the set [-1;1]</varinfo>
+              </moosvar>
+           </subscriptions>
+           <publications>
+              <moosvar>
+                 <varname>SAUCISSE_POLOLU_STATUS</varname>
+                 <vartype>string</vartype>
+                 <varinfo>message in case of error, "ok" otherwise</varinfo>
+              </moosvar>
+           </publications>
+        </interface>
+        <!-- if there is a bug or a special fact to know.. -->
+        <optional-comments>
+           No comment.
+        </optional-comments>
+        <!-- if something can be improved -->
+        <suggested-improvements>
+           No suggested improvements.
+        </suggested-improvements>
+     </documentation>
+
+  </moosapp>
+</xmldoc>

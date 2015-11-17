@@ -5,6 +5,8 @@
 /*    DATE: 2015
 /************************************************************/
 
+#include <sstream>
+#include <iomanip>
 #include <iterator>
 #include "MBUtils.h"
 #include "ACTable.h"
@@ -19,11 +21,11 @@ LatLon2LocalGrid::LatLon2LocalGrid() {
     
     
     // Default to the competition site
-    latOrigin = 42.954273;
-    lonOrigin = 10.601703;
+    lat_origin = 0.;
+    long_origin = 0.;
 
-    currentLat=latOrigin;
-    currentLon=lonOrigin;
+    currentLat=lat_origin;
+    currentLon=long_origin;
 
     LAT_SUBSCRIPTION_NAME = "GPS_LAT";
     LON_SUBSCRIPTION_NAME = "GPS_LON";
@@ -31,7 +33,7 @@ LatLon2LocalGrid::LatLon2LocalGrid() {
     // Topics we publish to
     NORTHING_PUBLICATION_NAME = "GPS_N";
     EASTING_PUBLICATION_NAME = "GPS_E";
-    geodesy.Initialise(latOrigin, lonOrigin);
+    geodesy.Initialise(lat_origin, long_origin);
 }
 
 //---------------------------------------------------------
@@ -81,6 +83,23 @@ bool LatLon2LocalGrid::Iterate() {
 bool LatLon2LocalGrid::OnStartUp() {
     AppCastingMOOSApp::OnStartUp();
 
+    bool geodesy_origin_param = true;
+
+    if(!m_MissionReader.GetValue("LatOrigin", lat_origin))
+    {
+      reportConfigWarning("No LatOrigin in *.moos file");
+      geodesy_origin_param = false;
+    }
+
+    if(!m_MissionReader.GetValue("LongOrigin", long_origin))
+    {
+      reportConfigWarning("No LongOrigin in *.moos file");
+      geodesy_origin_param = false;
+    }
+
+    if(geodesy_origin_param)
+        geodesy.Initialise(lat_origin, long_origin);
+
     STRING_LIST sParams;
     m_MissionReader.EnableVerbatimQuoting(false);
     if (!m_MissionReader.GetConfiguration(GetAppName(), sParams))
@@ -95,17 +114,7 @@ bool LatLon2LocalGrid::OnStartUp() {
         string value = line;
         bool handled = false;
 
-        if (param == "LatOrigin") {
-            latOrigin = atof(value.c_str());
-            // I Think this is never handled
-            geodesy.Initialise(latOrigin, lonOrigin);
-            handled = true;
-        } else if (param == "LongOrigin") {
-            // I Think this is never handled
-            lonOrigin = atof(value.c_str());
-            geodesy.Initialise(latOrigin, lonOrigin);
-            handled = true;
-        } else if (param == "NORTHING_PUBLICATION_NAME") {
+        if (param == "NORTHING_PUBLICATION_NAME") {
             NORTHING_PUBLICATION_NAME = value;
             handled = true;
         } else if (param == "EASTING_PUBLICATION_NAME") {
@@ -152,6 +161,27 @@ bool LatLon2LocalGrid::buildReport() {
     actab << "one" << "two" << "three" << "four";
     m_msgs << actab.getFormattedString();
 #endif
+
+    ostringstream strs;
+    strs << lat_origin;
+    string lat_str = strs.str();
+    strs.str("");
+    strs.clear();
+    strs << long_origin;
+    string long_str = strs.str();
+
+    ACTable actab_geo(2);
+    actab_geo << "Lat origin | Long origin";
+    actab_geo.addHeaderLines();
+    actab_geo << lat_str << long_str;
+    m_msgs << actab_geo.getFormattedString() << endl << endl;
+
+    ACTable actab_variables(3);
+    actab_variables << "From | | To";
+    actab_variables.addHeaderLines();
+    actab_variables << LAT_SUBSCRIPTION_NAME << "-> " << NORTHING_PUBLICATION_NAME;
+    actab_variables << LON_SUBSCRIPTION_NAME << "-> " << EASTING_PUBLICATION_NAME;
+    m_msgs << actab_variables.getFormattedString();
 
     return true;
 }

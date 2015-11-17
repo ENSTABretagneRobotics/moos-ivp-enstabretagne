@@ -32,8 +32,8 @@ protected: // LatLon2LocalGrid functions
 
 
 private: // Configuration variables
-    double latOrigin;
-    double lonOrigin;
+    double lat_origin;
+    double long_origin;
 
     // Topics we subscribe to
     std::string LAT_SUBSCRIPTION_NAME;

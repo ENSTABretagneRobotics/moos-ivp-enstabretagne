@@ -256,9 +256,6 @@ bool Joystick::OnStartUp()
 void Joystick::registerVariables()
 {
   AppCastingMOOSApp::RegisterVariables();
-
-  Register("FOOBAR", 0);
-  Register("TESTVAR", 0);
 }
 
 //------------------------------------------------------------
@@ -278,13 +275,39 @@ bool Joystick::buildReport()
     m_msgs << actab.getFormattedString();
   #endif
 
-  ACTable actab(4);
-  actab << "thread Quit Request | Bravo | Charlie | Delta";
-  actab.addHeaderLines();
-  actab << m_deviceReadThread.IsQuitRequested() << "two" << "three" << "four";
-  m_msgs << actab.getFormattedString();
+  ACTable actab_axis(6);
+  actab_axis << "Id" << "MoosVar" << "Value" << "Increment" << "Offset" << "Gain";
+  actab_axis.addHeaderLines();
+  for(map<int,string>::iterator it = m_axis_variables.begin() ;
+        it != m_axis_variables.end() ;
+        ++it)
+  {
+    actab_axis << it->first 
+               << it->second 
+               << m_variables[it->second]
+               << m_increment_variable[it->second]
+               << m_axis_offset[make_pair(JS_EVENT_AXIS, it->first)]
+               << m_axis_gain[make_pair(JS_EVENT_AXIS, it->first)];
+  }
+  m_msgs << actab_axis.getFormattedString() << "\n\n";
 
-  return(true);
+  ACTable actab_button(6);
+  actab_button << "Id" << "MoosVar" << "Value" << "Increment" << "Offset" << "Gain";
+  actab_button.addHeaderLines();
+  for(map<int,string>::iterator it = m_button_variables.begin() ;
+        it != m_button_variables.end() ;
+        ++it)
+  {
+    actab_button << it->first 
+                 << it->second 
+                 << m_variables[it->second]
+                 << m_increment_variable[it->second]
+                 << m_axis_offset[make_pair(JS_EVENT_BUTTON, it->first)]
+                 << m_axis_gain[make_pair(JS_EVENT_BUTTON, it->first)];
+  }
+  m_msgs << actab_button.getFormattedString() << "\n\n";
+
+  return true;
 }
 
 //------------------------------------------------------------
