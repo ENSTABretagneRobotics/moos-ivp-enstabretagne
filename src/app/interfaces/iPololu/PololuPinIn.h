@@ -17,8 +17,11 @@ class PololuPinIn : public PololuPin
     PololuPinIn(int pin_number);
     ~PololuPinIn() {};
 
+    double getValue();
+    void setValue(double value);
+
   protected:
-    
+  	double m_value;
 };
 
 #endif 

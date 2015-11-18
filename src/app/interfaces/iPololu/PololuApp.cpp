@@ -109,7 +109,12 @@ bool PololuApp::Iterate()
   {
     if(!m_pololu->getValue(it->second->getPinNumber(), value))
       reportRunWarning("Error reading value: " + it->first);
-    Notify(it->first, value);
+    
+    else
+    {
+      m_map_pinins[it->first]->setValue(value);
+      Notify(it->first, value);
+    }
   }
 
   AppCastingMOOSApp::PostReport();
@@ -245,14 +250,14 @@ bool PololuApp::buildReport()
   m_msgs << "\n";
 
   ACTable actab_pwm(8);
-  actab_pwm << "MoosVar" << "Pin" << "Value" << "Mini" << "Zero" << "Maxi" << "Reversed" << "Bilateral";
+  actab_pwm << "Pin" << "MoosVar" << "Value" << "Mini" << "Zero" << "Maxi" << "Reversed" << "Bilateral";
   actab_pwm.addHeaderLines();
   for(map<string,PololuPinOut*>::iterator it = m_map_pinouts.begin() ;
         it != m_map_pinouts.end() ;
         ++it)
   {
-    actab_pwm << it->first 
-              << it->second->getPinNumber() 
+    actab_pwm << it->second->getPinNumber() 
+              << it->first 
               << it->second->getPwmValue()
               << it->second->getPwmMini()
               << it->second->getPwmZero()
@@ -261,6 +266,19 @@ bool PololuApp::buildReport()
               << (it->second->isBilateral() ? "yes" : "no");
   }
   m_msgs << actab_pwm.getFormattedString() << "\n\n";
+
+  ACTable actab_in(3);
+  actab_in << "Pin" << "MoosVar" << "Value";
+  actab_in.addHeaderLines();
+  for(map<string,PololuPinIn*>::iterator it = m_map_pinins.begin() ;
+        it != m_map_pinins.end() ;
+        ++it)
+  {
+    actab_in << it->second->getPinNumber()
+             << it->first
+             << it->second->getValue();
+  }
+  m_msgs << actab_in.getFormattedString() << "\n\n";
   
   return true;
 }
