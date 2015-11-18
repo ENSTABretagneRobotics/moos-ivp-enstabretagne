@@ -1,6 +1,3 @@
-//------------------------------------------------
-// iSonar config block
-
 ProcessConfig = iSonar // Any Sonar, 360 scan, low resolution
 {
   AppTick   = 4
@@ -22,42 +19,44 @@ ProcessConfig = iSonar // Any Sonar, 360 scan, low resolution
 
   POWERED_AT_START = true
 }
-// ProcessConfig = iSonar // Any Sonar, 360 scan, med resolution
-// {
-//   AppTick   = 4
-//   CommsTick = 4
 
-//   SERIAL_PORT = /dev/sonar
+ProcessConfig = iSonar // Any Sonar, 360 scan, med resolution
+{
+  AppTick   = 4
+  CommsTick = 4
 
-//   RANGE = 10 //IN METERS
-//   //VOS = 1500 //Velocity Of Sound in m/s
-//   INVERT = 0 //(Default = 0 = Sonar mounted upright, transducer boot pointing up)
-//   NBINS = 200 //NUMBER OF SAMPLES PER SCANLINE High Resolution (20*Range), Medium Resolution (15*Range), Low Resolution (10*Range)
-//   ANGLESTEP = 1.8 // In degrees: Ultimate Resolution (0.225°), Mgr Resolution (0.45°), Medium Resolution (0.9°), Low Resolution (1.8°)
-//   GAIN = 45 // MUST BE BETWEEN 0 AND 100 (PERCENTAGE)
-//   CONTINUOUS = true //TRUE FOR 360  ROTATION. SET RIGHT AND LEFT LIMIT IF FALSE
-//   //LEFTLIMIT = 300.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
-//   //RIGHTLIMIT = 60.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
+  SERIAL_PORT = /dev/sonar
 
-//   POWERED_AT_START = true
-// }
-// ProcessConfig = iSonar // Micron, sector scan for 'bathymetry', high resolution
-// {
-//   AppTick   = 4
-//   CommsTick = 4
+  RANGE = 10 //IN METERS
+  //VOS = 1500 //Velocity Of Sound in m/s
+  INVERT = 0 //(Default = 0 = Sonar mounted upright, transducer boot pointing up)
+  NBINS = 200 //NUMBER OF SAMPLES PER SCANLINE High Resolution (20*Range), Medium Resolution (15*Range), Low Resolution (10*Range)
+  ANGLESTEP = 1.8 // In degrees: Ultimate Resolution (0.225°), Mgr Resolution (0.45°), Medium Resolution (0.9°), Low Resolution (1.8°)
+  GAIN = 45 // MUST BE BETWEEN 0 AND 100 (PERCENTAGE)
+  CONTINUOUS = true //TRUE FOR 360  ROTATION. SET RIGHT AND LEFT LIMIT IF FALSE
+  //LEFTLIMIT = 300.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
+  //RIGHTLIMIT = 60.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
 
-//   SERIAL_PORT = /dev/ttyUSB0
+  POWERED_AT_START = true
+}
 
-//   RANGE = 10 //IN METERS
-//   //VOS = 1500 //Velocity Of Sound in m/s
-//   INVERT = 0 //(Default = 0 = Sonar mounted upright, transducer boot pointing up)
-//   NBINS = 200 //NUMBER OF SAMPLES PER SCANLINE
-//   //NBins : High Resolution (20*Range), Medium Resolution (15*Range), Low Resolution (10*Range)
-//   ANGLESTEP = 0.45 // In degrees: Ultimate Resolution (0.225°), Mgr Resolution (0.45°), Medium Resolution (0.9°), Low Resolution (1.8°)
-//   GAIN = 45 // MUST BE BETWEEN 0 AND 100 (PERCENTAGE)
-//   CONTINUOUS = false //TRUE FOR 360  ROTATION. SET RIGHT AND LEFT LIMIT IF FALSE
-//   LEFTLIMIT = 300.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
-//   RIGHTLIMIT = 60.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
+ProcessConfig = iSonar // Micron, sector scan for 'bathymetry', high resolution
+{
+  AppTick   = 4
+  CommsTick = 4
 
-//   POWERED_AT_START = true
-// }
+  SERIAL_PORT = /dev/ttyUSB0
+
+  RANGE = 10 //IN METERS
+  //VOS = 1500 //Velocity Of Sound in m/s
+  INVERT = 0 //(Default = 0 = Sonar mounted upright, transducer boot pointing up)
+  NBINS = 200 //NUMBER OF SAMPLES PER SCANLINE
+  //NBins : High Resolution (20*Range), Medium Resolution (15*Range), Low Resolution (10*Range)
+  ANGLESTEP = 0.45 // In degrees: Ultimate Resolution (0.225°), Mgr Resolution (0.45°), Medium Resolution (0.9°), Low Resolution (1.8°)
+  GAIN = 45 // MUST BE BETWEEN 0 AND 100 (PERCENTAGE)
+  CONTINUOUS = false //TRUE FOR 360  ROTATION. SET RIGHT AND LEFT LIMIT IF FALSE
+  LEFTLIMIT = 300.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
+  RIGHTLIMIT = 60.0 //IN DEGREES. ONLY WHEN CONTINUOUS IS FALSE
+
+  POWERED_AT_START = true
+}

@@ -1,6 +1,3 @@
-//------------------------------------------------
-// iRosen config block
-
 ProcessConfig = iSaucisse
 {
   AppTick   = 4

@@ -1,6 +1,3 @@
-//------------------------------------------------
-// pEstimSpeed config block
-
 ProcessConfig = pEstimSpeed
 {
    AppTick   = 4
@@ -40,4 +37,3 @@ ProcessConfig = pEstimSpeed
    SPEED_LOCAL_DEAD_RECKONING_PUBLICATION_NAME = SPEED_LOCAL_DEAD_RECKONING
    SPEED_GLOBAL_DEAD_RECKONING_PUBLICATION_NAME = SPEED_GLOBAL_DEAD_RECKONING
 }
-

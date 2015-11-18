@@ -1,11 +1,3 @@
-Community  = TOUTATIS_BUOY
-
-ServerHost = localhost
-ServerPort = 9000
-
-LatOrigin    = 48.418079
-LongOrigin   = -4.472279
-
 ProcessConfig = iGPSoE
 {
   AppTick   = 4

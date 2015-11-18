@@ -1,6 +1,3 @@
-//------------------------------------------------
-// pMapLocalizerParticleFilter config block
-
 ProcessConfig = pMapLocalizerParticleFilter
 {
    AppTick   = 4
@@ -16,4 +13,3 @@ ProcessConfig = pMapLocalizerParticleFilter
    RESAMPLE_EVERY = 10
    RESAMPLING_METHOD = RESIDUAL
 }
-

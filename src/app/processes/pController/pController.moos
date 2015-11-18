@@ -1,11 +1,7 @@
-//------------------------------------------------
-// pController config block
-
 ProcessConfig = pController
 {
   AppTick   = 20
   CommsTick = 4
-
 
   kp_heading = 1.0
   kd_heading = 0.0
@@ -23,6 +19,4 @@ ProcessConfig = pController
   max_rotational_force = 1.0
   max_z_force = 1.0
   max_forward_force = 1.0
-
-
 }

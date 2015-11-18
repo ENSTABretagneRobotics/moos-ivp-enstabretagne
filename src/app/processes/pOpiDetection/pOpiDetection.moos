@@ -1,6 +1,3 @@
-//------------------------------------------------
-// pOpiDetection config block
-
 ProcessConfig = pOpiDetection
 {
   AppTick   = 4

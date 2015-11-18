@@ -1,6 +1,3 @@
-//------------------------------------------------
-// iXSensINS config block
-
 ProcessConfig = iXSensINS
 {
   AppTick   = 25

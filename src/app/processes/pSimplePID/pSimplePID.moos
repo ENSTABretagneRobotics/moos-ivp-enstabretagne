@@ -1,6 +1,3 @@
-//------------------------------------------------
-// pSimplePID config block
-
 ProcessConfig = pSimplePID
 {
   AppTick   = 4

@@ -1,6 +1,3 @@
-//------------------------------------------------
-// iLidarMove config block
-
 ProcessConfig = iLidarMove
 {
   CommsTick 	= 200
@@ -13,4 +10,3 @@ ProcessConfig = iLidarMove
   SERVO_SPEED   = 500 //speed of servo rotation 0-1023 0-117rpm
   DEBUG         = 1 //print info
 }
-

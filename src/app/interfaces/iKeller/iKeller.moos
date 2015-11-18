@@ -1,7 +1,3 @@
-//------------------------------------------------
-// iKeller config block
-
-
 ProcessConfig = iKeller
 {
   AppTick   = 4

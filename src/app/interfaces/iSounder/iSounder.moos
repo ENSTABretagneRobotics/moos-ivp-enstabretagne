@@ -1,7 +1,3 @@
-//------------------------------------------------
-// iSounder config block
-
-
 ProcessConfig = iSounder
 {
   AppTick   = 4

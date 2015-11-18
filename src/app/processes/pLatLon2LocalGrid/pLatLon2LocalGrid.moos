@@ -1,6 +1,3 @@
-//------------------------------------------------
-// pLatLon2LocalGrid config block
-
 ProcessConfig = pLatLon2LocalGrid
 {
   AppTick   = 4

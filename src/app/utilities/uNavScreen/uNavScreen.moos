@@ -1,6 +1,3 @@
-//------------------------------------------------
-// uNavScreen config block
-
 ProcessConfig = uNavScreen
 {
   AppTick   = 4
