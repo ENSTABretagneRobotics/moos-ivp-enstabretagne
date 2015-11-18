@@ -5,8 +5,8 @@
 /*    DATE: 2015
 /************************************************************/
 
-#ifndef PololuPinOut_HEADER
-#define PololuPinOut_HEADER
+#ifndef PololuPinIn_HEADER
+#define PololuPinIn_HEADER
 
 #include <QObject>
 #include "PololuPin.h"

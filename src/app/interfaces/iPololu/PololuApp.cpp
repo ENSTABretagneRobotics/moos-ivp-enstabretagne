@@ -40,6 +40,7 @@ PololuApp::~PololuApp()
   }
 
   m_map_pinouts.clear();
+  m_map_pinins.clear();
   delete m_pololu;
 }
 
@@ -100,6 +101,16 @@ bool PololuApp::Iterate()
   string error_message;
   bool pololu_ok = m_pololu->isReady(error_message);
   Notify("POLOLU_STATUS", pololu_ok ? "ok" : error_message);
+
+  int value;
+  for(map<string,PololuPinIn*>::iterator it = m_map_pinins.begin() ;
+      it != m_map_pinins.end() ;
+      ++it)
+  {
+    if(!m_pololu->getValue(it->second->getPinNumber(), value))
+      reportRunWarning("Error reading value: " + it->first);
+    Notify(it->first, value);
+  }
 
   AppCastingMOOSApp::PostReport();
   return true;
@@ -180,6 +191,13 @@ bool PololuApp::OnStartUp()
       new_pin->setBilaterality(bilateral_range);
       new_pin->reverse(reverse);
       m_map_pinouts[toupper(value)] = new_pin;
+      handled = true;
+    }
+
+    if(param == "MOOSVAR_PUBLICATION" && pin_number != -1)
+    {
+      PololuPinIn *new_pin = new PololuPinIn(pin_number);
+      m_map_pinins[toupper(value)] = new_pin;
       handled = true;
     }
 

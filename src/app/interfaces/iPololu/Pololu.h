@@ -25,6 +25,7 @@ class Pololu : public QObject
 
   public slots:
     bool setTarget(unsigned char channel, unsigned short target);
+    bool getValue(unsigned char channel, int &returned_value);
 
   protected:
     void setErrorMessage(std::string message);

@@ -98,6 +98,34 @@ bool Pololu::setTarget(unsigned char channel, unsigned short target)
   return true;
 }
 
+bool Pololu::getValue(unsigned char channel, int &returned_value)
+{
+  if(!isReady())
+    return false;
+
+  // Gets the position of a Maestro channel.
+  // See the "Serial Servo Commands" section of the user's guide.
+  unsigned char command[] = {0x90, channel};
+  if(write(m_pololu, command, sizeof(command)) == -1)
+  {
+    setErrorMessage("error (writing)");
+    //perror("error (writing)");
+    return false;
+  }
+ 
+  unsigned char response[2];
+  if(read(m_pololu, response,2) != 2)
+  {
+    setErrorMessage("error (reading)");
+    //perror("error (reading)");
+    return false;
+  }
+ 
+  returned_value = response[0] + 256*response[1];
+
+  return true;
+}
+
 void Pololu::setErrorMessage(string message)
 {
   if(m_error_message == "")

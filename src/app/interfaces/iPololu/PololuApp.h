@@ -10,6 +10,7 @@
 
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 #include "Pololu.h"
+#include "PololuPinIn.h"
 #include "PololuPinOut.h"
 
 class PololuApp : public AppCastingMOOSApp
@@ -35,6 +36,7 @@ class PololuApp : public AppCastingMOOSApp
 
   private: // State variables
     Pololu *m_pololu;
+    std::map<std::string,PololuPinIn*> m_map_pinins;
     std::map<std::string,PololuPinOut*> m_map_pinouts;
 };
 
