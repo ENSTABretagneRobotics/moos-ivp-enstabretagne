@@ -17,7 +17,7 @@
      <documentation>
         <synopsis>
           The iPololu application is used as an interface between the Pololu Maestro Board and the MOOS software.
-          A link can be done between PWM pins and MOOS variables. See iPololu.moos for more information.
+          A link can be done between in/out pins and MOOS variables. See iPololu.moos for more information.
         </synopsis>
         <interface>
            <subscriptions>
@@ -32,6 +32,11 @@
                  <varname>SAUCISSE_POLOLU_STATUS</varname>
                  <vartype>string</vartype>
                  <varinfo>message in case of error, "ok" otherwise</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>VARNAME_TO_BE_DEFINED</varname>
+                 <vartype>double</vartype>
+                 <varinfo>get value from the specified pin</varinfo>
               </moosvar>
            </publications>
         </interface>
