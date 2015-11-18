@@ -38,7 +38,7 @@ SimplePID::SimplePID()
   m_I                           = 0.0;
   
   m_moosvar_state               = "STATE";
-  m_moosvar_consigne            = "DESIERED_STATE";
+  m_moosvar_consigne            = "DESIRED_STATE";
   m_moosvar_command             = "COMMAND";
   m_moosvar_saturation          = "SATURATION";
   m_moosvar_state_diffferential = "";
