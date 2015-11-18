@@ -4,8 +4,7 @@ ServerPort = 9000
 
 MOOSTimeWarp = 1
 
-#include "latlong.moos"
-#include "viability_simu.moos"
+#include "o/origin_penfeld.moos"
 #include "interfaces.moos"
 #include "processes.moos"
 #include "utilities.moos"
@@ -35,12 +34,14 @@ ProcessConfig = uJoystick
   SCALE = 100
 
   AXIS = 1
-  SCALE_RATIO =-0.7
+  SCALE_RATIO = 0.7
   MOOS_DEST_VAR = JOYSTICK_THRUST
 
   AXIS = 0
   SCALE_RATIO = -1.0
   MOOS_DEST_VAR = JOYSTICK_RUDDER
+
+  INCREMENT = false
 }
 
 ProcessConfig = pMarineViewer

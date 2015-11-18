@@ -1,0 +1,13 @@
+ProcessConfig = pLatLon2LocalGrid
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  // Topics we subscribe to
+  LAT_SUBSCRIPTION_NAME = INS_LAT
+  LON_SUBSCRIPTION_NAME = INS_LONG
+
+  // Topics we publish to
+  NORTHING_PUBLICATION_NAME = NAV_Y
+  EASTING_PUBLICATION_NAME = NAV_X
+}

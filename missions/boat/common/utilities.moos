@@ -1,4 +1,5 @@
 // UTILITIES
 
+#include "u/uSimMarine.moos"
 #include "u/uMACView.moos"
 #include "u/uProcessWatch.moos"

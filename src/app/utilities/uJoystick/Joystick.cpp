@@ -84,7 +84,7 @@ bool Joystick::Iterate()
 
   // Update incremental variables
   for(it = m_increment_variable.begin() ; it != m_increment_variable.end() ; ++it)
-    m_variables[it->first] += it->second;
+    m_variables[it->first] = it->second;
   
   // Refresh variables  
   for(it = m_variables.begin() ; it != m_variables.end() ; ++it)
@@ -133,7 +133,7 @@ bool Joystick::OnStartUp()
 
     else if(param == "INCREMENT")
     {
-      increment = tolower(value) == "true";
+      increment = (tolower(value) == "true");
       handled = true;
     }
 
