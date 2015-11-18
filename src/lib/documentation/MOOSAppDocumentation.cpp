@@ -53,20 +53,20 @@ namespace xmldoc
   string MOOSAppDocumentation::getRepositoryPath()
   {
     // Test if environment value is set
-    char* repository_path = getenv(MOOS_IVP_TOUTATIS_PATH);
+    char* repository_path = getenv(PROJECT_PATH_NAME);
     if(repository_path == NULL)
     {
-      red("  ERROR: unable to read " + string(MOOS_IVP_TOUTATIS_PATH) + " environment value.");
+      red("  ERROR: unable to read " + string(PROJECT_PATH_NAME) + " environment value.");
       blk("  Please update your configuration.");
       blk("  For Linux users: add an EXPORT in your ~/.bashrc file. Ex:");
       blk("    export MOOS_IVP_PROJECTNAME_PATH=\"/home/user/moos-ivp-projectname\"\n");
       exit(0);
     }
 
-    // Test if MOOS_IVP_TOUTATIS_PATH is an absolute path
+    // Test if PROJECT_PATH_NAME is an absolute path
     if(repository_path[0] != '/')
     {
-      red("  ERROR: " + string(MOOS_IVP_TOUTATIS_PATH) + " is not an absolute path.");
+      red("  ERROR: " + string(PROJECT_PATH_NAME) + " is not an absolute path.");
       blk("  Please update your configuration.");
       blk("  For Linux users: check the EXPORT in your ~/.bashrc file. Ex:");
       blk("    export MOOS_IVP_PROJECTNAME_PATH=\"/home/user/moos-ivp-projectname\"\n");
@@ -77,12 +77,38 @@ namespace xmldoc
   }
 
   //----------------------------------------------------------------
-  // Procedure: showSynopsis
+  // Procedure: getFilePath
+
+  string MOOSAppDocumentation::getFilePath(string extension)
+  {
+    string repository_path = getRepositoryPath();
+    string file_path = repository_path + "/src/app/";
+
+    switch(m_moosapp_name[0])
+    {
+      case 'i':
+        file_path += "interfaces/";
+        break;
+
+      case 'p':
+        file_path += "processes/";
+        break;
+
+      case 'u':
+        file_path += "utilities/";
+        break;
+    }
+    
+    file_path += m_moosapp_name + "/" + m_moosapp_name + extension;
+    return file_path;
+  }
+
+  //----------------------------------------------------------------
+  // Procedure: loadXML
 
   void MOOSAppDocumentation::loadXML()
   {
-    string repository_path = getRepositoryPath();
-    string doc_path = repository_path + "/src/app/" + m_moosapp_name + "/" + m_moosapp_name + ".xml";
+    string doc_path = getFilePath(".xml");
 
     // Test file existance with ifstream
     ifstream xmlfile(doc_path.c_str());
@@ -224,7 +250,7 @@ namespace xmldoc
   }
 
   //----------------------------------------------------------------
-  // Procedure: parseXML
+  // Procedure: xmlToMoosvar
 
   bool MOOSAppDocumentation::xmlToMoosvar(XMLElement *xmlmoosvar, MOOSVarDescription &moosvar, string &item_error)
   {
@@ -304,8 +330,7 @@ namespace xmldoc
   {
     showTitleSection("EXAMPLE MOOS CONFIGURATION");
 
-    string repository_path = getRepositoryPath();
-    string example_path = repository_path + "/src/app/" + m_moosapp_name + "/" + m_moosapp_name + ".moos";
+    string example_path = getFilePath(".moos");
 
     // Test file existance with ifstream
     ifstream moosfile(example_path.c_str());

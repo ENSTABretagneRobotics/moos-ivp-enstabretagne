@@ -13,7 +13,7 @@
 #include <tinyxml2.h>
 #include "MOOS/libMOOS/Utils/MOOSUtilityFunctions.h"
 
-#define MOOS_IVP_TOUTATIS_PATH "MOOS_IVP_TOUTATIS_PATH"
+#define PROJECT_PATH_NAME "MOOS_IVP_TOUTATIS_PATH"
 #define MESSAGE_LENGTH 60
 
 namespace xmldoc
@@ -58,6 +58,7 @@ namespace xmldoc
 
     protected:
       std::string getRepositoryPath();
+      std::string getFilePath(std::string extension);
       void loadXML();
       bool parseXML(std::string &item_error);
       bool xmlToMoosvar(tinyxml2::XMLElement *xmlmoosvar, MOOSVarDescription &moosvar, std::string &item_error);

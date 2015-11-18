@@ -13,8 +13,7 @@
         </authors>
         <licence>MIT</licence>
      </info>
-  NORTHING_PUBLICATION_NAME = GPS_N
-  EASTING_PUBLICATION_NAME = GPS_E
+
      <documentation>
         <synopsis>
           LatLon2LocalGrid uses the MOOSGeodesy lib to compute a local projection of the lat,lon given by the GPS in degrees around an origin. The given projections are in meters.
