@@ -173,32 +173,32 @@ bool XSensINS::OnStartUp() {
       m_uart_port = value;
       handled = true;
     }
-    else if (param == "XDI_EulerAngles"){
+    else if (param == "XDI_EULERANGLES"){
       XsOutputConfiguration config(XDI_EulerAngles, atoi(value.c_str()));
       configArray.push_back(config);
       handled = true;
     }
-    else if (param == "XDI_Acceleration"){
+    else if (param == "XDI_ACCELERATION"){
       XsOutputConfiguration config(XDI_Acceleration, atoi(value.c_str()));
       configArray.push_back(config);
       handled = true;
     }
-    else if (param == "XDI_RateOfTurn"){
+    else if (param == "XDI_RATEOFTURN"){
       XsOutputConfiguration config(XDI_RateOfTurn, atoi(value.c_str()));
       configArray.push_back(config);
       handled = true;
     }
-    else if (param == "XDI_MagneticField"){
+    else if (param == "XDI_MAGNETICFIELD"){
       XsOutputConfiguration config(XDI_MagneticField, atoi(value.c_str()));
       configArray.push_back(config);
       handled = true;
     }
-    else if (param == "XDI_LatLon"){
+    else if (param == "XDI_LATLON"){
       XsOutputConfiguration config(XDI_LatLon, atoi(value.c_str()));
       configArray.push_back(config);
       handled = true;
     }
-    else if (param == "XDI_VelocityXYZ"){
+    else if (param == "XDI_VELOCITYXYZ"){
       XsOutputConfiguration config(XDI_VelocityXYZ, atoi(value.c_str()));
       configArray.push_back(config);
       handled = true;
