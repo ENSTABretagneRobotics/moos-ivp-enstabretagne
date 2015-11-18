@@ -1,0 +1,32 @@
+ServerHost = localhost
+ServerPort = 9000
+Community  = test
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+
+  Run = MOOSDB     @ NewConsole = false
+  Run = uMS        @ NewConsole = false
+  Run = uMACView   @ NewConsole = false
+  Run = uJoystick  @ NewConsole = false
+}
+
+ProcessConfig = uJoystick
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  DEVICE_NAME = /dev/input/js0
+
+  INCREMENT = false
+  SCALE = 100
+
+  AXIS = 1
+  SCALE_RATIO = -0.7
+  MOOS_DEST_VAR = JOYSTICK_THRUST
+
+  AXIS = 0
+  SCALE_RATIO = -1.0
+  MOOS_DEST_VAR = JOYSTICK_RUDDER
+}
