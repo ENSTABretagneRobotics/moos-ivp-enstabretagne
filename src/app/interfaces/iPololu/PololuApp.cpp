@@ -113,7 +113,8 @@ bool PololuApp::Iterate()
     else
     {
       m_map_pinins[it->first]->setValue(value);
-      if(m_map_pinins[it->first]->getValue() < m_map_pinins[it->first]->getThreshold())
+      if(m_map_pinins[it->first]->testThresholdRequired() && 
+         m_map_pinins[it->first]->getValue() < m_map_pinins[it->first]->getThreshold())
         reportRunWarning(m_map_pinins[it->first]->getWarningMessage());
       Notify(it->first, value);
     }
@@ -144,6 +145,7 @@ bool PololuApp::OnStartUp()
   double threshold = 1.;
   string unit = "";
   string warning_message = "";
+  bool test_threshold = false;
   bool bilateral_range = true;
   bool reverse = false;
 
@@ -172,6 +174,7 @@ bool PololuApp::OnStartUp()
     if(param == "THRESHOLD")
     {
       threshold = atof(value.c_str());
+      test_threshold = true;
       handled = true;
     }
 
@@ -234,9 +237,11 @@ bool PololuApp::OnStartUp()
       PololuPinIn *new_pin = new PololuPinIn(pin_number);
       new_pin->setCoeff(coeff);
       new_pin->setThreshold(threshold);
+      new_pin->requireTestThreshold(test_threshold);
       new_pin->setUnit(unit);
       new_pin->setWarningMessage(warning_message);
       m_map_pinins[toupper(value)] = new_pin;
+      test_threshold = false;
       handled = true;
     }
 
@@ -311,7 +316,12 @@ bool PololuApp::buildReport()
     stringstream strs_value(stringstream::in | stringstream::out);
     stringstream strs_threshold(stringstream::in | stringstream::out);
     strs_value << setprecision(3) << fixed << it->second->getValue() << " V";
-    strs_threshold << setprecision(3) << fixed << it->second->getThreshold() << " V";
+
+    if(it->second->testThresholdRequired())
+      strs_threshold << "-";
+
+    else
+      strs_threshold << setprecision(3) << fixed << it->second->getThreshold() << " V";
 
     actab_in << it->second->getPinNumber()
              << it->first

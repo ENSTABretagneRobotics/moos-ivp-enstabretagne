@@ -17,6 +17,7 @@ PololuPinIn::PololuPinIn(int pin_number) : PololuPin(pin_number)
   m_value = 0.;
   m_coeff = 1.;
   m_threshold = 0.;
+  m_test_threshold = false;
 }
 
 double PololuPinIn::getValue()
@@ -44,6 +45,11 @@ std::string PololuPinIn::getWarningMessage()
   return m_warning_message;
 }
 
+bool PololuPinIn::testThresholdRequired()
+{
+  return m_test_threshold;
+}
+
 void PololuPinIn::setValue(double value)
 {
   m_value = value * m_coeff;
@@ -67,4 +73,9 @@ void PololuPinIn::setUnit(std::string unit)
 void PololuPinIn::setWarningMessage(std::string message)
 {
   m_warning_message = message;
+}
+
+void PololuPinIn::requireTestThreshold(bool test)
+{
+  m_test_threshold = test;
 }

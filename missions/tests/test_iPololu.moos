@@ -7,7 +7,7 @@ ProcessConfig = ANTLER
   MSBetweenLaunches = 200
   Run = MOOSDB     @ NewConsole = false
   Run = uMACView   @ NewConsole = false
-  Run = iPololu    @ NewConsole = true
+  Run = iPololu    @ NewConsole = false
 }
 
 ProcessConfig = iPololu
@@ -50,4 +50,9 @@ ProcessConfig = iPololu
     UNIT = "V"
     WARNING_MESSAGE = "caution: low battery"
     MOOSVAR_PUBLICATION = BATTERY_VOLTAGE
+  
+    PIN_NUMBER = 4
+    COEFF = 0.003539409
+    UNIT = "A"
+    MOOSVAR_PUBLICATION = BATTERY_AMPERAGE
 }
