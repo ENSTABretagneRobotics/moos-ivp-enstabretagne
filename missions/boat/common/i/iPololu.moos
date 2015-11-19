@@ -36,5 +36,6 @@ ProcessConfig = iPololu
     THRESHOLD = 3.3
     COEFF = 0.012318305
     UNIT = "V"
+    WARNING_MESSAGE = "caution: low battery"
     MOOSVAR_PUBLICATION = BATTERY_VOLTAGE
 }
