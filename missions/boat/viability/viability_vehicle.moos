@@ -44,7 +44,7 @@ ProcessConfig = pEchoVar_Joystick
   Echo      = JOYSTICK_RUDDER -> FINAL_DESIRED_RUDDER
 
   condition = CONFINES_stayIN != VIOLATION
-  condition = CONFINES_stayOUT != VIOLATION
+//  condition = CONFINES_stayOUT != VIOLATION
 }
 
 ProcessConfig = pEchoVar_Helm
@@ -55,7 +55,7 @@ ProcessConfig = pEchoVar_Helm
   Echo      = DESIRED_THRUST -> FINAL_DESIRED_THRUST
   Echo      = DESIRED_RUDDER -> FINAL_DESIRED_RUDDER
 
-  condition = (CONFINES_stayIN = VIOLATION) or (CONFINES_stayOUT = VIOLATION)
+  condition = (CONFINES_stayIN = VIOLATION)
 }
 
 ProcessConfig = pHelmIvP
@@ -66,7 +66,7 @@ ProcessConfig = pHelmIvP
   Behaviors  = penfeld_confines.bhv
   Verbose    = quiet
   Domain     = course:0:359:360
-  Domain     = speed:0:4:21
+  Domain     = speed:0:16:100
 
   bhv_dir_not_found_ok = true
 

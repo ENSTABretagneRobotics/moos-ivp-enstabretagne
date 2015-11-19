@@ -18,7 +18,7 @@ Behavior = BHV_Confines
   should_normalize = true
 }
 
-Behavior = BHV_Confines
+//Behavior = BHV_Confines
 {
   name            = stayOUT
   pwt             = 100
