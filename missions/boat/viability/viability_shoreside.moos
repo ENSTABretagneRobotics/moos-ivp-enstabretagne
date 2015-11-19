@@ -4,7 +4,7 @@ ServerPort = 9000
 
 MOOSTimeWarp = 1
 
-#include "o/origin_enstabretagne.moos"
+#include "o/origin_penfeld.moos"
 #include "interfaces.moos"
 #include "processes.moos"
 #include "utilities.moos"
@@ -34,7 +34,7 @@ ProcessConfig = uJoystick
   SCALE = 100
 
   AXIS = 1
-  SCALE_RATIO = 0.7
+  SCALE_RATIO = 1.0
   MOOS_DEST_VAR = JOYSTICK_THRUST
 
   AXIS = 0
@@ -50,7 +50,7 @@ ProcessConfig = pMarineViewer
   CommsTick  = 4
 
   //tiff_file            = ../../../data/maps/penfeld.tif
-  tiff_file            = ../../../data/maps/ensta_bretagne.tif
+  tiff_file            = ../../../data/maps/penfeld.tif
   set_pan_x            = -400
   set_pan_y            = 300
   zoom                 = 1.2
