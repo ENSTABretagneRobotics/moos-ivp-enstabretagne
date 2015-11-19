@@ -7,7 +7,7 @@
 
 #include <iostream>
 #include <fstream>
-
+#include <iomanip>
 #include <sstream>
 #include <iterator>
 #include "math.h"
@@ -143,6 +143,7 @@ bool PololuApp::OnStartUp()
   double coeff = 1.;
   double threshold = 1.;
   string unit = "";
+  string warning_message = "";
   bool bilateral_range = true;
   bool reverse = false;
 
@@ -177,6 +178,12 @@ bool PololuApp::OnStartUp()
     if(param == "UNIT")
     {
       unit = value;
+      handled = true;
+    }
+
+    if(param == "WARNING_MESSAGE")
+    {
+      warning_message = value;
       handled = true;
     }
 
@@ -228,6 +235,7 @@ bool PololuApp::OnStartUp()
       new_pin->setCoeff(coeff);
       new_pin->setThreshold(threshold);
       new_pin->setUnit(unit);
+      new_pin->setWarningMessage(warning_message);
       m_map_pinins[toupper(value)] = new_pin;
       handled = true;
     }
@@ -300,13 +308,15 @@ bool PololuApp::buildReport()
         it != m_map_pinins.end() ;
         ++it)
   {
-    ostringstream strs;
-    strs << it->second->getValue() << " V";
+    stringstream strs_value(stringstream::in | stringstream::out);
+    stringstream strs_threshold(stringstream::in | stringstream::out);
+    strs_value << setprecision(3) << fixed << it->second->getValue() << " V";
+    strs_threshold << setprecision(3) << fixed << it->second->getThreshold() << " V";
 
     actab_in << it->second->getPinNumber()
              << it->first
-             << strs.str()
-             << it->second->getThreshold();
+             << strs_value.str()
+             << strs_threshold.str();
   }
   m_msgs << actab_in.getFormattedString() << "\n\n";
   
