@@ -18,10 +18,20 @@ class PololuPinIn : public PololuPin
     ~PololuPinIn() {};
 
     double getValue();
+    double getCoeff();
+    double getThreshold();
+    std::string getUnit();
+    std::string getWarningMessage();
+
     void setValue(double value);
+    void setCoeff(double coeff);
+    void setThreshold(double threshold);
+    void setUnit(std::string unit);
+    void setWarningMessage(std::string message);
 
   protected:
-  	double m_value;
+  	double m_value, m_coeff, m_threshold;
+  	std::string m_unit, m_warning_message;
 };
 
 #endif 

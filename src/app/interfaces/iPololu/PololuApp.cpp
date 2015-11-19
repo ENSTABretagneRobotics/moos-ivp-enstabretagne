@@ -113,6 +113,8 @@ bool PololuApp::Iterate()
     else
     {
       m_map_pinins[it->first]->setValue(value);
+      if(m_map_pinins[it->first]->getValue() < m_map_pinins[it->first]->getThreshold())
+        reportRunWarning(m_map_pinins[it->first]->getWarningMessage());
       Notify(it->first, value);
     }
   }
@@ -138,6 +140,9 @@ bool PololuApp::OnStartUp()
   int pwm_mini = 1200;
   int pwm_zero = 1500;
   int pwm_maxi = 1800;
+  double coeff = 1.;
+  double threshold = 1.;
+  string unit = "";
   bool bilateral_range = true;
   bool reverse = false;
 
@@ -154,6 +159,24 @@ bool PololuApp::OnStartUp()
     if(param == "PIN_NUMBER")
     {
       pin_number = atoi(value.c_str());
+      handled = true;
+    }
+
+    if(param == "COEFF")
+    {
+      coeff = atof(value.c_str());
+      handled = true;
+    }
+
+    if(param == "THRESHOLD")
+    {
+      threshold = atof(value.c_str());
+      handled = true;
+    }
+
+    if(param == "UNIT")
+    {
+      unit = value;
       handled = true;
     }
 
@@ -202,6 +225,9 @@ bool PololuApp::OnStartUp()
     if(param == "MOOSVAR_PUBLICATION" && pin_number != -1)
     {
       PololuPinIn *new_pin = new PololuPinIn(pin_number);
+      new_pin->setCoeff(coeff);
+      new_pin->setThreshold(threshold);
+      new_pin->setUnit(unit);
       m_map_pinins[toupper(value)] = new_pin;
       handled = true;
     }
@@ -267,16 +293,20 @@ bool PololuApp::buildReport()
   }
   m_msgs << actab_pwm.getFormattedString() << "\n\n";
 
-  ACTable actab_in(3);
-  actab_in << "Pin" << "MoosVar" << "Value";
+  ACTable actab_in(4);
+  actab_in << "Pin" << "MoosVar" << "Value" << "Threshold";
   actab_in.addHeaderLines();
   for(map<string,PololuPinIn*>::iterator it = m_map_pinins.begin() ;
         it != m_map_pinins.end() ;
         ++it)
   {
+    ostringstream strs;
+    strs << it->second->getValue() << " V";
+
     actab_in << it->second->getPinNumber()
              << it->first
-             << it->second->getValue();
+             << strs.str()
+             << it->second->getThreshold();
   }
   m_msgs << actab_in.getFormattedString() << "\n\n";
   
