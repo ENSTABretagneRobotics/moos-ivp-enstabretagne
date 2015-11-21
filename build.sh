@@ -7,7 +7,7 @@ JOYSTICK="ON"
 RAZOR="ON"
 XSENS="ON"
 GPSOE="ON"
-INTERVAL_FILTER="ON"
+INTERVAL_FILTER="OFF"
 
 #-------------------------------------------------------------------
 #  Part 1: Check for and handle command-line arguments
