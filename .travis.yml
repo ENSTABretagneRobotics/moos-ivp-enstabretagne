@@ -8,8 +8,7 @@ before_script:
  - cd ..
  - svn co https://oceanai.mit.edu/svn/moos-ivp-aro/releases/moos-ivp-14.7.1 moos-ivp
  - cd moos-ivp
- - sudo apt-get install g++ subversion xterm cmake libfltk1.3-dev freeglut3-dev libpng12-dev libjpeg-dev libxft-dev libxinerama-dev libtiff4-dev
- - sudo apt-get install libtinyxml2-dev libusb-1.0-0-dev mono-runtime libmono-winforms2.0-cil libv4l-dev libopencv-dev libboost1.55-dev libboost-system1.55-dev
+ - sudo apt-get update && apt-get install g++ subversion xterm cmake libfltk1.3-dev freeglut3-dev libpng12-dev libjpeg-dev libxft-dev libxinerama-dev libtiff4-dev libtinyxml2-dev libusb-1.0-0-dev mono-runtime libmono-winforms2.0-cil libv4l-dev libopencv-dev libboost1.55-dev libboost-system1.55-dev
  - ./build-moos.sh
  - ./build-ivp.sh
  - export PATH=$PATH:$PWD/bin
