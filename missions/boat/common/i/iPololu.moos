@@ -35,12 +35,12 @@ ProcessConfig = iPololu
     PIN_NUMBER = 3
     THRESHOLD = 3.3
     COEFF = 0.012318305
-    UNIT = "V"
-    WARNING_MESSAGE = "caution: low battery"
+    UNIT = V
+    WARNING_MESSAGE = low_battery
     MOOSVAR_PUBLICATION = BATTERY_VOLTAGE
   
     PIN_NUMBER = 4
     COEFF = 0.003539409
-    UNIT = "A"
+    UNIT = A
     MOOSVAR_PUBLICATION = BATTERY_AMPERAGE
 }

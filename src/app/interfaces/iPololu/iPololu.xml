@@ -22,7 +22,7 @@
         <interface>
            <subscriptions>
               <moosvar>
-                 <varname>VARNAME_TO_BE_DEFINED</varname>
+                 <varname>$(MOOSVAR_SUBSCRIPTION)</varname>
                  <vartype>double</vartype>
                  <varinfo>set PWM value based on a ratio belonging to the set [-1;1]</varinfo>
               </moosvar>
@@ -34,9 +34,14 @@
                  <varinfo>message in case of error, "ok" otherwise</varinfo>
               </moosvar>
               <moosvar>
-                 <varname>VARNAME_TO_BE_DEFINED</varname>
+                 <varname>$(MOOSVAR_PUBLICATION)</varname>
                  <vartype>double</vartype>
                  <varinfo>get value from the specified pin</varinfo>
+              </moosvar>
+              <moosvar>
+                 <varname>$(MOOSVAR_PUBLICATION)_WARNING</varname>
+                 <vartype>double</vartype>
+                 <varinfo>1 once the threshold is exceeded, 0 otherwise</varinfo>
               </moosvar>
            </publications>
         </interface>
