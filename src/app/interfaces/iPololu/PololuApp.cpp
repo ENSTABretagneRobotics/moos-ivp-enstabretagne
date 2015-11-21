@@ -112,10 +112,19 @@ bool PololuApp::Iterate()
     
     else
     {
+      string warning_moosvar = it->first + "_WARNING";
+
       m_map_pinins[it->first]->setValue(value);
       if(m_map_pinins[it->first]->testThresholdRequired() && 
          m_map_pinins[it->first]->getValue() < m_map_pinins[it->first]->getThreshold())
-        reportRunWarning(m_map_pinins[it->first]->getWarningMessage());
+      {
+        reportRunWarning("Warning: " + m_map_pinins[it->first]->getWarningMessage());
+        Notify(warning_moosvar, 1.);
+      }
+
+      else
+        Notify(warning_moosvar, 0.);
+
       Notify(it->first, value);
     }
   }
@@ -229,6 +238,7 @@ bool PololuApp::OnStartUp()
       new_pin->setBilaterality(bilateral_range);
       new_pin->reverse(reverse);
       m_map_pinouts[toupper(value)] = new_pin;
+      pin_number = -1;
       handled = true;
     }
 
@@ -242,6 +252,7 @@ bool PololuApp::OnStartUp()
       new_pin->setWarningMessage(warning_message);
       m_map_pinins[toupper(value)] = new_pin;
       test_threshold = false;
+      pin_number = -1;
       handled = true;
     }
 
@@ -250,7 +261,10 @@ bool PololuApp::OnStartUp()
       m_device_name = value;
       handled = true;
     }
-    
+    if(test_threshold)
+      cout << "test ok!!!" << endl;
+    else
+      cout << "test NO!!!" << endl;
     if(!handled)
       reportUnhandledConfigWarning(orig);
   }
@@ -315,13 +329,13 @@ bool PololuApp::buildReport()
   {
     stringstream strs_value(stringstream::in | stringstream::out);
     stringstream strs_threshold(stringstream::in | stringstream::out);
-    strs_value << setprecision(3) << fixed << it->second->getValue() << " V";
+    strs_value << setprecision(3) << fixed << it->second->getValue() << " " << it->second->getUnit();
 
-    if(it->second->testThresholdRequired())
+    if(!it->second->testThresholdRequired())
       strs_threshold << "-";
 
     else
-      strs_threshold << setprecision(3) << fixed << it->second->getThreshold() << " V";
+      strs_threshold << setprecision(3) << fixed << it->second->getThreshold() << " " << it->second->getUnit();
 
     actab_in << it->second->getPinNumber()
              << it->first
