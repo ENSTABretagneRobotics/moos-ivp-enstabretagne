@@ -8,7 +8,7 @@
 #ifndef PololuPin_HEADER
 #define PololuPin_HEADER
 
-#include <QObject>
+//#include <QObject>
 
 class PololuPin
 {

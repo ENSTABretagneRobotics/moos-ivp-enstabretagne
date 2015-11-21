@@ -8,7 +8,7 @@
 #ifndef PololuPinOut_HEADER
 #define PololuPinOut_HEADER
 
-#include <QObject>
+//#include <QObject>
 #include "PololuPin.h"
 
 class PololuPinOut : public PololuPin
