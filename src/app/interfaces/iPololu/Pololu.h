@@ -10,9 +10,9 @@ class Pololu;
 #ifndef Pololu_HEADER
 #define Pololu_HEADER
 
-#include <QObject>
+//#include <QObject>
 
-class Pololu : public QObject
+class Pololu/* : public QObject*/
 {
   Q_OBJECT
 
@@ -23,7 +23,7 @@ class Pololu : public QObject
     bool isReady();
     bool isReady(std::string &error_message);
 
-  public slots:
+  /*public slots:*/
     bool setTarget(unsigned char channel, unsigned short target);
     bool getValue(unsigned char channel, int &returned_value);
 

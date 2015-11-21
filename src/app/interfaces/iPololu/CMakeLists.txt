@@ -14,7 +14,6 @@ SET(SRC
 )
 
 SET(CMAKE_AUTOMOC ON)
-FIND_PACKAGE(Qt5Widgets)
 
 ADD_EXECUTABLE(iPololu ${SRC})
 
@@ -24,5 +23,4 @@ TARGET_LINK_LIBRARIES(iPololu
    apputil
    mbutil
    m
-   pthread
-   Qt5::Widgets)
+   pthread)
