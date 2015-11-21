@@ -14,7 +14,7 @@ class Pololu;
 
 class Pololu/* : public QObject*/
 {
-  Q_OBJECT
+  /*Q_OBJECT*/
 
   public:
     Pololu(std::string device_name);
