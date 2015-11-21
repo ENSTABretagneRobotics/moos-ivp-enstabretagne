@@ -4,7 +4,7 @@ ServerPort = 9000
 
 MOOSTimeWarp = 1
 
-#include "o/origin_penfeld.moos"
+#include "origins/origin_penfeld.moos"
 #include "interfaces.moos"
 #include "processes.moos"
 #include "utilities.moos"

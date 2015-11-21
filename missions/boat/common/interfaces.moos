@@ -1,4 +1,4 @@
 // INTERFACES
 
-#include "i/iPololu.moos"
-#include "i/iXSensINS.moos"
+#include "interfaces/iPololu.moos"
+#include "interfaces/iXSensINS.moos"

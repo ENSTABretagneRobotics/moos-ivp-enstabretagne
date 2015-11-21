@@ -1,10 +1,10 @@
 // PROCESSES
 
-#include "p/pEstimSpeed.moos"
-#include "p/pMixThrusters.moos"
-#include "p/pSimplePID_Depth.moos"
-#include "p/pSimplePID_Heading.moos"
-#include "p/pTrustGPS.moos"
-#include "p/pOpiDetection_Side.moos"
-#include "p/pOpiDetection_Bottom.moos"
-#include "p/pMarinePID.moos"
+#include "processes/pEstimSpeed.moos"
+#include "processes/pMixThrusters.moos"
+#include "processes/pSimplePID_Depth.moos"
+#include "processes/pSimplePID_Heading.moos"
+#include "processes/pTrustGPS.moos"
+#include "processes/pOpiDetection_Side.moos"
+#include "processes/pOpiDetection_Bottom.moos"
+#include "processes/pMarinePID.moos"

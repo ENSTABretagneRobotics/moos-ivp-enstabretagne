@@ -1,6 +1,6 @@
 // UTILITIES
 
-#include "u/uMACView.moos"
-#include "u/uNavScreen.moos"
-#include "u/uProcessWatch.moos"
-#include "u/uSensorsViewer.moos"
+#include "utilities/uMACView.moos"
+#include "utilities/uNavScreen.moos"
+#include "utilities/uProcessWatch.moos"
+#include "utilities/uSensorsViewer.moos"
