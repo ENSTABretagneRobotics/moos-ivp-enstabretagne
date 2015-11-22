@@ -50,6 +50,8 @@ done
 #  Part 2: Invoke the call to make in the build directory
 #-------------------------------------------------------------------
 mkdir -p build
+mkdir -p bin
+mkdir -p lib
 cd build
 
 cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_JOYSTICK=${JOYSTICK} -DWITH_RAZOR=${RAZOR} -DWITH_XSENS=${XSENS} -DWITH_GPSOE=${GPSOE} -DWITH_INTERVAL_FILTER=${INTERVAL_FILTER} ../
