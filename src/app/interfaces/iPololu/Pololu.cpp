@@ -83,9 +83,11 @@ bool Pololu::setTarget(unsigned char channel, unsigned short target)
   if(!isReady())
     return false;
 
+  target *= 4; // quarter microseconds -> microseconds
+
   // Sets the target of a Maestro channel.
   // See the "Serial Servo Commands" section of the user's guide.
-  // The units of 'target' are quarter-microseconds.
+  // The units of 'target' are microseconds.
   unsigned char command[] = {0x84, channel, target & 0x7F, target >> 7 & 0x7F};
 
   if(write(m_pololu, command, sizeof(command)) == -1)

@@ -35,7 +35,7 @@ PololuApp::~PololuApp()
       it != m_map_pinouts.end() ;
       ++it)
   {
-    if(!m_pololu->setTarget(it->second->getPinNumber(), it->second->getPwmZero() * 4))
+    if(!m_pololu->setTarget(it->second->getPinNumber(), it->second->getPwmZero()))
       reportRunWarning("Error setting zero target: " + it->first);
   }
 
@@ -70,7 +70,7 @@ bool PololuApp::OnNewMail(MOOSMSG_LIST &NewMail)
     if(m_map_pinouts.count(toupper(key)) > 0)
     {
       m_map_pinouts[key]->setValue(msg.GetDouble());
-      if(!m_pololu->setTarget(m_map_pinouts[key]->getPinNumber(), m_map_pinouts[key]->getPwmValue() * 4))
+      if(!m_pololu->setTarget(m_map_pinouts[key]->getPinNumber(), m_map_pinouts[key]->getPwmValue()))
         reportRunWarning("Error setting target: " + key);
     }
 
