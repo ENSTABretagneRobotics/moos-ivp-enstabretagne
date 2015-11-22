@@ -10,11 +10,11 @@ class Pololu;
 #ifndef Pololu_HEADER
 #define Pololu_HEADER
 
-#include <QObject>
+//#include <QObject>
 
-class Pololu : public QObject
+class Pololu/* : public QObject*/
 {
-  Q_OBJECT
+  //Q_OBJECT
 
   public:
     Pololu(std::string device_name);
@@ -23,7 +23,7 @@ class Pololu : public QObject
     bool isReady();
     bool isReady(std::string &error_message);
 
-  public slots:
+  //public slots:
     bool turnOnRelay(int id, bool turned_on = true);
     bool turnOnBistableRelay(int id_on, int id_off, bool turned_on = true);
     bool emitBips(int bip_number = 1);

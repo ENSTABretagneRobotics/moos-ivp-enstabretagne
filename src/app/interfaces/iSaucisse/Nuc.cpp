@@ -5,6 +5,7 @@
 /*    DATE: 2015
 /************************************************************/
 
+#include <cstdlib>
 #include <string>
 #include <iostream>
 #include <stdio.h>

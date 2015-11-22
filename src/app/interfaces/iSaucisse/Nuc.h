@@ -8,7 +8,7 @@
 #ifndef Nuc_HEADER
 #define Nuc_HEADER
 
-#include <QObject>
+//#include <QObject>
 
 class Nuc
 {
