@@ -70,7 +70,7 @@ ProcessConfig = pHelmIvP
   Behaviors  = penfeld_confines.bhv
   Verbose    = quiet
   Domain     = course:0:359:360
-  Domain     = speed:0:16:100
+  Domain     = speed:0:80:16
 
   bhv_dir_not_found_ok = true
 
