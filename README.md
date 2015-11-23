@@ -155,3 +155,23 @@ GenMOOSApp_Toutatis SimModem u "John Doe"
 ```
 
 Do not forget to add your new application to the CMake configuration file: `./src/app/CMakeLists.txt` and to update the main documentation page : `./doc/index.html`.
+
+
+License
+-------
+
+To be defined.
+
+
+Contributors
+------------
+
+* [Simon Rohou](https://github.com/SimonRohou) (ENSTA Bretagne)
+* [Clement Aubry](https://github.com/ClementAubry) (ISEN)
+* [Thomas Le Mézo](https://github.com/ThomasLeMezo) (ENSTA Bretagne)
+* [Mohamed Saad Ibn Seddik](https://github.com/msis) (ENSTA Bretagne / CGG)
+* [Vincent Drevelle](https://github.com/dvinc) (INRIA Rennes / IRISA)
+* [Jérémy Nicola](https://github.com/nicolaje) (ENSTA Bretagne / iXBlue)
+* [Benoit Desrochers](https://github.com/benEnsta) (ENSTA Bretagne / GESMA)
+* [Murilo Santos](https://github.com/muriloksantos) (École Navale)
+* [Elouan Autret](https://github.com/Elessog) (ENSTA Bretagne)
