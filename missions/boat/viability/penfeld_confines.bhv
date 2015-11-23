@@ -2,6 +2,8 @@
 
 initialize   DEPLOY = false
 initialize   RETURN = false
+initialize   BATTERY_VOLTAGE_WARNING = 0
+initialize   GO_HOME = 0
 
 Behavior = BHV_Confines
 {
@@ -10,7 +12,7 @@ Behavior = BHV_Confines
   condition       = RETURN=false
   condition       = DEPLOY=true
 
-  polygon = -20,0 : -21,-13 : -29,-23 : -42,-21 : -55,-20 : -68,-16 : -82,-14 : -99,-11 : -114,-8 : -130,-4 : -145,1 : -144,17 : -147,32 : -155,43 : -165,54 : -178,62 : -194,67 : -209,71 : -224,74 : -240,76 : -235,90 : -236,106 : -241,120 : -249,132 : -257,145 : -265,157 : -274,173 : -282,186 : -291,198 : -298,214 : -299,229 : -297,244 : -296,260 : -292,275 : -291,291 : -293,305 : -286,316 : -273,320 : -266,310 : -255,299 : -242,292 : -236,278 : -231,262 : -229,247 : -235,233 : -242,219 : -242,203 : -233,192 : -224,179 : -229,163 : -229,147 : -220,133 : -213,118 : -205,103 : -191,90 : -172,80 : -146,77 : -124,84 : -107,93 : -90,91 : -72,80 : -57,70 : -44,62 : -31,54 : -18,45 : -7,36 : -6,23 : -13,12 : -20,0 : label,stayIN
+  polygon = 0,0 : 7,-4 : 3,-8 : -4,-3 : -21,-13 : -29,-23 : -42,-21 : -55,-20 : -68,-16 : -82,-14 : -99,-11 : -114,-8 : -130,-4 : -145,1 : -144,17 : -147,32 : -155,43 : -165,54 : -178,62 : -194,67 : -209,71 : -224,74 : -240,76 : -235,90 : -236,106 : -241,120 : -249,132 : -257,145 : -265,157 : -274,173 : -282,186 : -291,198 : -298,214 : -299,229 : -297,244 : -296,260 : -292,275 : -291,291 : -293,305 : -286,316 : -273,320 : -266,310 : -255,299 : -242,292 : -236,278 : -231,262 : -229,247 : -235,233 : -242,219 : -242,203 : -233,192 : -224,179 : -229,163 : -229,147 : -220,133 : -213,118 : -205,103 : -191,90 : -172,80 : -146,77 : -124,84 : -107,93 : -90,91 : -72,80 : -57,70 : -44,62 : -31,54 : -18,45 : -7,36 : -6,23 : 0,0 : label,stayIN
 
   lookahead_secs  = 0.1
   show_closest_pt = true
@@ -18,29 +20,30 @@ Behavior = BHV_Confines
   should_normalize = true
 }
 
-//Behavior = BHV_Confines
+Behavior = BHV_Confines
 {
   name            = stayOUT
   pwt             = 100
   condition       = RETURN=false
   condition       = DEPLOY=true
-  polygon         = -64,43 : -81,27 : -59,21 : label,stayOUT
+  polygon         = -83,56 : -45,31 : -71,16 : -110,43 : label,stayOUT
   lookahead_secs  = 0.1
   show_closest_pt = true
   use_zero_cone   = true
   should_normalize = true
 }
 
-//Behavior = BHV_Waypoint
+Behavior = BHV_Waypoint
 {
   name      = waypt_survey
-  pwt       = 100
+  pwt       = 50
   condition = RETURN = false
   condition = DEPLOY = true
+  condition = (BATTERY_VOLTAGE_WARNING = 1) OR (GO_HOME = 1)
   endflag   = RETURN = true
   wptflag   = WPT_HIT = $(X),$(Y)
   UPDATES   = WPT_UPDATE
-  perpetual = true
+  perpetual = false
 
             lead = 8
      lead_damper = 1
@@ -48,8 +51,7 @@ Behavior = BHV_Confines
     capture_line = true
   capture_radius = 5.0
      slip_radius = 15.0
-          points = 75,-75 : 75,-175 : 175,-175 : 204,-125 : 175,-75
-          points = 50,-50 : 50,-150 : 150,-150 : 180,-100 : 150,-50
+          points = -11,6 : 4,-6
           repeat = 1
 
     visual_hints = nextpt_color=red, nextpt_lcolor=green

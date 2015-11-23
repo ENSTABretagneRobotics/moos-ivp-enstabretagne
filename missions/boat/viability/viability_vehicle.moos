@@ -26,17 +26,16 @@ ProcessConfig = ANTLER
   Run = pMarinePID      @ NewConsole = false
 
   // Simu:
-  //Run = uSimMarine      @ NewConsole = false
+  Run = uSimMarine      @ NewConsole = false
 
   // Demo:
-  Run = iPololu       @ NewConsole = false
-  Run = iXSensINS     @ NewConsole = false
-  //Run = iGPS          @ NewConsole = false
-  Run = pLatLon2LocalGrid      @ NewConsole = false
+  //Run = iPololu       @ NewConsole = false
+  //Run = iXSensINS     @ NewConsole = false
+  //Run = pLatLon2LocalGrid      @ NewConsole = false
 }
 
 ProcessConfig = pEchoVar_Joystick
-{                                                  
+{
   AppTick   = 10
   CommsTick = 10
 
@@ -44,18 +43,21 @@ ProcessConfig = pEchoVar_Joystick
   Echo      = JOYSTICK_RUDDER -> FINAL_DESIRED_RUDDER
 
   condition = CONFINES_stayIN != VIOLATION
-//  condition = CONFINES_stayOUT != VIOLATION
+  condition = CONFINES_stayOUT != VIOLATION
+  condition = CONFINES_stayOUT != VIOLATION
+  condition = BATTERY_VOLTAGE_WARNING != 1
+  condition = GO_HOME != 1
 }
 
 ProcessConfig = pEchoVar_Helm
-{                                                  
+{
   AppTick   = 10
   CommsTick = 10
 
   Echo      = DESIRED_THRUST -> FINAL_DESIRED_THRUST
   Echo      = DESIRED_RUDDER -> FINAL_DESIRED_RUDDER
 
-  condition = (CONFINES_stayIN = VIOLATION)
+  condition = ((GO_HOME = 1) OR (BATTERY_VOLTAGE_WARNING = 1)) OR ((CONFINES_stayIN = VIOLATION) OR (CONFINES_stayOUT = VIOLATION))
 }
 
 ProcessConfig = pHelmIvP

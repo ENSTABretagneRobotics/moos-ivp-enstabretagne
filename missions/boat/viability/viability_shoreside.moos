@@ -69,8 +69,9 @@ ProcessConfig = pMarineViewer
   appcast_font_size    = small
 
   button_one = DEPLOY # DEPLOY = true
+  button_two = GO_HOME # GO_HOME = 1
   button_one = MOOS_MANUAL_OVERIDE = false # RETURN = false
-  button_two = RETURN # RETURN = true
+  //button_two = RETURN # RETURN = true
 }
 
 ProcessConfig = pShare
@@ -95,7 +96,7 @@ ProcessConfig = uFldShoreBroker
   bridge   = src=JOYSTICK_THRUST
   bridge   = src=JOYSTICK_RUDDER
   bridge   = src=MOOS_MANUAL_OVERIDE
-  //bridge   = src=MOOS_MANUAL_OVERRIDE
+  bridge   = src=GO_HOME
 }
 
 ProcessConfig = pHostInfo
