@@ -67,7 +67,7 @@ ProcessConfig = pHelmIvP
   AppTick    = 10
   CommsTick  = 10
 
-  Behaviors  = penfeld_confines.bhv
+  Behaviors  = penfeld_security_fence.bhv
   Verbose    = quiet
   Domain     = course:0:359:360
   Domain     = speed:0:80:25

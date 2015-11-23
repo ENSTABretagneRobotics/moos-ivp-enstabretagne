@@ -3,7 +3,7 @@ initialize RETURN = false
 initialize BATTERY_VOLTAGE_WARNING = 0
 initialize GO_HOME = 0
 
-Behavior = BHV_Confines
+Behavior = BHV_SecurityFence
 {
   name            = stayIN
   pwt             = 100
@@ -18,7 +18,7 @@ Behavior = BHV_Confines
   should_normalize = true
 }
 
-Behavior = BHV_Confines
+Behavior = BHV_SecurityFence
 {
   name            = stayOUT
   pwt             = 100
