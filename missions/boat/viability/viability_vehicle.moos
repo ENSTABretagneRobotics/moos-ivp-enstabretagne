@@ -33,6 +33,8 @@ ProcessConfig = ANTLER
   Run = iXSensINS     @ NewConsole = false
   //Run = iGPS          @ NewConsole = false
   Run = pLatLon2LocalGrid      @ NewConsole = false
+
+  //Run = iCamera @ NewConsole = false
 }
 
 ProcessConfig = pEchoVar_Joystick

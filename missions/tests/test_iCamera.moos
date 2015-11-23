@@ -1,8 +1,7 @@
 // MOOS file
 
 ServerHost = localhost
-ServerPort = 9000
-
+ServerPort = 9001
 Community  = AUV
 
 //------------------------------------------
@@ -11,11 +10,11 @@ ProcessConfig = ANTLER
 {
   MSBetweenLaunches = 200
 
-  Run = MOOSDB       	  @ NewConsole = true
-  Run = uMS             @ NewConsole=false
+#  Run = MOOSDB       	  @ NewConsole = true
+#  Run = uMS             @ NewConsole=false
   Run = iCamera @ NewConsole = true ~iCamera1
-  Run = iCamera @ NewConsole = true ~iCamera2
-  Run = uSensorsViewer @ NewConsole = true
+  #Run = iCamera @ NewConsole = true ~iCamera2
+  #Run = uSensorsViewer @ NewConsole = true
 }
 
 //------------------------------------------------
@@ -27,7 +26,7 @@ ProcessConfig = iCamera1
    CommsTick = 25
 
    VARIABLE_IMAGE_NAME= CAMERA_FRONT
-   IDENTIFIANT_CV_CAMERA = 1
+   IDENTIFIANT_CV_CAMERA = 0
    DISPLAY_IMAGE = true
    INVERT_IMAGE = false
 
