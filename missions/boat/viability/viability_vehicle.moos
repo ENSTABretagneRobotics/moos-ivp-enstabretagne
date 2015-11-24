@@ -4,7 +4,7 @@ ServerPort = 9001
 
 MOOSTimeWarp = 1
 
-#include "origins/origin_penfeld.moos"
+#include "origins/origin_ecolepolytechnique.moos"
 #include "interfaces.moos"
 #include "processes.moos"
 #include "utilities.moos"
@@ -26,12 +26,12 @@ ProcessConfig = ANTLER
   Run = pMarinePID      @ NewConsole = false
 
   // Simu:
-  //Run = uSimMarine      @ NewConsole = false
+  Run = uSimMarine      @ NewConsole = false
 
   // Demo:
-  Run = iPololu       @ NewConsole = false
-  Run = iXSensINS     @ NewConsole = false
-  Run = pLatLon2LocalGrid      @ NewConsole = false
+  //Run = iPololu       @ NewConsole = false
+  //Run = iXSensINS     @ NewConsole = false
+  //Run = pLatLon2LocalGrid      @ NewConsole = false
 
   //Run = iCamera @ NewConsole = false
 }
@@ -67,7 +67,7 @@ ProcessConfig = pHelmIvP
   AppTick    = 10
   CommsTick  = 10
 
-  Behaviors  = penfeld_security_fence.bhv
+  Behaviors  = polytechnique_security_fence.bhv
   Verbose    = quiet
   Domain     = course:0:359:360
   Domain     = speed:0:80:25

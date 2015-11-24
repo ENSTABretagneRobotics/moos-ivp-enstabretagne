@@ -1,0 +1,64 @@
+initialize DEPLOY = false
+initialize RETURN = false
+initialize BATTERY_VOLTAGE_WARNING = 0
+initialize GO_HOME = 0
+
+Behavior = BHV_SecurityFence
+{
+  name            = stayIN
+  pwt             = 100
+  condition       = RETURN=false
+  condition       = DEPLOY=true
+
+  polygon = -15,3 : -5,9 : 9,9 : 12,-1 : 93,-4 : 177,110 : 205,110 : 290,74 : 311,59 : 317,61 : 344,118 : 336,132 : 240,152 : 150,156 : -67,166 : -362,180 : -374,169 : -374,136 : -364,133 : -299,151 : -201,159 : -76,153 : -41,139 : -27,110 : -18,71 : -10,25 : -12,14 : -18,9 : -15,3 : label,stayIN
+
+  lookahead_secs  = 0.1
+  show_closest_pt = true
+  use_zero_cone   = true
+  should_normalize = true
+}
+
+Behavior = BHV_SecurityFence
+{
+  name            = stayOUT
+  pwt             = 100
+  condition       = RETURN=false
+  condition       = DEPLOY=true
+  polygon         = 56,91 : 45,79 : 50,66 : 65,59 : 93,79 : 86,93 : label,stayOUT
+  lookahead_secs  = 0.1
+  show_closest_pt = true
+  use_zero_cone   = true
+  should_normalize = true
+}
+
+Behavior = BHV_Waypoint
+{
+  name      = waypt_survey
+  pwt       = 100
+  condition = RETURN = false
+  condition = DEPLOY = true
+  condition = (BATTERY_VOLTAGE_WARNING = 1) OR (GO_HOME = 1)
+  endflag   = RETURN = true
+  wptflag   = WPT_HIT = $(X),$(Y)
+  UPDATES   = WPT_UPDATE
+  perpetual = false
+
+            lead = 8
+     lead_damper = 1
+           speed = 100   // meters per second
+    capture_line = true
+  capture_radius = 5.0
+     slip_radius = 15.0
+          points = -1,17 : -15,6
+          repeat = 1
+
+    visual_hints = nextpt_color=red, nextpt_lcolor=green
+    visual_hints = vertex_color=blue, edge_color=pink
+    visual_hints = vertex_size=4, edge_size=1
+}
+
+Behavior = BHV_HSLine
+{
+  name        = hsline
+  time_on_leg = 20
+}
