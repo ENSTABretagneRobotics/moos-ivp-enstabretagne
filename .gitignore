@@ -1,6 +1,6 @@
 lib/libparticle_filter.so
 *~
-/lib/*.a
+*.a
 /lib/*.dylib
 build/*
 bin/*
