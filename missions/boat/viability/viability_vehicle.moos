@@ -26,12 +26,12 @@ ProcessConfig = ANTLER
   Run = pMarinePID      @ NewConsole = false
 
   // Simu:
-  Run = uSimMarine      @ NewConsole = false
+  //Run = uSimMarine      @ NewConsole = false
 
   // Demo:
   //Run = iPololu       @ NewConsole = false
   //Run = iXSensINS     @ NewConsole = false
-  //Run = pLatLon2LocalGrid      @ NewConsole = false
+  Run = pLatLon2LocalGrid      @ NewConsole = false
 
   //Run = iCamera @ NewConsole = false
 }

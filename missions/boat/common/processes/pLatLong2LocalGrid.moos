@@ -10,4 +10,7 @@ ProcessConfig = pLatLon2LocalGrid
   // Topics we publish to
   NORTHING_PUBLICATION_NAME = NAV_Y
   EASTING_PUBLICATION_NAME = NAV_X
+
+  CUSTOM_SHIFT_X = 0
+  CUSTOM_SHIFT_Y = 0
 }
