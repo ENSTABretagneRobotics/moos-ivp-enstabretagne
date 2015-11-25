@@ -8,6 +8,6 @@ ProcessConfig = iCamera
   DISPLAY_IMAGE         = true
   INVERT_IMAGE          = false
 
-  LARGEUR_IMAGE_CAMERA  = 360
-  HAUTEUR_IMAGE_CAMERA  = 288
+  LARGEUR_IMAGE_CAMERA  = 800
+  HAUTEUR_IMAGE_CAMERA  = 600
 }
