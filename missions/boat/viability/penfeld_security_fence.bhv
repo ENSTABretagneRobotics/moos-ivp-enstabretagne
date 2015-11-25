@@ -57,7 +57,7 @@ Behavior = BHV_Waypoint
     visual_hints = vertex_size=4, edge_size=1
 }
 
-Behavior = BHV_HSLine
+//Behavior = BHV_HSLine
 {
   name        = hsline
   time_on_leg = 20
