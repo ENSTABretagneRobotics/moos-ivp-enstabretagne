@@ -69,8 +69,8 @@ bool LatLon2LocalGrid::OnConnectToServer() {
 bool LatLon2LocalGrid::Iterate() {
     AppCastingMOOSApp::Iterate();
     geodesy.LatLong2LocalGrid(currentLat, currentLon, currentNorthing, currentEasting);
-    Notify(EASTING_PUBLICATION_NAME, currentEasting);
-    Notify(NORTHING_PUBLICATION_NAME, currentNorthing);
+    Notify(EASTING_PUBLICATION_NAME, currentEasting - 42.1 + 1.5 + 6);
+    Notify(NORTHING_PUBLICATION_NAME, currentNorthing + 12.8 - 1.3 + 5);
     
     AppCastingMOOSApp::PostReport();
     return true;
