@@ -46,7 +46,7 @@ ProcessConfig = uJoystick
 
 ProcessConfig = pMarineViewer
 {
-  AppTick    = 4
+  AppTick    = 10
   CommsTick  = 4
 
   tiff_file            = ../../../data/maps/ecole_polytechnique.tif
@@ -75,8 +75,8 @@ ProcessConfig = pMarineViewer
 
 ProcessConfig = pShare
 {
-  AppTick    = 2
-  CommsTick  = 2
+  AppTick    = 5
+  CommsTick  = 5
 
   input = route = localhost:9300
   input = route = multicast_9
@@ -84,8 +84,8 @@ ProcessConfig = pShare
 
 ProcessConfig = uFldShoreBroker
 {
-  AppTick       = 1
-  CommsTick     = 1
+  AppTick       = 10
+  CommsTick     = 10
 
   qbridge  = NODE_REPORT, NODE_MESSAGE
   
@@ -100,8 +100,8 @@ ProcessConfig = uFldShoreBroker
 
 ProcessConfig = pHostInfo
 {
-  AppTick   = 1
-  CommsTick   = 1
+  AppTick   = 10
+  CommsTick   = 10
 
   default_hostip = localhost
 }

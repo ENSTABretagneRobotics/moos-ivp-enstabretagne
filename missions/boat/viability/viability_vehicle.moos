@@ -104,8 +104,8 @@ ProcessConfig = uFldNodeBroker
 
 ProcessConfig = pShare
 {
-  AppTick   = 2
-  CommsTick = 2
+  AppTick   = 5
+  CommsTick = 5
 
   input = route = localhost:9301
 }

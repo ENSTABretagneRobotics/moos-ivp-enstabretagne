@@ -53,8 +53,7 @@ Behavior = BHV_Waypoint
     capture_line = true
   capture_radius = 5.0
      slip_radius = 15.0
-          points = 105,37
-// : 120.6,28.7
+          points = 105,37 : 120.6,28.7
           repeat = 1
 
     visual_hints = nextpt_color=red, nextpt_lcolor=green
