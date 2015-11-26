@@ -2,7 +2,7 @@
 
 ServerHost = localhost
 ServerPort = 9001
-Community  = AUV
+Community  = enstaboat
 
 //------------------------------------------
 // Antler configuration  block

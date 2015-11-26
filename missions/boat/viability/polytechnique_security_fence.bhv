@@ -9,9 +9,11 @@ Behavior = BHV_SecurityFence
   pwt             = 100
   condition       = RETURN=false
   condition       = DEPLOY=true
+  condition       = BATTERY_VOLTAGE_WARNING!=1
+  condition       = GO_HOME!=1
 
-  polygon = -15,3 : -5,9 : 9,9 : 12,-1 : 93,-4 : 177,110 : 205,110 : 290,74 : 311,59 : 317,61 : 344,118 : 336,132 : 240,152 : 150,156 : -67,166 : -362,180 : -374,169 : -374,136 : -364,133 : -299,151 : -201,159 : -76,153 : -41,139 : -27,110 : -18,71 : -10,25 : -12,14 : -18,9 : -15,3 : label,stayIN
-  //polygon = 1,35 : -18,9 : -15,3 : 9,19 : 90,11 : 168,116 : 157,142 : -2,153 : -16,126 : 1,35 : label,stayIN
+  //polygon = -15,3 : -5,9 : 9,9 : 12,-1 : 93,-4 : 177,110 : 205,110 : 290,74 : 311,59 : 317,61 : 344,118 : 336,132 : 240,152 : 150,156 : -67,166 : -362,180 : -374,169 : -374,136 : -364,133 : -299,151 : -201,159 : -76,153 : -41,139 : -27,110 : -18,71 : -10,25 : -12,14 : -18,9 : -15,3 : label,stayIN
+  polygon = 1,35 : 17,11 : 90,11 : 168,116 : 157,142 : -2,153 : -16,126 : 1,35 : label,stayIN
 
   lookahead_secs  = 0.1
   show_closest_pt = true
@@ -25,7 +27,8 @@ Behavior = BHV_SecurityFence
   pwt             = 100
   condition       = RETURN=false
   condition       = DEPLOY=true
-  polygon         = 56,91 : 45,79 : 50,66 : 65,59 : 93,79 : 86,93 : label,stayOUT
+  //polygon         = 56,91 : 45,79 : 50,66 : 65,59 : 93,79 : 86,93 : label,stayOUT
+  polygon         = 89,98 : 101,79 : 65,56 : 39,68 : 43,88 : 89,98 : label,stayOUT
   lookahead_secs  = 0.1
   show_closest_pt = true
   use_zero_cone   = true
@@ -50,7 +53,8 @@ Behavior = BHV_Waypoint
     capture_line = true
   capture_radius = 5.0
      slip_radius = 15.0
-          points = -1,17 : -15,6
+          points = 105,37
+// : 120.6,28.7
           repeat = 1
 
     visual_hints = nextpt_color=red, nextpt_lcolor=green
@@ -58,7 +62,7 @@ Behavior = BHV_Waypoint
     visual_hints = vertex_size=4, edge_size=1
 }
 
-Behavior = BHV_HSLine
+//Behavior = BHV_HSLine
 {
   name        = hsline
   time_on_leg = 20

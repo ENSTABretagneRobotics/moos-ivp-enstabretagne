@@ -26,12 +26,12 @@ ProcessConfig = ANTLER
   Run = pMarinePID      @ NewConsole = false
 
   // Simu:
-  Run = uSimMarine      @ NewConsole = false
+  //Run = uSimMarine      @ NewConsole = false
 
   // Demo:
-  //Run = iPololu       @ NewConsole = false
-  //Run = iXSensINS     @ NewConsole = false
-  //Run = pLatLon2LocalGrid      @ NewConsole = false
+  Run = iPololu       @ NewConsole = false
+  Run = iXSensINS     @ NewConsole = false
+  Run = pLatLon2LocalGrid      @ NewConsole = false
 
   //Run = iCamera @ NewConsole = false
 }
@@ -89,8 +89,8 @@ ProcessConfig = pNodeReporter
 
 ProcessConfig = uFldNodeBroker
 {
-  AppTick   = 1
-  CommsTick = 1
+  AppTick   = 10
+  CommsTick = 10
 
   TRY_SHORE_HOST = pshare_route=multicast_9
 
@@ -104,16 +104,16 @@ ProcessConfig = uFldNodeBroker
 
 ProcessConfig = pShare
 {
-  AppTick   = 10
-  CommsTick = 10
+  AppTick   = 2
+  CommsTick = 2
 
   input = route = localhost:9301
 }
 
 ProcessConfig = pHostInfo
 {
-  AppTick   = 1
-  CommsTick = 1
+  AppTick   = 10
+  CommsTick = 10
 
   default_hostip = localhost
 }
