@@ -1,4 +1,4 @@
-lib/libparticle_filter.so
+lib/*.so
 *~
 *.a
 /lib/*.dylib
@@ -7,4 +7,3 @@ bin/*
 *.DS_Store
 nbproject
 *.dpp
-toutatis.sublime-workspace
