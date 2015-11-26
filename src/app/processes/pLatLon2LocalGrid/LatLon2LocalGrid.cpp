@@ -24,6 +24,9 @@ LatLon2LocalGrid::LatLon2LocalGrid() {
     lat_origin = 0.;
     long_origin = 0.;
 
+    m_custom_shift_x = 0.;
+    m_custom_shift_y = 0.;
+
     currentLat=lat_origin;
     currentLon=long_origin;
 
@@ -69,8 +72,8 @@ bool LatLon2LocalGrid::OnConnectToServer() {
 bool LatLon2LocalGrid::Iterate() {
     AppCastingMOOSApp::Iterate();
     geodesy.LatLong2LocalGrid(currentLat, currentLon, currentNorthing, currentEasting);
-    Notify(EASTING_PUBLICATION_NAME, currentEasting - 42.1 + 1.5 + 6);
-    Notify(NORTHING_PUBLICATION_NAME, currentNorthing + 12.8 - 1.3 + 5);
+    Notify(EASTING_PUBLICATION_NAME, currentEasting + m_custom_shift_x);
+    Notify(NORTHING_PUBLICATION_NAME, currentNorthing + m_custom_shift_y);
     
     AppCastingMOOSApp::PostReport();
     return true;
@@ -125,6 +128,12 @@ bool LatLon2LocalGrid::OnStartUp() {
             handled = true;
         } else if (param == "LON_SUBSCRIPTION_NAME") {
             LON_SUBSCRIPTION_NAME = value;
+            handled = true;
+        } else if (param == "CUSTOM_SHIFT_X") {
+            m_custom_shift_x = atof(value.c_str());
+            handled = true;
+        } else if (param == "CUSTOM_SHIFT_Y") {
+            m_custom_shift_y = atof(value.c_str());
             handled = true;
         }
         if (!handled)
@@ -181,7 +190,13 @@ bool LatLon2LocalGrid::buildReport() {
     actab_variables.addHeaderLines();
     actab_variables << LAT_SUBSCRIPTION_NAME << "-> " << NORTHING_PUBLICATION_NAME;
     actab_variables << LON_SUBSCRIPTION_NAME << "-> " << EASTING_PUBLICATION_NAME;
-    m_msgs << actab_variables.getFormattedString();
+    m_msgs << actab_variables.getFormattedString() << endl << endl;
+
+    ACTable actab_shift(2);
+    actab_shift << "Shift X | Shift Y";
+    actab_shift.addHeaderLines();
+    actab_shift << m_custom_shift_x << m_custom_shift_y;
+    m_msgs << actab_shift.getFormattedString();
 
     return true;
 }
