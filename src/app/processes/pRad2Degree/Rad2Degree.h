@@ -1,6 +1,6 @@
 /************************************************************/
 /*    FILE: Rad2Degree.h
-/*    ORGN: Toutatis AUVs - ENSTA Bretagne
+/*    ORGN: ENSTA Bretagne Robotics - moos-ivp-enstabretagne
 /*    AUTH: Simon Rohou
 /*    DATE: 2015
 /************************************************************/

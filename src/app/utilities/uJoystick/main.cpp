@@ -1,6 +1,6 @@
 /************************************************************/
 /*    FILE: main.cpp
-/*    ORGN: Toutatis AUVs - ENSTA Bretagne
+/*    ORGN: ENSTA Bretagne Robotics - moos-ivp-enstabretagne
 /*    AUTH: Vincent Drevelle, Simon Rohou
 /*    DATE: 2015
 /************************************************************/

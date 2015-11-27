@@ -1,6 +1,6 @@
 /****************************************************************/
 /*    FILE: MOOSAppDoc.h
-/*    ORGN: Toutatis AUVs - ENSTA Bretagne
+/*    ORGN: ENSTA Bretagne Robotics - moos-ivp-enstabretagne
 /*    AUTH: Simon Rohou
 /*    DATE: 2015
 /****************************************************************/
@@ -13,7 +13,7 @@
 #include <tinyxml2.h>
 #include "MOOS/libMOOS/Utils/MOOSUtilityFunctions.h"
 
-#define PROJECT_PATH_NAME "MOOS_IVP_TOUTATIS_PATH"
+#define PROJECT_PATH_NAME "MOOS_IVP_ENSTABRETAGNE_PATH"
 #define MESSAGE_LENGTH 60
 
 namespace xmldoc

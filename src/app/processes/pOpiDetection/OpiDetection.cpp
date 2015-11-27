@@ -1,6 +1,6 @@
 /************************************************************/
 /*    FILE: OpiDetection.cpp
-/*    ORGN: Toutatis AUVs - ENSTA Bretagne
+/*    ORGN: ENSTA Bretagne Robotics - moos-ivp-enstabretagne
 /*    AUTH: Guilherme Schvarcz Franco, Simon Rohou
 /*    DATE: 2015
 /************************************************************/

@@ -11,6 +11,6 @@ while [ "${ANSWER}" != "q" ]; do
   read ANSWER
 done
 
-toutatiskill >& /dev/null &
+enstabretagnekill >& /dev/null &
 printf "Done killing processes...\n"
 rm targ_*

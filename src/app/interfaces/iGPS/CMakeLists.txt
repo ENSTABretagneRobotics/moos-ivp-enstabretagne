@@ -1,6 +1,6 @@
 #--------------------------------------------------------
 # The CMakeLists.txt for: iGPS
-# Toutatis AUVs - ENSTA Bretagne
+# ENSTA Bretagne Robotics - moos-ivp-enstabretagne
 # Author(s): Thomas Le Mezo
 #--------------------------------------------------------
 

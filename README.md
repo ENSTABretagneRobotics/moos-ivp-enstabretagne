@@ -1,15 +1,20 @@
-MOOS-IvP-TOUTATIS [![Build Status](https://travis-ci.org/ENSTABretagneRobotics/moos-ivp-toutatis.svg)](https://travis-ci.org/ENSTABretagneRobotics/moos-ivp-toutatis)
+MOOS-IvP-ENSTABretagne [![Build Status](https://travis-ci.org/ENSTABretagneRobotics/moos-ivp-enstabretagne.svg)](https://travis-ci.org/ENSTABretagneRobotics/moos-ivp-enstabretagne)
 =================
 
 Introduction
 ------------
 
-The `moos-ivp-toutatis` repository is an extension of the [MOOS-IvP
+The `moos-ivp-enstabretagne` repository is an extension of the [MOOS-IvP
 Autonomy system](http://oceanai.mit.edu/moos-ivp). This includes MOOS applications,
-IvP behaviors and mission files for AUVs Toutatis of [ENSTA Bretagne](http://www.ensta-bretagne.fr).
+IvP behaviors and mission files for autonomous vehicles of [ENSTA Bretagne](http://www.ensta-bretagne.fr).
 
+The following vehicles are equipped with this software:
+* Toutatis AUVs
+* Optical AUVs
+* ENSTA Bretagne's boat
+* AUV Saucisse NG
 
-[Documentation](http://rawgit.com/ENSTABretagneRobotics/moos-ivp-toutatis/master/doc/index.html)
+[Documentation](http://rawgit.com/ENSTABretagneRobotics/moos-ivp-enstabretagne/master/doc/index.html)
 -------------
 
 MOOSApp documentation is available by command line:
@@ -28,19 +33,19 @@ Options:
       Display all information about the MOOSApp.
 ```
 
-Complete documentation can also be found in `doc/index.html`. [**Click to access**](http://rawgit.com/ENSTABretagneRobotics/moos-ivp-toutatis/master/doc/index.html).
+Complete documentation can also be found in `doc/index.html`. [**Click to access**](http://rawgit.com/ENSTABretagneRobotics/moos-ivp-enstabretagne/master/doc/index.html).
 
 
 Directory Structure
 -------------------
 
-The directory structure for the `moos-ivp-toutatis` is decribed below:
+The directory structure for the `moos-ivp-enstabretagne` is decribed below:
 
 | Item             | Description                              |
 |-----------------:|:-----------------------------------------|
 | `bin`            | Directory for generated executable files |
 | `build`          | Directory for build object files         |
-| `build.sh`       | Script for building moos-ivp-toutatis    |
+| `build.sh`       | Script for building moos-ivp-enstabretagne    |
 | `CMakeLists.txt` | CMake configuration file for the project |
 | `data`           | Directory for storing data               |
 | `doc`            | Directory for documentation files        |
@@ -57,7 +62,7 @@ Installation
 [MOOS-IvP](http://oceanai.mit.edu/moos-ivp) (typically v14.7.1) is supposed to be installed.
 More information available on the official website.
 
-Additional packages are required for building `moos-ivp-toutatis`:
+Additional packages are required for building `moos-ivp-enstabretagne`:
 ```shell
 sudo apt-get install libtinyxml2-dev libusb-1.0-0-dev mono-runtime libmono-winforms2.0-cil libv4l-dev libopencv-dev libboost1.55-dev libboost-system1.55-dev
 ```
@@ -120,13 +125,13 @@ additional help.
 
 Environment variables
 ---------------------
-The `moos-ivp-toutatis` binaries files should be added to your path to allow them
+The `moos-ivp-enstabretagne` binaries files should be added to your path to allow them
 to be launched from `pAntler`.
 Linux users can edit `~/.bashrc` configuration file by adding at the end:
 ```shell
-export PATH=$PATH:~/moos-ivp-toutatis/bin
-export PATH=$PATH:~/moos-ivp-toutatis/scripts
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/moos-ivp-toutatis/lib
+export PATH=$PATH:~/moos-ivp-enstabretagne/bin
+export PATH=$PATH:~/moos-ivp-enstabretagne/scripts
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/moos-ivp-enstabretagne/lib
 ```
 
 In order for generated IvP Behaviors to be recognized by the IvP Helm, you
@@ -134,9 +139,9 @@ should add the library directory to the `IVP_BEHAVIOR_DIRS` environment
 variable.
 
 New XML documentation is also available by command-line (e.g. typing `uJoystick -e`).
-This can work by specifying the `MOOS_IVP_TOUTATIS_PATH` environment variable (Linux users, update your `~/.bashrc`). For instance:
+This can work by specifying the `MOOS_IVP_ENSTABRETAGNE_PATH` environment variable (Linux users, update your `~/.bashrc`). For instance:
 ```shell
-export MOOS_IVP_TOUTATIS_PATH="/home/your_username/moos-ivp-toutatis"
+export MOOS_IVP_ENSTABRETAGNE_PATH="/home/your_username/moos-ivp-enstabretagne"
 ```
 Linux users may need to run, in the current terminal:
 ```shell
@@ -147,11 +152,11 @@ source ~/.bashrc
 Generate a new MOOS Application
 -------------------------------
 
-Please use `GenMOOSApp_Toutatis` script to generate an empty structure for your new MOOSApp. For instance:
+Please use `GenMOOSApp_ENSTABretagne` script to generate an empty structure for your new MOOSApp. For instance:
 
 ```shell
 cd ./src/app
-GenMOOSApp_Toutatis SimModem u "John Doe"
+GenMOOSApp_ENSTABretagne SimModem u "John Doe"
 ```
 
 Do not forget to add your new application to the CMake configuration file: `./src/app/CMakeLists.txt` and to update the main documentation page : `./doc/index.html`.

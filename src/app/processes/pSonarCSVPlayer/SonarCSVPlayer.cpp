@@ -1,6 +1,6 @@
 /************************************************************/
 /*    FILE: SonarCSVPlayer.cpp
-/*    ORGN: Toutatis AUVs - ENSTA Bretagne
+/*    ORGN: ENSTA Bretagne Robotics - moos-ivp-enstabretagne
 /*    AUTH: Clément Aubry
 /*    DATE: 2015
 /************************************************************/

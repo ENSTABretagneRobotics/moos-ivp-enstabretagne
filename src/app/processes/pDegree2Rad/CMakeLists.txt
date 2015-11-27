@@ -1,6 +1,6 @@
 #--------------------------------------------------------
 # The CMakeLists.txt for: pDegree2Rad
-# Toutatis AUVs - ENSTA Bretagne
+# ENSTA Bretagne Robotics - moos-ivp-enstabretagne
 # Author(s): Simon Rohou
 #--------------------------------------------------------
 

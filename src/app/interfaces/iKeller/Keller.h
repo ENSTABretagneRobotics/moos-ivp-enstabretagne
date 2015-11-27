@@ -1,6 +1,6 @@
 /************************************************************/
 /*    FILE: Keller.h
-/*    ORGN: Toutatis AUVs - ENSTA Bretagne
+/*    ORGN: ENSTA Bretagne Robotics - moos-ivp-enstabretagne
 /*    AUTH: Thomas Le Mezo, Clement Aubry
 /*    DATE: 2015
 /************************************************************/

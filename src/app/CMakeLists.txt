@@ -1,7 +1,7 @@
 ##############################################################################
-# FILE:        moos-ivp-toutatis/src/CMakeLists.txt
+# FILE:        moos-ivp-enstabretagne/src/CMakeLists.txt
 # DATE:        2015
-# DESCRIPTION: CMakeLists.txt file for the moos-ivp-toutatis source directory
+# DESCRIPTION: CMakeLists.txt file for the moos-ivp-enstabretagne source directory
 ##############################################################################
 
 

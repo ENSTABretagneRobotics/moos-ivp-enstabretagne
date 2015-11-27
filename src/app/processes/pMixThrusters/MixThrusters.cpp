@@ -1,6 +1,6 @@
 /************************************************************/
 /*    FILE: MixThrusters.cpp
-/*    ORGN: Toutatis AUVs - ENSTA Bretagne
+/*    ORGN: ENSTA Bretagne Robotics - moos-ivp-enstabretagne
 /*    AUTH: 
 /*    DATE: 2015
 /************************************************************/

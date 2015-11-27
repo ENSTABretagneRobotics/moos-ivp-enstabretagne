@@ -1,6 +1,6 @@
 /************************************************************/
 /*    NAME: Jeremy NICOLA                                              */
-/*    ORGN: Toutatis AUVs - ENSTA Bretagne                                             */
+/*    ORGN: ENSTA Bretagne Robotics - moos-ivp-enstabretagne                                             */
 /*    FILE: EstimSpeed.cpp                                        */
 /*    DATE: 2015                                                */
 /************************************************************/

@@ -1,6 +1,6 @@
 /************************************************************/
 /*    FILE: Controller.h
-/*    ORGN: Toutatis AUVs - ENSTA Bretagne
+/*    ORGN: ENSTA Bretagne Robotics - moos-ivp-enstabretagne
 /*    AUTH: MDS
 /*    DATE: 2015
 /************************************************************/

@@ -1,12 +1,12 @@
 #!/bin/bash
 
 if [ -z "$1" ] ; then
-    echo "GenMOOSApp_Toutatis: usage: $0 [app-name] [prefix]"
+    echo "GenMOOSApp_ENSTABretagne: usage: $0 [app-name] [prefix]"
     exit 0
 fi
 
 if [ -z "$2" ] ; then
-    echo "GenMOOSApp_Toutatis: usage: $0 [app-name] [prefix]"
+    echo "GenMOOSApp_ENSTABretagne: usage: $0 [app-name] [prefix]"
     exit 0
 fi
 
@@ -20,7 +20,7 @@ cd $2$1
 cat >> CMakeLists.txt <<EOF
 #--------------------------------------------------------
 # The CMakeLists.txt for: $2$1
-# Toutatis AUVs - ENSTA Bretagne
+# ENSTA Bretagne Robotics - moos-ivp-enstabretagne
 # Author(s): $3
 #--------------------------------------------------------
 
@@ -43,7 +43,7 @@ EOF
 cat >> ${1}.h <<EOF
 /************************************************************/
 /*    FILE: ${1}.h
-/*    ORGN: Toutatis AUVs - ENSTA Bretagne
+/*    ORGN: ENSTA Bretagne Robotics - moos-ivp-enstabretagne
 /*    AUTH: $3
 /*    DATE: 2015
 /************************************************************/
@@ -85,7 +85,7 @@ EOF
 cat >> main.cpp <<EOF
 /************************************************************/
 /*    FILE: main.cpp
-/*    ORGN: Toutatis AUVs - ENSTA Bretagne
+/*    ORGN: ENSTA Bretagne Robotics - moos-ivp-enstabretagne
 /*    AUTH: $3
 /*    DATE: 2015
 /************************************************************/
@@ -176,7 +176,7 @@ EOF
 cat >> ${1}.cpp <<EOF
 /************************************************************/
 /*    FILE: ${1}.cpp
-/*    ORGN: Toutatis AUVs - ENSTA Bretagne
+/*    ORGN: ENSTA Bretagne Robotics - moos-ivp-enstabretagne
 /*    AUTH: $3
 /*    DATE: 2015
 /************************************************************/
@@ -328,7 +328,7 @@ cat >> ${2}${1}.xml <<EOF
 
      <info>
         <name>${2}${1}</name>
-        <organization>Toutatis AUVs - ENSTA Bretagne</organization>
+        <organization>ENSTA Bretagne Robotics - moos-ivp-enstabretagne</organization>
         <date>2015</date>
         <authors>
            <author>${3}</author>

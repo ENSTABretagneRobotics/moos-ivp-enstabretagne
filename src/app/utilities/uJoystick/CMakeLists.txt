@@ -1,6 +1,6 @@
 #--------------------------------------------------------
 # The CMakeLists.txt for: uJoystick
-# Toutatis AUVs - ENSTA Bretagne
+# ENSTA Bretagne Robotics - moos-ivp-enstabretagne
 # Author(s): Vincent Drevelle, Simon Rohou
 #--------------------------------------------------------
 

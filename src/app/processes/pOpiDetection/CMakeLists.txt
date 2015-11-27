@@ -1,6 +1,6 @@
 #--------------------------------------------------------
 # The CMakeLists.txt for: pOpiDetection
-# Toutatis AUVs - ENSTA Bretagne
+# ENSTA Bretagne Robotics - moos-ivp-enstabretagne
 # Author(s): Guilherme Schvarcz Franco, Simon Rohou
 #--------------------------------------------------------
 
