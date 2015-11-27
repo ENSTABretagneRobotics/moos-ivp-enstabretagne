@@ -1,4 +1,0 @@
-// PROCESSES
-
-#include "processes/pMarinePID.moos"
-#include "processes/pLatLong2LocalGrid.moos"

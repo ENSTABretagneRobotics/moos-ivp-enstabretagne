@@ -1,5 +1,5 @@
 #!/bin/bash
-nsplug viability_vehicle.moos targ_viability_vehicle.moos --path=../common -f
+nsplug viability_vehicle.moos targ_viability_vehicle.moos --path=../common:../../../data/maps -f
 pAntler targ_viability_vehicle.moos >& /dev/null &
 
 printf "Mission started.\n"

@@ -1,5 +1,5 @@
 #!/bin/bash
-nsplug eurathlon.moos targ_eurathlon.moos --path=../common -f
+nsplug eurathlon.moos targ_eurathlon.moos --path=../../common:../../../../data/maps -f
 pAntler targ_eurathlon.moos >& /dev/null &
 
 printf "Mission started.\n"

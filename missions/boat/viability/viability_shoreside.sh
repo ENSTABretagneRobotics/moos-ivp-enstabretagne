@@ -1,5 +1,5 @@
 #!/bin/bash
-nsplug viability_shoreside.moos targ_viability_shoreside.moos --path=../common -f
+nsplug viability_shoreside.moos targ_viability_shoreside.moos --path=../common:../../../data/maps -f
 pAntler targ_viability_shoreside.moos >& /dev/null &
 
 printf "Mission started.\n"

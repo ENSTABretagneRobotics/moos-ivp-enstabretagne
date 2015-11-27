@@ -1,5 +1,5 @@
 #!/bin/bash
-nsplug gate_timers.moos targ_gate_timers.moos --path=../../common -f
+nsplug gate_timers.moos targ_gate_timers.moos --path=../../common:../../../../data/maps -f
 pAntler targ_gate_timers.moos >& /dev/null &
 
 printf "Mission started.\n"

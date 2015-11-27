@@ -1,5 +1,5 @@
 #!/bin/bash
-nsplug ground_regulation.moos targ_ground_regulation.moos --path=../../common -f
+nsplug ground_regulation.moos targ_ground_regulation.moos --path=../../common:../../../../data/maps -f
 pAntler targ_ground_regulation.moos >& /dev/null &
 
 printf "Mission started.\n"

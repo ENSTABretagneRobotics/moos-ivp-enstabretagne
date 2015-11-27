@@ -1,0 +1,28 @@
+// INTERFACES
+#include "interfaces/iCamera_Bottom.moos"
+#include "interfaces/iCamera_Side.moos"
+#include "interfaces/iGPS.moos"
+#include "interfaces/iKeller.moos"
+#include "interfaces/iModem.moos"
+#include "interfaces/iRazorIMU.moos"
+#include "interfaces/iSaucisse.moos"
+#include "interfaces/iSonar_Micron.moos"
+#include "interfaces/iSonar_Miniking.moos"
+#include "interfaces/iSounder.moos"
+#include "interfaces/iXSensINS.moos"
+
+// PROCESSES
+#include "processes/pEstimSpeed.moos"
+#include "processes/pMixThrusters.moos"
+#include "processes/pSimplePID_Depth.moos"
+#include "processes/pSimplePID_Heading.moos"
+#include "processes/pTrustGPS.moos"
+#include "processes/pOpiDetection_Side.moos"
+#include "processes/pOpiDetection_Bottom.moos"
+#include "processes/pMarinePID.moos"
+
+// UTILITIES
+#include "utilities/uMACView.moos"
+#include "utilities/uNavScreen.moos"
+#include "utilities/uProcessWatch.moos"
+#include "utilities/uSensorsViewer.moos"

@@ -1,0 +1,13 @@
+// INTERFACES
+#include "interfaces/iPololu.moos"
+#include "interfaces/iXSensINS.moos"
+#include "interfaces/iCamera.moos"
+
+// PROCESSES
+#include "processes/pMarinePID.moos"
+#include "processes/pLatLong2LocalGrid.moos"
+
+// UTILITIES
+#include "utilities/uSimMarine.moos"
+#include "utilities/uMACView.moos"
+#include "utilities/uProcessWatch.moos"

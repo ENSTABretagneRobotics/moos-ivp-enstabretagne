@@ -4,10 +4,8 @@ ServerPort = 9000
 
 MOOSTimeWarp = 1
 
-#include "origins/origin_ecolepolytechnique.moos"
-#include "interfaces.moos"
-#include "processes.moos"
-#include "utilities.moos"
+#include "ecole_polytechnique.moos"
+#include "includes.moos"
 
 ProcessConfig = ANTLER
 {

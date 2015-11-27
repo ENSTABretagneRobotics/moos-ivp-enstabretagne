@@ -1,5 +1,0 @@
-// INTERFACES
-
-#include "interfaces/iPololu.moos"
-#include "interfaces/iXSensINS.moos"
-#include "interfaces/iCamera.moos"

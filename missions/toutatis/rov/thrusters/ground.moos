@@ -2,10 +2,8 @@ ServerHost = localhost
 ServerPort = 9000
 Community  = AUV
 
-#include "latlong.moos"
-#include "interfaces.moos"
-#include "processes.moos"
-#include "utilities.moos"
+#include "piombino.moos"
+#include "includes.moos"
 
 ProcessConfig = ANTLER
 {
