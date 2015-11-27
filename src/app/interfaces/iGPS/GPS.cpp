@@ -202,11 +202,8 @@ bool GPS::buildReport() {
   ACTable actab(6);
   actab << "Serial port | Baudrate | Fix | Sig | Lat | Lon";
   actab.addHeaderLines();
-  char bufferLat[10];
-  char bufferLon[10];
-  sprintf(bufferLat,"%2.6lf",m_lat);
-  sprintf(bufferLon,"%2.6lf",m_lon);
-  actab << m_uart_port << m_uart_baud_rate << m_fix << m_sig << bufferLat << bufferLon;
+
+  actab << m_uart_port << m_uart_baud_rate << m_fix << m_sig << doubleToString(m_lat, GPS_PRECISION) << doubleToString(m_lon, GPS_PRECISION);
   m_msgs << actab.getFormattedString();
 
   return true;
@@ -214,8 +211,8 @@ bool GPS::buildReport() {
 
 bool GPS::Notify_GNSS(float *lat, float *lon) {
     string msg;
-    msg += "LAT=" + doubleToString(*lat, 6) + ",";
-    msg += "LON=" + doubleToString(*lon, 6);
+    msg += "LAT=" + doubleToString(*lat, GPS_PRECISION) + ",";
+    msg += "LON=" + doubleToString(*lon, GPS_PRECISION);
     Notify("GPS_NAV", msg);
 
     return true;

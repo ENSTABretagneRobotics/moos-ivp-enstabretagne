@@ -21,6 +21,8 @@
 
 #include <math.h>
 
+#define GPS_PRECISION 8
+
 class GPS : public AppCastingMOOSApp
 {
   public:
