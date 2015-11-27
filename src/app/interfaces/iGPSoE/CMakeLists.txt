@@ -12,7 +12,7 @@ SET(SRC
   OSUtils/OSMisc.c
   OSUtils/OSThread.c
   OSUtils/OSCriticalSection.c
-  OSUtils/OSRS232Port.c
+  #OSUtils/OSRS232Port.c
   Extensions/Devices/GPSoEUtils/GPSoECore.c
   Extensions/Devices/GPSoEUtils/GPSoECfg.c
   Extensions/Devices/GPSoEUtils/GPSoEMgr.c

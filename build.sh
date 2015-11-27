@@ -6,7 +6,7 @@ CMD_LINE_ARGS=""
 JOYSTICK="ON"
 RAZOR="ON"
 XSENS="ON"
-GPSOE="ON"
+GPSOE="OFF"
 INTERVAL_FILTER="OFF"
 
 #-------------------------------------------------------------------

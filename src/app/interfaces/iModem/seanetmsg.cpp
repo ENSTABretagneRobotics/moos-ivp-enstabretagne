@@ -3,8 +3,8 @@
 #include <sstream>
 #include <cstdio>
 
-#define PRINT_DEBUG_WARNING_MINIKINGCORE(x) printf x
-#define PRINT_DEBUG_ERROR_MINIKINGCORE(x) printf x
+//#define PRINT_DEBUG_WARNING_MINIKINGCORE(x) printf x
+//#define PRINT_DEBUG_ERROR_MINIKINGCORE(x) printf x
 #define strtime_m() 0
 #define hDev 0
 
@@ -275,29 +275,17 @@ void SeaNetMsg_HeadCommand::buildMessage()
   // This sonar has only 1 channel so channel 1 = channel 2
   if (RangeScale < 0)     {
     RangeScale = 30;
-    PRINT_DEBUG_WARNING_MINIKINGCORE(("SetParamMiniKing warning (%s) : %s"
-      "(hDev=%#x)\n",
-      strtime_m(),
-      "Negative RangeScale value. Default value of 30 m used. ",
-      hDev));
+    printf("SetParamMiniKing warning, Negative RangeScale value. Default value of 30 m used.\n");
   }
   d = (double)((RangeScale + 10.0) * 25.0 / 10.0);
   word.v = (uint16)d;
   if (word.v > 350)       {
     word.v = 350;
-    PRINT_DEBUG_WARNING_MINIKINGCORE(("SetParamMiniKing warning (%s) : %s"
-      "(hDev=%#x)\n",
-      strtime_m(),
-      "Too high RangeScale value. ",
-      hDev));
+    printf("SetParamMiniKing warning, Too high RangeScale value.\n");
   }
   if (word.v < 37)        {
     word.v = 37;
-    PRINT_DEBUG_WARNING_MINIKINGCORE(("SetParamMiniKing warning (%s) : %s"
-      "(hDev=%#x)\n",
-      strtime_m(),
-      "Too low RangeScale value. ",
-      hDev));
+    printf("SetParamMiniKing warning, Too low RangeScale value.\n");
   }
   writebuf[33] = (uint8)word.c[0]; // Transmitter Pulse Length in microseconds units (LSB)
   writebuf[34] = (uint8)word.c[1]; // Transmitter Pulse Length in microseconds units (MSB)
@@ -356,20 +344,12 @@ void SeaNetMsg_HeadCommand::buildMessage()
   if (IGain > 210)
   {
     IGain = 210;
-    PRINT_DEBUG_WARNING_MINIKINGCORE(("SetParamMiniKing warning (%s) : %s"
-      "(hDev=%#x)\n",
-      strtime_m(),
-      "Too high Gain value. ",
-      hDev));
+    printf("SetParamMiniKing warning, Too high Gain value.\n");
   }
   if (IGain < 0)
   {
     IGain = 0;
-    PRINT_DEBUG_WARNING_MINIKINGCORE(("SetParamMiniKing warning (%s) : %s"
-      "(hDev=%#x)\n",
-      strtime_m(),
-      "Negative Gain value. ",
-      hDev));
+    printf("SetParamMiniKing warning, Negative Gain value.\n");
   }
   writebuf[43] = (uint8)IGain; // Initial Gain of the receiver for channel 1 in units 0..210 = 0..+80dB = 0..100% (default = 0x49)
   writebuf[44] = (uint8)IGain; // Initial Gain of the receiver for channel 2 in units 0..210 = 0..+80dB = 0..100% (default = 0x49)
@@ -390,11 +370,7 @@ void SeaNetMsg_HeadCommand::buildMessage()
   word.v = (uint16)d;
   if (word.v < 5) {
     word.v = 5;
-    PRINT_DEBUG_WARNING_MINIKINGCORE(("SetParamMiniKing warning (%s) : %s"
-      "(hDev=%#x)\n",
-      strtime_m(),
-      "Too low ADInterval value. Invalid RangeScale, NBins or VelocityOfSound values. ",
-      hDev));
+    printf("SetParamMiniKing warning, Too low ADInterval value. Invalid RangeScale, NBins or VelocityOfSound values.\n");
   }
   writebuf[51] = (uint8)word.c[0]; // AD Interval in units of 640 nanoseconds (LSB)
   writebuf[52] = (uint8)word.c[1]; // AD Interval in units of 640 nanoseconds (MSB)
@@ -405,19 +381,11 @@ void SeaNetMsg_HeadCommand::buildMessage()
   word.v = (uint16)NBins;
   if (word.v > 800)       {
     word.v = 800;
-    PRINT_DEBUG_WARNING_MINIKINGCORE(("SetParamMiniKing warning (%s) : %s"
-      "(hDev=%#x)\n",
-      strtime_m(),
-      "Too high NBins value. ",
-      hDev));
+    printf("SetParamMiniKing warning, Too high NBins value.\n");
   }
   if (word.v < 5) {
     word.v = 5;
-    PRINT_DEBUG_WARNING_MINIKINGCORE(("SetParamMiniKing warning (%s) : %s"
-      "(hDev=%#x)\n",
-      strtime_m(),
-      "Too low NBins value. ",
-      hDev));
+    printf("SetParamMiniKing warning, Too low NBins value.\n");
   }
   writebuf[53] = (uint8)word.c[0]; // Number of sample bins over scan-line (LSB)
   writebuf[54] = (uint8)word.c[1]; // Number of sample bins over scan-line (MSB)
