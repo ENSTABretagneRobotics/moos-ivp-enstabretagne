@@ -178,5 +178,6 @@ Contributors
 * [Vincent Drevelle](https://github.com/dvinc) (INRIA Rennes / IRISA)
 * [Jérémy Nicola](https://github.com/nicolaje) (ENSTA Bretagne / iXBlue)
 * [Benoit Desrochers](https://github.com/benEnsta) (ENSTA Bretagne / GESMA)
+* [Guilherme Schvarcz Franco](https://github.com/schvarcz) (UFRGS)
 * [Murilo Santos](https://github.com/muriloksantos) (École Navale)
 * [Elouan Autret](https://github.com/Elessog) (ENSTA Bretagne)
