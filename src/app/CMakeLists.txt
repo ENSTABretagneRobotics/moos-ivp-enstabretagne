@@ -61,7 +61,7 @@
   ADD_SUBDIRECTORY(interfaces/iSounder)
   ADD_SUBDIRECTORY(interfaces/iGPS)
   ADD_SUBDIRECTORY(interfaces/iModem)
-  ADD_SUBDIRECTORY(interfaces/iLidarMove)
+#  ADD_SUBDIRECTORY(interfaces/iLidarMove)
   ADD_SUBDIRECTORY(interfaces/iPololu)
   ADD_SUBDIRECTORY(interfaces/iSonar)
   ADD_SUBDIRECTORY(interfaces/iKeller)

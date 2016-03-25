@@ -1,0 +1,20 @@
+ProcessConfig = iSaucisse
+{
+  AppTick   = 10
+  CommsTick = 10
+
+  DEVICE_NAME = /dev/ttyACM0
+  # Linux:
+  #     /dev/ttyACM0
+  # Windows: 
+  #     \\\\.\\USBSER000
+  #     or
+  #     \\\\.\\COM6
+  # Mac OS X:
+  #     /dev/cu.usbmodem00034567
+
+  // Force relays settings on startup
+  AUTOSET_ON_STARTUP = autoset=true, all_on=true
+  // Force relays settings on quit
+  AUTOSET_ON_QUIT = autoset=true, all_on=false
+}
