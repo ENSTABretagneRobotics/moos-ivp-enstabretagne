@@ -171,13 +171,13 @@ To be defined.
 Contributors
 ------------
 
-* [Simon Rohou](https://github.com/SimonRohou) (ENSTA Bretagne)
-* [Clement Aubry](https://github.com/ClementAubry) (ISEN)
-* [Thomas Le Mézo](https://github.com/ThomasLeMezo) (ENSTA Bretagne)
-* [Mohamed Saad Ibn Seddik](https://github.com/msis) (ENSTA Bretagne / CGG)
-* [Vincent Drevelle](https://github.com/dvinc) (INRIA Rennes / IRISA)
-* [Jérémy Nicola](https://github.com/nicolaje) (ENSTA Bretagne / iXBlue)
-* [Benoit Desrochers](https://github.com/benEnsta) (ENSTA Bretagne / GESMA)
-* [Guilherme Schvarcz Franco](https://github.com/schvarcz) (UFRGS)
-* [Murilo Santos](https://github.com/muriloksantos) (École Navale)
-* [Elouan Autret](https://github.com/Elessog) (ENSTA Bretagne)
+* [Simon Rohou](https://github.com/SimonRohou) (ENSTA Bretagne - Brest FR)
+* [Clement Aubry](https://github.com/ClementAubry) (ISEN - Brest FR)
+* [Thomas Le Mézo](https://github.com/ThomasLeMezo) (ENSTA Bretagne - Brest FR)
+* [Mohamed Saad Ibn Seddik](https://github.com/msis) (MIT - Boston USA)
+* [Vincent Drevelle](https://github.com/dvinc) (INRIA / IRISA - Rennes FR)
+* [Jérémy Nicola](https://github.com/nicolaje) (ENSTA Bretagne / iXBlue - Brest FR)
+* [Benoit Desrochers](https://github.com/benEnsta) (ENSTA Bretagne / DGA-TN - Brest FR)
+* [Guilherme Schvarcz Franco](https://github.com/schvarcz) (ENSTA Bretagne - Brest FR)
+* [Murilo Santos](https://github.com/muriloksantos) (École Navale - Brest FR)
+* [Elouan Autret](https://github.com/Elessog) (ENSTA Bretagne - Brest FR)
