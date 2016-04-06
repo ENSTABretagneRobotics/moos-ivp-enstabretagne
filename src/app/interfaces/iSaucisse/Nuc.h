@@ -15,7 +15,9 @@ class Nuc
   public:
     Nuc();
     ~Nuc() {};
-    double getTemperature();
+    double getTemperature0();
+    double getTemperature1();
+    double getTemperature2();
 
   protected:
     std::string exec(std::string cmd);

@@ -18,9 +18,21 @@ Nuc::Nuc()
 
 }
 
-double Nuc::getTemperature()
+double Nuc::getTemperature0()
 {
   string str_t = exec("cat /sys/class/thermal/thermal_zone0/temp");
+  return atof(str_t.c_str()) / 1000.;
+}
+
+double Nuc::getTemperature1()
+{
+  string str_t = exec("cat /sys/class/thermal/thermal_zone1/temp");
+  return atof(str_t.c_str()) / 1000.;
+}
+
+double Nuc::getTemperature2()
+{
+  string str_t = exec("cat /sys/class/thermal/thermal_zone2/temp");
   return atof(str_t.c_str()) / 1000.;
 }
 
