@@ -5,7 +5,7 @@ ProcessConfig = iCamera_Side
 
   VARIABLE_IMAGE_NAME   = CAMERA_SIDE
   IDENTIFIANT_CV_CAMERA = 0
-  DISPLAY_IMAGE         = true
+  DISPLAY_IMAGE         = false
   INVERT_IMAGE          = false
 
   LARGEUR_IMAGE_CAMERA  = 360

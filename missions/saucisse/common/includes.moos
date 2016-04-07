@@ -2,6 +2,7 @@
 #include "interfaces/iCamera_Bottom.moos"
 #include "interfaces/iCamera_Side.moos"
 #include "interfaces/iGPS.moos"
+#include "interfaces/iGPSoE.moos"
 #include "interfaces/iKeller.moos"
 #include "interfaces/iModem.moos"
 #include "interfaces/iRazorIMU.moos"

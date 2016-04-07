@@ -47,11 +47,11 @@ ProcessConfig = uJoystick
   SCALE = 100
 
   AXIS = 1
-  SCALE_RATIO = -0.01
+  SCALE_RATIO = 0.04
   MOOS_DEST_VAR = DESIRED_FX
 
   AXIS = 2
-  SCALE_RATIO = -0.01
+  SCALE_RATIO = 0.01
   MOOS_DEST_VAR = DESIRED_RZ
 
   AXIS = 3
