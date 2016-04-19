@@ -1,8 +1,8 @@
 /************************************************************/
 /*    FILE: SensorViewer.h
 /*    ORGN: ENSTA Bretagne Robotics - moos-ivp-enstabretagne
-/*    AUTH:
-/*    DATE: 2015
+/*    AUTH: Guilherme Schvarcz Franco
+/*    DATE: 2016
 /************************************************************/
 
 #ifndef SensorViewer_HEADER
@@ -13,6 +13,12 @@
 #include <opencv/cv.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <vector>
+#include <iterator>
+#include "MBUtils.h"
+#include "ACTable.h"
+#include "SonarMapping.h"
+#include "CameraViewer.h"
+#include "Viewer.h"
 
 using namespace std;
 
@@ -30,59 +36,19 @@ class SensorViewer : public AppCastingMOOSApp
 		void registerVariables();
 		bool buildReport();
 
-	private: // Fonctions
-		void AddSector(cv::Mat &img_sonar, vector<double> scanline, double bearing, double &bearing_previous, double contrast);
-		void UpdateDistance(cv::Mat &img_wall, vector<double> distance_tab, vector<double> bearing_tab);
-
 	private: // Configuration variables
 
-	private: // State variables
-        string m_camera_bottom_keyname, m_camera_side_keyname,
-                m_sonar_micron_keyname, m_sonar_micron_contrast_keyname,
-                m_sonar_minking_keyname, m_sonar_minking_contrast_keyname,
-                m_sonar_raw_keyname, m_sonar_contrast_keyname,
-                m_wall_detector_minking_keyname, m_wall_detector_micron_keyname;
-		int m_nb_camera_bottom;
-		int m_nb_camera_side;
-		cv::Mat m_img_camera_bottom;
-		cv::Mat m_img_camera_side;
+    private:
 
-		cv::Mat m_img_sonar_micron;
-		cv::Mat m_img_sonar_miniking;
-		cv::Mat m_img_sonar;
+        // State variables
+        std::map<string, CameraViewer> mapCameras;
+        std::map<string, SonarMappingScanline> mapSonarsScanline;
+        std::map<string, SonarMappingDistance> mapSonarsDistance;
 
-		cv::Mat m_img_micron;
-		cv::Mat m_img_miniking;
+        Viewer mViewer;
 
-		cv::Mat m_img_wall_miniking;
-		cv::Mat m_img_wall_micron;
 
-		// SONAR DATAS
-	    std::vector<double> m_new_scanline_micron;
-	    std::vector<double> m_new_scanline_miniking;
-	    std::vector<double> m_new_scanline;
-    	double m_new_bearing_micron, m_old_bearing_micron;
-    	double m_new_bearing_miniking, m_old_bearing_miniking;
-    	double m_new_bearing, m_old_bearing;
 
-    	bool m_new_data_micron;
-    	bool m_new_data_miniking;
-    	bool m_new_data;
-
-    	int m_size_scanline_micron;
-    	int m_size_scanline_miniking;
-    	int m_size_scanline;
-
-    	double m_sonar_contrast_micron;
-    	double m_sonar_contrast_miniking;
-    	double m_sonar_contrast;
-
-    	// WALL DETECTOR DATA
-    	std::vector<double> m_wall_detector_distance_micron;
-    	std::vector<double> m_wall_detector_bearing_micron;
-
-    	std::vector<double> m_wall_detector_distance_miniking;
-    	std::vector<double> m_wall_detector_bearing_miniking;
 };
 
 #endif
