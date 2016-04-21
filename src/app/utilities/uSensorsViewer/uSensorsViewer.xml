@@ -7,10 +7,11 @@
      <info>
         <name>uSensorsViewer</name>
         <organization>ENSTA Bretagne Robotics - moos-ivp-enstabretagne</organization>
-        <date>2015</date>
+        <date>2015/2016</date>
         <authors>
            <author>Vincent Drevelle</author>
            <author>Thomas Le Mezo</author>
+           <author>Guilherme Schvarcz Franco</author>
         </authors>
         <licence>MIT</licence>
      </info>

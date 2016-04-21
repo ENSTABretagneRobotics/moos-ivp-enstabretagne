@@ -37,8 +37,13 @@ class SensorViewer : public AppCastingMOOSApp
 	private: // Configuration variables
 
 	private: // State variables
-int m_nb_camera_bottom;
-int m_nb_camera_side;
+        string m_camera_bottom_keyname, m_camera_side_keyname,
+                m_sonar_micron_keyname, m_sonar_micron_contrast_keyname,
+                m_sonar_minking_keyname, m_sonar_minking_contrast_keyname,
+                m_sonar_raw_keyname, m_sonar_contrast_keyname,
+                m_wall_detector_minking_keyname, m_wall_detector_micron_keyname;
+		int m_nb_camera_bottom;
+		int m_nb_camera_side;
 		cv::Mat m_img_camera_bottom;
 		cv::Mat m_img_camera_side;
 

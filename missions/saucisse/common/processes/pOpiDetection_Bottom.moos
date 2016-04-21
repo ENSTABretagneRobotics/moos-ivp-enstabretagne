@@ -1,0 +1,12 @@
+ProcessConfig = pOpiDetection_Bottom
+{
+  AppTick   = 4
+  CommsTick = 4
+  
+  VARIABLE_IMAGE_NAME = CAMERA_BOTTOM
+  VARIABLE_WHEN_FOUND = PIPE_DETECTION_BOTTOM
+  SHOW_PROCESS = true
+  SAVE_IN_FOLDER = /home/ciscrea/Desktop/
+  IMAGE_NAME_PATTERN = image_%H_%M_%S.jpg
+  FOLDER_NAME_PATTERN = DATASET_%F_%H-%M-%S
+}

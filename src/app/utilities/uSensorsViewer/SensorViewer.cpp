@@ -21,7 +21,13 @@ using namespace cv;
  * \brief Constructeur de l'application MOOS
  */
 
-SensorViewer::SensorViewer()
+SensorViewer::SensorViewer():
+    m_camera_bottom_keyname("CAMERA_BOTTOM"), m_camera_side_keyname("CAMERA_SIDE"),
+    m_sonar_micron_keyname("SONAR_RAW_DATA_MICRON"), m_sonar_micron_contrast_keyname("SONAR_MICRON_CONTRAST"),
+    m_sonar_minking_keyname("SONAR_RAW_DATA_MINIKING"), m_sonar_minking_contrast_keyname("SONAR_MINIKING_CONTRAST"),
+    m_sonar_raw_keyname("SONAR_RAW_DATA"), m_sonar_contrast_keyname("SONAR_CONTRAST"),
+    m_wall_detector_minking_keyname("WALL_DETECTOR_MINIKING"), m_wall_detector_micron_keyname("WALL_DETECTOR_MICRON")
+
 {
 	m_nb_camera_bottom = 0;
 	m_nb_camera_side = 0;
@@ -90,17 +96,18 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
 		//cout << msg.GetKey() << en
 		double pool_angle = MOOSDeg2Rad(0.0);
 
-		// **************** SENSORS DATA ************************
-		// 
-		if( msg.GetKey() == "CAMERA_BOTTOM") {
+        // **************** CAMERA DATA ************************
+        if( msg.GetKey() == m_camera_bottom_keyname) {
 			m_nb_camera_bottom ++;
 		  	memcpy(m_img_camera_bottom.data, msg.GetBinaryData(), m_img_camera_bottom.rows*m_img_camera_bottom.step);
 		}
-		else if( msg.GetKey() == "CAMERA_SIDE") {
+        else if( msg.GetKey() == m_camera_side_keyname) {
 		  	m_nb_camera_side ++;
 		  	memcpy(m_img_camera_side.data, msg.GetBinaryData(), m_img_camera_side.rows*m_img_camera_side.step);
 		}
-		else if(msg.GetKey() == "SONAR_RAW_DATA_MICRON"){
+
+        // **************** SONAR DATA ************************
+        else if(msg.GetKey() == m_sonar_micron_keyname){
 			MOOSValFromString(m_new_bearing_micron, msg.GetString(), "bearing", true);
 
 			int nRows, nCols;
@@ -115,7 +122,7 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
       		m_size_scanline_micron = m_new_scanline_micron.size();
       		m_new_data_micron = true;
 		}
-		else if(msg.GetKey() == "SONAR_RAW_DATA_MINIKING"){
+        else if(msg.GetKey() == m_sonar_minking_keyname){
 			MOOSValFromString(m_new_bearing_miniking, msg.GetString(), "bearing", true);
 
 			int nRows, nCols;
@@ -128,7 +135,7 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
       		m_size_scanline_miniking = m_new_scanline_miniking.size();
       		m_new_data_miniking = true;
 		}
-		else if(msg.GetKey() == "SONAR_RAW_DATA"){
+        else if(msg.GetKey() == m_sonar_raw_keyname){
 			MOOSValFromString(m_new_bearing, msg.GetString(), "bearing", true);
 			
 			int nRows, nCols;
@@ -141,27 +148,18 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
       		}
       		m_size_scanline = m_new_scanline.size();
       		m_new_data = true;
-		}
-
-		// **************** ANALYSIS DATA ************************
-		// 
-	    // if( msg.GetKey() == "WALL_DETECTOR"){
-	    //   MOOSValFromString(m_bearing, msg.GetString(), "bearing");
-	    //   MOOSValFromString(m_distance, msg.GetString(), "distance");
-	    // }
+        }
 
 		// **************** CONFIG DATA ************************
-		
-		else if(msg.GetKey() == "SONAR_MINIKING_CONTRAST")
+        else if(msg.GetKey() == m_sonar_minking_contrast_keyname)
 			m_sonar_contrast_miniking = msg.GetDouble();
-		else if(msg.GetKey() == "SONAR_MICRON_CONTRAST")
+        else if(msg.GetKey() == m_sonar_micron_contrast_keyname)
 			m_sonar_contrast_micron = msg.GetDouble();
-		else if(msg.GetKey() == "SONAR_CONTRAST")
-			m_sonar_contrast = msg.GetDouble();
-		else if(msg.GetKey() == "WALL_DETECTOR_MICRON"){
+        else if(msg.GetKey() == m_sonar_contrast_keyname)
+            m_sonar_contrast = msg.GetDouble();
 
-		}
-		else if(msg.GetKey() == "WALL_DETECTOR_MINIKING"){
+        // **************** WALL DETECTION DATA ************************
+        else if(msg.GetKey() == m_wall_detector_minking_keyname){
 			double dist, bearing;
 			MOOSValFromString(bearing, msg.GetString(), "bearing", true);
 			MOOSValFromString(dist, msg.GetString(), "distance", true);
@@ -172,7 +170,7 @@ bool SensorViewer::OnNewMail(MOOSMSG_LIST &NewMail)
 				m_wall_detector_distance_miniking.erase(m_wall_detector_distance_miniking.begin());
 			}
 		}
-		else if(msg.GetKey() == "WALL_DETECTOR_MICRON"){
+        else if(msg.GetKey() == m_wall_detector_micron_keyname){
 			double dist, bearing;
 			MOOSValFromString(bearing, msg.GetString(), "bearing", true);
 			MOOSValFromString(dist, msg.GetString(), "distance", true);
@@ -218,18 +216,18 @@ bool SensorViewer::Iterate()
 		m_new_data = false;
 	}
 
-	// imshow("SONAR MINIKING", m_img_sonar_miniking);
+    imshow("SONAR MINIKING", m_img_sonar_miniking);
 	imshow("SONAR MICRON", m_img_micron);
-	//imshow("SONAR", m_img_sonar);
+    imshow("SONAR", m_img_sonar);
 	
-	imshow("CAMERA SIDE", m_img_camera_side);
-	imshow("CAMERA BOTTOM", m_img_camera_bottom);
+    imshow("CAMERA 1", m_img_camera_side);
+    imshow("CAMERA 2", m_img_camera_bottom);
 
 	imshow("WALL MICRON", m_img_wall_micron);
-	// imshow("WALL MINIKING", m_img_wall_miniking);
+    imshow("WALL MINIKING", m_img_wall_miniking);
 
 	waitKey(1);
-	AppCastingMOOSApp::PostReport();
+    AppCastingMOOSApp::PostReport();
 	return(true);
 }
 
@@ -238,40 +236,42 @@ bool SensorViewer::OnStartUp() {
 
     STRING_LIST sParams;
     m_MissionReader.EnableVerbatimQuoting(false);
-    STRING_LIST::iterator p;
-    for (p = sParams.begin(); p != sParams.end(); p++) {
-        string orig = *p;
-        string line = *p;
-        string param = toupper(biteStringX(line, '='));
-        string value = line;
+    if(m_MissionReader.GetConfiguration(GetAppName(), sParams))
+    {
+        STRING_LIST::iterator p;
+        for (p = sParams.begin(); p != sParams.end(); p++) {
+            string orig = *p;
+            string line = *p;
+            string param = toupper(biteStringX(line, '='));
+            string value = line;
+            bool handled = false;
+            if (param == "SONAR_CONTRAST") {
+                m_sonar_contrast = atof(value.c_str());
+                handled = true;
+            }
+            else if (param == "SONAR_CONTRAST_MINIKING") {
+                m_sonar_contrast_miniking = atof(value.c_str());
+                handled = true;
+            }
+            else if (param == "SONAR_CONTRAST_MICRON") {
+                m_sonar_contrast_micron = atof(value.c_str());
+                handled = true;
+            }
+            else if (param == "VARIABLE_IMAGE_1_NAME") {
+                m_camera_side_keyname = value;
+                handled = true;
+            }
+            else if (param == "VARIABLE_IMAGE_2_NAME") {
+                m_camera_bottom_keyname = value;
+                handled = true;
+            }
 
-        bool handled = false;
-        if (param == "SONAR_CONTRAST") {
-            m_sonar_contrast = atof(value.c_str());
-            handled = true;
+            if (!handled)
+                reportUnhandledConfigWarning(orig);
         }
-        else if (param == "SONAR_CONTRAST_MINIKING") {
-            m_sonar_contrast_miniking = atof(value.c_str());
-            handled = true;
-        }
-        else if (param == "SONAR_CONTRAST_MICRON") {
-            m_sonar_contrast_micron = atof(value.c_str());
-            handled = true;
-        }
-
-        if (!handled)
-            reportUnhandledConfigWarning(orig);
     }
 
-	registerVariables();
-
-	namedWindow("CAMERA SIDE", WINDOW_NORMAL);
-	namedWindow("CAMERA BOTTOM", WINDOW_NORMAL);
-	// namedWindow("SONAR MINIKING", WINDOW_NORMAL);
-	namedWindow("SONAR MICRON", WINDOW_NORMAL);
-	//namedWindow("SONAR", WINDOW_NORMAL);
-	namedWindow("WALL MICRON", WINDOW_NORMAL);
-	// namedWindow("WALL MINIKING", WINDOW_NORMAL);
+    registerVariables();
 
 	return(true);
 }
@@ -281,23 +281,24 @@ void SensorViewer::registerVariables()
 	AppCastingMOOSApp::RegisterVariables();
 
 	// CAMERA DATA
-	Register("CAMERA_SIDE", 0);
-	Register("CAMERA_BOTTOM", 0);
+    Register(m_camera_side_keyname, 0);
+    Register(m_camera_bottom_keyname, 0);
 
 	// SONAR DATA
-	Register("SONAR_RAW_DATA", 0);
-	Register("SONAR_CONTRAST", 0);
+    Register(m_sonar_raw_keyname, 0);
+    Register(m_sonar_contrast_keyname, 0);
 
-	Register("SONAR_RAW_DATA_MICRON", 0);
-	Register("SONAR_MICRON_CONTRAST", 0);
+    Register(m_sonar_micron_keyname, 0);
+    Register(m_sonar_micron_contrast_keyname, 0);
 
-	Register("SONAR_MINIKING_CONTRAST", 0);
-	Register("SONAR_RAW_DATA_MINIKING", 0);
+    Register(m_sonar_minking_keyname, 0);
+    Register(m_sonar_minking_contrast_keyname, 0);
 
 	// WALL DETECTOR
-	Register("WALL_DETECTOR_MICRON", 0);
-	Register("WALL_DETECTOR_MINIKING", 0);
+    Register(m_wall_detector_micron_keyname, 0);
+    Register(m_wall_detector_minking_keyname, 0);
 }
+
 bool SensorViewer::buildReport()
 {
   #if 0 // Keep these around just for template
@@ -322,9 +323,7 @@ void SensorViewer::AddSector(Mat &img_sonar, vector<double> scanline, double bea
 			int x = round(scanline.size() + r*cos(theta));
 			int y = round(scanline.size() + r*sin(theta));
 
-			img_sonar.at<unsigned char>(y, x) = 255 - pow(10, scanline[r]/20.0)/pow(10, 150/20.0)*255*255*contrast;
-			// cout << "SCANLINE SIZE = " << scanline.size() << " r = " << r << '\n';
-			// cout << "ADD SECTOR (" << x << " " << y << ") = " << 255 - (unsigned char)scanline[r] << '\n';
+            img_sonar.at<unsigned char>(y, x) = 255 - pow(10, scanline[r]/20.0)/pow(10, 150/20.0)*255*255*contrast;
 		}
 	}
 	bearing_previous = bearing;

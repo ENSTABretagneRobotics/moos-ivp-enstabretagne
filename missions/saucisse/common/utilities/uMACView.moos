@@ -1,0 +1,5 @@
+ProcessConfig = uMACView
+{
+  AppTick   = 10
+  CommsTick = 10
+}

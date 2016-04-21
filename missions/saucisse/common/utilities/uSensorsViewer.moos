@@ -1,0 +1,8 @@
+ProcessConfig = uSensorsViewer
+{
+  AppTick   = 25
+  CommsTick = 25
+  
+  VARIABLE_IMAGE_1_NAME = CAMERA_SIDE
+  VARIABLE_IMAGE_2_NAME = CAMERA_BOTTOM
+}
