@@ -5,6 +5,7 @@
 #--------------------------------------------------------
 
 SET(SRC
+  JoystickControl.cpp
   Joystick.cpp
   main.cpp
 )

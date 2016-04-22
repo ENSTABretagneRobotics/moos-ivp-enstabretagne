@@ -5,7 +5,8 @@ ProcessConfig = uJoystick
 
   DEVICE_NAME = /dev/input/js0
 
-  INCREMENT = false
+  MODE = value //Value, Increment, Switch
+
   SCALE = 100
 
   AXIS = 0
@@ -21,7 +22,8 @@ ProcessConfig = uJoystick
   MOOS_DEST_VAR = DESIRED_RUDDER
 
   AXIS = 3
-  SCALE_RATIO = 0.5
+  MIN = 0
+  MAX = 10
   MOOS_DEST_VAR = DESIRED_ELEVATOR
 
   BUTTON = 1
