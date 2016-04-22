@@ -23,31 +23,44 @@
         <interface>
            <subscriptions>
               <moosvar>
-                 <varname>CAMERA_SIDE</varname>
+                 <varname>[image_var_name]</varname>
                  <vartype>binary</vartype>
                  <varinfo></varinfo>
               </moosvar>
 
               <moosvar>
-                 <varname>CAMERA_BOTTOM</varname>
-                 <vartype>binary</vartype>
+                 <varname>[sonar_var_name]_RAW_DATA</varname>
+                 <vartype>string</vartype>
                  <varinfo></varinfo>
               </moosvar>
 
               <moosvar>
-                 <varname>SONAR_RAW_DATA_(MICRON, MINIKING, *)</varname>
-                 <vartype>binary</vartype>
+                 <varname>[sonar_var_name]_DISTANCE</varname>
+                 <vartype>string</vartype>
                  <varinfo></varinfo>
               </moosvar>
 
               <moosvar>
-                 <varname>SONAR_CONTRAST_(MINIKING, MICRON, *)</varname>
-                 <vartype>double</vartype>
+                 <varname>[sonar_var_name]_CONNECTED</varname>
+                 <vartype>string</vartype>
                  <varinfo></varinfo>
               </moosvar>
+
               <moosvar>
-                 <varname>WALL_DETECTOR_(MINIKING, MICRON)</varname>
-                 <vartype>double</vartype>
+                 <varname>[sonar_var_name]_CONSTRAST</varname>
+                 <vartype>string</vartype>
+                 <varinfo></varinfo>
+              </moosvar>
+
+              <moosvar>
+                 <varname>[sonar_var_name]_FOV</varname>
+                 <vartype>string</vartype>
+                 <varinfo></varinfo>
+              </moosvar>
+
+              <moosvar>
+                 <varname>[sonar_var_name]_SCAN_LENGTH</varname>
+                 <vartype>string</vartype>
                  <varinfo></varinfo>
               </moosvar>
            </subscriptions>
@@ -63,13 +76,17 @@
         </interface>
         <!-- if there is a bug or a special fact to know.. -->
         <optional-comments>
-           No comment.
+           Keyboard commands to control the interface:
+
+           S: Switch between single mode and multiple windows
+           W: Previous image
+           X: Next image
+           ESC: Quit app
         </optional-comments>
         <!-- if something can be improved -->
         <suggested-improvements>
            No suggested improvements.
         </suggested-improvements>
      </documentation>
-
   </moosapp>
 </xmldoc>

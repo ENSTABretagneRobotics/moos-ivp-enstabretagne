@@ -7,6 +7,9 @@
 
 SET(SRC
   SensorViewer.cpp
+  SonarMapping.cpp
+  Viewer.cpp
+  CameraViewer.cpp
   main.cpp
 )
 
