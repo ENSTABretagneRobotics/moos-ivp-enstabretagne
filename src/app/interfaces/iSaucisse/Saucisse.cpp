@@ -246,8 +246,12 @@ bool Saucisse::Iterate()
   bool pololu_ok = m_pololu->isReady(error_message);
   Notify("SAUCISSE_POLOLU_STATUS", pololu_ok ? "ok" : error_message);
 
-  double current_temperature = m_nuc->getTemperature();
-  Notify("NUC_TEMPERATURE", current_temperature);
+  double current_temperature0 = m_nuc->getTemperature0();
+  double current_temperature1 = m_nuc->getTemperature1();
+  double current_temperature2 = m_nuc->getTemperature2();
+  Notify("NUC_TEMPERATURE_0", current_temperature0);
+  Notify("NUC_TEMPERATURE_1", current_temperature1);
+  Notify("NUC_TEMPERATURE_2", current_temperature2);
 
   AppCastingMOOSApp::PostReport();
   return true;
@@ -368,7 +372,9 @@ bool Saucisse::buildReport()
   ACTable actab_temperatures(2);
   actab_temperatures << "Unit" << "°C";
   actab_temperatures.addHeaderLines();
-  actab_temperatures << "NUC" << m_nuc->getTemperature();
+  actab_temperatures << "NUC 0" << m_nuc->getTemperature0();
+  actab_temperatures << "NUC 1" << m_nuc->getTemperature1();
+  actab_temperatures << "NUC 2" << m_nuc->getTemperature2();
   m_msgs << actab_temperatures.getFormattedString() << "\n\n";
   
   return true;
