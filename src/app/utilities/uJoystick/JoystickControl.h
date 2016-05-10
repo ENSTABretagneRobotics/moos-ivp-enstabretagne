@@ -20,12 +20,15 @@ enum ControlMode
     Value, Increment, Switch
 };
 
-typedef struct
+typedef struct _JoystickControlState
 {
-    ControlMode mode = Value;
-    bool switchValue = false;
-    double value = 0, increment = 0, offset = 0, gain = 1;
-
+    ControlMode mode;
+    bool switchValue;
+    double value, increment, offset, gain;
+    _JoystickControlState():
+        value(0), increment(0), offset(0), gain(1),
+        switchValue(false), mode(Value)
+    {}
 } JoystickControlState;
 
 class JoystickControl
