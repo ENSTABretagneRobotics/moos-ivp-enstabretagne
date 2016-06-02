@@ -21,6 +21,8 @@
 #include "processes/pOpiDetection_Side.moos"
 #include "processes/pOpiDetection_Bottom.moos"
 #include "processes/pMarinePID.moos"
+#include "processes/pShareAUVWifi.moos"
+#include "processes/pShareAUVEthernet.moos"
 
 // UTILITIES
 #include "utilities/uMACView.moos"

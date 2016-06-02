@@ -15,7 +15,7 @@ ProcessConfig = ANTLER
   Run = uMACView          @ NewConsole = false
   Run = uProcessWatch     @ NewConsole = false
   Run = uNavScreen        @ NewConsole = false
-  //Run = uJoystick         @ NewConsole = false
+  Run = uJoystick         @ NewConsole = false
 
   // ************** ENGINE CONTROL ***********
   Run = iSaucisse         @ NewConsole = false
