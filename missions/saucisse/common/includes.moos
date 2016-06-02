@@ -23,6 +23,8 @@
 #include "processes/pMarinePID.moos"
 #include "processes/pShareAUVWifi.moos"
 #include "processes/pShareAUVEthernet.moos"
+#include "processes/pShareGroundAUVWifi.moos"
+#include "processes/pShareGroundAUVEthernet.moos"
 
 // UTILITIES
 #include "utilities/uMACView.moos"
