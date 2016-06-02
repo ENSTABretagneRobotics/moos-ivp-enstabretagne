@@ -128,7 +128,7 @@ bool Joystick::OnStartUp()
 
             if(inputId >= 0)
             {
-                mControlsVariables[make_pair(inputType, inputId)] = value;
+                mControlsVariables[make_pair(inputType, inputId)] = pair<string, JoystickControlState>(value, JoystickControlState());
 
                 double offset = ratio*axis_min;
                 double gain = (ratio*axis_max - offset);
@@ -194,18 +194,22 @@ bool Joystick::Iterate()
 
     mJoystickControl.deviceReadLoop();
 
-    map<pair<int/*type*/,int/*number*/>, string>::const_iterator it;
+    map<pair<int/*type*/,int/*number*/>, pair<string, JoystickControlState> >::const_iterator it;
     for(it = mControlsVariables.begin(); it != mControlsVariables.end(); it++)
     {
         JoystickControlState state = mJoystickControl.mControlsState[it->first];
+        if(state == it->second.second)
+            continue;
+        mControlsVariables[it->first] = pair<string, JoystickControlState>(it->second.first, state);
+
         switch (state.mode)
         {
         case Value:
         case Increment:
-            Notify(it->second, state.value);
+            Notify(it->second.first, state.value);
             break;
         case Switch:
-            Notify(it->second, state.switchValue);
+            Notify(it->second.first, state.switchValue);
             break;
         }
     }
