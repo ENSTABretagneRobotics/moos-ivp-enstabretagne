@@ -1,0 +1,25 @@
+ServerHost = localhost
+ServerPort = 9000
+Community  = AUV
+
+#include "piombino.moos"
+#include "includes.moos"
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+	
+  Run = MOOSDB            @ NewConsole = false
+
+  // ************** UTILITIES ****************
+  Run = uMACView          @ NewConsole = false
+  Run = uMS               @ NewConsole = false
+  Run = uProcessWatch     @ NewConsole = false
+
+  // ************** LOGS *********************
+  Run = pShare            @ NewConsole = false ~pShareGroundAUVWifi
+  Run = pShare            @ NewConsole = false ~pShareGroundAUVEthernet
+
+  // ***************** CONTROL ****************
+  Run = uJoystick         @ NewConsole = false
+}
