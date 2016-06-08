@@ -209,7 +209,10 @@ bool Joystick::Iterate()
             Notify(it->second.first, state.value);
             break;
         case Switch:
-            Notify(it->second.first, state.switchValue);
+            if (state.switchValue)
+                Notify(it->second.first, "true");
+            else
+                Notify(it->second.first, "false");
             break;
         }
     }
