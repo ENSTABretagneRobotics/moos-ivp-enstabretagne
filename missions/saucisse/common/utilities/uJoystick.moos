@@ -1,0 +1,34 @@
+ProcessConfig = uJoystick
+{
+  AppTick   = 20
+  CommsTick = 20
+
+  DEVICE_NAME = /dev/input/js0
+
+  INCREMENT = false
+  SCALE = 100
+
+  AXIS = 1
+  SCALE_RATIO = 0.04
+  MOOS_DEST_VAR = DESIRED_FX
+
+  INCREMENT = true
+  AXIS = 2
+  SCALE_RATIO = 0.01
+  MOOS_DEST_VAR = DESIRED_RZ
+  INCREMENT = false
+
+  AXIS = 3
+  SCALE_RATIO = 1
+  MAX  = 0
+  MIN  = -2
+  MOOS_DEST_VAR = DESIRED_DEPTH_JOY
+
+  MODE = switch
+  MIN = 0
+  MAX = 1
+  BUTTON = 0
+  MOOS_DEST_VAR = Launch
+  BUTTON = 1
+  MOOS_DEST_VAR = Diving
+}

@@ -1,0 +1,10 @@
+ProcessConfig = pEchoVar_Diving
+{
+  AppTick   = 20
+  CommsTick = 20
+
+  echo = DESIRED_DEPTH_JOY -> DESIRED_DEPTH
+  condition = Diving = false
+  echo = DESIRED_DEPTH_PID -> DESIRED_DEPTH
+  condition = Diving = true
+}

@@ -15,51 +15,26 @@ ProcessConfig = ANTLER
   Run = uMACView          @ NewConsole = false
   Run = uProcessWatch     @ NewConsole = false
   Run = uNavScreen        @ NewConsole = false
-  Run = uJoystick         @ NewConsole = false
 
   // ************** ENGINE CONTROL ***********
   Run = iSaucisse         @ NewConsole = false
   Run = pMixThrusters     @ NewConsole = false
 
   // ************** SENSORS ******************
-  Run = iXSensINS         @ NewConsole = true
+  Run = iXSensINS         @ NewConsole = false
   Run = iGPS              @ NewConsole = false
   Run = iKeller           @ NewConsole = false
-  Run = iSounder      @ NewConsole = false
-  
-  //Run = iSonar            @ NewConsole = false ~iSonar_Micron
-  Run = iCamera           @ NewConsole = true ~iCamera_Side
+  Run = iSounder          @ NewConsole = false
+  Run = iCamera           @ NewConsole = false ~iCamera_Side
   Run = iCamera           @ NewConsole = false ~iCamera_Bottom
+  //Run = iSonar            @ NewConsole = false ~iSonar_Micron
   //Run = iRazorIMU         @ NewConsole = false
 
   // ************** VISUALISATION *************
-  Run = uSensorsViewer     @ NewConsole = false
+  Run = uSensorsViewer    @ NewConsole = false
 
-}
-
-
-ProcessConfig = uJoystick
-{
-  AppTick   = 20
-  CommsTick = 20
-
-  DEVICE_NAME = /dev/input/js0
-
-  INCREMENT = false
-  SCALE = 100
-
-  AXIS = 1
-  SCALE_RATIO = 0.01
-  MOOS_DEST_VAR = DESIRED_FX
-
-  INCREMENT = true
-  AXIS = 2
-  SCALE_RATIO = 0.01
-  MOOS_DEST_VAR = DESIRED_RZ
-  INCREMENT = false
-
-  AXIS = 3
-  SCALE_RATIO = -0.05
-  MOOS_DEST_VAR = DESIRED_FZ
-
+  // ***************** CONTROL ****************
+  Run = uJoystick         @ NewConsole = false
+  Run = pSimplePID        @ NewConsole = true ~pSimplePID_Depth 
+  Run = pEchoVar          @ NewConsole = false ~pEchoVar_Diving
 }
