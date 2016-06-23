@@ -1,0 +1,132 @@
+
+initialize   LAUNCH = false
+initialize   MISSION = gate
+
+
+Behavior = BHV_ConstantDepth
+{
+  name = Diving
+  priority = 100
+  condition = LAUNCH = true
+  duration = no-time-limit
+  depth = 1             // meters
+}
+
+//---------Long Range------------------
+Behavior = BHV_Waypoint 
+{ 
+  name      = waypt_longrange
+  pwt       = 100
+  condition = LAUNCH = true
+  condition = MISSION = gate
+
+  idleflag  = WPTING = gate_idle
+  runflag   = WPTING = gate_passing
+  endflag   = WPTING = gate_finished
+  endflag   = MISSION = wall
+  inactiveflag = WPTING = gate_inactive
+
+  updates     = WPT_UPDATE
+  perpetual   = true
+   templating = clone
+                lead = 8
+         lead_damper = 1
+       lead_to_start = true
+               speed = 2   // meters per second
+        capture_line = true
+      capture_radius = 1.0
+         slip_radius = 2.0
+
+             polygon = 60,-40 : 60,-160 : 150,-160 
+             repeat = 0
+
+
+    visual_hints = nextpt_color=yellow
+    visual_hints = nextpt_vertex_size=8
+    visual_hints = nextpt_lcolor=gray70
+    visual_hints = vertex_color=dodger_blue, edge_color=white
+    visual_hints = vertex_size=5, edge_size=1
+}
+
+
+//---------Wall Following------------------
+Behavior = BHV_Waypoint 
+{ 
+  name      = waypt_wallfollowing
+  pwt       = 100
+  condition = LAUNCH = true
+  condition = MISSION = wall
+
+  idleflag  = WPTING = wall_idle
+  runflag   = WPTING = wall_passing
+  endflag   = WPTING = wall_finished
+  endflag   = MISSION = inspection
+  inactiveflag = WPTING = wall_inactive
+
+  updates     = WPT_UPDATE
+  perpetual   = true
+   templating = clone
+                lead = 8
+         lead_damper = 1
+       lead_to_start = true
+               speed = 2   // meters per second
+        capture_line = true
+      capture_radius = 1.0
+         slip_radius = 2.0
+
+             polygon = 60,-40 : 60,-160 : 150,-160 
+             repeat = 0
+
+
+    visual_hints = nextpt_color=yellow
+    visual_hints = nextpt_vertex_size=8
+    visual_hints = nextpt_lcolor=gray70
+    visual_hints = vertex_color=dodger_blue, edge_color=white
+    visual_hints = vertex_size=5, edge_size=1
+}
+
+//-----------Inspection-------------
+Behavior = BHV_Waypoint 
+{ 
+  name      = waypt_inspection
+  pwt       = 100
+  condition = LAUNCH = true
+  condition = MISSION = inspection
+
+  idleflag  = WPTING = inspectionl_idle
+  runflag   = WPTING = inspection_passing
+  endflag   = WPTING = inspection_finished
+  endflag   = MISSION = surface
+  endflag   = LAUNCH = false
+  inactiveflag = WPTING = inspection_inactive
+
+  updates     = WPT_UPDATE
+  perpetual   = true
+   templating = clone
+                lead = 8
+         lead_damper = 1
+       lead_to_start = true
+               speed = 2   // meters per second
+        capture_line = true
+      capture_radius = 1.0
+         slip_radius = 2.0
+
+             polygon = 60,-40 : 60,-160 : 150,-160 
+             repeat = 0
+
+
+    visual_hints = nextpt_color=yellow
+    visual_hints = nextpt_vertex_size=8
+    visual_hints = nextpt_lcolor=gray70
+    visual_hints = vertex_color=dodger_blue, edge_color=white
+    visual_hints = vertex_size=5, edge_size=1
+}
+
+Behavior = BHV_ConstantDepth
+{
+  name = Surface
+  priority = 100
+  condition = LAUNCH = false
+  duration = no-time-limit
+  depth = 0             // meters
+}
