@@ -77,7 +77,7 @@ ProcessConfig = uTimerDiving
   pause_var = LAUNCH
   
   // To WP 2
-  event = var=DESIRED_DEPTH,      time=0001, val=0.4
+  event = var=DESIRED_DEPTH,      time=0001, val=1.0
   event = var=DESIRED_HEADING,    time=0010, val=169.13
   event = var=DESIRED_DEPTH,      time=0031, val=0.
 }
