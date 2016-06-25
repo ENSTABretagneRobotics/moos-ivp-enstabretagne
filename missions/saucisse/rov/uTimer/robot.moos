@@ -40,7 +40,9 @@ ProcessConfig = ANTLER
   Run = uSensorsViewer     @ NewConsole = false
 
   // ***************** CONTROL ****************
-  Run = pSimplePID        @ NewConsole = false ~pSimplePID_Depth 
+  Run = uJoystick         @ NewConsole = false
+  Run = pSimplePID        @ NewConsole = false ~pSimplePID_Depth
+  Run = pSimplePID        @ NewConsole = false ~pSimplePID_Heading
   Run = pEchoVar          @ NewConsole = false ~pEchoVar_Diving
 
 
@@ -76,7 +78,7 @@ ProcessConfig = uTimerDiving
   
   // To WP 2
   event = var=DESIRED_DEPTH,      time=0001, val=0.4
-  event = var=DESIRED_HEADING,    time=0010, val=8.13 // !
+  event = var=DESIRED_HEADING,    time=0010, val=169.13
   event = var=DESIRED_DEPTH,      time=0031, val=0.
 }
 

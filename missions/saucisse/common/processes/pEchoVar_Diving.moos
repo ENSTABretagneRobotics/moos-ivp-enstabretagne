@@ -6,7 +6,4 @@ ProcessConfig = pEchoVar_Diving
   echo = DESIRED_DEPTH_JOY -> DESIRED_DEPTH
   condition = DIVING = false
   condition = LAUNCH = false
-  echo = DESIRED_DEPTH_PID -> DESIRED_DEPTH
-  condition = DIVING = true
-  condition = LAUNCH = false
-}
+ }
