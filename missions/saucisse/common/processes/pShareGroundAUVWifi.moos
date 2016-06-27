@@ -5,4 +5,6 @@ ProcessConfig = pShareGroundAUVWifi
 
   Input = route = 192.168.0.102:24468
   Output = src_name = DESIRED_*, route = 192.168.0.101:24466
+  Output = src_name = LAUNCH, route = 192.168.0.101:24466
+  Output = src_name = DIVING, route = 192.168.0.101:24466
 }
