@@ -26,10 +26,6 @@ cd ../moos-ivp-enstabretagne
 sudo apt-get install -y --force-yes libtinyxml2-dev libusb-1.0-0-dev mono-runtime libmono-winforms2.0-cil libv4l-dev libopencv-dev libboost1.55-dev libboost-system1.55-dev
 ./build.sh
 
-echo 'export PATH=$PATH:~/moos-ivp-enstabretagne/bin' >> ~/.bashrc
-echo 'export PATH=$PATH:~/moos-ivp-enstabretagne/lib' >> ~/.bashrc
-echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/moos-ivp-enstabretagne/lib' >> ~/.bashrc
-echo 'export IVP_BEHAVIOR_DIRS=$IVP_BEHAVIOR_DIRS:~/moos-ivp-enstabretagne/lib' >> ~/.bashrc
-echo 'export MOOS_IVP_ENSTABRETAGNE_PATH="/home/'$USER'/moos-ivp-enstabretagne"' >> ~/.bashrc
+echo 'source ~/moos-ivp-enstabretagne/script/source.sh' >> ~/.bashrc
 
 source ~/.bashrc
