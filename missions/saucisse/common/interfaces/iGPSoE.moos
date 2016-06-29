@@ -1,0 +1,7 @@
+ProcessConfig = iGPSoE
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  ADRESS = 192.168.0.33:4002
+}

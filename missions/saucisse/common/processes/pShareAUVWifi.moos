@@ -1,0 +1,21 @@
+ProcessConfig = pShareAUVWifi
+{
+  Input = route = 192.168.0.101:24466
+
+  //Output = src_name = *,dest_name = *,route=192.168.0.102:24468
+
+  // Camera binary flows can't pass via pShare (data.size() < 64K)
+  //Output = src_name = CAMERA_*,dest_name = CAMERA_*,route=192.168.0.102:24468
+  Output = src_name = POWER*,route=192.168.0.102:24468
+  Output = src_name = IMU_*,route=192.168.0.102:24468
+  Output = src_name = GPS_*,route=192.168.0.102:24468
+  Output = src_name = GPSOE_*,route=192.168.0.102:24468
+  Output = src_name = KELLER_*,route=192.168.0.102:24468
+  Output = src_name = ECHOSOUNDER_*,route=192.168.0.102:24468
+  Output = src_name = MODEM_*,route=192.168.0.102:24468
+  Output = src_name = SONAR_*,route=192.168.0.102:24468
+  Output = src_name = OPERATION_*,route=192.168.0.102:24468
+  Output = src_name = SAUCISSE*,route=192.168.0.102:24468
+  //Input = src_name = DESIRED_*,route=multicast_8
+  //Output = src_name = *,route=192.168.0.102:24468
+}

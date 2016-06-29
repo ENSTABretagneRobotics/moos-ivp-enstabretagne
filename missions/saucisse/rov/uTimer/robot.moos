@@ -1,0 +1,164 @@
+ServerHost = localhost
+ServerPort = 9000
+Community  = AUV
+
+#include "piombino.moos"
+#include "includes.moos"
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+
+  Run = MOOSDB            @ NewConsole = false
+
+  // ************** UTILITIES ****************
+  Run = uMS               @ NewConsole = false
+  Run = uMACView          @ NewConsole = false
+  Run = uProcessWatch     @ NewConsole = false
+  Run = uNavScreen        @ NewConsole = false
+
+  // ************** LOGS *********************
+  Run = pLogger           @ NewConsole = false
+
+  // ************** ENGINE CONTROL ***********
+  Run = iSaucisse         @ NewConsole = true
+  Run = pMixThrusters     @ NewConsole = false
+  Run = pShare            @ NewConsole = false  ~pShareAUVEthernet 
+  Run = pShare            @ NewConsole = false  ~pShareAUVWifi 
+
+  // ************** SENSORS ******************
+  Run = iXSensINS         @ NewConsole = false
+  Run = iGPS              @ NewConsole = false
+  //Run = iGPSoE              @ NewConsole = true
+  Run = iKeller           @ NewConsole = false
+  Run = iSounder          @ NewConsole = false
+  Run = iSonar            @ NewConsole = false ~iSonar_Micron
+  Run = iCamera           @ NewConsole = false ~iCamera_Side
+  Run = iCamera           @ NewConsole = false ~iCamera_Bottom
+
+  // ************** VISUALISATION *************
+  Run = uSensorsViewer     @ NewConsole = false
+
+  // ***************** CONTROL ****************
+  Run = uJoystick         @ NewConsole = false
+  Run = pSimplePID        @ NewConsole = false ~pSimplePID_Depth
+  Run = pSimplePID        @ NewConsole = false ~pSimplePID_Heading
+  Run = pEchoVar          @ NewConsole = false ~pEchoVar_Diving
+
+
+  // ***************** Missions ****************
+  Run = uTimerScript      @ NewConsole = false ~uTimerDiving
+
+}
+
+ProcessConfig = pLogger
+{
+  //over  loading  basic  params
+  AppTick     = 4.0
+  CommsTick   = 4.0
+
+  File          = uTimerMission
+  PATH          = /home/ciscrea/log
+  FileTimeStamp = true
+
+  DoublePrecision = 12
+
+  AsyncLog        = true
+  WildCardLogging = true
+}
+
+ProcessConfig = uTimerDiving
+{
+  AppTick = 4
+  CommsTick = 4
+
+  // To WP 1
+  event = var=LAUNCH,    time=0000, val=true // !
+  pause_var = LAUNCH
+  
+  // To WP 2
+  event = var=DESIRED_DEPTH,      time=0001, val=1.0
+  event = var=DESIRED_HEADING,    time=0010, val=169.13
+  event = var=DESIRED_DEPTH,      time=0031, val=0.
+}
+
+ProcessConfig = uTimerLongRange
+{
+  AppTick = 4
+  CommsTick = 4
+
+  // To WP 1
+  event = var=LAUNCH,    time=0000, val=true // !
+  pause_var = LAUNCH
+  
+  // To WP 2
+  event = var=DESIRED_HEADING,    time=0001, val=8.13 // !
+  event = var=DESIRED_DEPTH,      time=0001, val=1.6
+  event = var=DESIRED_SPEED,      time=0020, val=1
+  event = var=DESIRED_SPEED,      time=0210, val=-1
+  event = var=DESIRED_SPEED,      time=0212, val=0
+  event = var=DESIRED_DEPTH,      time=0212, val=0
+  
+  // To WP 3
+  event = var=DESIRED_HEADING,    time=0240, val=-4.67 // !
+  event = var=DESIRED_DEPTH,      time=0240, val=1.6
+  event = var=DESIRED_SPEED,      time=0260, val=1
+  event = var=DESIRED_SPEED,      time=0450, val=-1
+  event = var=DESIRED_SPEED,      time=0452, val=0
+  event = var=DESIRED_DEPTH,      time=0452, val=0
+}
+
+ProcessConfig = uTimerWall
+{
+  AppTick = 4
+  CommsTick = 4
+
+  // To WP 1
+  event = var=LAUNCH,    time=0000, val=true // !
+  pause_var = LAUNCH
+  
+  // To WP 2
+  event = var=DESIRED_HEADING,    time=0001, val=8.13 // !
+  event = var=DESIRED_DEPTH,      time=0001, val=1.6
+  event = var=DESIRED_SPEED,      time=0020, val=1
+  event = var=DESIRED_SPEED,      time=0210, val=-1
+  event = var=DESIRED_SPEED,      time=0212, val=0
+  event = var=DESIRED_DEPTH,      time=0212, val=0
+  
+  // To WP 3
+  event = var=DESIRED_HEADING,    time=0001, val=8.13 // !
+  event = var=DESIRED_DEPTH,      time=0001, val=1.6
+  event = var=DESIRED_SPEED,      time=0020, val=1
+  event = var=DESIRED_SPEED,      time=0210, val=-1
+  event = var=DESIRED_SPEED,      time=0212, val=0
+  event = var=DESIRED_DEPTH,      time=0212, val=0
+  
+  // To WP 4
+  event = var=DESIRED_HEADING,    time=0240, val=-4.67 // !
+  event = var=DESIRED_DEPTH,      time=0240, val=1.6
+  event = var=DESIRED_SPEED,      time=0260, val=1
+  event = var=DESIRED_SPEED,      time=0450, val=-1
+  event = var=DESIRED_SPEED,      time=0452, val=0
+  event = var=DESIRED_DEPTH,      time=0452, val=0
+}
+
+ProcessConfig = uTimerInspection
+{
+  AppTick = 4
+  CommsTick = 4
+
+  // To WP 1
+  event = var=LAUNCH,    time=0000, val=true // !
+  pause_var = LAUNCH
+
+  event = var=DESIRED_DEPTH,      time=0000, val=1.5
+  event = var=DESIRED_FX,      time=0010, val=1
+  event = var=DESIRED_HEADING,    time=0010, val=10 // to the left (halfway)
+  event = var=DESIRED_HEADING,    time=0035, val=-10 // to the right
+  event = var=DESIRED_HEADING,    time=0085, val=10 // to the left
+  event = var=DESIRED_HEADING,    time=0135, val=-10 // to the right
+  event = var=DESIRED_HEADING,    time=0185, val=10 // to the left
+  event = var=DESIRED_HEADING,    time=0235, val=-10 // to the right
+  event = var=DESIRED_DEPTH,      time=0285, val=9999
+  event = var=DESIRED_FX,      time=0285, val=0
+}

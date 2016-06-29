@@ -1,0 +1,24 @@
+ServerHost = localhost
+ServerPort = 9000
+Community  = AUV
+
+ProcessConfig = ANTLER
+{
+
+  Run = MOOSDB            @ NewConsole = false
+
+  // ************** UTILITIES ****************
+  Run = uMS               @ NewConsole = false
+
+  // ************** SENSORS ******************
+  Run = iGPSoE              @ NewConsole = false
+
+
+}
+ProcessConfig = iGPSoE
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  ADRESS = 192.168.0.33:4002
+}

@@ -2,6 +2,7 @@
 #include "interfaces/iCamera_Bottom.moos"
 #include "interfaces/iCamera_Side.moos"
 #include "interfaces/iGPS.moos"
+#include "interfaces/iGPSoE.moos"
 #include "interfaces/iKeller.moos"
 #include "interfaces/iModem.moos"
 #include "interfaces/iRazorIMU.moos"
@@ -20,9 +21,15 @@
 #include "processes/pOpiDetection_Side.moos"
 #include "processes/pOpiDetection_Bottom.moos"
 #include "processes/pMarinePID.moos"
+#include "processes/pShareAUVWifi.moos"
+#include "processes/pShareAUVEthernet.moos"
+#include "processes/pShareGroundAUVWifi.moos"
+#include "processes/pShareGroundAUVEthernet.moos"
+#include "processes/pEchoVar_Diving.moos"
 
 // UTILITIES
 #include "utilities/uMACView.moos"
 #include "utilities/uNavScreen.moos"
 #include "utilities/uProcessWatch.moos"
 #include "utilities/uSensorsViewer.moos"
+#include "utilities/uJoystick.moos"
