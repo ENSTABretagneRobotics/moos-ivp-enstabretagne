@@ -30,7 +30,7 @@ class Joystick : public AppCastingMOOSApp
 
   private:
     JoystickControl mJoystickControl;
-    map<pair<int/*type*/,int/*number*/>, string> mControlsVariables;
+    map<pair<int/*type*/,int/*number*/>, pair<string, JoystickControlState> > mControlsVariables;
 
 };
 
