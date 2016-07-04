@@ -26,6 +26,8 @@
 #include "processes/pShareGroundAUVWifi.moos"
 #include "processes/pShareGroundAUVEthernet.moos"
 #include "processes/pEchoVar_Diving.moos"
+#include "processes/pEchoVar_Heading.moos"
+#include "processes/pEchoVar_Update_Heading.moos"
 
 // UTILITIES
 #include "utilities/uMACView.moos"

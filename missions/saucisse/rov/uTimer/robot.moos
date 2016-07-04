@@ -40,10 +40,12 @@ ProcessConfig = ANTLER
   Run = uSensorsViewer     @ NewConsole = false
 
   // ***************** CONTROL ****************
-  Run = uJoystick         @ NewConsole = false
+  //Run = uJoystick         @ NewConsole = false
   Run = pSimplePID        @ NewConsole = false ~pSimplePID_Depth
   Run = pSimplePID        @ NewConsole = false ~pSimplePID_Heading
   Run = pEchoVar          @ NewConsole = false ~pEchoVar_Diving
+  Run = pEchoVar          @ NewConsole = false ~pEchoVar_Heading
+  Run = pEchoVar          @ NewConsole = false ~pEchoVar_Update_Heading
 
 
   // ***************** Missions ****************
@@ -77,9 +79,11 @@ ProcessConfig = uTimerDiving
   pause_var = LAUNCH
   
   // To WP 2
-  event = var=DESIRED_DEPTH,      time=0001, val=1.0
+  event = var=DESIRED_DEPTH,      time=0001, val=0.5
   event = var=DESIRED_HEADING,    time=0010, val=169.13
-  event = var=DESIRED_DEPTH,      time=0031, val=0.
+  event = var=DESIRED_DEPTH,      time=0031, val=0.0
+  event = var=LAUNCH,    	  time=0031, val=true
+  event = var=DESIRED_RZ,    	  time=0033, val=0.0
 }
 
 ProcessConfig = uTimerLongRange
@@ -92,12 +96,16 @@ ProcessConfig = uTimerLongRange
   pause_var = LAUNCH
   
   // To WP 2
-  event = var=DESIRED_HEADING,    time=0001, val=8.13 // !
   event = var=DESIRED_DEPTH,      time=0001, val=1.6
-  event = var=DESIRED_SPEED,      time=0020, val=1
-  event = var=DESIRED_SPEED,      time=0210, val=-1
-  event = var=DESIRED_SPEED,      time=0212, val=0
-  event = var=DESIRED_DEPTH,      time=0212, val=0
+  event = var=DESIRED_HEADING,    time=0010, val=30 // !
+  event = var=DESIRED_FX,      time=0020, val=1
+  event = var=DESIRED_FX,      time=0040, val=-1
+  event = var=DESIRED_FX,      time=0042, val=0
+  event = var=DESIRED_HEADING,      time=0045, val=124
+  event = var=DESIRED_FX,      time=0055, val=1
+  event = var=DESIRED_FX,      time=0085, val=-1
+  event = var=DESIRED_FX,      time=0087, val=0
+  event = var=DESIRED_DEPTH,      time=0090, val=0
   
   // To WP 3
   event = var=DESIRED_HEADING,    time=0240, val=-4.67 // !

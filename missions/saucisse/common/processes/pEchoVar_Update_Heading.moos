@@ -1,0 +1,8 @@
+ProcessConfig = pEchoVar_Update_Heading
+{
+  AppTick   = 20
+  CommsTick = 20
+
+  echo = NAV_HEADING -> DESIRED_HEADING
+  condition = LAUNCH = true
+ }
