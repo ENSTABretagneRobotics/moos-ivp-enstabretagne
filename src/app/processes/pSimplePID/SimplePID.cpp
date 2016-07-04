@@ -112,7 +112,9 @@ bool SimplePID::Iterate()
     m_error = m_consigne - m_state;
 
     if(m_angle){
+        m_error = m_error*M_PI/180.0;
         m_error = 2.0*atan(tan(m_error/2.0));
+        m_error = m_error*180.0/M_PI;
     }
 
     double P = m_dt * m_kp * m_error;
