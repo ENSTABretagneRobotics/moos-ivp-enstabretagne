@@ -24,8 +24,7 @@ ProcessConfig = ANTLER
   Run = uJoystick         @ NewConsole = false
 
   
-  Run = pMarineViewer         @ NewConsole = false
-  Run = uSimMarine         @ NewConsole = false
+  Run = pMarineViewer      @ NewConsole = false
 }
 
 ProcessConfig = uSimMarine
