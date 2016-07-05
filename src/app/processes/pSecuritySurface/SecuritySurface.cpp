@@ -21,7 +21,7 @@ SecuritySurface::SecuritySurface()
     mTimeout = 30;
     publishVariableName = "DESIRED_DEPTH";
     publishValue = "0.0";
-    currentValue = "";
+    currentValue = "Not received";
 }
 
 //---------------------------------------------------------
@@ -47,8 +47,8 @@ bool SecuritySurface::OnNewMail(MOOSMSG_LIST &NewMail)
       bool   mstr  = msg.IsString();
     #endif
 
-    if (key == publishVariableName)
-        currentValue = msg.GetString();
+    if (key.compare(publishVariableName) == 0)
+        currentValue = doubleToString(msg.GetDouble());
     else
         mLastMessage = MOOSTime();
 
@@ -81,8 +81,8 @@ bool SecuritySurface::Iterate()
 
   int eLapsedTime = MOOSTime() - mLastMessage;
 
-  if((eLapsedTime > mTimeout) && (currentValue != publishValue))
-    Notify(publishVariableName, publishValue);
+  if((eLapsedTime > mTimeout) && (currentValue.compare(publishValue) != 0))
+    Notify(publishVariableName, atof(publishValue.c_str()));
 
   AppCastingMOOSApp::PostReport();
   return true;
@@ -170,11 +170,11 @@ bool SecuritySurface::buildReport()
     m_msgs << actab.getFormattedString();
   #endif
 
-    ACTable actab(3);
-    actab << "Variable Name | Publish Value | Current Value";
+    ACTable actab(4);
+    actab << "Variable Name | Publish Value | Current Value | ElapsedTime";
     actab.addHeaderLines();
-    actab << publishVariableName << publishValue << currentValue;
-    m_msgs << actab.getFormattedString();
+    actab << publishVariableName << publishValue << currentValue << MOOSTime() - mLastMessage;
+    m_msgs << actab.getFormattedString() << endl;
 
     ACTable actabVariables(1);
     actabVariables << "Watched Variables";
