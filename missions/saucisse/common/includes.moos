@@ -28,6 +28,7 @@
 #include "processes/pEchoVar_Diving.moos"
 #include "processes/pEchoVar_Heading.moos"
 #include "processes/pEchoVar_Update_Heading.moos"
+#include "processes/pSecuritySurface.moos"
 
 // UTILITIES
 #include "utilities/uMACView.moos"

@@ -46,6 +46,7 @@ ProcessConfig = ANTLER
   Run = pEchoVar          @ NewConsole = false ~pEchoVar_Diving
   Run = pEchoVar          @ NewConsole = false ~pEchoVar_Heading
   Run = pEchoVar          @ NewConsole = false ~pEchoVar_Update_Heading
+  Run = pSecuritySurface  @ NewConsole = true 
 
 
   // ***************** Missions ****************
