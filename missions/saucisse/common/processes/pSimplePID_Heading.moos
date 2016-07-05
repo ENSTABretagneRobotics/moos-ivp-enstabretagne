@@ -3,8 +3,8 @@ ProcessConfig = pSimplePID_Heading
   AppTick   = 10
   CommsTick = 10
 
-  KP = 0.425
-  //KI = 0.025
+  KP = 0.38
+  //KI = 0.01
   //KD = 1.0
   //KW = 0.0
 
@@ -14,5 +14,5 @@ ProcessConfig = pSimplePID_Heading
   //MOOSVAR_STATE_DIFFERENTIAL=IMU_GYR_Z
   MOOSVAR_SATURATION=PID_HEADING_SATURATION
 
-  //ANGLE=RAD
+  ANGLE=RAD
 }

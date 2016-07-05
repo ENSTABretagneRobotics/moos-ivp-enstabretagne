@@ -49,7 +49,7 @@ ProcessConfig = ANTLER
 
 
   // ***************** Missions ****************
-  Run = uTimerScript      @ NewConsole = false ~uTimerDiving
+  Run = uTimerScript      @ NewConsole = false ~uTimerLongRange
 
 }
 
@@ -96,24 +96,19 @@ ProcessConfig = uTimerLongRange
   pause_var = LAUNCH
   
   // To WP 2
-  event = var=DESIRED_DEPTH,      time=0001, val=1.6
-  event = var=DESIRED_HEADING,    time=0010, val=30 // !
+  event = var=DESIRED_DEPTH,      time=0001, val=1.5
+  event = var=DESIRED_HEADING,    time=0010, val=160.5 // !
   event = var=DESIRED_FX,      time=0020, val=1
-  event = var=DESIRED_FX,      time=0040, val=-1
-  event = var=DESIRED_FX,      time=0042, val=0
-  event = var=DESIRED_HEADING,      time=0045, val=124
-  event = var=DESIRED_FX,      time=0055, val=1
-  event = var=DESIRED_FX,      time=0085, val=-1
-  event = var=DESIRED_FX,      time=0087, val=0
-  event = var=DESIRED_DEPTH,      time=0090, val=0
+  event = var=DESIRED_FX,      time=0025, val=-1
+  event = var=DESIRED_FX,      time=0027, val=0
+  event = var=DESIRED_HEADING,      time=0030, val=240
+  //event = var=DESIRED_FX,      time=0055, val=1
+  //event = var=DESIRED_FX,      time=0085, val=-1
+  //event = var=DESIRED_FX,      time=0087, val=0
+  event = var=DESIRED_DEPTH,      time=0045, val=0
+  //event = var=LAUNCH,    	  time=0055, val=true
+  //event = var=DESIRED_RZ,    	  time=0035, val=0.0
   
-  // To WP 3
-  event = var=DESIRED_HEADING,    time=0240, val=-4.67 // !
-  event = var=DESIRED_DEPTH,      time=0240, val=1.6
-  event = var=DESIRED_SPEED,      time=0260, val=1
-  event = var=DESIRED_SPEED,      time=0450, val=-1
-  event = var=DESIRED_SPEED,      time=0452, val=0
-  event = var=DESIRED_DEPTH,      time=0452, val=0
 }
 
 ProcessConfig = uTimerWall
