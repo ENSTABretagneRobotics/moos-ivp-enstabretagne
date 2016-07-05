@@ -1,0 +1,18 @@
+//------------------------------------------------
+// pSecuritySurface config block
+
+ProcessConfig = pSecuritySurface
+{
+  AppTick   = 4
+  CommsTick = 4
+
+  TIMEOUT = 30
+  WATCH_VARIABLE = LAUNCH
+  WATCH_VARIABLE = DIVING
+  WATCH_VARIABLE = DESIRED_DEPTH_JOY
+  WATCH_VARIABLE = DESIRED_FX
+  WATCH_VARIABLE = DESIRED_RZ
+
+  PUBLISH_VARIABLE_NAME = DESIRED_DEPTH
+  PUBLISH_VALUE = 0.0
+}

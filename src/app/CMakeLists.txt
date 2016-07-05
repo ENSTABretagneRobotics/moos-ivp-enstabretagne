@@ -39,6 +39,7 @@
   ADD_SUBDIRECTORY(processes/pMixThrusters)
   ADD_SUBDIRECTORY(processes/pLatLon2LocalGrid)
   ADD_SUBDIRECTORY(processes/pSonarCSVPlayer)
+  ADD_SUBDIRECTORY(processes/pSecuritySurface)
 
   if (WITH_INTERVAL_FILTER)
     MESSAGE("Building with pMapLocalizer*")
