@@ -60,7 +60,7 @@ ProcessConfig = pLogger
   AppTick     = 4.0
   CommsTick   = 4.0
 
-  File          = uTimerMission
+  File          = gate
   PATH          = /home/ciscrea/log
   FileTimeStamp = true
 
@@ -80,7 +80,7 @@ ProcessConfig = uTimerDiving
   pause_var = LAUNCH
   
   // To WP 2
-  event = var=DESIRED_DEPTH,      time=0001, val=0.5
+  event = var=DESIRED_DEPTH,      time=0001, val=2.0
   event = var=DESIRED_HEADING,    time=0010, val=169.13
   event = var=DESIRED_DEPTH,      time=0031, val=0.0
   event = var=LAUNCH,    	  time=0031, val=true
@@ -93,22 +93,20 @@ ProcessConfig = uTimerLongRange
   CommsTick = 4
 
   // To WP 1
-  event = var=LAUNCH,    time=0000, val=true // !
+  event = var=LAUNCH,    time=0000, val=false // !
   pause_var = LAUNCH
   
   // To WP 2
-  event = var=DESIRED_DEPTH,      time=0001, val=1.5
-  event = var=DESIRED_HEADING,    time=0010, val=160.5 // !
-  event = var=DESIRED_FX,      time=0020, val=1
-  event = var=DESIRED_FX,      time=0025, val=-1
-  event = var=DESIRED_FX,      time=0027, val=0
-  event = var=DESIRED_HEADING,      time=0030, val=240
-  //event = var=DESIRED_FX,      time=0055, val=1
-  //event = var=DESIRED_FX,      time=0085, val=-1
-  //event = var=DESIRED_FX,      time=0087, val=0
-  event = var=DESIRED_DEPTH,      time=0045, val=0
-  //event = var=LAUNCH,    	  time=0055, val=true
-  //event = var=DESIRED_RZ,    	  time=0035, val=0.0
+  event = var=DESIRED_DEPTH,      time=0001, val=2.0
+  event = var=DESIRED_HEADING,    time=0001, val=160.5 // !
+  event = var=DESIRED_FX,      time=0080, val=1
+  event = var=DESIRED_FX,      time=0117, val=-1
+  event = var=DESIRED_FX,      time=0119, val=0
+  event = var=DESIRED_HEADING,      time=0122, val=250
+  event = var=DESIRED_FX,      time=0137, val=1
+  event = var=DESIRED_FX,      time=0167, val=-1
+  event = var=DESIRED_FX,      time=0169, val=0
+  event = var=DESIRED_DEPTH,      time=0167, val=0
   
 }
 
