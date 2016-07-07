@@ -28,16 +28,17 @@ ProcessConfig = ANTLER
 
   // ************** SENSORS ******************
   Run = iXSensINS         @ NewConsole = false
-  Run = iGPS              @ NewConsole = false
+  //Run = iGPS              @ NewConsole = false
   //Run = iGPSoE              @ NewConsole = true
   Run = iKeller           @ NewConsole = false
-  Run = iSounder          @ NewConsole = false
-  Run = iSonar            @ NewConsole = false ~iSonar_Micron
+  //Run = iSounder          @ NewConsole = false
+  //Run = iSonar            @ NewConsole = false ~iSonar_Micron
   Run = iCamera           @ NewConsole = false ~iCamera_Side
   Run = iCamera           @ NewConsole = false ~iCamera_Bottom
+  //Run = FogRemove           @ NewConsole = true
 
   // ************** VISUALISATION *************
-  Run = uSensorsViewer     @ NewConsole = false
+  //Run = uSensorsViewer     @ NewConsole = true
 
   // ***************** CONTROL ****************
   //Run = uJoystick         @ NewConsole = false
@@ -51,6 +52,7 @@ ProcessConfig = ANTLER
 
   // ***************** Missions ****************
   Run = uTimerScript      @ NewConsole = false ~uTimerLongRange
+  //Run = uTimerScript      @ NewConsole = false ~uTimerISaucisse
 
 }
 
@@ -60,7 +62,7 @@ ProcessConfig = pLogger
   AppTick     = 4.0
   CommsTick   = 4.0
 
-  File          = uTimerMission
+  File          = gate
   PATH          = /home/ciscrea/log
   FileTimeStamp = true
 
@@ -80,11 +82,20 @@ ProcessConfig = uTimerDiving
   pause_var = LAUNCH
   
   // To WP 2
-  event = var=DESIRED_DEPTH,      time=0001, val=0.5
+  event = var=DESIRED_DEPTH,      time=0001, val=2.0
   event = var=DESIRED_HEADING,    time=0010, val=169.13
   event = var=DESIRED_DEPTH,      time=0031, val=0.0
   event = var=LAUNCH,    	  time=0031, val=true
   event = var=DESIRED_RZ,    	  time=0033, val=0.0
+}
+
+ProcessConfig = uTimerISaucisse
+{
+  AppTick = 4
+  CommsTick = 4
+
+  // To WP 1
+  event = var=LAUNCH,    time=0070, val=false
 }
 
 ProcessConfig = uTimerLongRange
@@ -97,19 +108,27 @@ ProcessConfig = uTimerLongRange
   pause_var = LAUNCH
   
   // To WP 2
-  event = var=DESIRED_DEPTH,      time=0001, val=1.5
-  event = var=DESIRED_HEADING,    time=0010, val=160.5 // !
-  event = var=DESIRED_FX,      time=0020, val=1
-  event = var=DESIRED_FX,      time=0025, val=-1
-  event = var=DESIRED_FX,      time=0027, val=0
-  event = var=DESIRED_HEADING,      time=0030, val=240
-  //event = var=DESIRED_FX,      time=0055, val=1
-  //event = var=DESIRED_FX,      time=0085, val=-1
-  //event = var=DESIRED_FX,      time=0087, val=0
-  event = var=DESIRED_DEPTH,      time=0045, val=0
-  //event = var=LAUNCH,    	  time=0055, val=true
-  //event = var=DESIRED_RZ,    	  time=0035, val=0.0
-  
+  event = var=DESIRED_DEPTH,      time=0001, val=2.0
+  event = var=DESIRED_HEADING,    time=0001, val=160.5 // !
+  event = var=PID_HEADING,    time=0002, val=true // !
+  event = var=DESIRED_FX,      time=0030, val=1
+  event = var=DESIRED_FX,      time=0074, val=-1
+  event = var=DESIRED_FX,      time=0076, val=0
+  event = var=DESIRED_HEADING,      time=0079, val=255
+  event = var=DESIRED_FX,      time=0094, val=1
+  event = var=DESIRED_FX,      time=0139, val=-1
+  event = var=DESIRED_FX,      time=0142, val=0
+  event = var=DESIRED_DEPTH,      time=0144, val=0
+  event = var=PID_HEADING,    time=0144, val=false // !
+  event = var=DESIRED_FX,      time=0146, val=0.0
+  event = var=DESIRED_RZ,      time=0146, val=0.0
+  event = var=DESIRED_FZ,      time=0146, val=0.0
+  event = var=DESIRED_RZ,      time=0149, val=0.0
+  //event = var=DESIRED_RZ,      time=0150, val=0.0
+  //event = var=DESIRED_RZ,      time=0160, val=0.0
+  //event = var=DESIRED_RZ,      time=0170, val=0.0
+  //event = var=DESIRED_RZ,      time=0190, val=0.0
+  //event = var=DESIRED_RZ,      time=0200, val=0.0
 }
 
 ProcessConfig = uTimerWall

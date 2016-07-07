@@ -231,6 +231,7 @@ bool Saucisse::OnNewMail(MOOSMSG_LIST &NewMail)
 bool Saucisse::OnConnectToServer()
 {
   registerVariables();
+  Notify("iSaucisse", "false");
   return true;
 }
 

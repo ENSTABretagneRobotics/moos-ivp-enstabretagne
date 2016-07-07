@@ -29,6 +29,7 @@
 #include "processes/pEchoVar_Heading.moos"
 #include "processes/pEchoVar_Update_Heading.moos"
 #include "processes/pSecuritySurface.moos"
+#include "processes/FogRemove.moos"
 
 // UTILITIES
 #include "utilities/uMACView.moos"

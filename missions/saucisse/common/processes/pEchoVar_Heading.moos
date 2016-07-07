@@ -4,6 +4,6 @@ ProcessConfig = pEchoVar_Heading
   CommsTick = 20
 
   echo = DESIRED_RZ_PID -> DESIRED_RZ
-  condition = LAUNCH = false
+  condition = PID_HEADING = true
  }
 
