@@ -20,7 +20,7 @@ ProcessConfig = uJoystick
 
   AXIS = 3
   SCALE_RATIO = 1
-  MAX  = 0.7
+  MAX  = 2.0
   MIN  = 0
   MOOS_DEST_VAR = DESIRED_DEPTH_JOY
 
