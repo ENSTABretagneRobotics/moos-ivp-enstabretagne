@@ -114,21 +114,20 @@ ProcessConfig = uTimerLongRange
   event = var=DESIRED_FX,      time=0030, val=1
   event = var=DESIRED_FX,      time=0074, val=-1
   event = var=DESIRED_FX,      time=0076, val=0
+
+  // To WP 3  
   event = var=DESIRED_HEADING,      time=0079, val=255
   event = var=DESIRED_FX,      time=0094, val=1
   event = var=DESIRED_FX,      time=0139, val=-1
   event = var=DESIRED_FX,      time=0142, val=0
+
+  // To WP 4
   event = var=DESIRED_DEPTH,      time=0144, val=0
   event = var=PID_HEADING,    time=0144, val=false // !
   event = var=DESIRED_FX,      time=0146, val=0.0
   event = var=DESIRED_RZ,      time=0146, val=0.0
   event = var=DESIRED_FZ,      time=0146, val=0.0
   event = var=DESIRED_RZ,      time=0149, val=0.0
-  //event = var=DESIRED_RZ,      time=0150, val=0.0
-  //event = var=DESIRED_RZ,      time=0160, val=0.0
-  //event = var=DESIRED_RZ,      time=0170, val=0.0
-  //event = var=DESIRED_RZ,      time=0190, val=0.0
-  //event = var=DESIRED_RZ,      time=0200, val=0.0
 }
 
 ProcessConfig = uTimerWall
@@ -141,28 +140,81 @@ ProcessConfig = uTimerWall
   pause_var = LAUNCH
   
   // To WP 2
-  event = var=DESIRED_HEADING,    time=0001, val=8.13 // !
-  event = var=DESIRED_DEPTH,      time=0001, val=1.6
-  event = var=DESIRED_SPEED,      time=0020, val=1
-  event = var=DESIRED_SPEED,      time=0210, val=-1
-  event = var=DESIRED_SPEED,      time=0212, val=0
-  event = var=DESIRED_DEPTH,      time=0212, val=0
-  
+  event = var=DESIRED_HEADING,    time=0001, val=70.13 // !
+  event = var=DESIRED_DEPTH,      time=0001, val=2.0
+  event = var=PID_HEADING,    time=0002, val=true // !
+  event = var=DESIRED_FX,      time=0030, val=1
+  event = var=DESIRED_FX,      time=0079, val=-1
+  event = var=DESIRED_FX,      time=0081, val=0
+
   // To WP 3
-  event = var=DESIRED_HEADING,    time=0001, val=8.13 // !
-  event = var=DESIRED_DEPTH,      time=0001, val=1.6
-  event = var=DESIRED_SPEED,      time=0020, val=1
-  event = var=DESIRED_SPEED,      time=0210, val=-1
-  event = var=DESIRED_SPEED,      time=0212, val=0
-  event = var=DESIRED_DEPTH,      time=0212, val=0
-  
+  event = var=DESIRED_HEADING,      time=0084, val=255
+  event = var=DESIRED_FX,      time=0099, val=1
+  event = var=DESIRED_FX,      time=0144, val=-1
+  event = var=DESIRED_FX,      time=0147, val=0
+
   // To WP 4
-  event = var=DESIRED_HEADING,    time=0240, val=-4.67 // !
-  event = var=DESIRED_DEPTH,      time=0240, val=1.6
-  event = var=DESIRED_SPEED,      time=0260, val=1
-  event = var=DESIRED_SPEED,      time=0450, val=-1
-  event = var=DESIRED_SPEED,      time=0452, val=0
-  event = var=DESIRED_DEPTH,      time=0452, val=0
+  event = var=DESIRED_DEPTH,      time=0149, val=0
+  event = var=PID_HEADING,    time=0149, val=false // !
+  event = var=DESIRED_FX,      time=0151, val=0.0
+  event = var=DESIRED_RZ,      time=0151, val=0.0
+  event = var=DESIRED_FZ,      time=0151, val=0.0
+  event = var=DESIRED_RZ,      time=0154, val=0.0
+  
+}
+
+ProcessConfig = uTimerLongRangeWall
+{
+  AppTick = 4
+  CommsTick = 4
+
+  // To WP 1
+  event = var=LAUNCH,    time=0000, val=true // !
+  pause_var = LAUNCH
+  
+  // To WP 2
+  event = var=DESIRED_DEPTH,      time=0001, val=2.0
+  event = var=DESIRED_HEADING,    time=0001, val=160.5 // !
+  event = var=PID_HEADING,    time=0002, val=true // !
+  event = var=DESIRED_FX,      time=0030, val=1
+  event = var=DESIRED_FX,      time=0074, val=-1
+  event = var=DESIRED_FX,      time=0076, val=0
+
+
+  // To WP 3  
+  event = var=DESIRED_HEADING,      time=0079, val=255
+  event = var=DESIRED_FX,      time=0094, val=1
+  event = var=DESIRED_FX,      time=0139, val=-1
+  event = var=DESIRED_FX,      time=0142, val=0
+
+
+  // To WP 4
+  event = var=DESIRED_HEADING,      time=0147, val=165
+  event = var=DESIRED_FX,      time=0162, val=1
+  event = var=DESIRED_FX,      time=0210, val=-1
+  event = var=DESIRED_FX,      time=0213, val=0
+
+
+  // To WP 5
+  event = var=DESIRED_HEADING,    time=0218, val=70.13
+  event = var=DESIRED_FX,      time=0233, val=1
+  event = var=DESIRED_FX,      time=0282, val=-1
+  event = var=DESIRED_FX,      time=0285, val=0
+
+  // To WP 6
+  event = var=DESIRED_HEADING,      time=0288, val=255
+  event = var=DESIRED_FX,      time=0303, val=1
+  event = var=DESIRED_FX,      time=0348, val=-1
+  event = var=DESIRED_FX,      time=0351, val=0
+
+  // To WP 7
+  event = var=DESIRED_DEPTH,      time=0354, val=0
+  event = var=PID_HEADING,    time=0354, val=false // !
+  event = var=DESIRED_FX,      time=0356, val=0.0
+  event = var=DESIRED_RZ,      time=0356, val=0.0
+  event = var=DESIRED_FZ,      time=0356, val=0.0
+  event = var=DESIRED_RZ,      time=0359, val=0.0
+  
 }
 
 ProcessConfig = uTimerInspection
