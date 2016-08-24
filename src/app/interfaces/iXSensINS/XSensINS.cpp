@@ -88,7 +88,7 @@ bool XSensINS::Iterate() {
     // Convert packet to Euler
     if(packet.containsOrientation()){
       m_euler = packet.orientationEuler();
-      m_nav_heading = 90.0 - m_euler.yaw();
+      m_nav_heading = m_euler.yaw();
 
       Notify("IMU_PITCH", m_euler.pitch());
       Notify("IMU_ROLL", m_euler.roll());      
