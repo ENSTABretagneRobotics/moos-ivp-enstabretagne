@@ -1,18 +1,11 @@
 /************************************************************/
 /*    FILE: SimplePID.cpp
 /*    ORGN: ENSTA Bretagne Robotics - moos-ivp-enstabretagne
-/*    AUTH: Thomas Le Mezo
-/*    DATE: 2015
+/*    AUTH: Thomas Le Mezo and Guilherme Schvarcz Franco
+/*    DATE: 2015 - 2016
 /************************************************************/
 
-#include <iterator>
-#include "math.h"
-#include "MBUtils.h"
-#include "ACTable.h"
 #include "SimplePID.h"
-#include <math.h>
-
-using namespace std;
 
 //---------------------------------------------------------
 // Constructor
@@ -44,7 +37,7 @@ SimplePID::SimplePID()
     m_moosvar_state_diffferential = "";
     m_differential_input          = false;
 
-    m_angle                = false;
+    m_angle                = "";
 }
 
 //---------------------------------------------------------
@@ -111,7 +104,10 @@ bool SimplePID::Iterate()
     // Proportional
     m_error = m_consigne - m_state;
 
-    if(m_angle){
+    if(m_angle == "RAD"){
+        m_error = 2.0*atan(tan(m_error/2.0));
+    }
+    if(m_angle == "DEG"){
         m_error = m_error*M_PI/180.0;
         m_error = 2.0*atan(tan(m_error/2.0));
         m_error = m_error*180.0/M_PI;
@@ -194,8 +190,8 @@ bool SimplePID::OnStartUp()
             handled = true;
         }
         else if(param == "ANGLE"){
-            if(value == "RAD"){
-                m_angle = true;
+            if((value == "RAD") || (value == "DEG")){
+                m_angle = value;
                 handled = true;
             }
         }
@@ -242,7 +238,7 @@ bool SimplePID::buildReport()
     ACTable actab(4);
     actab << "State | Consigne | Error | Command";
     actab.addHeaderLines();
-    if(m_angle == false){
+    if(m_angle == ""){
         actab << m_state << m_consigne << m_error;
     }
     else{

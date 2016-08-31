@@ -1,8 +1,8 @@
 /************************************************************/
 /*    FILE: SimplePID.h
 /*    ORGN: ENSTA Bretagne Robotics - moos-ivp-enstabretagne
-/*    AUTH: Thomas Le Mezo
-/*    DATE: 2015
+/*    AUTH: Thomas Le Mezo and Guilherme Schvarcz Franco
+/*    DATE: 2015 - 2016
 /************************************************************/
 
 #ifndef SimplePID_HEADER
@@ -10,6 +10,13 @@
 
 #include "MOOS/libMOOS/Thirdparty/AppCasting/AppCastingMOOSApp.h"
 #include <string>
+#include <iterator>
+#include "math.h"
+#include "MBUtils.h"
+#include "ACTable.h"
+#include <math.h>
+
+using namespace std;
 
 class SimplePID : public AppCastingMOOSApp
 {
@@ -39,7 +46,7 @@ class SimplePID : public AppCastingMOOSApp
     std::string m_moosvar_saturation;
     
     bool m_differential_input;
-    bool m_angle;
+    string m_angle;
 
   private: // State variables
     double m_consigne, m_state, m_state_previous, m_state_differential, m_error, m_command;
