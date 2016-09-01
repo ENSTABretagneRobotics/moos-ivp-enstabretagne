@@ -148,7 +148,7 @@ bool PololuApp::OnStartUp()
 
   int pin_number = -1;
   int pwm_mini = 1200;
-  int pwm_zero = 1500;
+  int pwm_zero = -1;
   int pwm_maxi = 1800;
   double coeff = 1.;
   double threshold = 1.;
@@ -233,12 +233,16 @@ bool PololuApp::OnStartUp()
     {
       PololuPinOut *new_pin = new PololuPinOut(pin_number);
       new_pin->setPwmMini(pwm_mini);
-      new_pin->setPwmZero(pwm_zero);
       new_pin->setPwmMaxi(pwm_maxi);
+      if(pwm_zero != -1)
+          new_pin->setPwmZero(pwm_zero);
+      else
+          new_pin->setPwmZero((pwm_maxi+pwm_mini)/2);
       new_pin->setBilaterality(bilateral_range);
       new_pin->reverse(reverse);
       m_map_pinouts[toupper(value)] = new_pin;
       pin_number = -1;
+      pwm_zero = -1;
       handled = true;
     }
 
