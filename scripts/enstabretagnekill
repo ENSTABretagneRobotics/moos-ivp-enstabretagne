@@ -93,5 +93,6 @@ killall pWallDetector
 killall uJoystick
 killall uNavScreen
 killall uSensorsViewer
+killall iPololu
 
 echo Done - Killed all MOOS-Related Processes.....
