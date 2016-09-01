@@ -8,8 +8,6 @@
 #ifndef PololuPin_HEADER
 #define PololuPin_HEADER
 
-//#include <QObject>
-
 class PololuPin
 {
   public:
@@ -20,4 +18,4 @@ class PololuPin
     int m_pin_number;
 };
 
-#endif 
+#endif

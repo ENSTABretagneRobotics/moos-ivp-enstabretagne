@@ -5,12 +5,7 @@
 /*    DATE: 2015
 /************************************************************/
 
-#include <string>
-#include <iostream>
-#include <stdio.h>
 #include "PololuPin.h"
-
-using namespace std;
 
 PololuPin::PololuPin(int pin_number)
 {

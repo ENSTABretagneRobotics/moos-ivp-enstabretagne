@@ -5,17 +5,8 @@
 /*    DATE: 2015
 /************************************************************/
 
-#include <iostream>
-#include <fstream>
-#include <iomanip>
-#include <sstream>
-#include <iterator>
-#include "math.h"
-#include "MBUtils.h"
-#include "ACTable.h"
 #include "PololuApp.h"
 
-using namespace std;
 
 //---------------------------------------------------------
 // Constructor
@@ -109,7 +100,6 @@ bool PololuApp::Iterate()
   {
     if(!m_pololu->getValue(it->second->getPinNumber(), value))
       reportRunWarning("Error reading value: " + it->first);
-    
     else
     {
       string warning_moosvar = it->first + "_WARNING";
@@ -121,7 +111,6 @@ bool PololuApp::Iterate()
         reportRunWarning("Warning: " + m_map_pinins[it->first]->getWarningMessage());
         Notify(warning_moosvar, 1.);
       }
-
       else
         Notify(warning_moosvar, 0.);
 

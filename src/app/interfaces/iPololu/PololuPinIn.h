@@ -8,14 +8,16 @@
 #ifndef PololuPinIn_HEADER
 #define PololuPinIn_HEADER
 
-//#include <QObject>
+#include <string>
 #include "PololuPin.h"
+
+using namespace std;
 
 class PololuPinIn : public PololuPin
 {
   public:
     PololuPinIn(int pin_number);
-    ~PololuPinIn() {};
+    ~PololuPinIn() {}
 
     double getValue();
     double getCoeff();
@@ -37,4 +39,4 @@ class PololuPinIn : public PololuPin
   	bool m_test_threshold;
 };
 
-#endif 
+#endif
