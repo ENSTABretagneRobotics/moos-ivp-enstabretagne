@@ -8,14 +8,16 @@
 #ifndef PololuPinOut_HEADER
 #define PololuPinOut_HEADER
 
-//#include <QObject>
+#include <iostream>
 #include "PololuPin.h"
+
+using namespace std;
 
 class PololuPinOut : public PololuPin
 {
   public:
     PololuPinOut(int pin_number);
-    ~PololuPinOut() {};
+    ~PololuPinOut() {}
 
     int getPwmValue();
     int getPwmMini();
@@ -36,4 +38,4 @@ class PololuPinOut : public PololuPin
     bool m_bilaterality, m_reversed;
 };
 
-#endif 
+#endif

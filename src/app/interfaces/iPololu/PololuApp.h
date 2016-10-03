@@ -12,6 +12,8 @@
 #include "Pololu.h"
 #include "PololuPinIn.h"
 #include "PololuPinOut.h"
+#include "MBUtils.h"
+#include "ACTable.h"
 
 class PololuApp : public AppCastingMOOSApp
 {

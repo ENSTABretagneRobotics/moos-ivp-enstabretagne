@@ -5,12 +5,7 @@
 /*    DATE: 2015
 /************************************************************/
 
-#include <string>
-#include <iostream>
-#include <stdio.h>
 #include "PololuPinOut.h"
-
-using namespace std;
 
 PololuPinOut::PololuPinOut(int pin_number) : PololuPin(pin_number)
 {
@@ -65,11 +60,10 @@ void PololuPinOut::setValue(double value)
 
     if(value < 0)
       m_pwm = (int)(m_pwm_zero + value * (m_pwm_zero - m_pwm_mini));
-
     else
       m_pwm = (int)(m_pwm_zero + value * (m_pwm_maxi - m_pwm_zero));
-  }
 
+  }
   else // from 0 to 1
   {
     value = max(0., min(1., value));
