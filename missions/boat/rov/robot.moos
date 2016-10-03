@@ -1,0 +1,42 @@
+ServerHost = localhost
+ServerPort = 9000
+Community  = AUV
+
+#include "includes.moos"
+
+ProcessConfig = ANTLER
+{
+  MSBetweenLaunches = 200
+
+  Run = MOOSDB            @ NewConsole = false
+
+  // ************** UTILITIES ****************
+  Run = uMS               @ NewConsole = false
+  Run = uMACView          @ NewConsole = false
+  Run = uProcessWatch     @ NewConsole = false
+  Run = uNavScreen        @ NewConsole = false
+
+  // ************** SENSORS ******************
+  Run = iXSensINS         @ NewConsole = true
+  
+  Run = iPololu        @ NewConsole = true
+  Run = uJoystick         @ NewConsole = false
+
+}
+
+ProcessConfig = uJoystick
+{
+  AppTick   = 20
+  CommsTick = 20
+
+  DEVICE_NAME = /dev/input/js0
+
+  INCREMENT = false
+  SCALE = 100
+
+  AXIS = 1
+  MOOS_DEST_VAR = FINAL_DESIRED_THRUST
+
+  AXIS = 3
+  MOOS_DEST_VAR = FINAL_DESIRED_RUDDER
+}
