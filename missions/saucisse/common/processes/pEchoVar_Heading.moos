@@ -1,0 +1,9 @@
+ProcessConfig = pEchoVar_Heading
+{
+  AppTick   = 20
+  CommsTick = 20
+
+  echo = DESIRED_RZ_PID -> DESIRED_RZ
+  condition = PID_HEADING = true
+ }
+
