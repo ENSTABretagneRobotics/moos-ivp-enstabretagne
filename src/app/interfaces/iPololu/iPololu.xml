@@ -24,7 +24,7 @@
               <moosvar>
                  <varname>$(MOOSVAR_SUBSCRIPTION)</varname>
                  <vartype>double</vartype>
-                 <varinfo>set PWM value based on a ratio belonging to the set [-1;1]</varinfo>
+                 <varinfo>set PWM value based on a ratio belonging to the set [-100;100]</varinfo>
               </moosvar>
            </subscriptions>
            <publications>
