@@ -905,7 +905,7 @@ int nmea_parse_PRTI01(const char *s, const int len, bool has_checksum, nmeaPRTI0
     return 0;
   }
 
-  if (!isnan(pack->bottom_vx) && !isnan(pack->bottom_vy) && !isnan(pack->bottom_vz)) {
+  if (!isnan((float)pack->bottom_vx) && !isnan((float)pack->bottom_vy) && !isnan((float)pack->bottom_vz)) {
     nmea_INFO_set_present(&pack->present, RTI);
   }
 
